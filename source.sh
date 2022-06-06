@@ -10,7 +10,9 @@ html() {
         --from "markdown+tex_math_dollars" \
         --to "html" \
         --output "$OUT_DIR/index.html" \
-        --metadata "pagetitle=Master's Thesis"
+        --metadata "pagetitle=Master's Thesis" \
+        --metadata "date=$(date -I)" \
+        --metadata-file "metadata.yaml"
 }
 
 pdf() {
@@ -20,5 +22,7 @@ pdf() {
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
         --output "$OUT_DIR/index.pdf" \
-        --pdf-engine="xelatex"
+        --pdf-engine="xelatex" \
+        --metadata "date=$(date -I)" \
+        --metadata-file "metadata.yaml"
 }
