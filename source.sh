@@ -4,7 +4,8 @@ OUT_DIR=build
 
 html() {
     mkdir -p "$OUT_DIR"
-    pandoc "$IN_DIR/index.md" \
+    pandoc "$IN_DIR/"*".md"\
+        --verbose \
         --citeproc \
         --standalone \
         --from "markdown+tex_math_dollars" \
@@ -17,7 +18,8 @@ html() {
 
 pdf() {
     mkdir -p "$OUT_DIR"
-    pandoc "$IN_DIR/index.md" \
+    pandoc "$IN_DIR/"*".md" \
+        --verbose \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
