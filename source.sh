@@ -11,6 +11,7 @@ html() {
         --from "markdown+tex_math_dollars" \
         --to "html" \
         --output "$OUT_DIR/index.html" \
+        --katex \
         --metadata "pagetitle=Master's Thesis" \
         --metadata "date=$(date -I)" \
         --metadata-file "metadata.yaml"
