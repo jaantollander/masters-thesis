@@ -86,65 +86,65 @@ Lustre keeps count of the following operations.
 
 Let's denote a stream of IO events for a job as
 
-$$x_1,x_2,x_3,...$$
+$$(t_1,x_1),(t_2,x_2),...$$
 
-where $x_i$ is a value of individual IO event and the subscript $i$ denotes the amount of samples upto the event.
+where $t_i$ is the timestamp of the event, $x_i$ is a value the event, timestamps are increasing $t_1< t_2< ...$ and the subscript $i$ denotes the count of the event.
 
 Counters keep track of aggregate values from a stream of IO events.
 
 minimum
 
-$$a_1=x_1, a_i=\min\{a_{i-1},x_{i}\}$$
+$$a_1=x_1, a_i=\min\{a_{i-1},x_{i}\}, i>1$$
 
 maximum
 
-$$b_1=x_1, b_i=\max\{b_{i-1},x_{i}\}$$
+$$b_1=x_1, b_i=\max\{b_{i-1},x_{i}\}, i>1$$
 
 sum
 
-$$s_1=x_1, s_i=s_{i-1}+x_i$$
+$$s_1=x_1, s_i=s_{i-1}+x_i, i>1$$
 
 sum of squares
 
-$$q_i=x_1^2, q_i=q_{i-1}+x_i^2$$
+$$q_i=x_1^2, q_i=q_{i-1}+x_i^2, i>1$$
 
 ---
 
-Take snapshot from the counters at intervals
+Consider we take snapshot of the counter at time $\tau,$ we obtain value
+
+$$m(\tau)=\max\{i\mid t_i\le\tau\}$$
+
+We take snapshot from the counters at intervals
+
+$$\tau_1, \tau_2, ...,\quad \tau_1< \tau_2, ...$$
+
+Let be $t_{m_j}$ be targest timestamp such that $t_{m_j}\le\tau_j$ for $j=1,2,...$.
+
+Then, the intervals consist of events like
 
 $$x_0,...,x_{m_1},x_{m_1+1}...,x_{m_2},...$$
 
-Computing differences for the interval 
-
-$$x_{m_1+1},...,x_{m_2}$$
-
 Number of samples in the interval 
 
-$$n_{m_1,m_2}=m_2-m_2$$
+$$n_{m_j,m_{j+1}}=m_{j+1}-m_{j}$$
 
 We cannot compute the minimum and maximum of the samples in the interval from the aggregates.
 
 Sum of the samples in the interval
 
-$$s_{m_1,m_2}=s_{m_2}-s_{m_1}$$
+$$s_{m_j,m_{j+1}}=s_{m_{j+1}}-s_{m_{j}}$$
 
 Sum of squares of the samples in the interval
 
-$$q_{m_1,m_2}=q_{m_2}-q_{m_1}$$
+$$q_{m_{j},m_{j+1}}=q_{m_{j+1}}-q_{m_{j}}$$
 
 ---
 
 From the aggregate statistics, we can compute the average value of the events
 
-$$\mu_{m_1,m_2}=\frac{s_{m_1,m_2}}{n_{m_1,m_2}}$$
+$$\mu_{m_j,m_{j+1}}=\frac{s_{m_j,m_{j+1}}}{n_{m_j,m_{j+1}}}$$
 
 and standard deviation
 
-$$\sigma_{m_1,m_2}=\sqrt{\frac{q_{m_1,m_2}}{n_{m_1,m_2}} - \mu_{m_1,m_2}^2}$$
-
----
-
-By taking a snapshot at times $t_1,t_2,t_3,...$ we obtain a time series.
-
-$$(t_1, \mu_{t_1}), (t_2,\mu_{t_2}), ...$$
+$$\sigma_{m_j,m_{j+1}}=\sqrt{\frac{q_{m_j,m_{j+1}}}{n_{m_j,m_{j+1}}} - \mu_{m_j,m_{j+1}}^2}$$
 
