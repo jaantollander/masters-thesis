@@ -1,17 +1,19 @@
 # Master's Thesis
-Dependencies
+The `source.sh ` file contains script for using Pandoc to convert content into HTML or PDF.
 
 - `pandoc`
 - `texlive`
 - `texlive-xetex`
+- `inotify-tools`
 
-Usage
+We can use the script by sourcing it.
 
 ```bash
 . source.sh
 ```
 
-```bash
-pdf
-html
-```
+The script contains the following functions.
+
+- `html`
+- `pdf`
+- `preview`

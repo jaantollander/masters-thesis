@@ -94,57 +94,63 @@ Counters keep track of aggregate values from a stream of IO events.
 
 minimum
 
-$$a_1=x_1, a_i=\min\{a_{i-1},x_{i}\}, i>1$$
+$$a_1=x_1$$
+$$a_i=\min\{a_{i-1},x_{i}\},\quad i>1$$
 
 maximum
 
-$$b_1=x_1, b_i=\max\{b_{i-1},x_{i}\}, i>1$$
+$$b_1=x_1$$
+$$b_i=\max\{b_{i-1},x_{i}\},\quad i>1$$
 
 sum
 
-$$s_1=x_1, s_i=s_{i-1}+x_i, i>1$$
+$$s_1=x_1$$
+$$s_i=s_{i-1}+x_i,\quad i>1$$
 
 sum of squares
 
-$$q_i=x_1^2, q_i=q_{i-1}+x_i^2, i>1$$
+$$q_i=x_1^2$$
+$$q_i=q_{i-1}+x_i^2,\quad i>1$$
 
 ---
 
-Consider we take snapshot of the counter at time $\tau,$ we obtain value
+Consider we take snapshot of the counter at time $\tau.$ Then, we obtain index
 
-$$m(\tau)=\max\{i\mid t_i\le\tau\}$$
+$$m(\tau)=\max\{i\in\mathbb{N}\mid t_i\le\tau\}$$
 
-We take snapshot from the counters at intervals
+Subsuquently, if we take snapshot from the counters at interval
 
-$$\tau_1, \tau_2, ...,\quad \tau_1< \tau_2, ...$$
+$$\tau, \tau^\prime,\quad \tau< \tau^\prime$$
 
-Let be $t_{m_j}$ be targest timestamp such that $t_{m_j}\le\tau_j$ for $j=1,2,...$.
+Then
+
+$$k=m(\tau)\le m(\tau^\prime)=k^\prime$$
 
 Then, the intervals consist of events like
 
-$$x_0,...,x_{m_1},x_{m_1+1}...,x_{m_2},...$$
+$$x_0,...,x_{k},...,x_{k^\prime}$$
 
 Number of samples in the interval 
 
-$$n_{m_j,m_{j+1}}=m_{j+1}-m_{j}$$
+$$n_{k,k^\prime}=k^\prime-k$$
 
 We cannot compute the minimum and maximum of the samples in the interval from the aggregates.
 
 Sum of the samples in the interval
 
-$$s_{m_j,m_{j+1}}=s_{m_{j+1}}-s_{m_{j}}$$
+$$s_{k,k^\prime}=s_{k^\prime}-s_{k}$$
 
 Sum of squares of the samples in the interval
 
-$$q_{m_{j},m_{j+1}}=q_{m_{j+1}}-q_{m_{j}}$$
+$$q_{k,k^\prime}=q_{k^\prime}-q_{k}$$
 
 ---
 
 From the aggregate statistics, we can compute the average value of the events
 
-$$\mu_{m_j,m_{j+1}}=\frac{s_{m_j,m_{j+1}}}{n_{m_j,m_{j+1}}}$$
+$$\mu_{k,k^\prime}=\frac{s_{k,k^\prime}}{n_{k,k^\prime}}$$
 
 and standard deviation
 
-$$\sigma_{m_j,m_{j+1}}=\sqrt{\frac{q_{m_j,m_{j+1}}}{n_{m_j,m_{j+1}}} - \mu_{m_j,m_{j+1}}^2}$$
+$$\sigma_{k,k^\prime}=\sqrt{\frac{q_{k,k^\prime}}{n_{k,k^\prime}} - \mu_{k,k^\prime}^2}$$
 
