@@ -1,7 +1,7 @@
 # Monitoring Lustre
-There are multiple **Metadata Servers** (MDS) on the system. For each MDS there are multiple **Metadata Targets** (MDT).
+There are multiple *Metadata Servers* (MDS) on the system. For each MDS there are multiple *Metadata Targets* (MDT).
 
-There are multiple **Object Storage Servers** (OSS) on the system. For each OSS there are multiple **Object Storage Targets** (OST).
+There are multiple *Object Storage Servers* (OSS) on the system. For each OSS there are multiple *Object Storage Targets* (OST).
 
 ```sh
 lctl get_params obdfilter.*.job_stats
@@ -92,24 +92,34 @@ where $t_i$ is the timestamp of the event, $x_i$ is a value the event, timestamp
 
 Counters keep track of aggregate values from a stream of IO events.
 
+samples
+
+$$n_1=1$$
+
+$$n_i=n_{i-1}+1,\quad i>1$$
+
 minimum
 
 $$a_1=x_1$$
+
 $$a_i=\min\{a_{i-1},x_{i}\},\quad i>1$$
 
 maximum
 
 $$b_1=x_1$$
+
 $$b_i=\max\{b_{i-1},x_{i}\},\quad i>1$$
 
 sum
 
 $$s_1=x_1$$
+
 $$s_i=s_{i-1}+x_i,\quad i>1$$
 
 sum of squares
 
 $$q_i=x_1^2$$
+
 $$q_i=q_{i-1}+x_i^2,\quad i>1$$
 
 ---
@@ -132,7 +142,7 @@ $$x_0,...,x_{k},...,x_{k^\prime}$$
 
 Number of samples in the interval 
 
-$$n_{k,k^\prime}=k^\prime-k$$
+$$n_{k,k^\prime}=n_{k^\prime}-n_k$$
 
 We cannot compute the minimum and maximum of the samples in the interval from the aggregates.
 
@@ -153,4 +163,20 @@ $$\mu_{k,k^\prime}=\frac{s_{k,k^\prime}}{n_{k,k^\prime}}$$
 and standard deviation
 
 $$\sigma_{k,k^\prime}=\sqrt{\frac{q_{k,k^\prime}}{n_{k,k^\prime}} - \mu_{k,k^\prime}^2}$$
+
+---
+
+The counter will reset if there are no events in some defined cutoff time $T$.
+
+$$t_{k^\prime}-t_k>T$$
+
+We can detect that counters have reset if values in the counter have decreased. If we detect that the counter has reset during the measuring interval, for example, if $n_k>n_{k^\prime},$ we will 
+
+We can deal with resetting counter by setting 
+
+$$n_{k,k^\prime}=n_{k^\prime}$$
+
+$$s_{k,k^\prime}=s_{k^\prime}$$
+
+$$q_{k,k^\prime}=q_{k^\prime}$$
 

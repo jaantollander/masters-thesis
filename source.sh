@@ -34,6 +34,7 @@ pdf() {
 preview() {
     html
     # Run html command if files in target directories change.
+    # https://superuser.com/questions/181517/how-to-execute-a-command-whenever-a-file-changes
     inotifywait -e close_write,moved_to,create -m $IN_DIR -m $DATA_DIR |
     while read -r directory events filename; do
         case $filename in 
