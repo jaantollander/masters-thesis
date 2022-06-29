@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-IN_DIR=content
-OUT_DIR=build
-DATA_DIR=data
+IN_DIR=$PWD/content
+OUT_DIR=$PWD/build
+DATA_DIR=$PWD/data
+
+export TEXINPUTS="::$DATA_DIR"
 
 thesis_download_aaltostyle() {
     curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" --output "aaltothesis.cls"
