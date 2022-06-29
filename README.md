@@ -4,6 +4,7 @@ The `source.sh ` file contains script for using Pandoc to convert content into H
 - `pandoc`
 - `texlive`
 - `texlive-xetex`
+- `texlive-lang-european`
 - `inotify-tools`
 
 We can use the script by sourcing it.

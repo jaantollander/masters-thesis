@@ -180,3 +180,15 @@ $$s_{k,k^\prime}=s_{k^\prime}$$
 
 $$q_{k,k^\prime}=q_{k^\prime}$$
 
+---
+
+Metrics
+
+samples per time unit during the measuring interval
+
+$$n_{m(\tau),m(\tau^\prime)}/(\tau^\prime-\tau)$$
+
+sum of event per time unit
+
+$$s_{m(\tau),m(\tau^\prime)}/(\tau^\prime-\tau)$$
+
