@@ -69,6 +69,8 @@ thesis_tex() {
 thesis_preview() {
     THESIS_PREVIEW_CMD=$1
     : "${THESIS_PREVIEW_CMD:="thesis_html"}"
+
+    # Run initial command
     $THESIS_PREVIEW_CMD
 
     # Run "THESIS_PREVIEW_CMD" if files in target directories change.
@@ -80,5 +82,5 @@ thesis_preview() {
             *) ;;
         esac
     done
-    unset directory events filename
+    unset directory events filename THESIS_PREVIEW_CMD
 }
