@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-IN_DIR=$PWD/content
+CONTENT_DIR=$PWD/content
 OUT_DIR=$PWD/build
 ASSETS_DIR=$PWD/assets
 
@@ -19,7 +19,7 @@ thesis_download_citationstyle() {
 
 thesis_html() {
     mkdir -p "$OUT_DIR"
-    pandoc "$IN_DIR/"*".md"\
+    pandoc "$CONTENT_DIR/"*".md"\
         --citeproc \
         --standalone \
         --from "markdown+tex_math_dollars" \
@@ -29,13 +29,13 @@ thesis_html() {
         --metadata "pagetitle=Master's Thesis" \
         --metadata "date=$(date -I)" \
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
-        --bibliography "$ASSETS_DIR/bibliography.bib" \
+        --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl"
 }
 
 thesis_pdf() {
     mkdir -p "$OUT_DIR"
-    pandoc "$IN_DIR/"*".md" \
+    pandoc "$CONTENT_DIR/"*".md" \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
@@ -43,21 +43,21 @@ thesis_pdf() {
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
-        --bibliography "$ASSETS_DIR/bibliography.bib" \
+        --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --include-in-header "$ASSETS_DIR/header.tex"
 }
 
 thesis_tex() {
     mkdir -p "$OUT_DIR"
-    pandoc "$IN_DIR/"*".md" \
+    pandoc "$CONTENT_DIR/"*".md" \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
         --output "$OUT_DIR/index.tex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
-        --bibliography "$ASSETS_DIR/bibliography.bib" \
+        --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --include-in-header "$ASSETS_DIR/header.tex"
 }
@@ -69,7 +69,7 @@ thesis_preview() {
 
     # Run "THESIS_PREVIEW_CMD" if files in target directories change.
     # https://superuser.com/questions/181517/how-to-execute-a-command-whenever-a-file-changes
-    inotifywait -e close_write,moved_to,create -m "$IN_DIR" -m "$ASSETS_DIR" |
+    inotifywait -e close_write,moved_to,create -m "$CONTENT_DIR" -m "$ASSETS_DIR" |
     while read -r directory events filename; do
         case $filename in 
             *.md|*.bib) $THESIS_PREVIEW_CMD ;;
