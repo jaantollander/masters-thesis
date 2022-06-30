@@ -63,14 +63,16 @@ thesis_tex() {
 }
 
 thesis_preview() {
-    CMD="thesis_html"
-    $CMD
-    # Run html command if files in target directories change.
+    THESIS_PREVIEW_CMD=$1
+    : "${THESIS_PREVIEW_CMD:="thesis_html"}"
+    $THESIS_PREVIEW_CMD
+
+    # Run "THESIS_PREVIEW_CMD" if files in target directories change.
     # https://superuser.com/questions/181517/how-to-execute-a-command-whenever-a-file-changes
     inotifywait -e close_write,moved_to,create -m "$IN_DIR" -m "$ASSETS_DIR" |
     while read -r directory events filename; do
         case $filename in 
-            *.md|*.bib) $CMD ;;
+            *.md|*.bib) $THESIS_PREVIEW_CMD ;;
             *) ;;
         esac
     done
