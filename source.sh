@@ -5,6 +5,10 @@ ASSETS_DIR=$PWD/assets
 
 export TEXINPUTS="::$ASSETS_DIR"
 
+__mdfiles() {
+    find "$CONTENT_DIR" -name '*.md' | sort
+}
+
 thesis_download_aaltostyle() {
     curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" --output "$ASSETS_DIR/aaltothesis.cls"
     TMP="$(mktemp -d)"
@@ -19,7 +23,7 @@ thesis_download_citationstyle() {
 
 thesis_html() {
     mkdir -p "$OUT_DIR"
-    pandoc "$CONTENT_DIR/"*".md"\
+    pandoc $(__mdfiles) \
         --citeproc \
         --standalone \
         --from "markdown+tex_math_dollars" \
@@ -35,7 +39,7 @@ thesis_html() {
 
 thesis_pdf() {
     mkdir -p "$OUT_DIR"
-    pandoc "$CONTENT_DIR/"*".md" \
+    pandoc $(__mdfiles) \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
@@ -50,7 +54,7 @@ thesis_pdf() {
 
 thesis_tex() {
     mkdir -p "$OUT_DIR"
-    pandoc "$CONTENT_DIR/"*".md" \
+    pandoc $(__mdfiles) \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
