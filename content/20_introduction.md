@@ -1,3 +1,5 @@
+\newpage
+
 # Introduction
 In this thesis, we investigate causes of performance issues in a large parallel file system of a computer cluster.
 

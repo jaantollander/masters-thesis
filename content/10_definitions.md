@@ -1,3 +1,5 @@
+\newpage
+
 # Definitions
 - High-Performance Computing (HPC)
 - Computer Cluster

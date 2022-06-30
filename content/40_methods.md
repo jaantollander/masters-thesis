@@ -1,1 +1,3 @@
+\newpage
+
 # Methods
