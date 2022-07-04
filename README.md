@@ -11,7 +11,7 @@ The `source.sh ` file contains script for using Pandoc to convert content into H
 First, we need to source the build commands.
 
 ```bash
-source source.sh
+source build.sh
 ```
 
 Then, we can use them as follows. For PDF output
