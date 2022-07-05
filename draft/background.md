@@ -23,30 +23,37 @@ Turing machine has important properties such as universality, which means that a
 
 Modern computer systems are complex and contain many parts. Here are some general characteristics of hardware and software.
 
-hardware
+Hardware
 
-- General and special purpose *processors* which manipulate data by performing operations on them.
-- Various *memory* units for storing data, organized hierarchically from volatile, fast, small memory close to the processor to nonvolatile, slow, large memory far from the processor.
+- General and special purpose *processors* which manipulate data by performing operations on them. Modern processor employ multiple levels of parallelism to perform multiple operations simultaneously to increase throughput.
+
+- Various *memory* units for storing data. Modern computers employ multiple memory units ordered by their proximity to the processor to increase throughtput. They are organized hierarchically from fast, volatile, working memory close to the processor to slow, nonvolatile, storage memory far from the processor.
+
 - *Buses* for internal data transportation between processors and memory units.
+
 - *Input/Output* for interacting with the computer system.
 
-software
+Software
 
 - *Operating System* is a special program which is responsible for the communication between application programs and the hardware.
+
 - *Device Drivers* are programs that enable the operating system to communicate with external devices.
+
 - *Application Programs* are programs executed by the user
 
-Examples:
+Examples
 
-- parallel processing capabilities, many programs run at the same time
-- memory hierarchy, from volatile to nonvolatile, small, fast, volatile memory close to processor to large, slow, nonvolative memory far from processor
 - ALU, registers, Central Processing Unit (CPU)
 - Random Access Memory (RAM)
-- storage memory
 - specialized processors GPU
 - keyboard, mouse, display
+- Linux operating system
 
 ---
 
 Communication between computers and computer networks
+
+- connected computer is called a node or host
+- nodes are identified by unique addresses
+- topology of the network means the arrangement of nodes
 
