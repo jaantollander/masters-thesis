@@ -21,39 +21,52 @@ Turing machine has important properties such as universality, which means that a
 
 ---
 
-Modern computer systems are complex and contain many parts. Here are some general characteristics of hardware and software.
+Modern computer systems are complex and contain many parts.
 
-Hardware
+Characteristics of modern computer hardware.
 
 - General and special purpose *processors* which manipulate data by performing operations on them. Modern processor employ multiple levels of parallelism to perform multiple operations simultaneously to increase throughput.
 
 - Various *memory* units for storing data. Modern computers employ multiple memory units ordered by their proximity to the processor to increase throughtput. They are organized hierarchically from fast, volatile, working memory close to the processor to slow, nonvolatile, storage memory far from the processor.
 
-- *Buses* for internal data transportation between processors and memory units.
+- *Buses* for internal data transportation between hardware components.
 
 - *Input/Output* for interacting with the computer system.
-
-Software
-
-- *Operating System* is a special program which is responsible for the communication between application programs and the hardware.
-
-- *Device Drivers* are programs that enable the operating system to communicate with external devices.
-
-- *Application Programs* are programs executed by the user
 
 Examples
 
 - ALU, registers, Central Processing Unit (CPU)
 - Random Access Memory (RAM)
-- specialized processors GPU
+- specialized processors, Graphics Processing Unit (GPU)
 - keyboard, mouse, display
-- Linux operating system
+
+Characteristics of modern computer software.
+
+- *Operating System* is a special program which is responsible for the communication between application programs and the hardware.
+
+- *Device Drivers* are programs that enable the operating system to communicate with external devices.
+
+- *Application Programs* are programs executed by the user.
+
+Examples
+
+- Linux operating system, system vs user space
+- drivers, graphics
+- application programs: browser, terminal emulator, simulation program
 
 ---
 
-Communication between computers and computer networks
+We can increase the scale of a computer system by connecting multiple computers together to form a *computer network*.
 
-- connected computer is called a node or host
+- individual connected computer system is called a node or host
 - nodes are identified by unique addresses
-- topology of the network means the arrangement of nodes
+- topology of the network means the arrangement of nodes is a defining characteristic of computer network
+- communication between systems, direct communication vs communication protocol
+- tightly vs loosely coupled (connected) (centralized vs distributed, speed vs robustness)
+
+Examples
+
+- cloud computing, internet
+- grid computing
+- computer cluster
 
