@@ -56,7 +56,7 @@ Examples
 
 ---
 
-We can increase the scale of a computer system by connecting multiple computers together to form a *computer network*.
+We can increase the scale of a computer system by connecting multiple systems together to form a *computer network*.
 
 - individual connected computer system is called a node or host
 - nodes are identified by unique addresses
