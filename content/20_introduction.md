@@ -5,6 +5,7 @@
 - Problem description
 - Research objectives
 - Scope of the research
+- Length around 2 pages
 
 ---
 
