@@ -69,6 +69,8 @@ thesis_tex() {
 thesis_preview() {
     THESIS_PREVIEW_CMD=$1
     : "${THESIS_PREVIEW_CMD:="thesis_html"}"
+
+    # Run command initially before watching changes.
     $THESIS_PREVIEW_CMD
 
     # Run "THESIS_PREVIEW_CMD" if files in target directories change.
