@@ -28,24 +28,30 @@ We indicate variables using the syntax `<name>`.
 ```text
 obdfilter.<source>.job_stats=
 job_stats:
-- job_id: <job_id>
+- job_id: <job-information>
   snapshot_time: 1646385002
-  <operation>: <values>
+  <operation>: <statistics>
 ```
 
 ---
 
-The `<source>` field contains a value such as `scratch-MDT0000` or `scratch-OST0000` indicating the source of the data, that is, the MDT or OST.
+The `<source>` contains a value such as `scratch-MDT0000` or `scratch-OST0000` indicating the source of the data, that is, the MDT or OST.
 
-Below `job_stats` there are entries of statistic for each unique job has performed file system operations on the source.
+The `job_stats` contains entries for each unique job that has performed file system operations on the source.
 
-The `job_id` field is either formatted as login node job `<program>.<uid>` or compute node job `<job>:<uid>:<nodename>`.
+The `job_id` field contains job infromation in either of two formats.
+
+1) `<program>.<uid>` (login nodes)
+2) `<job>:<uid>:<nodename>` (puhti and compute nodes)
+
 However, some of these values are missing for some jobs.
 
-The `snapshot_time` is the Unix time epoch when the snapshot was taken.
+The value of `snapshot_time` contains a Unix time epoch when the snapshot was taken.
 We discard these values and use a timestamp of when we queried the data instead.
 
-The `<values>` of  each file system `<operation>` are formatted as a key-value pairs separated by commas and enclosed within curly brackets.
+Each file system operation contains the statistics of the individual
+file operations.
+They are formatted as a key-value pairs separated by commas and enclosed within curly brackets.
 
 ---
 
@@ -55,18 +61,20 @@ The `<values>` of  each file system `<operation>` are formatted as a key-value p
 
 ---
 
-The `samples` field indicates how many operations since the counter was started.
-The fields `min`, `max`, `sum` and `sumsq` are values of the counter with `<unit>` of either `bytes` or `usecs` (microseconds)
-The the values fields contain positive integers that increase monotonically until the counter is reset.
+The `samples` field counts how many operations the job has performed since the counter was started.
+The fields minimum (`min`), maximum (`max`), sum (`sum`) and sum of squares (`sumsq`) keep count of these aggregates values.
+The `unit` is either bytes (`bytes`) or microseconds (`usecs`).
+The the values fields contain nonnegative integers that increase monotonically until the counter is reset.
 
----
 
-Challences
-
+## Problems with jobstats
 Detecting counter resets from the data.
 Detecting when new jobs from the data (first appears on the output).
 
 Handing missing values, adding synthetic values.
+[Which values are missing? Why?]
+[How many missing values? Compute from sample data.]
+
 Due to a bug in Lustre 2.x, the `<job>` values are missing for MPI jobs.
 
 
