@@ -29,5 +29,4 @@ In many cases, the problem disappears before they have identified the actual cau
 With active monitoring, system administrator should be able to identify the causes and take action as the issues occur, not afterwards.
 It should also reduce the amount of manual work involved.
 
-[Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.]
-
+Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.

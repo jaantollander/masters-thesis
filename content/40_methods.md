@@ -2,13 +2,16 @@
 
 # Methods
 > - *Describe the research material and methodology*
-> - *How we conducted the research and which methods we used?*
 
-## Collecting file system metrics
+
+## Collecting file system metrics via Lustre jobstats
+Lustre documentation, section 12.2 [@lustredocs].
+
 Lustre keeps a counter of file system usage on each server.
 We can query the values from the counter by running the command below at regular intervals.
 
 ```
+lctl get_param mdt.*.jobstats
 lctl get_param obdfilter.*.jobstats
 ```
 
@@ -49,8 +52,7 @@ However, some of these values are missing for some jobs.
 The value of `snapshot_time` contains a Unix time epoch when the snapshot was taken.
 We discard these values and use a timestamp of when we queried the data instead.
 
-Each file system operation contains the statistics of the individual
-file operations.
+Each file system operation contains the statistics of the individual file operations.
 They are formatted as a key-value pairs separated by commas and enclosed within curly brackets.
 
 ---
@@ -63,53 +65,60 @@ They are formatted as a key-value pairs separated by commas and enclosed within 
 
 The `samples` field counts how many operations the job has performed since the counter was started.
 The fields minimum (`min`), maximum (`max`), sum (`sum`) and sum of squares (`sumsq`) keep count of these aggregates values.
+These fields contain a values that is a nonnegative integers that increases monotonically until the counter is reset.
 The `unit` is either bytes (`bytes`) or microseconds (`usecs`).
-The the values fields contain nonnegative integers that increase monotonically until the counter is reset.
 
 
-## Problems with jobstats
-Detecting counter resets from the data.
-Detecting when new jobs from the data (first appears on the output).
+## MDT operations
+We have the following operations for MDTs. We keep their `samples` values and omit the other counts.
 
-Handing missing values, adding synthetic values.
-[Which values are missing? Why?]
-[How many missing values? Compute from sample data.]
+- `open` : open file
+- `close` : close file
+- `mknod` : make inode
+- `link` : create link? hard or soft link?
+- `unlink` : remove link
+- `mkdir` : make directory
+- `rmdir` : remove directory
+- `rename` : rename file
+- `getattr` : get attribute
+- `setattr` : set attribute
+- `getxattr` : get extended attribute
+- `setxattr` : set extended attribute
+- `statfs` : get file system statistics
+- `sync` : writes buffered data in memory to disk
 
-Due to a bug in Lustre 2.x, the `<job>` values are missing for MPI jobs.
 
-
-## File system operations
-The data fields for each MDT are
-
-- `open`
-- `close`
-- `mknod`
-- `link`
-- `unlink`
-- `mkdir`
-- `rmdir`
-- `rename`
-- `getattr`
-- `setattr`
-- `getxattr`
-- `setxattr`
-- `statfs`
-- `sync`
-- `punch`
-
-The data fields for each OST are
+## OST operations
+We have the following operations for OSTs. We keep their `samples` values and omit the other counts.
 
 - `read`
 - `write`
-- `readbytes`
-- `writebytes`
-- `getattr`
 - `setattr`
 - `punch`
 - `sync`
 - `getinfo`
 - `setinfo`
 - `quotactl`
+
+Addtionally, we have two operations with bytes. We keep their `sum` counts.
+
+- `readbytes`
+- `writebytes`
+
+
+## Problems with jobstats
+The only way to detect a counter reset from the data is to observe if the value decreases.
+However, if the value of counter grows larger after reset than it was before
+reset, we cannot detect it.
+
+First data point from a new job is lost.
+Detecting new jobs from the data (first appears on the output).
+
+Handing missing values by adding synthetic values.
+[Which values are missing? Why?]
+[How many missing values? Compute from sample data.]
+
+Due to a bug in Lustre version 2.?, the `<job>` values are missing for MPI jobs.
 
 
 ## Building a data pipeline
