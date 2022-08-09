@@ -6,52 +6,62 @@
 
 ---
 
-## Collecting File System Metrics
+## Collecting file system metrics
 Lustre keeps a counter of file system usage on each server.
-We can query the values from the counter by running `lctl get_param obdfilter.*.jobstats` command at regular intervals.
+We can query the values from the counter by running the command below at regular intervals.
+
+```
+lctl get_param obdfilter.*.jobstats
+```
+
 The command fetches the values and prints them in a text format, which we can parse into a data structure.
 We furher process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
 Each data point has the same fields for values and thus we can represent it in a tuple.
 Multiple tuples form a table (aka relation), therefore, we can efficiently store the differences into a tabular format for storage and analysis.
 
 
-## Parsing the Raw Data
-The output from the command from each MDS and OSS is formatted as follows.
+## Jobstats output
+The output for all MDTs that belong to the same MDS or OSTs of an OSS are concatenated into single output.
+The raw output for each MDT and OST is formatted as below.
+We indicate variables using the syntax `<name>`.
 
-```
+---
+
+```text
 obdfilter.<source>.job_stats=
 job_stats:
 - job_id: <job_id>
   snapshot_time: 1646385002
-  <field>: <values>
-```
-
-The `<source>` value such as `scratch-MDT0000` or `scratch-OST0000`.
-
-The `<job_id>` field is either formatted as login node job `<program>.<uid>` or compute node job `<job>:<uid>:<nodename>`.
-
-The `snapshot_time` is the Unix time epoch when the snapshot was taken. We do not recored these.
-
-The `<field>` values are formatted as below
-
-```
-{ samples: 0, unit: bytes, min: 0, max: 0, sum: 0, sumsq: 0}
-```
-
-```
-{ samples: 0, unit: usecs, min: 0, max: 0, sum: 0, sumsq: 0}
+  <operation>: <values>
 ```
 
 ---
 
-Common fields
+The `<source>` field contains a value such as `scratch-MDT0000` or `scratch-OST0000` indicating the source of the data, that is, the MDT or OST.
 
-- `timestamp`
-- `job`
-- `uid`
-- `nodename`
-- `source` -- `obdfilter.scratch-OST0000.job_stats=`
+Below `job_stats` there are entries of statistic for jobs that are performing file system operations on the source.
 
+The `job_id` field is either formatted as login node job `<program>.<uid>` or compute node job `<job>:<uid>:<nodename>`.
+
+The `snapshot_time` is the Unix time epoch when the snapshot was taken.
+We discard these values and use the timestamp when we queried the data instead.
+
+The `<values>` of `<operation>` are formatted as below. 
+
+---
+
+```text
+{ samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
+```
+
+---
+
+The `samples` field indicates how many operations since the counter was started.
+The fields `min`, `max`, `sum` and `sumsq` are values of the counter with `<unit>` of either `bytes` or `usecs`
+The the values fields contain positive integers that increase monotonically until the counter is reset.
+
+
+## Operations
 The data fields for each MDT are
 
 - `open`
