@@ -1,10 +1,8 @@
 \newpage
 
 # Methods
-- Describe the research material and methodology
-- How we conducted the research and which methods we used
-
----
+> - *Describe the research material and methodology*
+> - *How we conducted the research and which methods we used?*
 
 ## Collecting file system metrics
 Lustre keeps a counter of file system usage on each server.
@@ -20,7 +18,7 @@ Each data point has the same fields for values and thus we can represent it in a
 Multiple tuples form a table (aka relation), therefore, we can efficiently store the differences into a tabular format for storage and analysis.
 
 
-## Jobstats output
+## Interpreting jobstats output
 The output for all MDTs that belong to the same MDS or OSTs of an OSS are concatenated into single output.
 The raw output for each MDT and OST is formatted as below.
 We indicate variables using the syntax `<name>`.
@@ -39,14 +37,15 @@ job_stats:
 
 The `<source>` field contains a value such as `scratch-MDT0000` or `scratch-OST0000` indicating the source of the data, that is, the MDT or OST.
 
-Below `job_stats` there are entries of statistic for jobs that are performing file system operations on the source.
+Below `job_stats` there are entries of statistic for each unique job has performed file system operations on the source.
 
 The `job_id` field is either formatted as login node job `<program>.<uid>` or compute node job `<job>:<uid>:<nodename>`.
+However, some of these values are missing for some jobs.
 
 The `snapshot_time` is the Unix time epoch when the snapshot was taken.
-We discard these values and use the timestamp when we queried the data instead.
+We discard these values and use a timestamp of when we queried the data instead.
 
-The `<values>` of `<operation>` are formatted as below. 
+The `<values>` of  each file system `<operation>` are formatted as a key-value pairs separated by commas and enclosed within curly brackets.
 
 ---
 
@@ -57,11 +56,21 @@ The `<values>` of `<operation>` are formatted as below.
 ---
 
 The `samples` field indicates how many operations since the counter was started.
-The fields `min`, `max`, `sum` and `sumsq` are values of the counter with `<unit>` of either `bytes` or `usecs`
+The fields `min`, `max`, `sum` and `sumsq` are values of the counter with `<unit>` of either `bytes` or `usecs` (microseconds)
 The the values fields contain positive integers that increase monotonically until the counter is reset.
 
+---
 
-## Operations
+Challences
+
+Detecting counter resets from the data.
+Detecting when new jobs from the data (first appears on the output).
+
+Handing missing values, adding synthetic values.
+Due to a bug in Lustre 2.x, the `<job>` values are missing for MPI jobs.
+
+
+## File system operations
 The data fields for each MDT are
 
 - `open`
@@ -95,7 +104,7 @@ The data fields for each OST are
 - `quotactl`
 
 
-## Data Pipeline
+## Building a data pipeline
 The data pipeline consists of a database, ingest program and monitoring program.
 
 We installed a monitoring program, which runs on the background as a daemon, querying the values every two minutes, parses them and computes the difference.
@@ -104,5 +113,5 @@ The differences are sent to database via HTTP.
 Ingest program listens to the requests from the monitoring program and stores them to a relational database.
 
 
-## Analyzing the Metrics
+## Analyzing the metrics
 

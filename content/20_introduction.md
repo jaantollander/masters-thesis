@@ -1,11 +1,11 @@
 \newpage
 
 # Introduction
-- Introduction to the research topic 
-- Problem description
-- Research objectives
-- Scope of the research
-- Length around 2 pages
+> - *Introduction to the research topic*
+> - *Problem description*
+> - *Research objectives*
+> - *Scope of the research*
+> - *Length around 2 pages*
 
 ---
 
