@@ -4,9 +4,12 @@
 > - *Describe the research material and methodology*
 
 
-## Collecting file system metrics via Lustre jobstats
-Lustre documentation, section 12.2 [@lustredocs].
+## Collecting file system metrics
+Lustre can collect usage statistics as explained in Lustre documentation, section 12.2 [@lustredocs].
+Jobstats can track specific Linux system calls, see section 2 on Linux man pages project [@linuxmanpages].
 
+
+## Querying Jobstats
 Lustre keeps a counter of file system usage on each server.
 We can query the values from the counter by running the command below at regular intervals.
 
@@ -69,41 +72,44 @@ These fields contain a values that is a nonnegative integers that increases mono
 The `unit` is either bytes (`bytes`) or microseconds (`usecs`).
 
 
-## MDT operations
-We have the following operations for MDTs. We keep their `samples` values and omit the other counts.
+## File operations and statistics
+Bolded monospace indicates a statistic (**`name`**) and monospace with brackets indicates a Linux system call (`name()`).
 
-- `open` : open file
-- `close` : close file
-- `mknod` : make inode
-- `link` : create link? hard or soft link?
-- `unlink` : remove link
-- `mkdir` : make directory
-- `rmdir` : remove directory
-- `rename` : rename file
-- `getattr` : get attribute
-- `setattr` : set attribute
-- `getxattr` : get extended attribute
-- `setxattr` : set extended attribute
-- `statfs` : get file system statistics
-- `sync` : writes buffered data in memory to disk
+[Does jobstats only count succesful file operations?]
 
+We have the following operations for MDTs.
+We keep their `samples` values and omit the other counts.
 
-## OST operations
+- **`open`** collects the statistics from `open()`.
+- **`close`** collects the statistics from `close()`.
+- **`mknod`** collects statistics from `mknod()`.
+- **`link`** collects statistics from `link()`.
+- **`unlink`** collect statistic from `unlink()`.
+- **`mkdir`** : make directory
+- **`rmdir`** : remove directory
+- **`rename`** : rename file
+- **`getattr`** : get attribute
+- **`setattr`** : set attribute
+- **`getxattr`** : get extended attribute
+- **`setxattr`** : set extended attribute
+- **`statfs`** : get file system statistics
+- **`sync`** : writes buffered data in memory to disk
+
 We have the following operations for OSTs. We keep their `samples` values and omit the other counts.
 
-- `read`
-- `write`
-- `setattr`
-- `punch`
-- `sync`
-- `getinfo`
-- `setinfo`
-- `quotactl`
+- **`read`** :
+- **`write`** :
+- **`setattr`** :
+- **`punch`** :
+- **`sync`** :
+- **`get_info`** :
+- **`set_info`** :
+- **`quotactl`** :
 
 Addtionally, we have two operations with bytes. We keep their `sum` counts.
 
-- `readbytes`
-- `writebytes`
+- **`read_bytes`** :
+- **`write_bytes`** :
 
 
 ## Problems with jobstats
