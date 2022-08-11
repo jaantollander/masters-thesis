@@ -18,7 +18,7 @@ thesis_download_aaltostyle() {
 }
 
 thesis_download_citationstyle() {
-    curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/acm-sig-proceedings-long-author-list.csl" --output "$ASSETS_DIR/citationstyle.csl"
+    curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/vancouver-brackets.csl" --output "$ASSETS_DIR/citationstyle.csl"
 }
 
 thesis_html() {
