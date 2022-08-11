@@ -77,6 +77,9 @@ Bolded monospace indicates a statistic (**`name`**) and monospace with brackets 
 
 [Does jobstats only count succesful file operations?]
 
+Job stats does not count cached operations.
+For example, there may be more close than open operations counted.
+
 We have the following operations for MDTs.
 We keep their `samples` values and omit the other counts.
 
@@ -112,13 +115,14 @@ Addtionally, we have two operations with bytes. We keep their `sum` counts.
 - **`write_bytes`** :
 
 
-## Problems with jobstats
+## Challences with jobstats
 The only way to detect a counter reset from the data is to observe if the value decreases.
 However, if the value of counter grows larger after reset than it was before
 reset, we cannot detect it.
 
 First data point from a new job is lost.
 Detecting new jobs from the data (first appears on the output).
+Cached operations are not logged.
 
 Handing missing values by adding synthetic values.
 [Which values are missing? Why?]
