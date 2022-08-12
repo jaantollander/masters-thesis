@@ -8,8 +8,7 @@
 ---
 
 ## Linux operating system
-The Linux operating system runs practically all high-performance computer clusters.
-[[Why?]]
+The Linux operating system runs most high-performance computer clusters [@osfam].
 
 The Linux kernel [@linuxkernel] is the core of the Linux operating system.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
