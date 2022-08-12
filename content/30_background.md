@@ -21,8 +21,6 @@ In this work, we will refer to the Linux kernel as the kernel.
 
 A Linux distribution comprises of some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager and a graphical user interface.
 
-At the time of writing, CSC Puhti is using the RedHat Enterprise Linux distribution version 7.? and was in transition to version 8.?.
-
 
 ## Lustre cluster storage system
 Lustre documentation [@lustredocs]
@@ -81,4 +79,27 @@ If the removed hard link is the last hard link to the file, the file is deleted 
 - `fallocate()`
 
 - `quotactl()`
+
+
+## Configuration on CSC Puhti
+At the time of writing, CSC Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution and is in transition to version 8.
+
+```
+$ cat /etc/redhat-release
+Red Hat Enterprise Linux Server release 7.9 (Maipo)
+```
+
+The Lustre version is 
+
+```
+$ lctl --version
+2.12.6_ddn72
+```
+
+The Slurm version is
+
+```
+$ sinfo --version
+slurm 21.08.7-1_issue_803
+```
 
