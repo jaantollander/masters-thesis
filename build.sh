@@ -37,6 +37,21 @@ thesis_html() {
         --csl "$ASSETS_DIR/citationstyle.csl"
 }
 
+thesis_epub() {
+    mkdir -p "$OUT_DIR"
+    pandoc $(__mdfiles) \
+        --citeproc \
+        --from "markdown+tex_math_dollars" \
+        --to "epub" \
+        --output "$OUT_DIR/index.epub" \
+        --mathml \
+        --metadata "title=Master's Thesis" \
+        --metadata "date=$(date -I)" \
+        --metadata-file "$ASSETS_DIR/metadata.yaml" \
+        --bibliography "$CONTENT_DIR/bibliography.bib" \
+        --csl "$ASSETS_DIR/citationstyle.csl"
+}
+
 thesis_pdf() {
     mkdir -p "$OUT_DIR"
     pandoc $(__mdfiles) \
