@@ -13,9 +13,7 @@
 ## Linux operating system
 At the time of writing, all high-performance computer clusters use the *Linux operating system* [@osfam].
 The *Linux kernel* [@linuxkernel] is the core of the Linux operating system.
-It derives from the original *UNIX operating system* and closely follows the *POSIX standard*.
-
-For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
+It derives from the original *UNIX operating system* and closely follows the *POSIX standard*. For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
 
 In this work, we will refer to the Linux kernel as the *kernel*.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
@@ -36,6 +34,15 @@ Linux systems have one special user, called the *super user* or *root user* whic
 The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance. [@tlpi: sections 2-3]
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
+
+
+## Client-Server architecture
+A *client-server application* is an application that is broken into two processes, a client and a server.
+The *client* requests a server to perform some service by sending a message.
+The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
+The client and server may reside in the same host computer or separate host computers connected by a network.
+They communicate with each other by some Interprocess Communication (IPC) mechanism.
+"Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi: section 2]
 
 
 ## Slurm job scheduling system
