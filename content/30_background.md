@@ -36,6 +36,33 @@ The super user is used by *system administrators* for administrative tasks such 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
 
+## File system interface
+The kernel provides an abstraction layer called *Virtual File System* (VFS), which defines a generic interface for file-system operations which individual file systems must implement.
+This allows programs to use different file systems in an uniform way by using the operation defined in the interface.
+The interface contains the file system specific system calls such as ...
+
+See *The Linux man-pages project* [@linuxmanpages: section 2].
+
+- `mknod()` system call which creates a new file, that is, a new node in the file system.
+- `open()` system call opens a file.
+It returns a file descriptor to the file.
+- `close()` system call which closes a file descriptor. Releases the resource from usage.
+- `link()` system call which creates a new hard link to an existing file. There can be multiple links to the same file.
+- `unlink()` which removes a hard link to a file.
+If the removed hard link is the last hard link to the file, the file is deleted and the space is made available for reuse.
+- `mkdir()`
+- `rmdir()`
+- `rename()`
+- `chown()`
+- `chmod()`
+- `stat()`
+- `sync()`
+- `read()`
+- `write()`
+- `fallocate()`
+- `quotactl()`
+
+
 ## Client-Server architecture
 A *client-server application* is an application that is broken into two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
@@ -51,53 +78,6 @@ The Slurm documentation states, "Slurm is an open source, fault-tolerant, and hi
 
 ## Lustre cluster storage system
 The Lustre documentation states, "The Lustre architecture is a storage architecture for clusters. The central component of the Lustre architecture is the Lustre file system, which is supported on the Linux operating system and provides a POSIX \*standard-compliant UNIX file system interface." [@lustredocs]
-
-
-## File system interface
-The file system forms a graph where the nodes are files that contain data.
-That data may contain references to other files forming vertices in the graph.
-Summary of Linux system calls for using the file system.
-See *The Linux man-pages project* [@linuxmanpages: section 2].
-
-```sh
-man 2 mknod
-```
-
----
-
-- `mknod()` system call which creates a new file, that is, a new node in the file system.
-
-- `open()` system call opens a file.
-It returns a file descriptor to the file.
-
-- `close()` system call which closes a file descriptor. Releases the resource from usage.
-
-- `link()` system call which creates a new hard link to an existing file. There can be multiple links to the same file.
-
-- `unlink()` which removes a hard link to a file.
-If the removed hard link is the last hard link to the file, the file is deleted and the space is made available for reuse.
-
-- `mkdir()`
-
-- `rmdir()`
-
-- `rename()`
-
-- `chown()`
-
-- `chmod()`
-
-- `stat()`
-
-- `sync()`
-
-- `read()`
-
-- `write()`
-
-- `fallocate()`
-
-- `quotactl()`
 
 
 ## Configuration on CSC Puhti
