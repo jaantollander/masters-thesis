@@ -83,7 +83,10 @@ thesis_tex() {
 
 thesis_preview() {
     THESIS_PREVIEW_CMD=$1
-    : "${THESIS_PREVIEW_CMD:="thesis_html"}"
+    case "$THESIS_PREVIEW_CMD" in
+        thesis_pdf|thesis_epub|thesis_html) ;;
+        *) exit 1 ;;
+    esac
 
     # Run command initially before watching changes.
     $THESIS_PREVIEW_CMD
@@ -98,4 +101,8 @@ thesis_preview() {
         esac
     done
     unset directory events filename
+}
+
+thesis_serve() {
+    julia serve.jl "$OUT_DIR"
 }
