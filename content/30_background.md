@@ -44,25 +44,25 @@ We explain the most important system calls below.
 For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages: section 2].
 We denote system calls using the syntax `systemcall()`.
 
-- `mknod()` creates a new file (node).
+- `mknod()` creates a new file.
 - `open()` opens a file.
 It returns a file descriptor to the file.
-It may also create a new file.
+It may also create a new file (via `mknod`) if it doesn't exists.
 - `close()` closes a file descriptor. Releases the resource from usage.
+- `read()` reads bytes from a file.
+- `write()` writes bytes to a file.
 - `link()` creates a new hard link to an existing file. There can be multiple links to the same file.
 - `unlink()` removes a hard link to a file.
 If the removed hard link is the last hard link to the file, the file is deleted, and the space is made available for reuse.
-- `mkdir()`
-- `rmdir()`
-- `rename()`
-- `chown()`
-- `chmod()`
-- `stat()`
-- `sync()`
-- `read()`
-- `write()`
-- `fallocate()`
-- `quotactl()`
+- `mkdir()` creates new directory.
+- `rmdir()` removes an empty directory.
+- `rename()` renames a file by moving it to new location.
+- `chown()` changes file ownership.
+- `chmod()` changed file permissions such as read, write, and execute permissions.
+- `stat()` return file information.
+- `sync()` commits file system caches to disk.
+- `fallocate()` with `FALLOC_FL_PUNCH_HOLE` flag "punch" a hole to a file.
+- `quotactl()` manipulates disk quotas.
 
 
 ## Client-Server architecture
