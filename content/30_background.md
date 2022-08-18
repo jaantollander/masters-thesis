@@ -7,7 +7,24 @@
 
 ---
 
-## Computer Clusters
+## High-performance computing
+*High-performance computing* (HPC)
+
+- who need and for what purpose?
+- how? high-performance computer cluster
+
+
+## High-performance computer cluster
+*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine, often refered to as a *supercomputer* [@computercluster].
+They are built from commercially available consumer hardware components.
+We refer to the individual computers in the system as *nodes*.
+Computer cluster is homogenous system, that is, each node performs the same task.
+Nodes are connected via high-speed, local area networks.
+
+Typically, a computer clusters is centrally managed by an organization such as a company or university.
+It relies on administators and software from the organization and various vendors to configure the machine, to install software, to orchestrate its services and to maintain it.
+The organization may offer access to the machine as a service with billing based on the usage of computers resources such as the amount of time, memory and processors requested.
+A cluster may also be built for internal use in the organization.
 
 
 ## Linux operating system
@@ -37,31 +54,33 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 
 
 ## File system interface
-The kernel provides an abstraction layer called *Virtual File System* (VFS), which defines a generic interface for file-system operations for concrete file systems.
-This allows programs to use different file systems in a uniform way with the operation defined in the interface.
+The kernel provides an abstraction layer called *Virtual File System* (VFS), which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
+This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
 We explain the most important system calls below.
 For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages: section 2].
 We denote system calls using the syntax `systemcall()`.
 
 - `mknod()` creates a new file.
-- `open()` opens a file.
-It returns a file descriptor to the file.
-It may also create a new file (via `mknod`) if it doesn't exists.
-- `close()` closes a file descriptor. Releases the resource from usage.
+- `open()` opens a file and returns a file descriptor.
+It may also create a new file by calling `mknod` if it doesn't exists.
+- `close()` closes a file descriptor which releases the resource from usage.
 - `read()` reads bytes from a file.
 - `write()` writes bytes to a file.
-- `link()` creates a new hard link to an existing file. There can be multiple links to the same file.
+- `link()` creates a new hard link to an existing file.
+There can be multiple links to the same file.
 - `unlink()` removes a hard link to a file.
-If the removed hard link is the last hard link to the file, the file is deleted, and the space is made available for reuse.
+If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
+- `symlink()` create a symbolic (soft) link to a file.
 - `mkdir()` creates new directory.
 - `rmdir()` removes an empty directory.
 - `rename()` renames a file by moving it to new location.
 - `chown()` changes file ownership.
 - `chmod()` changed file permissions such as read, write, and execute permissions.
 - `stat()` return file information.
+- `statfs()` returns file system information.
 - `sync()` commits file system caches to disk.
-- `fallocate()` with `FALLOC_FL_PUNCH_HOLE` flag "punch" a hole to a file.
+- `fallocate()` with `FALLOC_FL_PUNCH_HOLE` flag "punches" a hole to a file.
 - `quotactl()` manipulates disk quotas.
 
 
@@ -82,7 +101,7 @@ The Slurm documentation states, "Slurm is an open source, fault-tolerant, and hi
 The Lustre documentation states, "The Lustre architecture is a storage architecture for clusters. The central component of the Lustre architecture is the Lustre file system, which is supported on the Linux operating system and provides a POSIX \*standard-compliant UNIX file system interface." [@lustredocs]
 
 
-## Configuration on CSC Puhti
+## Example: CSC Puhti cluster
 At the time of writing, CSC Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution and is in transition to version 8.
 
 ```

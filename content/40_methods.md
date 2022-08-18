@@ -97,6 +97,8 @@ We keep their `samples` values and omit the other counts.
 - **`setxattr`** : set extended attribute
 - **`statfs`** : get file system statistics
 - **`sync`** : writes buffered data in memory to disk
+- `samedir_rename`
+- `crossdir_rename`
 
 We have the following operations for OSTs. We keep their `samples` values and omit the other counts.
 
