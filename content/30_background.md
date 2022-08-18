@@ -10,20 +10,25 @@
 ## High-performance computing
 *High-performance computing* (HPC)
 
-- who need and for what purpose?
-- how? high-performance computer cluster
+- who needs it, and for what purpose?
+- commercial and research applications
+- common application are simulation, machine-learning, solving computational models, data science
+- how? High-performance computer cluster
+
+[@definition-hpc]
 
 
 ## High-performance computer cluster
-*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine, often refered to as a *supercomputer* [@computercluster].
-They are built from commercially available consumer hardware components.
-We refer to the individual computers in the system as *nodes*.
-Computer cluster is homogenous system, that is, each node performs the same task.
+*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine, often referred to as a *supercomputer* [@definition-computercluster].
+Individual computers in the system are called *nodes*.
+A computer cluster is a homogenous system where each node performs the same task.
 Nodes are connected via high-speed, local area networks.
 
-Typically, a computer clusters is centrally managed by an organization such as a company or university.
-It relies on administators and software from the organization and various vendors to configure the machine, to install software, to orchestrate its services and to maintain it.
-The organization may offer access to the machine as a service with billing based on the usage of computers resources such as the amount of time, memory and processors requested.
+The components of a computer clusters consist of commercially available consumer hardware.
+
+Typically, a computer cluster is centrally managed by an organization such as a company or university.
+It relies on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate its services and maintain it.
+The organization may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, and processors requested.
 A cluster may also be built for internal use in the organization.
 
 
