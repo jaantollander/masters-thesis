@@ -8,18 +8,30 @@
 ---
 
 ## High-performance computing
-*High-performance computing* (HPC)
+*High-performance computing* (HPC) is a practice of aggregating large amount of computing resources to solve computationally intensive problems such as simulating complex systems and solving large computational models [@definition-hpc].
+HPC is also applied for data science and training machine learning models.
+Important commercial and research applications of HPC include 
 
-- who needs it, and for what purpose?
-- commercial and research applications
-- common application are simulation, machine-learning, solving computational models, data science
-- how? High-performance computer cluster
+* simulation of weather for weather forecasting, 
+* climate modeling, 
+* financial analytics, 
+* oil and gas exploration, 
+* fluid simulation for engineering, 
+* molecular dynamics and pharmaceutical design, 
+* and cosmological simulation. 
 
-[@definition-hpc]
+The main characteristics of HPC are
+
+- *parallel processing*, perform large amount of work simultaneously
+
+- *batch processing*, traditionally computation is performed in a batch (referred to as *job*) such that ... compared to interactive computing, will it move towards interactive in the future? real-time, continuous analytics, etc
+
+Typically, computer clusters are used for high-performance computing.
+Other types are grid and cloud HPC.
 
 
 ## High-performance computer cluster
-*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine, often referred to as a *supercomputer* [@definition-computercluster].
+*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine [@definition-computercluster].
 Individual computers in the system are called *nodes*.
 A computer cluster is a homogenous system where each node performs the same task.
 Nodes are connected via high-speed, local area networks.
@@ -53,7 +65,7 @@ In this work, we focus on the storage file system I/O.
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
 Linux systems have one special user, called the *super user* or *root user*, which has the privileges to access everything on the system.
-The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance. [@tlpi: sections 2-3]
+The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance. [@tlpi, secs. 2-3]
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
@@ -63,7 +75,7 @@ The kernel provides an abstraction layer called *Virtual File System* (VFS), whi
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
 We explain the most important system calls below.
-For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages: section 2].
+For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
 We denote system calls using the syntax `systemcall()`.
 
 - `mknod()` creates a new file.
@@ -95,7 +107,7 @@ The *client* requests a server to perform some service by sending a message.
 The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
 The client and server may reside in the same host computer or separate host computers connected by a network.
 They communicate with each other by some Interprocess Communication (IPC) mechanism.
-"Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi: section 2]
+"Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
 
 
 ## Slurm job scheduling system
@@ -107,6 +119,8 @@ The Lustre documentation states, "The Lustre architecture is a storage architect
 
 
 ## Example: CSC Puhti cluster
+As a part of ICT solutions for research and education, CSC offers HPC
+
 At the time of writing, CSC Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution and is in transition to version 8.
 
 ```
