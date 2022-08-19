@@ -8,26 +8,25 @@
 ---
 
 ## High-performance computing
-*High-performance computing* (HPC) is a practice of aggregating large amount of computing resources to solve computationally intensive problems such as simulating complex systems and solving large computational models [@definition-hpc].
+*High-performance computing* (HPC) is a practice of aggregating large amounts of computing resources to solve computationally intensive problems such as simulating complex systems and solving large computational models [@definition-hpc].
 HPC is also applied for data science and training machine learning models.
-Important commercial and research applications of HPC include 
+Below we list some examples of commercial and research applications of HPC.
 
-* simulation of weather for weather forecasting, 
-* climate modeling, 
-* financial analytics, 
-* oil and gas exploration, 
-* fluid simulation for engineering, 
-* molecular dynamics and pharmaceutical design, 
-* and cosmological simulation. 
+* Weather modeling for weather forecasting
+* Climate modeling for understanding climate change
+* Financial analytics for trading decisions
+* Data analysis for oil and gas exploration
+* Fluid simulation such as airflow for cars and airplanes
+* Molecular dynamics simulation for pharmaceutical design
+* Cosmological simulation for understanding galaxy creation
 
-The main characteristics of HPC are
+The main characteristic of HPC is utilizing *parallel processing* to perform a large amount of work simultaneously.
 
-- *parallel processing*, perform large amount of work simultaneously
+Typically, HPC systems run programs as *batch processes* called *jobs*.
+A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
+[The programmer must define the job's parameters and resource requirements before submitting it to a scheduler that decides when a job will run based on a policy set by the system administrators.]
 
-- *batch processing*, traditionally computation is performed in a batch (referred to as *job*) such that ... compared to interactive computing, will it move towards interactive in the future? real-time, continuous analytics, etc
-
-Typically, computer clusters are used for high-performance computing.
-Other types are grid and cloud HPC.
+Computer clusters are a common choice for high-performance computing.
 
 
 ## High-performance computer cluster
@@ -36,7 +35,7 @@ Individual computers in the system are called *nodes*.
 A computer cluster is a homogenous system where each node performs the same task.
 Nodes are connected via high-speed, local area networks.
 
-The components of a computer clusters consist of commercially available consumer hardware.
+The components of computer clusters consist of commercially available consumer hardware.
 
 Typically, a computer cluster is centrally managed by an organization such as a company or university.
 It relies on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate its services and maintain it.
