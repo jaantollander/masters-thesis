@@ -20,20 +20,20 @@ Below we list some examples of commercial and research applications of HPC.
 * Molecular dynamics simulation for pharmaceutical design
 * Cosmological simulation for understanding galaxy creation
 
-A defining characteristic of HPC is to utilize *parallelisation* to aggregate computing resources.
+A defining characteristic of HPC is to utilize *parallelization* to aggregate computing resources.
 HPC uses *parallel computing* to perform a large amount of processing simultaneously.
-Contemporary processors employ multiple levels of parallelism such as bit-level, intruction-level, data and task parallelism.
-HPC may also employ *parallel storage* to aggregate large amount of storage memory.
-Computer clusters are a common choice for HPC for the parallisation.
+Contemporary processors employ multiple levels of parallelism, such as bit-level, instruction-level, data, and task parallelism.
+HPC may also employ *parallel storage* to aggregate a large amount of storage memory.
+Computer clusters are a common choice for HPC for parallelization.
 
 
 ## Computer cluster
 *Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine [@definition-computercluster].
 Individual computers in the system are called *compute nodes*.
-They consist of processors and memory, and optionally *fast local storage*.
+They consist of processors, memory, and optionally *fast local storage*.
 A computer cluster is a homogenous system where each node performs the same task.
 Nodes are connected via high-speed, local area *networks*.
-Clusters also have *global storage* for storing data such as programs and results from computation.
+Clusters also have *global storage* for storing data such as programs and results from the computation.
 
 The components of computer clusters consist of commercially available consumer hardware.
 
@@ -114,22 +114,22 @@ The Lustre documentation states, "The Lustre architecture is a storage architect
 
 
 ## Batch Processing
-Many clusters use a *workload manager* run programs as *batch processes*.
+Many clusters use a *workload manager* to run programs as *batch processes*.
 A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
 Furthermore, batch processes on clusters must predefine their resource requirements.
 
 
 ## Slurm workload manager
 *Slurm* is a workload manager for Linux clusters.
-It is responsible for allocating access to the computing resouces for users to perform batch processes.
+It is responsible for allocating access to the computing resources for users to perform batch processes.
 These computing resources include nodes, processors-per-node, memory-per-node, and maximum duration.
-The access to the resources may be exclusive or nonexclusive depending on the configuration.
-We refer to such an resource allocation as a *job*.
-Individual job may contain multiple *job steps* that may execute sequentially or in parallel.
+The access to the resources may be exclusive or nonexclusive, depending on the configuration.
+We refer to such a resource allocation as a *job*.
+An individual job may contain multiple *job steps* that may execute sequentially or in parallel.
 Slurm provides a framework for starting, executing, and monitoring work on the allocated nodes.
-Slurm groups nodes into *partitions* which may be overlapping.
+Slurm groups nodes into *partitions*, which may be overlapping.
 It also maintains a queue of jobs waiting for resources to become available for them to be started.
-Slurm can also perform accounting of resouce usage.
+Slurm can also perform accounting for resource usage.
 [@slurmdocs]
 
 
