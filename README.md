@@ -1,4 +1,8 @@
 # Master's Thesis
+[![CC BY 4.0][cc-by-shield]][cc-by]
+
+[cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
+
 ## Requirements
 The `source.sh ` file contains script for using Pandoc to convert content into HTML or PDF.
 
@@ -11,7 +15,7 @@ The `source.sh ` file contains script for using Pandoc to convert content into H
 First, we need to source the build commands.
 
 ```bash
-source build.sh
+source env.sh
 ```
 
 Then, we can use them as follows. For PDF output
