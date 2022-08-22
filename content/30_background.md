@@ -26,11 +26,8 @@ Contemporary processors employ multiple levels of parallelism such as bit-level,
 HPC may also employ *parallel storage* to aggregate large amount of storage memory.
 Computer clusters are a common choice for HPC for the parallisation.
 
-Typically, HPC systems use a *workload manager* run programs as *batch processes* called *jobs* with preset resource requirements.
-A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
 
-
-## High-performance computer cluster
+## Computer cluster
 *Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine [@definition-computercluster].
 Individual computers in the system are called *compute nodes*.
 They consist of processors and memory, and optionally *fast local storage*.
@@ -103,7 +100,7 @@ If the removed hard link is the last hard link to the file, the file is deleted,
 - `quotactl()` manipulates disk quotas.
 
 
-## Client-Server architecture
+## Client-server architecture
 A *client-server application* is an application that is broken into two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
 The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
@@ -112,12 +109,28 @@ They communicate with each other by some Interprocess Communication (IPC) mechan
 "Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
 
 
-## Slurm workload manager
-The Slurm documentation states, "Slurm is an open source, fault-tolerant, and highly scalable cluster management and job scheduling system for large and small Linux clusters." [@slurmdocs]
-
-
 ## Lustre cluster storage system
 The Lustre documentation states, "The Lustre architecture is a storage architecture for clusters. The central component of the Lustre architecture is the Lustre file system, which is supported on the Linux operating system and provides a POSIX \*standard-compliant UNIX file system interface." [@lustredocs]
+
+
+## Batch Processing
+Many clusters use a *workload manager* run programs as *batch processes*.
+A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
+Furthermore, batch processes on clusters must predefine their resource requirements.
+
+
+## Slurm workload manager
+*Slurm* is a workload manager for Linux clusters.
+It is responsible for allocating access to the computing resouces for users to perform batch processes.
+These computing resources include nodes, processors-per-node, memory-per-node, and maximum duration.
+The access to the resources may be exclusive or nonexclusive depending on the configuration.
+We refer to such an resource allocation as a *job*.
+Individual job may contain multiple *job steps* that may execute sequentially or in parallel.
+Slurm provides a framework for starting, executing, and monitoring work on the allocated nodes.
+Slurm groups nodes into *partitions* which may be overlapping.
+It also maintains a queue of jobs waiting for resources to become available for them to be started.
+Slurm can also perform accounting of resouce usage.
+[@slurmdocs]
 
 
 ## Example: CSC Puhti cluster
