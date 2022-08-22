@@ -20,20 +20,23 @@ Below we list some examples of commercial and research applications of HPC.
 * Molecular dynamics simulation for pharmaceutical design
 * Cosmological simulation for understanding galaxy creation
 
-The main characteristic of HPC is utilizing *parallel processing* to perform a large amount of work simultaneously.
+A defining characteristic of HPC is to utilize *parallelisation* to aggregate computing resources.
+HPC uses *parallel computing* to perform a large amount of processing simultaneously.
+Contemporary processors employ multiple levels of parallelism such as bit-level, intruction-level, data and task parallelism.
+HPC may also employ *parallel storage* to aggregate large amount of storage memory.
+Computer clusters are a common choice for HPC for the parallisation.
 
-Typically, HPC systems run programs as *batch processes* called *jobs*.
+Typically, HPC systems use a *workload manager* run programs as *batch processes* called *jobs* with preset resource requirements.
 A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
-[The programmer must define the job's parameters and resource requirements before submitting it to a scheduler that decides when a job will run based on a policy set by the system administrators.]
-
-Computer clusters are a common choice for high-performance computing.
 
 
 ## High-performance computer cluster
 *Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine [@definition-computercluster].
-Individual computers in the system are called *nodes*.
+Individual computers in the system are called *compute nodes*.
+They consist of processors and memory, and optionally *fast local storage*.
 A computer cluster is a homogenous system where each node performs the same task.
-Nodes are connected via high-speed, local area networks.
+Nodes are connected via high-speed, local area *networks*.
+Clusters also have *global storage* for storing data such as programs and results from computation.
 
 The components of computer clusters consist of commercially available consumer hardware.
 
@@ -109,7 +112,7 @@ They communicate with each other by some Interprocess Communication (IPC) mechan
 "Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
 
 
-## Slurm job scheduling system
+## Slurm workload manager
 The Slurm documentation states, "Slurm is an open source, fault-tolerant, and highly scalable cluster management and job scheduling system for large and small Linux clusters." [@slurmdocs]
 
 
