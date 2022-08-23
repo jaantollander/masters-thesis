@@ -7,18 +7,20 @@ on:
 
 jobs:
   build-resume:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-22.04"
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: "actions/checkout@v2"
 
       - name: "Install dependencies"
         run: |
-          sudo apt install git pandoc texlive texlive-lang-european
+          sudo apt-get install --yes git docker
 
       - name: "Build document"
         run: |
           . ./env.sh
+          thesis_pandoc_docker_pull
+          thesis_pandoc_docker_alias
           thesis_pdf
           thesis_html
           thesis_epub
