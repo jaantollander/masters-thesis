@@ -8,7 +8,7 @@
 ---
 
 ## High-performance computing
-*High-performance computing* (HPC) is a practice of aggregating large amounts of computing resources to solve computationally intensive problems such as simulating complex systems and solving large computational models [@definition-hpc].
+*High-performance computing (HPC)* is a practice of aggregating large amounts of computing resources to solve computationally intensive problems such as simulating complex systems and solving large computational models [@definition-hpc].
 HPC is also applied for data science and training machine learning models.
 Below we list some examples of commercial and research applications of HPC.
 
@@ -70,7 +70,7 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 
 
 ## File system interface
-The kernel provides an abstraction layer called *Virtual File System* (VFS), which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
+The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
 We explain the most important system calls below.
@@ -110,7 +110,26 @@ They communicate with each other by some Interprocess Communication (IPC) mechan
 
 
 ## Lustre cluster storage system
-The Lustre documentation states, "The Lustre architecture is a storage architecture for clusters. The central component of the Lustre architecture is the Lustre file system, which is supported on the Linux operating system and provides a POSIX \*standard-compliant UNIX file system interface." [@lustredocs]
+Lustre provides storage archicture for Linux clusters [@lustredocs, secs. 1-2].
+The Lustre file system provides a POSIX standard-compliant file system interface.
+It aggregates storage such that all files are available under single file system hierarchy on the entire cluster.
+
+The Lustre file system is designed using the client-server archicture.
+*Lustre Clients* on a cluster are nodes running the Lustre client software and have the Lustre file system mounted.
+"The Lustre client software provides an interface between the Linux virtual file system and the Lustre servers."
+
+Lustre file system separates file metadata and data operations and handles them using dedicated servers.
+Each server is connected to a one or more storage units called targets.
+
+*Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
+
+*Metadata Servers (MDS)* makes metadata available to Lustre clients. The metadata, such as filenames, directories, permissions and file layout, is stored on *Metadata Targets (MDT)* which are storage units attached to an MDS.
+
+*Object Storage Servers (OSS)*
+
+*Object Storage Targets (OST)*
+
+*Lustre Networking (LNet)*
 
 
 ## Batch processing
