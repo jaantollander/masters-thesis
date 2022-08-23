@@ -113,7 +113,7 @@ They communicate with each other by some Interprocess Communication (IPC) mechan
 The Lustre documentation states, "The Lustre architecture is a storage architecture for clusters. The central component of the Lustre architecture is the Lustre file system, which is supported on the Linux operating system and provides a POSIX \*standard-compliant UNIX file system interface." [@lustredocs]
 
 
-## Batch Processing
+## Batch processing
 Many clusters use a *workload manager* to run programs as *batch processes*.
 A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
 Furthermore, batch processes on clusters must predefine their resource requirements.
