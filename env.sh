@@ -2,11 +2,20 @@
 CONTENT_DIR=$PWD/content
 OUT_DIR=$PWD/build
 ASSETS_DIR=$PWD/assets
+CONTAINER_PANDOC="pandoc/latex:2.19-alpine"
 
 export TEXINPUTS="::$ASSETS_DIR"
 
 __mdfiles() {
     find "$CONTENT_DIR" -name '*.md' | sort
+}
+
+thesis_pandoc_docker_pull() {
+    sudo docker pull "$CONTAINER_PANDOC"
+}
+
+thesis_pandoc_docker_alias() {
+    alias pandoc='sudo docker run --rm --volume "$(pwd):$(pwd)" --user $(id -u):$(id -g) "$CONTAINER_PANDOC"'
 }
 
 thesis_download_aaltostyle() {
