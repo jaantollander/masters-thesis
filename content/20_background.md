@@ -111,25 +111,27 @@ They communicate with each other by some Interprocess Communication (IPC) mechan
 
 ## Lustre cluster storage system
 Lustre provides storage architecture for Linux clusters [@lustredocs, secs. 1-2].
-The Lustre file system provides a POSIX standard-compliant file system interface.
-It aggregates storage such that all files are available under a single file system hierarchy on the entire cluster.
+The *Lustre file system* provides a POSIX standard-compliant file system interface.
+It aggregates storage such that all files are available on the entire cluster, not only on specific nodes.
 
 The Lustre file system is designed using the client-server architecture.
-*Lustre Clients* on a cluster are nodes running the Lustre client software and have the Lustre file system mounted.
-"The Lustre client software provides an interface between the Linux virtual file system and the Lustre servers."
+*Lustre Clients* on a computer cluster are compute nodes running the Lustre client software and have the Lustre file system mounted.
+The Lustre client software provides an interface between the Linux virtual file system and the Lustre servers.
+For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
 
 Lustre file system separates file metadata and data operations and handles them using dedicated servers.
 Each server is connected to one or more storage units called targets.
 
+*Metadata Servers (MDS)* provide access to file metadata and handle metadata operations for Lustre clients.
+The metadata, such as filenames, directories, permissions, and file layout, is stored on *Metadata Targets (MDT)*, which are storage units attached to an MDS.
+
+*Object Storage Servers (OSS)* provide access to and handle file data operations for Lustre clients.
+The file data is stored in one or more objects, each object on a separate *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
+
 *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
 
-*Metadata Servers (MDS)* make metadata available to Lustre clients. The metadata, such as filenames, directories, permissions, and file layout, is stored on *Metadata Targets (MDT)*, which are storage units attached to an MDS.
-
-*Object Storage Servers (OSS)*
-
-*Object Storage Targets (OST)*
-
-*Lustre Networking (LNet)*
+Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
+LNet supports many network types, including InfiniBand and IP networks, with simultaneous availability between them.
 
 
 ## Batch processing
