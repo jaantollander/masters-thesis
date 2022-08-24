@@ -13,12 +13,14 @@ jobs:
       - uses: "actions/checkout@v2"
 
       - name: "Install dependencies"
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           sudo apt-get update
-          sudo apt-get install --yes git gh texlive
+          sudo apt-get install --yes git curl texlive
           TMP="$(mktemp -d)"
-          gh release download "2.18" --repo "jgm/pandoc" --pattern "pandoc-2.18-1-amd64.deb"  --dir "$TMP"
-          apt-get install "$TMP/pandoc-2.18-1-amd64.deb"
+          curl --location https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-amd64.deb --output "$TMP/pandoc.deb"
+          apt-get install "$TMP/pandoc.deb"
           rm -r "$TMP"
 
       - name: "Build document"
