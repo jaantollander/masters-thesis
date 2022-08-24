@@ -54,7 +54,7 @@ It is responsible for tasks such as process scheduling, memory management, provi
 *System calls* enable user processes to request the kernel to perform certain actions for the process, such as file I/O, and provide separation between kernel space and user space.
 Library functions, such as functions in the C standard library, implement caller friendly layer on top of system calls for performing system operations.
 
-*Input/Output* (I/O) refers to the communication between a computer and the outside world, for example, a disk, display, or keyboard.
+*Input/Output (I/O)* refers to the communication between a computer and the outside world, for example, a disk, display, or keyboard.
 Linux implements a universal file I/O model, which means that it represents everything from data stored on disk to devices and processes as files.
 It uses the same system calls for performing I/O on all types of files.
 Consequently, the user can use the same file utilities to perform various tasks, such as reading and writing files or interacting with processes and devices.
@@ -176,5 +176,33 @@ The Slurm version is
 ```
 $ sinfo --version
 slurm 21.08.7-1_issue_803
+```
+
+
+## Example: File I/O with system calls
+Example of file I/O using system calls.
+Opens `input.txt` in read only mode, reads at most 30 bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
+Note that these examples do not do any error handling.
+
+```c
+#include<fcntl.h>
+#include<sys/types.h>
+#include<unistd.h>
+#include<sys/stat.h>
+
+int main()
+{
+    int n;  // number of bytes read
+    int fd1, fd2;  // file descriptors
+    char buffer[31];  // reserve memory for reading bytes
+
+    fd1 = open("input.txt", O_RDONLY);
+    n = read(fd1, buffer, 30);
+    close(fd1);
+
+    fd2 = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
+    write(fd2, buffer, n);
+    close(fd2);
+}
 ```
 
