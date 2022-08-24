@@ -44,7 +44,8 @@ thesis_html() {
         --metadata "date=$(date -I)" \
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
-        --csl "$ASSETS_DIR/citationstyle.csl"
+        --csl "$ASSETS_DIR/citationstyle.csl" \
+        --number-sections
 }
 
 thesis_epub() {
@@ -60,7 +61,8 @@ thesis_epub() {
         --metadata "date=$(date -I)" \
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
-        --csl "$ASSETS_DIR/citationstyle.csl"
+        --csl "$ASSETS_DIR/citationstyle.csl" \
+        --number-sections
 }
 
 thesis_pdf() {
@@ -76,7 +78,8 @@ thesis_pdf() {
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --include-in-header "$CONTENT_DIR/header.tex" \
-        --include-before-body "$CONTENT_DIR/body.tex"
+        --include-before-body "$CONTENT_DIR/body.tex" \
+        --number-sections
 }
 
 thesis_tex() {
@@ -91,7 +94,8 @@ thesis_tex() {
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --include-in-header "$CONTENT_DIR/header.tex" \
-        --include-before-body "$CONTENT_DIR/body.tex"
+        --include-before-body "$CONTENT_DIR/body.tex" \
+        --number-sections
 }
 
 thesis_preview() {
@@ -109,7 +113,7 @@ thesis_preview() {
     inotifywait -e close_write,moved_to,create -m "$CONTENT_DIR" |
     while read -r directory events filename; do
         case $filename in 
-            *.md|*.bib) $THESIS_PREVIEW_CMD ;;
+            *.md|*.bib|*.tex) $THESIS_PREVIEW_CMD ;;
             *) ;;
         esac
     done
