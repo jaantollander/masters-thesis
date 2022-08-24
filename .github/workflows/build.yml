@@ -14,13 +14,16 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          sudo apt-get install --yes git docker
+          sudo apt-get update
+          sudo apt-get install --yes git gh texlive
+          TMP="$(mktemp -d)"
+          gh release download "2.18" --repo "jgm/pandoc" --pattern "pandoc-2.18-1-amd64.deb"  --dir "$TMP"
+          apt-get install "$TMP/pandoc-2.18-1-amd64.deb"
+          rm -r "$TMP"
 
       - name: "Build document"
         run: |
           . ./env.sh
-          thesis_pandoc_docker_pull
-          thesis_pandoc_docker_alias
           thesis_pdf
           thesis_html
           thesis_epub
