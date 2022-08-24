@@ -1,7 +1,7 @@
 \newpage
 
 # Methods
-> - *Describe the research material and methodology*
+- *Describe the research material and methodology*
 
 
 ## Collecting file system metrics
