@@ -35,6 +35,7 @@ thesis_html() {
     pandoc $(__mdfiles) \
         --citeproc \
         --standalone \
+        --toc \
         --from "markdown+tex_math_dollars" \
         --to "html" \
         --output "$OUT_DIR/index.html" \
@@ -50,6 +51,7 @@ thesis_epub() {
     mkdir -p "$OUT_DIR"
     pandoc $(__mdfiles) \
         --citeproc \
+        --toc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
         --output "$OUT_DIR/index.epub" \
@@ -73,7 +75,8 @@ thesis_pdf() {
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
-        --include-in-header "$ASSETS_DIR/header.tex"
+        --include-in-header "$CONTENT_DIR/header.tex" \
+        --include-before-body "$CONTENT_DIR/body.tex"
 }
 
 thesis_tex() {
@@ -87,7 +90,8 @@ thesis_tex() {
         --metadata-file "$ASSETS_DIR/metadata.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
-        --include-in-header "$ASSETS_DIR/header.tex"
+        --include-in-header "$CONTENT_DIR/header.tex" \
+        --include-before-body "$CONTENT_DIR/body.tex"
 }
 
 thesis_preview() {
