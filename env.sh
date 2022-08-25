@@ -2,6 +2,7 @@
 CONTENT_DIR=$PWD/content
 OUT_DIR=$PWD/build
 ASSETS_DIR=$PWD/assets
+METADATA_DIR=$PWD/metadata
 CONTAINER_PANDOC="pandoc/latex:2.19-alpine"
 
 export TEXINPUTS="::$ASSETS_DIR"
@@ -35,16 +36,15 @@ thesis_html() {
     pandoc $(__mdfiles) \
         --citeproc \
         --standalone \
-        --toc \
         --from "markdown+tex_math_dollars" \
         --to "html" \
         --output "$OUT_DIR/index.html" \
         --mathjax \
-        --metadata "pagetitle=Master's Thesis" \
         --metadata "date=$(date -I)" \
-        --metadata-file "$ASSETS_DIR/metadata.yaml" \
+        --metadata-file "$METADATA_DIR/html.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
+        --toc \
         --number-sections
 }
 
@@ -52,16 +52,15 @@ thesis_epub() {
     mkdir -p "$OUT_DIR"
     pandoc $(__mdfiles) \
         --citeproc \
-        --toc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
         --output "$OUT_DIR/index.epub" \
         --mathml \
-        --metadata "title=Master's Thesis" \
         --metadata "date=$(date -I)" \
-        --metadata-file "$ASSETS_DIR/metadata.yaml" \
+        --metadata-file "$METADATA_DIR/epub.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
+        --toc \
         --number-sections
 }
 
@@ -74,7 +73,7 @@ thesis_pdf() {
         --output "$OUT_DIR/index.pdf" \
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
-        --metadata-file "$ASSETS_DIR/metadata.yaml" \
+        --metadata-file "$METADATA_DIR/tex.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --include-in-header "$CONTENT_DIR/header.tex" \
@@ -90,7 +89,7 @@ thesis_tex() {
         --to "latex" \
         --output "$OUT_DIR/index.tex" \
         --metadata "date=$(date -I)" \
-        --metadata-file "$ASSETS_DIR/metadata.yaml" \
+        --metadata-file "$METADATA_DIR/tex.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --include-in-header "$CONTENT_DIR/header.tex" \
@@ -110,10 +109,10 @@ thesis_preview() {
 
     # Run "THESIS_PREVIEW_CMD" if files in target directories change.
     # https://superuser.com/questions/181517/how-to-execute-a-command-whenever-a-file-changes
-    inotifywait -e close_write,moved_to,create -m "$CONTENT_DIR" |
+    inotifywait -e close_write,moved_to,create -m "$CONTENT_DIR" -m "$METADATA_DIR" |
     while read -r directory events filename; do
         case $filename in 
-            *.md|*.bib|*.tex) $THESIS_PREVIEW_CMD ;;
+            *.md|*.bib|*.tex|*.yaml) $THESIS_PREVIEW_CMD ;;
             *) ;;
         esac
     done
