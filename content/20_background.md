@@ -100,6 +100,39 @@ If the removed hard link is the last hard link to the file, the file is deleted,
 - `quotactl()` manipulates disk quotas.
 
 
+## Example: File I/O with system calls
+An example, written in the C programming language, demonstrating `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
+The example program opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
+Note that this example does not do any error handling that should be done in a proper program.
+
+---
+
+```c
+#include<fcntl.h>
+#include<sys/types.h>
+#include<unistd.h>
+#include<sys/stat.h>
+
+int main()
+{
+    int n;  // number of bytes read
+    int fd1, fd2;  // file descriptors
+    const int size = 4096;  // buffer size
+    char buffer[size];  // reserve memory for reading bytes
+    // Read input file
+    fd1 = open("input.txt", O_RDONLY);
+    n = read(fd1, buffer, size);
+    close(fd1);
+    // Write output file
+    fd2 = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
+    write(fd2, buffer, n);
+    close(fd2);
+}
+```
+
+---
+
+
 ## Client-server architecture
 A *client-server application* is an application that is broken into two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
@@ -179,30 +212,33 @@ slurm 21.08.7-1_issue_803
 ```
 
 
-## Example: File I/O with system calls
-Example of file I/O using system calls.
-Opens `input.txt` in read only mode, reads at most 30 bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
-Note that these examples do not do any error handling.
+## Example: Slurm job on Puhti
+Script
 
-```c
-#include<fcntl.h>
-#include<sys/types.h>
-#include<unistd.h>
-#include<sys/stat.h>
+---
 
-int main()
-{
-    int n;  // number of bytes read
-    int fd1, fd2;  // file descriptors
-    char buffer[31];  // reserve memory for reading bytes
+```sh
+#!/usr/bin/env bash
+#SBATCH --job-name=<job-name>
+#SBATCH --account=<project>
+#SBATCH --partition=large
+#SBATCH --time=02:00:00
+#SBATCH --nodes=2
+#SBATCH --tasks-per-node=2
+#SBATCH --cpus-per-task=20
+#SBATCH --mem-per-cpu=1G
 
-    fd1 = open("input.txt", O_RDONLY);
-    n = read(fd1, buffer, 30);
-    close(fd1);
+# 1. job step
+srun <program-1>
 
-    fd2 = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
-    write(fd2, buffer, n);
-    close(fd2);
-}
+# 2. job step
+srun --nodes 1 --ntasks 2 <program-2> &
+
+# 3. job step
+srun --nodes 1 --ntasks 2 <program-3> &
+
+wait
 ```
+
+---
 
