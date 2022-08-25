@@ -77,27 +77,62 @@ We explain the most important system calls below.
 For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
 We denote system calls using the syntax `systemcall()`.
 
-- `mknod()` creates a new file.
-- `open()` opens a file and returns a file descriptor.
+`mknod()`
+: creates a new file.
+
+`open()`
+: opens a file and returns a file descriptor.
 It may also create a new file by calling `mknod` if it doesn't exists.
-- `close()` closes a file descriptor which releases the resource from usage.
-- `read()` reads bytes from a file.
-- `write()` writes bytes to a file.
-- `link()` creates a new hard link to an existing file.
+
+`close()`
+: closes a file descriptor which releases the resource from usage.
+
+`read()`
+: reads bytes from a file.
+
+`write()`
+: writes bytes to a file.
+
+`link()`
+: creates a new hard link to an existing file.
 There can be multiple links to the same file.
-- `unlink()` removes a hard link to a file.
+
+`unlink()`
+: removes a hard link to a file.
 If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
-- `symlink()` create a symbolic (soft) link to a file.
-- `mkdir()` creates new directory.
-- `rmdir()` removes an empty directory.
-- `rename()` renames a file by moving it to new location.
-- `chown()` changes file ownership.
-- `chmod()` changed file permissions such as read, write, and execute permissions.
-- `stat()` return file information.
-- `statfs()` returns file system information.
-- `sync()` commits file system caches to disk.
-- `fallocate()` with `FALLOC_FL_PUNCH_HOLE` flag "punches" a hole to a file.
-- `quotactl()` manipulates disk quotas.
+
+`symlink()`
+: create a symbolic (soft) link to a file.
+
+`mkdir()`
+: creates new directory.
+
+`rmdir()`
+: removes an empty directory.
+
+`rename()`
+: renames a file by moving it to new location.
+
+`chown()`
+: changes file ownership.
+
+`chmod()`
+: changed file permissions such as read, write, and execute permissions.
+
+`stat()`
+: return file information.
+
+`statfs()`
+: returns file system information.
+
+`sync()`
+: commits file system caches to disk.
+
+`fallocate()`
+: manipulates file space.
+
+`quotactl()`
+: manipulates disk quotas.
 
 
 ## Example: File I/O with system calls
@@ -127,6 +162,31 @@ int main()
     fd2 = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
     write(fd2, buffer, n);
     close(fd2);
+}
+```
+
+---
+
+The following example writes `hello hole world` to a `output.txt` file.
+It then deallocate bytes from 5 to 10 such that the file keeps its original size using `fallocate` with mode `FALLOC_FL_PUNCH_HOLE` and `FALLOC_FL_KEEP_HOLE`.
+This operation is refered to as *punching* a hole to file.
+
+---
+
+```c
+#define _GNU_SOURCE
+#include<fcntl.h>
+#include<sys/types.h>
+#include<unistd.h>
+#include<sys/stat.h>
+
+int main()
+{
+    int fd;  // file descriptor
+    fd = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
+    write(fd, "hello hole world", 16);
+    fallocate(fd, FALLOC_FL_PUNCH_HOLE|FALLOC_FL_KEEP_SIZE, 5, 5);
+    close(fd);
 }
 ```
 
@@ -213,7 +273,9 @@ slurm 21.08.7-1_issue_803
 
 
 ## Example: Slurm job on Puhti
-Script
+We can submit job to Slurm by writing a shell script.
+We can specify the options to `sbatch` command as comments.
+We specify job steps within the script using `srun` command.
 
 ---
 
@@ -230,13 +292,11 @@ Script
 
 # 1. job step
 srun <program-1>
-
 # 2. job step
 srun --nodes 1 --ntasks 2 <program-2> &
-
 # 3. job step
 srun --nodes 1 --ntasks 2 <program-3> &
-
+# Wait for job 2. and 3. to complete
 wait
 ```
 
