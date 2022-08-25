@@ -122,3 +122,16 @@ thesis_preview() {
 thesis_serve() {
     julia serve.jl "$OUT_DIR"
 }
+
+thesis_build() {
+    thesis_pdf
+    thesis_epub
+    thesis_html
+    mv "$BUILD_DIR"/* .
+    git checkout --orphan "build"
+    git rm -rf .
+    git add .
+    git commit -m "build"
+    git push origin "build" -f
+    git checkout "master"
+}
