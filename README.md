@@ -4,6 +4,15 @@
 [cc-by]: http://creativecommons.org/licenses/by/4.0/
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
 
+
+## Documents
+Download links for documents.
+
+- [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/index.pdf)
+- [**EPUB**](https://github.com/jaantollander/masters-thesis/blob/build/index.epub)
+- [**Standalone HTML**](https://github.com/jaantollander/masters-thesis/blob/build/index.html)
+
+
 ## Requirements
 The `env.sh ` file contains script for using Pandoc to convert content into HTML or PDF.
 
@@ -11,6 +20,7 @@ The `env.sh ` file contains script for using Pandoc to convert content into HTML
 - `texlive`
 - `texlive-lang-european`
 - `inotify-tools` for live preview
+
 
 ## Usage
 First, we need to source the build commands.
