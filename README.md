@@ -6,7 +6,7 @@
 
 
 ## Documents
-Download links for documents.
+Download links for documents from the `build` branch.
 
 - [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/index.pdf)
 - [**EPUB**](https://github.com/jaantollander/masters-thesis/blob/build/index.epub)
