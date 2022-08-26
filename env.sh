@@ -126,7 +126,7 @@ thesis_serve() {
 thesis_build() {
     git stash -u && \
     git checkout  --orphan "build" && \
-    thesis_pdf && thesis_epub && thesis_html && mv "$BUILD_DIR"/* . && \
+    thesis_pdf && thesis_epub && thesis_html && mv "$OUT_DIR"/* . && \
     git rm -rf . && \
     git add . && \
     git commit -m "build" && \
