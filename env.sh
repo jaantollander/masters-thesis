@@ -124,14 +124,14 @@ thesis_serve() {
 }
 
 thesis_build() {
-    thesis_pdf
-    thesis_epub
-    thesis_html
-    mv "$BUILD_DIR"/* .
-    git checkout --orphan "build"
-    git rm -rf .
-    git add .
-    git commit -m "build"
-    git push origin "build" -f
-    git checkout "master"
+    git stash -u && \
+    git checkout  --orphan "build" && \
+    thesis_pdf && thesis_epub && thesis_html && mv "$BUILD_DIR"/* . && \
+    git rm -rf . && \
+    git add . && \
+    git commit -m "build" && \
+    git push "origin" "build" --force && \
+    git checkout "master" && \
+    git branch -D "build" && \
+    git stash pop
 }
