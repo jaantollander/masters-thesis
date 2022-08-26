@@ -247,10 +247,8 @@ Slurm can also perform accounting for resource usage.
 [@slurmdocs]
 
 
-## Example: CSC Puhti cluster
-As a part of ICT solutions for research and education, CSC offers HPC
-
-At the time of writing, CSC Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution and is in transition to version 8.
+## Example: Puhti cluster
+At the time of writing, Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution.
 
 ```
 $ cat /etc/redhat-release
@@ -273,9 +271,9 @@ slurm 21.08.7-1_issue_803
 
 
 ## Example: Slurm job on Puhti
-We can submit job to Slurm by writing a shell script.
-We can specify the options to `sbatch` command as comments.
-We specify job steps within the script using `srun` command.
+We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
+We can specify the options as command line arguments as we invoke the command or in the script as comments.
+The script specifies job steps using the `srun` command.
 
 ---
 
@@ -289,7 +287,7 @@ We specify job steps within the script using `srun` command.
 #SBATCH --tasks-per-node=2
 #SBATCH --cpus-per-task=20
 #SBATCH --mem-per-cpu=1G
-
+#
 # 1. job step
 srun <program-1>
 # 2. job step
@@ -301,4 +299,10 @@ wait
 ```
 
 ---
+
+In the above example, the first program will run on the first job step utilizing all given nodes, tasks, and cpus and the majority of the given time.
+The program is some large parallel program such as a large, well parallelizing simulation.
+
+The second and third programs job steps will run in parallel after the first step, both utilizing all tasks and cpus from a single node.
+These programs could be, for example, programs for post processing steps, for example, processing and backing up the simulation results.
 

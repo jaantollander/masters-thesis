@@ -83,38 +83,88 @@ For example, there may be more close than open operations counted.
 We have the following operations for MDTs.
 We keep their `samples` values and omit the other counts.
 
-- **`open`** collects the statistics from `open()`.
-- **`close`** collects the statistics from `close()`.
-- **`mknod`** collects statistics from `mknod()`.
-- **`link`** collects statistics from `link()`.
-- **`unlink`** collect statistic from `unlink()`.
-- **`mkdir`** : make directory
-- **`rmdir`** : remove directory
-- **`rename`** : rename file
-- **`getattr`** : get attribute
-- **`setattr`** : set attribute
-- **`getxattr`** : get extended attribute
-- **`setxattr`** : set extended attribute
-- **`statfs`** : get file system statistics
-- **`sync`** : writes buffered data in memory to disk
-- `samedir_rename`
-- `crossdir_rename`
+`open`
+: collects the statistics from `open()`.
+
+`close`
+: collects the statistics from `close()`.
+
+`mknod`
+: collects statistics from `mknod()`.
+
+`link`
+: collects statistics from `link()`.
+
+`unlink`
+: collect statistic from `unlink()`.
+
+`mkdir`
+: make directory
+
+`rmdir`
+: remove directory
+
+`rename`
+: rename file
+
+`getattr`
+:  get attribute
+
+`setattr`
+:  set attribute
+
+`getxattr`
+:  get extended attribute
+
+`setxattr`
+:  set extended attribute
+
+`statfs`
+:  get file system statistics
+
+`sync`
+:  writes buffered data in memory to disk
+
+`samedir_rename`
+: todo
+
+`crossdir_rename`
+: todo
 
 We have the following operations for OSTs. We keep their `samples` values and omit the other counts.
 
-- **`read`** :
-- **`write`** :
-- **`setattr`** :
-- **`punch`** :
-- **`sync`** :
-- **`get_info`** :
-- **`set_info`** :
-- **`quotactl`** :
+`read`
+: todo
+
+`write`
+: todo
+
+`setattr`
+: todo
+
+`punch`
+: todo
+
+`sync`
+: todo
+
+`get_info`
+: todo
+
+`set_info`
+: todo
+
+`quotactl`
+: todo
+
 
 Addtionally, we have two operations with bytes. We keep their `sum` counts.
 
-- **`read_bytes`** :
-- **`write_bytes`** :
+`read_bytes`
+: todo
+
+`write_bytes`
+: todo
 
 
 ## Challences with jobstats

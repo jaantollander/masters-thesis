@@ -12,7 +12,8 @@
 In this thesis, we investigate performance issues in a parallel file system of a computer cluster.
 Notably, we examine issues related to file system usage of jobs, a term we use for the instances of programs run by users.
 Due to the shared nature of the file system, performance issues can cause noticeable slow-down across the whole cluster, harming all users.
-Specifically, we will explore these issues in the *CSC Puhti* [@cscpuhti], a computer cluster that runs lots of heterogenous, small to medium scale jobs from a large number of users.
+
+*CSC - IT Center for Science* in Finland has two high-performance computer clusters, *Puhti* and *Mahti* [@csccomputing]. Specifically, we will explore these issues in *Puhti*, a computer cluster that runs lots of heterogenous, small to medium scale jobs from a large number of users.
 
 Currently, there's only system-level load monitoring from processor usage and job information from job scheduler without any metrics from the file system usage.
 However, load monitoring can only tell us if problems are occuring, but not identify their causes.
