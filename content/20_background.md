@@ -257,32 +257,23 @@ Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory
 Some of the nodes have *fast local storage*, that is, a local Solid State Disk (SSD), to support I/O intensive processes.
 Compute nodes are divided into *node types* with different amounts of nodes, memory and fast local storage as below.
 
-**M** type
-: has 484 nodes and 192 GiB of memory.
+Node type | Node Count | Memory | Local storage
+-|-|-|-
+M | 484 | 192 GiB
+M-IO | 48 | 192 GiB | 1490 GiB
+L | 92 | 384 GiB
+L-IO | 40 | 384 GiB | 3600 GiB
+XL | 12 | 768 GiB | 3600 GiB
+BM-IO | 6 | 1.5 TiB | 1490 GiB
+GPU | 80 | 384 GiB | 3600 GiB
 
-**M-IO** type
-: has 48 nodes, 192 GiB of memory, and 1490 GiB of fast local storage.
+: Node types on Puhti
 
-**L** type
-: has 92 nodes and 384 GiB of memory.
-
-**L-IO** type
-: has 40 nodes, 384 GiB of memory, and 3600 GiB of fast local storage.
-
-**XL** type
-: has 12 nodes, 768 GiB of memory, and 1490 GiB of fast local storage.
-
-**BM-IO** type
-: has 6 nodes, 1.5 TiB of memory, and 1490 GiB of fast local storage.
-
-**GPU** type
-: has 80 nodes, 384 GiB of memory, and 3600 GiB of fast local storage.
-
-The nodes are connected using *Mellanox HDR InfiniBand*.
+The nodes are connected using *Mellanox HDR InfiniBand* (100 Gbps HDR100) with fat-tree network topology.
 
 ---
 
-At the time of writing, Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution.
+As the operating system, Puhti uses the *RedHat Enterprise Linux Server 7.9* distribution.
 
 ```
 $ cat /etc/redhat-release
@@ -293,6 +284,7 @@ Red Hat Enterprise Linux Server release 7.9 (Maipo)
 
 The global storage on Puhti consist of Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server.
 The file system is shared across *home*, *project*, and *scratch* storage areas.
+The total storage capacity of the file system is 4.8 PBs.
 
 ```
 $ lctl --version
@@ -301,7 +293,19 @@ $ lctl --version
 
 ---
 
-Slurm partitions with different resources limits ...
+partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit | local storage limit
+-|-|-|-|-|-|-
+test | 15 minutes | 80 | 2 | M | 190 GiB
+interactive | 7 days | 8 | 1 | IO | 76 GiB | 720 GiB
+small | 3 days |  40 | 1 | M, L, IO | 382 GiB | 3600 GiB
+large | 3 days | 1040 | 26 | M, L, IO | 382 GiB | 3600 GiB
+longrun | 14 days | 40 | 1 | M, L, IO | 382 GiB | 3600 GiB
+hugemem | 3 days | 160 | 4 | XL, BM | 1534 GiB
+hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 GiB
+
+: Slurm partitions on Puhti
+
+Slurm partitions with different resources limits.
 
 The Slurm version is
 
