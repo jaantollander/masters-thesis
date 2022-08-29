@@ -248,6 +248,40 @@ Slurm can also perform accounting for resource usage.
 
 
 ## Example: Puhti cluster
+The *Puhti* cluster [@csccomputing] has two *login nodes* and 762 *compute nodes*.
+The compute nodes consist of 682 *CPU nodes* and 80 *GPU nodes*.
+Each compute node has 2 *Intel Xeon Gold 6230* CPUs.
+Each CPU has 20 cores and 2.1 GHz base frequency.
+Compute nodes have a varying amount of memory (RAM) described below.
+Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
+Some of the nodes have *fast local storage*, that is, a local Solid State Disk (SSD), to support I/O intensive processes.
+Compute nodes are divided into *node types* with different amounts of nodes, memory and fast local storage as below.
+
+**M** type
+: has 484 nodes and 192 GiB of memory.
+
+**M-IO** type
+: has 48 nodes, 192 GiB of memory, and 1490 GiB of fast local storage.
+
+**L** type
+: has 92 nodes and 384 GiB of memory.
+
+**L-IO** type
+: has 40 nodes, 384 GiB of memory, and 3600 GiB of fast local storage.
+
+**XL** type
+: has 12 nodes, 768 GiB of memory, and 1490 GiB of fast local storage.
+
+**BM-IO** type
+: has 6 nodes, 1.5 TiB of memory, and 1490 GiB of fast local storage.
+
+**GPU** type
+: has 80 nodes, 384 GiB of memory, and 3600 GiB of fast local storage.
+
+The nodes are connected using *Mellanox HDR InfiniBand*.
+
+---
+
 At the time of writing, Puhti is using the *RedHat Enterprise Linux Server 7.9* distribution.
 
 ```
@@ -255,12 +289,19 @@ $ cat /etc/redhat-release
 Red Hat Enterprise Linux Server release 7.9 (Maipo)
 ```
 
-The Lustre version is 
+---
+
+The global storage on Puhti consist of Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server.
+The file system is shared across *home*, *project*, and *scratch* storage areas.
 
 ```
 $ lctl --version
 2.12.6_ddn72
 ```
+
+---
+
+Slurm partitions with different resources limits ...
 
 The Slurm version is
 
