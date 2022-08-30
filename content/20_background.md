@@ -249,27 +249,26 @@ Slurm can also perform accounting for resource usage.
 
 ## Example: Puhti cluster
 ### Nodes
+Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
+-|-|-|-
+login | 2 | 384 | 2900
+M | 484 | 192 | -
+M-IO | 48 | 192 | 1490
+L | 92 | 384 | -
+L-IO | 40 | 384 | 3600
+XL | 12 | 768 | 1490
+BM-IO | 6 | 1500 | 5960
+GPU | 80 | 384 | 3600
+
+: Node types on Puhti \label{tab:node-types}
+
 The *Puhti* cluster [@csccomputing] has two *login nodes* and 762 *compute nodes*.
 The compute nodes consist of 682 *CPU nodes* and 80 *GPU nodes*.
 Each compute node has 2 *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
-Compute nodes have a varying amount of memory (RAM) described below.
+Compute nodes have a varying amount of memory (RAM).
+Also, some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
 Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
-Some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node to perform I/O intensive processes instead of using the global storage from the Lustre file system.
-Compute nodes are divided into *node types* with different amounts of nodes, memory, and fast local storage as below.
-
-Node type | Node count | Memory per node | Local storage per node
--|-|-|-
-login | 2 | 384 GiB | 2900 GiB
-M | 484 | 192 GiB
-M-IO | 48 | 192 GiB | 1490 GiB
-L | 92 | 384 GiB
-L-IO | 40 | 384 GiB | 3600 GiB
-XL | 12 | 768 GiB | 1490 GiB
-BM-IO | 6 | 1.5 TiB | 5960 GiB
-GPU | 80 | 384 GiB | 3600 GiB
-
-: Node types on Puhti
-
+We divide the nodes into *node types* based on these attribute as on the table \ref{tab:node-types}.
 The nodes are connected using *Mellanox HDR InfiniBand* (100 Gbps HDR100) with a fat-tree network topology.
 
 ### Linux Operating System
@@ -294,7 +293,7 @@ The global file system (Lustre) is shared across *home*, *project*, and *scratch
 
 *home*
 : area is intended for storing personal data and configuration files.
-In the file system, it resides at `/home/<user>` (env `$HOME`) and has a default quota of 10 GiB per user.
+In the file system, it resides at `/home/<user>` available via the `$HOME` variable and has a default quota of 10 GiB per user.
 
 *projappl*
 : area is intended for storing project-specific application files such as compiled libraries.
@@ -310,31 +309,31 @@ Data that should be kept for a longer term should be copied to *scratch*.
 
 *tmp*
 : area is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
-It resides at `/local_scratch/<user>` (env `$TMPDIR`).
+It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
 *local scratch*
 : is intended for batch jobs to perform I/O heavy operations.
 The quota depends on how much is requested for the job.
-It resides at `/local_scratch/<???>` (env `$LOCAL_SCRATCH`).
+It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
 
 
 ### Slurm Configuration
 
-partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit | local storage limit
+partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit (GiB) | local storage limit (GiB)
 -|-|-|-|-|-|-
-test | 15 minutes | 80 | 2 | M | 190 GiB
-interactive | 7 days | 8 | 1 | IO | 76 GiB | 720 GiB
-small | 3 days |  40 | 1 | M, L, IO | 382 GiB | 3600 GiB
-large | 3 days | 1040 | 26 | M, L, IO | 382 GiB | 3600 GiB
-longrun | 14 days | 40 | 1 | M, L, IO | 382 GiB | 3600 GiB
-hugemem | 3 days | 160 | 4 | XL, BM | 1534 GiB
-hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 GiB
-gputest | 15 minutes | 8 | 2 | GPU | 382 GiB | 3600 GiB
-gpu | 3 days | 80 | 20 | GPU | 382 GiB | 3600 GiB
+test | 15 minutes | 80 | 2 | M | 190 | -
+interactive | 7 days | 8 | 1 | IO | 76 | 720
+small | 3 days |  40 | 1 | M, L, IO | 382 | 3600
+large | 3 days | 1040 | 26 | M, L, IO | 382 | 3600
+longrun | 14 days | 40 | 1 | M, L, IO | 382 | 3600
+hugemem | 3 days | 160 | 4 | XL, BM | 1534 | -
+hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 | -
+gputest | 15 minutes | 8 | 2 | GPU | 382 | 3600
+gpu | 3 days | 80 | 20 | GPU | 382 | 3600
 
-: Slurm partitions on Puhti
+: Slurm partitions on Puhti \label{tab:slurm-partitions}
 
-Slurm partitions with different resource limits.
+Slurm partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
 
 The Slurm version is
 
