@@ -248,31 +248,31 @@ Slurm can also perform accounting for resource usage.
 
 
 ## Example: Puhti cluster
+### Nodes
 The *Puhti* cluster [@csccomputing] has two *login nodes* and 762 *compute nodes*.
 The compute nodes consist of 682 *CPU nodes* and 80 *GPU nodes*.
-Each compute node has 2 *Intel Xeon Gold 6230* CPUs.
-Each CPU has 20 cores and 2.1 GHz base frequency.
+Each compute node has 2 *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 Compute nodes have a varying amount of memory (RAM) described below.
 Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
-Some of the nodes have *fast local storage*, that is, a local Solid State Disk (SSD), to support I/O intensive processes.
+Some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node, to perform I/O intensive processes instead of using the global storage from Lustre file system.
 Compute nodes are divided into *node types* with different amounts of nodes, memory and fast local storage as below.
 
-Node type | Node Count | Memory | Local storage
+Node type | Node count | Memory per node | Local storage per node
 -|-|-|-
+login | 2 | 384 GiB | 2900 GiB
 M | 484 | 192 GiB
 M-IO | 48 | 192 GiB | 1490 GiB
 L | 92 | 384 GiB
 L-IO | 40 | 384 GiB | 3600 GiB
-XL | 12 | 768 GiB | 3600 GiB
-BM-IO | 6 | 1.5 TiB | 1490 GiB
+XL | 12 | 768 GiB | 1490 GiB
+BM-IO | 6 | 1.5 TiB | 5960 GiB
 GPU | 80 | 384 GiB | 3600 GiB
 
 : Node types on Puhti
 
 The nodes are connected using *Mellanox HDR InfiniBand* (100 Gbps HDR100) with fat-tree network topology.
 
----
-
+### Linux Operating System
 As the operating system, Puhti uses the *RedHat Enterprise Linux Server 7.9* distribution.
 
 ```
@@ -280,18 +280,45 @@ $ cat /etc/redhat-release
 Red Hat Enterprise Linux Server release 7.9 (Maipo)
 ```
 
----
-
-The global storage on Puhti consist of Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server.
-The file system is shared across *home*, *project*, and *scratch* storage areas.
-The total storage capacity of the file system is 4.8 PBs.
+### Lustre Configuration
+The global storage on Puhti consist of Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server. The total storage capacity of the file system is 4.8 PiBs.
 
 ```
 $ lctl --version
 2.12.6_ddn72
 ```
 
----
+### Storage areas
+In the file system, each storage area has a dedicated directory.
+The global file system (Lustre) is shared across *home*, *project*, and *scratch* storage areas with different uses and quotas.
+
+*home*
+: area is intended for storing personal data and configuration files.
+In the file system, it resides at `/home/<user>` (env `$HOME`) and has a default quota of 10 GiB per user.
+
+*projappl*
+: area is intended for storing project specific application files such as compiled libraries.
+It resides at `/projappl/<project>` and has a default quota of 50 GiB per project.
+
+*scratch*
+: area is intended for short term storage (90 days) of data used in the cluster.
+It resides at `/scratch/<project>` and has a default quota of 1 TiB per project.
+
+The fast local storage, mounted on a local SSD, is called *tmp* or *local scratch*.
+It is intended as a temporary file storage for I/O heavy operations.
+Data that should be kept for longer term should be copied to *scratch*.
+
+*tmp*
+: area is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
+It resides at `/local_scratch/<user>` (env `$TMPDIR`).
+
+*local scratch*
+: is intended for batch jobs to perform I/O heavy operations.
+The quota depends on how much is requested for the job.
+It resides at `/local_scratch/<???>` (env `$LOCAL_SCRATCH`).
+
+
+### Slurm Configuration
 
 partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit | local storage limit
 -|-|-|-|-|-|-
@@ -302,6 +329,8 @@ large | 3 days | 1040 | 26 | M, L, IO | 382 GiB | 3600 GiB
 longrun | 14 days | 40 | 1 | M, L, IO | 382 GiB | 3600 GiB
 hugemem | 3 days | 160 | 4 | XL, BM | 1534 GiB
 hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 GiB
+gputest | 15 minutes | 8 | 2 | GPU | 382 GiB | 3600 GiB
+gpu | 3 days | 80 | 20 | GPU | 382 GiB | 3600 GiB
 
 : Slurm partitions on Puhti
 
@@ -314,13 +343,26 @@ $ sinfo --version
 slurm 21.08.7-1_issue_803
 ```
 
+### Lmod module system
+Puhti uses the *Lmod* module system developed by *Texas Advanced Computing Center (TACC)*.
 
-## Example: Slurm job on Puhti
+### Slurm batch job
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
 
 ---
+
+Small sequential batch job
+
+```sh
+#!/usr/bin/env bash
+#todo
+```
+
+---
+
+Large parallel batch job
 
 ```sh
 #!/usr/bin/env bash
@@ -332,7 +374,10 @@ The script specifies job steps using the `srun` command.
 #SBATCH --tasks-per-node=2
 #SBATCH --cpus-per-task=20
 #SBATCH --mem-per-cpu=1G
-#
+#SBATCH --grep=nvme:100
+
+module load myprog/1.2.3
+
 # 1. job step
 srun <program-1>
 # 2. job step
