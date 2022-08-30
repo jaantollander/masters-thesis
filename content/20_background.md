@@ -254,8 +254,8 @@ The compute nodes consist of 682 *CPU nodes* and 80 *GPU nodes*.
 Each compute node has 2 *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 Compute nodes have a varying amount of memory (RAM) described below.
 Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
-Some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node, to perform I/O intensive processes instead of using the global storage from Lustre file system.
-Compute nodes are divided into *node types* with different amounts of nodes, memory and fast local storage as below.
+Some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node to perform I/O intensive processes instead of using the global storage from the Lustre file system.
+Compute nodes are divided into *node types* with different amounts of nodes, memory, and fast local storage as below.
 
 Node type | Node count | Memory per node | Local storage per node
 -|-|-|-
@@ -270,7 +270,7 @@ GPU | 80 | 384 GiB | 3600 GiB
 
 : Node types on Puhti
 
-The nodes are connected using *Mellanox HDR InfiniBand* (100 Gbps HDR100) with fat-tree network topology.
+The nodes are connected using *Mellanox HDR InfiniBand* (100 Gbps HDR100) with a fat-tree network topology.
 
 ### Linux Operating System
 As the operating system, Puhti uses the *RedHat Enterprise Linux Server 7.9* distribution.
@@ -281,7 +281,7 @@ Red Hat Enterprise Linux Server release 7.9 (Maipo)
 ```
 
 ### Lustre Configuration
-The global storage on Puhti consist of Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server. The total storage capacity of the file system is 4.8 PiBs.
+The global storage on Puhti consists of a Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server. The total storage capacity of the file system is 4.8 PiBs.
 
 ```
 $ lctl --version
@@ -297,16 +297,16 @@ The global file system (Lustre) is shared across *home*, *project*, and *scratch
 In the file system, it resides at `/home/<user>` (env `$HOME`) and has a default quota of 10 GiB per user.
 
 *projappl*
-: area is intended for storing project specific application files such as compiled libraries.
+: area is intended for storing project-specific application files such as compiled libraries.
 It resides at `/projappl/<project>` and has a default quota of 50 GiB per project.
 
 *scratch*
-: area is intended for short term storage (90 days) of data used in the cluster.
+: area is intended for short-term storage (90 days) of data used in the cluster.
 It resides at `/scratch/<project>` and has a default quota of 1 TiB per project.
 
 The fast local storage, mounted on a local SSD, is called *tmp* or *local scratch*.
-It is intended as a temporary file storage for I/O heavy operations.
-Data that should be kept for longer term should be copied to *scratch*.
+It is intended as temporary file storage for I/O heavy operations.
+Data that should be kept for a longer term should be copied to *scratch*.
 
 *tmp*
 : area is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
@@ -334,7 +334,7 @@ gpu | 3 days | 80 | 20 | GPU | 382 GiB | 3600 GiB
 
 : Slurm partitions on Puhti
 
-Slurm partitions with different resources limits.
+Slurm partitions with different resource limits.
 
 The Slurm version is
 
