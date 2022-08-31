@@ -234,7 +234,7 @@ Furthermore, batch processes on clusters must predefine their resource requireme
 
 
 ## Slurm workload manager
-*Slurm* is a workload manager for Linux clusters.
+*Slurm* is a workload manager for Linux clusters [@slurmdocs].
 It is responsible for allocating access to the computing resources for users to perform batch processes.
 These computing resources include nodes, processors-per-node, memory-per-node, and maximum duration.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.
@@ -244,7 +244,19 @@ Slurm provides a framework for starting, executing, and monitoring work on the a
 Slurm groups nodes into *partitions*, which may be overlapping.
 It also maintains a queue of jobs waiting for resources to become available for them to be started.
 Slurm can also perform accounting for resource usage.
-[@slurmdocs]
+
+
+## Example: CSC
+*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
+It is owned by the Finnish-state and higher education institutions.
+These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
+
+In CSC systems, each user has one *user account* which can belong to one or more *projects*.
+Projects are used for setting quotas and accounting of computational resources and storage.
+The usage of computational resources is measured using *Billing Units (BU)*.
+These resources include reserved CPU cores, memory, local disk, and GPUs per unit of time.
+In Linux systems, each user account is associated with *user* and each project with a *group*.
+[@cscdocs]
 
 
 ## Example: Puhti cluster
@@ -269,7 +281,7 @@ Compute nodes have a varying amount of memory (RAM).
 Also, some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
 Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
 We divide the nodes into *node types* based on these attribute as on the table \ref{tab:node-types}.
-The nodes are connected using *Mellanox HDR InfiniBand* (100 Gbps HDR100) with a fat-tree network topology.
+The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s HDR100) with a fat-tree network topology.
 
 ### Linux Operating System
 As the operating system, Puhti uses the *RedHat Enterprise Linux Server 7.9* distribution.
@@ -280,7 +292,7 @@ Red Hat Enterprise Linux Server release 7.9 (Maipo)
 ```
 
 ### Lustre Configuration
-The global storage on Puhti consists of a Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server. The total storage capacity of the file system is 4.8 PiBs.
+The global storage on Puhti consists of a Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server. The total storage capacity of the file system is 4.8 PBs.
 
 ```
 $ lctl --version
@@ -289,19 +301,19 @@ $ lctl --version
 
 ### Storage areas
 In the file system, each storage area has a dedicated directory.
-The global file system (Lustre) is shared across *home*, *project*, and *scratch* storage areas with different uses and quotas.
+The global file system (Lustre) is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
 *home*
 : area is intended for storing personal data and configuration files.
-In the file system, it resides at `/home/<user>` available via the `$HOME` variable and has a default quota of 10 GiB per user.
+In the file system, it resides at `/home/<user>` available via the `$HOME` variable and has a default quota of 10 GB per user.
 
 *projappl*
 : area is intended for storing project-specific application files such as compiled libraries.
-It resides at `/projappl/<project>` and has a default quota of 50 GiB per project.
+It resides at `/projappl/<project>` and has a default quota of 50 GB per project.
 
 *scratch*
 : area is intended for short-term storage (90 days) of data used in the cluster.
-It resides at `/scratch/<project>` and has a default quota of 1 TiB per project.
+It resides at `/scratch/<project>` and has a default quota of 1 TB per project.
 
 The fast local storage, mounted on a local SSD, is called *tmp* or *local scratch*.
 It is intended as temporary file storage for I/O heavy operations.
@@ -345,23 +357,49 @@ slurm 21.08.7-1_issue_803
 ### Lmod module system
 Puhti uses the *Lmod* module system developed by *Texas Advanced Computing Center (TACC)*.
 
-### Slurm batch job
+### Running a batch job via Slurm
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
 
 ---
 
-Small sequential batch job
+Small sequential batch job with a single job step.
 
 ```sh
 #!/usr/bin/env bash
-#todo
+#SBATCH --job-name=<job-name>
+#SBATCH --account=<project>
+#SBATCH --partition=small
+#SBATCH --time=01:00:00
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=10G
+srun <program-1>
 ```
 
 ---
 
-Large parallel batch job
+Array job runs multiple similar, independent jobs
+
+```sh
+#!/usr/bin/env bash
+#SBATCH --job-name=<job-name>
+#SBATCH --account=<project>
+#SBATCH --partition=small
+#SBATCH --time=01:00:00
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=10G
+#SBATCH --array=1-100
+srun <program-1>
+```
+
+---
+
+Large parallel batch job with four job steps.
 
 ```sh
 #!/usr/bin/env bash
@@ -372,26 +410,27 @@ Large parallel batch job
 #SBATCH --nodes=2
 #SBATCH --tasks-per-node=2
 #SBATCH --cpus-per-task=20
-#SBATCH --mem-per-cpu=1G
-#SBATCH --grep=nvme:100
-
-module load myprog/1.2.3
-
+#SBATCH --mem-per-cpu=2G
+#SBATCH --gres=nvme:100
 # 1. job step
-srun <program-1>
+srun --nodes 2 --ntasks 1 <program-1>
 # 2. job step
-srun --nodes 1 --ntasks 2 <program-2> &
+srun <program-2>
 # 3. job step
 srun --nodes 1 --ntasks 2 <program-3> &
+# 4. job step
+srun --nodes 1 --ntasks 2 <program-4> &
 # Wait for job 2. and 3. to complete
 wait
 ```
 
 ---
 
-In the above example, the first program will run on the first job step utilizing all given nodes, tasks, and cpus and the majority of the given time.
+In the above example, the first program will run on the first job step and would load data to the local disk.
+
+The second program will run on the second job step utilizing all given nodes, tasks, and cpus and the majority of the given time.
 The program is some large parallel program such as a large, well parallelizing simulation.
 
-The second and third programs job steps will run in parallel after the first step, both utilizing all tasks and cpus from a single node.
+The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and cpus from a single node.
 These programs could be, for example, programs for post processing steps, for example, processing and backing up the simulation results.
 
