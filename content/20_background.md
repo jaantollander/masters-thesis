@@ -45,8 +45,11 @@ A cluster may also be built for internal use in the organization.
 
 ## Linux operating system
 At the time of writing, all high-performance computer clusters use the *Linux operating system* [@osfam].
-The *Linux kernel* [@linuxkernel] is the core of the Linux operating system.
-It derives from the original *UNIX operating system* and closely follows the *POSIX standard*. For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
+The *Linux kernel* [@linuxkernel] is the core of the Linux operating system
+It derives from the original *UNIX operating system* and closely follows the *POSIX standard*.
+Linux kernel is written in the *C programming language*.
+For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
+
 
 In this work, we will refer to the Linux kernel as the *kernel*.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
@@ -134,11 +137,12 @@ If the removed hard link is the last hard link to the file, the file is deleted,
 `quotactl()`
 : manipulates disk quotas.
 
+Next, we present two examples of performing file I/O using system calls.
+Please note that these examples do not perform any error handling that should be done by proper programs.
 
-## Example: File I/O with system calls
-An example, written in the C programming language, demonstrating `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
-The example program opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
-Note that this example does not do any error handling that should be done in a proper program.
+The first example program demonstrates opening and closing file descriptors, reading bytes from a file and writing bytes to a file.
+It opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
+The code performs the `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
 
 ---
 
@@ -167,9 +171,11 @@ int main()
 
 ---
 
-The following example writes `hello hole world` to a `output.txt` file.
+The second example demonstrates a less common feature of "punching a hole" to a file, creating a sparse file.
+The hole appears as null bytes when reading the file, without takeing any space on the disk.
+This feature supported by certain Linux file systems such as ext4.
+The following code writes `hello hole world` to a `output.txt` file.
 It then deallocate bytes from 5 to 10 such that the file keeps its original size using `fallocate` with mode `FALLOC_FL_PUNCH_HOLE` and `FALLOC_FL_KEEP_HOLE`.
-This operation is refered to as *punching* a hole to file.
 
 ---
 
@@ -203,12 +209,12 @@ They communicate with each other by some Interprocess Communication (IPC) mechan
 
 
 ## Lustre cluster storage system
-Lustre provides storage architecture for Linux clusters [@lustredocs, secs. 1-2].
+Lustre provides storage architecture for Linux clusters [@lustre-storage-architecture; @lustredocs, secs. 1-2].
 The *Lustre file system* provides a POSIX standard-compliant file system interface.
 It aggregates storage such that all files are available on the entire cluster, not only on specific nodes.
 
 The Lustre file system is designed using the client-server architecture.
-*Lustre Clients* on a computer cluster are compute nodes running the Lustre client software and have the Lustre file system mounted.
+*Lustre Clients* on a computer cluster are nodes running the Lustre client software and have the Lustre file system mounted.
 The Lustre client software provides an interface between the Linux virtual file system and the Lustre servers.
 For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
 
@@ -230,13 +236,14 @@ LNet supports many network types, including InfiniBand and IP networks, with sim
 ## Batch processing
 Many clusters use a *workload manager* to run programs as *batch processes*.
 A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
-Furthermore, batch processes on clusters must predefine their resource requirements.
+Typically, batch processes have predefined limits for resource usage.
+For example, a batch process should not use more than specified amount or memory or time.
 
 
 ## Slurm workload manager
 *Slurm* is a workload manager for Linux clusters [@slurmdocs].
 It is responsible for allocating access to the computing resources for users to perform batch processes.
-These computing resources include nodes, processors-per-node, memory-per-node, and maximum duration.
+These computing resources include nodes, tasks (CPU cores), memory, and time.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.
 We refer to such a resource allocation as a *job*.
 An individual job may contain multiple *job steps* that may execute sequentially or in parallel.
@@ -246,7 +253,8 @@ It also maintains a queue of jobs waiting for resources to become available for 
 Slurm can also perform accounting for resource usage.
 
 
-## Example: CSC
+## Puhti cluster at CSC
+### About CSC
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
 It is owned by the Finnish-state and higher education institutions.
 These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
@@ -258,8 +266,8 @@ These resources include reserved CPU cores, memory, local disk, and GPUs per uni
 In Linux systems, each user account is associated with *user* and each project with a *group*.
 [@cscdocs]
 
+We will be looking at the structure of CSC *Puhti* cluster.
 
-## Example: Puhti cluster
 ### Nodes
 Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-
@@ -314,32 +322,36 @@ It resides at `/projappl/<project>` and has a default quota of 50 GB per project
 *scratch*
 : area is intended for short-term storage (90 days) of data used in the cluster.
 It resides at `/scratch/<project>` and has a default quota of 1 TB per project.
+Files that require long-term storage should be moved to a long-term data storage outside Puhti.
+
+Jobs should use the *scratch* area for storing data.
+They should access *home* or *projappl* areas only to read or copy configuration files or application specific files in the beginning of the job.
 
 The fast local storage, mounted on a local SSD, is called *tmp* or *local scratch*.
 It is intended as temporary file storage for I/O heavy operations.
-Data that should be kept for a longer term should be copied to *scratch*.
+User should copy data that they wish to keep after the job has completed to *scratch* since files in these temporary storage areas are cleaned regularly.
 
 *tmp*
-: area is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
+: is an area for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
 It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
 *local scratch*
-: is intended for batch jobs to perform I/O heavy operations.
+: is an area for batch jobs to perform I/O heavy operations.
 The quota depends on how much is requested for the job.
 It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
 
 
 ### Slurm Configuration
 
-partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit (GiB) | local storage limit (GiB)
+partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit (GiB per node) | local storage limit (GiB per node)
 -|-|-|-|-|-|-
 test | 15 minutes | 80 | 2 | M | 190 | -
 interactive | 7 days | 8 | 1 | IO | 76 | 720
 small | 3 days |  40 | 1 | M, L, IO | 382 | 3600
 large | 3 days | 1040 | 26 | M, L, IO | 382 | 3600
 longrun | 14 days | 40 | 1 | M, L, IO | 382 | 3600
-hugemem | 3 days | 160 | 4 | XL, BM | 1534 | -
-hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 | -
+hugemem | 3 days | 160 | 4 | XL, BM | 1534 | 5960
+hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 | 5960
 gputest | 15 minutes | 8 | 2 | GPU | 382 | 3600
 gpu | 3 days | 80 | 20 | GPU | 382 | 3600
 
@@ -394,7 +406,7 @@ Array job runs multiple similar, independent jobs
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=1-100
-srun <program-1>
+srun <program-1> ${SLURM_ARRAY_TASK_ID}
 ```
 
 ---
@@ -433,4 +445,8 @@ The program is some large parallel program such as a large, well parallelizing s
 
 The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and cpus from a single node.
 These programs could be, for example, programs for post processing steps, for example, processing and backing up the simulation results.
+
+
+## Common file I/O problems and solutions
+[@tacc-io-guideline]
 
