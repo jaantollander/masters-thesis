@@ -310,8 +310,10 @@ We will be looking at the structure of CSC *Puhti* cluster.
 Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-
 login | 2 | 384 | 2900
+login-fmi | 2 | 384 | ?
 M | 484 | 192 | -
 M-IO | 48 | 192 | 1490
+M-FMI | 240 | 192 | -
 L | 92 | 384 | -
 L-IO | 40 | 384 | 3600
 XL | 12 | 768 | 1490
@@ -338,7 +340,13 @@ Red Hat Enterprise Linux Server release 7.9 (Maipo)
 ```
 
 ### Lustre Configuration
-The global storage on Puhti consists of a Lustre file system that has 2 MDSs with 2 MDTs on each server and 8 OSSs with 3 OSTs on each server. The total storage capacity of the file system is 4.8 PBs.
+The global storage on Puhti consists of a Lustre file system that has 
+
+- 2 MDSs with 2 MDTs on each server with 20 x 800 GB NVMe
+- 8 OSSs with 3 OSTs on each server with 704 x 10 TB SAS HDD
+
+The total storage capacity of the file system is 4.8 PBs.
+
 
 ```
 $ lctl --version
@@ -390,6 +398,8 @@ large | 3 days | 1040 | 26 | M, L, IO | 382 | 3600
 longrun | 14 days | 40 | 1 | M, L, IO | 382 | 3600
 hugemem | 3 days | 160 | 4 | XL, BM | 1534 | 5960
 hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 | 5960
+fmitest | 1 hour | 80 | 2 | M-FMI | 190 | -
+fmi | 12 days | 4000 | 100 | M-FMI | 190 | -
 gputest | 15 minutes | 8 | 2 | GPU | 382 | 3600
 gpu | 3 days | 80 | 20 | GPU | 382 | 3600
 
@@ -399,9 +409,17 @@ Slurm partitions with different resource limits as seen on table \ref{tab:slurm-
 
 The Slurm version is
 
-```
+```sh
 $ sinfo --version
 slurm 21.08.7-1_issue_803
+```
+
+```sh
+$ scontrol show partition
+```
+
+```
+$ scontrol show node
 ```
 
 ### Lmod module system
