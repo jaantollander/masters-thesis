@@ -4,7 +4,7 @@
 - *Describe the research material and methodology*
 
 
-## Collecting file system metrics
+## Collecting file system metrics for Lustre Jobstats
 Lustre can collect usage statistics as explained in Lustre documentation [@lustredocs, sec. 12.2].
 Jobstats can track specific Linux system calls, see the Linux man pages project [@linuxmanpages, sec. 2].
 

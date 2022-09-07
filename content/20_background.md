@@ -7,24 +7,62 @@
 
 ---
 
-## High-performance computing
-*High-performance computing (HPC)* is a practice of aggregating large amounts of computing resources to solve computationally intensive problems such as simulating complex systems and solving large computational models [@definition-hpc].
-HPC is also applied for data science and training machine learning models.
-Below we list some examples of commercial and research applications of HPC.
+## Computing
+We can thing about *computing* as applying rules on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
+At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
+For example, first applicable rule at a time or all applicable rules at once.
+Both, the set of rules and set of symbols must be discrete.
+A *computation* is the process of applying the rules until we can no longer apply any rules, that is, the process halts.
+The *memory* requirement of a computation is the maximum size of the string during the computation.
+We can visualize the progression of a computation as a directed, acyclic graph where each string of symbols, known as a state, is a node and transformation from one state to another is an edge.
 
-* Weather modeling for weather forecasting
-* Climate modeling for understanding climate change
-* Financial analytics for trading decisions
-* Data analysis for oil and gas exploration
-* Fluid simulation such as airflow for cars and airplanes
-* Molecular dynamics simulation for pharmaceutical design
-* Cosmological simulation for understanding galaxy creation
+Real-world computers derive from these concepts.
 
-A defining characteristic of HPC is to utilize *parallelization* to aggregate computing resources.
-HPC uses *parallel computing* to perform a large amount of processing simultaneously.
-Contemporary processors employ multiple levels of parallelism, such as bit-level, instruction-level, data, and task parallelism.
+- symbols are bits typically read in bytes (8 bits)
+- rules are intructions to the processor
+- memory is hierarchical, and divided into working and storage memories
+
+
+## Parallel and high-performance computing
+- *What is and why do we need high-performance computing?*
+- *What are the defining characteristics of high-performance computing (HPC)?*
+- *How does HPC related to computer clusters?*
+
+---
+
+*Serial computing* refers to performing one operation at a time.
+In contrast, *parallel computing* is about performing multiple independent operations simultaneously, with the goal of reducing run time, performing larger calculations, and decreasing energy consumption.
+
+*High-performance computing (HPC)* relies on parallel computing to provide large amount of computing resources for solving computationally intensive problems.
+These problems include simulating complex systems, solving large computational models, data science and training machine learning models.
+Examples of commercial and research applications of HPC include [@definition-hpc]:
+
+- Weather modeling for weather forecasting
+- Climate modeling for understanding climate change
+- Financial analytics for trading decisions
+- Data analysis for oil and gas exploration
+- Fluid simulation such as airflow for cars and airplanes
+- Molecular dynamics simulation for pharmaceutical design
+- Cosmological simulation for understanding galaxy creation
+
+
+The performance of HPC system is traditionally measured in operations per unit of time.
+However, the role of data is becoming increasingly important with data science and machine learning.
+
+---
+
+A *computer* consists of processor and memory.
+We can link multiple computers together to form a computer network.
+
+Parallelism in practice exist in multiple, hierarchical levels.
+[@parallel-and-high-performance-computing]
+
+- Process-based parallelization, communication between processes using message passing in distributed memory
+- Thread-based parallelization, communication between threads using shared data via memory
+- Vectorization to perform multiple operations with one instruction
+- Stream processing through specialized processors
+
 HPC may also employ *parallel storage* to aggregate a large amount of storage memory.
-Computer clusters are a common choice for HPC for parallelization.
 
 
 ## Computer cluster
@@ -243,7 +281,7 @@ For example, a batch process should not use more than specified amount or memory
 ## Slurm workload manager
 *Slurm* is a workload manager for Linux clusters [@slurmdocs].
 It is responsible for allocating access to the computing resources for users to perform batch processes.
-These computing resources include nodes, tasks (CPU cores), memory, and time.
+These computing resources include nodes, cores, memory, and time.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.
 We refer to such a resource allocation as a *job*.
 An individual job may contain multiple *job steps* that may execute sequentially or in parallel.
