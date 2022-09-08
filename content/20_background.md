@@ -307,18 +307,18 @@ In Linux systems, each user account is associated with *user* and each project w
 We will be looking at the structure of CSC *Puhti* cluster.
 
 ### Nodes
-Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
--|-|-|-
-login | 2 | 384 | 2900
-login-fmi | 2 | 384 | ?
-M | 484 | 192 | -
-M-IO | 48 | 192 | 1490
-M-FMI | 240 | 192 | -
-L | 92 | 384 | -
-L-IO | 40 | 384 | 3600
-XL | 12 | 768 | 1490
-BM-IO | 6 | 1500 | 5960
-GPU | 80 | 384 | 3600
+Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
+-|-|-|-|-
+utility | login | 2 | 384 | 2900
+utility | login-fmi | 2 | 384 | ?
+cpu | M | 484 | 192 | -
+cpu | M, IO | 48 | 192 | 1490
+cpu | M-FMI | 240 | 192 | -
+cpu | L | 92 | 384 | -
+cpu | L, IO | 40 | 384 | 3600
+cpu | XL | 12 | 768 | 1490
+cpu | BM | 6 | 1500 | 5960
+gpu | GPU | 80 | 384 | 3600
 
 : Node types on Puhti \label{tab:node-types}
 
@@ -326,7 +326,7 @@ The *Puhti* cluster [@csccomputing] has two *login nodes* and 762 *compute nodes
 The compute nodes consist of 682 *CPU nodes* and 80 *GPU nodes*.
 Each compute node has 2 *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 Compute nodes have a varying amount of memory (RAM).
-Also, some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
+Also, some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node via *NVMe* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
 Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
 We divide the nodes into *node types* based on these attribute as on the table \ref{tab:node-types}.
 The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s HDR100) with a fat-tree network topology.
@@ -335,7 +335,7 @@ The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s HDR100) with a
 As the operating system, Puhti uses the *RedHat Enterprise Linux Server 7.9* distribution.
 
 ```
-$ cat /etc/redhat-release
+puhti> cat /etc/redhat-release
 Red Hat Enterprise Linux Server release 7.9 (Maipo)
 ```
 
@@ -349,7 +349,7 @@ The total storage capacity of the file system is 4.8 PBs.
 
 
 ```
-$ lctl --version
+puhti> lctl --version
 2.12.6_ddn72
 ```
 
@@ -389,19 +389,19 @@ It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` va
 
 ### Slurm Configuration
 
-partition \newline name | time \newline limit | task \newline limit | node \newline limit | node \newline type | memory limit (GiB per node) | local storage limit (GiB per node)
+partition name | time limit | task limit | node limit | node type
 -|-|-|-|-|-|-
-test | 15 minutes | 80 | 2 | M | 190 | -
-interactive | 7 days | 8 | 1 | IO | 76 | 720
-small | 3 days |  40 | 1 | M, L, IO | 382 | 3600
-large | 3 days | 1040 | 26 | M, L, IO | 382 | 3600
-longrun | 14 days | 40 | 1 | M, L, IO | 382 | 3600
-hugemem | 3 days | 160 | 4 | XL, BM | 1534 | 5960
-hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM | 1534 | 5960
-fmitest | 1 hour | 80 | 2 | M-FMI | 190 | -
-fmi | 12 days | 4000 | 100 | M-FMI | 190 | -
-gputest | 15 minutes | 8 | 2 | GPU | 382 | 3600
-gpu | 3 days | 80 | 20 | GPU | 382 | 3600
+test | 15 minutes | 80 | 2 | M
+interactive | 7 days | 8 | 1 | IO
+small | 3 days |  40 | 1 | M, L, IO
+large | 3 days | 1040 | 26 | M, L, IO
+longrun | 14 days | 40 | 1 | M, L, IO
+hugemem | 3 days | 160 | 4 | XL, BM
+hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM
+fmitest | 1 hour | 80 | 2 | M-FMI
+fmi | 12 days | 4000 | 100 | M-FMI
+gputest | 15 minutes | 8 | 2 | GPU
+gpu | 3 days | 80 | 20 | GPU
 
 : Slurm partitions on Puhti \label{tab:slurm-partitions}
 
@@ -409,17 +409,17 @@ Slurm partitions with different resource limits as seen on table \ref{tab:slurm-
 
 The Slurm version is
 
-```sh
-$ sinfo --version
+```
+puhti> sinfo --version
 slurm 21.08.7-1_issue_803
 ```
 
-```sh
-$ scontrol show partition
+```
+puhti> scontrol show partition --all
 ```
 
 ```
-$ scontrol show node
+puhti> scontrol show node --all
 ```
 
 ### Lmod module system
