@@ -311,6 +311,7 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 -|-|-|-|-
 utility | login | 2 | 384 | 2900
 utility | login-fmi | 2 | 384 | ?
+utility | other | 3 | ? | ?
 cpu | M | 484 | 192 | -
 cpu | M, IO | 48 | 192 | 1490
 cpu | M-FMI | 240 | 192 | -
@@ -322,13 +323,13 @@ gpu | GPU | 80 | 384 | 3600
 
 : Node types on Puhti \label{tab:node-types}
 
-The *Puhti* cluster [@csccomputing] has two *login nodes* and 762 *compute nodes*.
-The compute nodes consist of 682 *CPU nodes* and 80 *GPU nodes*.
-Each compute node has 2 *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
-Compute nodes have a varying amount of memory (RAM).
+The *Puhti* cluster [@csccomputing] has several *utility nodes* and 1002 *compute nodes*.
+The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
+Each node consists of 2 $\times$ *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency and varying amounts of memory (RAM) as described in table \ref{tab:node-types}.
 Also, some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node via *NVMe* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
-Additionally, each GPU node has 4 *Nvidia Volta V100* GPUs with 36 GiB of memory each.
+Additionally, each GPU node has 4 $\times$ *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
 We divide the nodes into *node types* based on these attribute as on the table \ref{tab:node-types}.
+
 The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s HDR100) with a fat-tree network topology.
 
 ### Linux Operating System
@@ -346,6 +347,7 @@ The global storage on Puhti consists of a Lustre file system that has
 - 8 OSSs with 3 OSTs on each server with 704 x 10 TB SAS HDD
 
 The total storage capacity of the file system is 4.8 PBs.
+Part of the total capacity of storage disks is reserved for redundancy.
 
 
 ```
