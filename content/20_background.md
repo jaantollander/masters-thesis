@@ -305,55 +305,49 @@ In Linux systems, each user account is associated with *user* and each project w
 [@cscdocs]
 
 We will be looking at the structure of CSC *Puhti* cluster.
+As the operating system, Puhti uses the *RedHat Enterprise Linux Server* (version 7.9) distribution.
 
-### Nodes
+### Hardware Configuration
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
-utility | login | 2 | 384 | 2900
-utility | login-fmi | 2 | 384 | ?
-utility | other | 3 | ? | ?
-cpu | M | 484 | 192 | -
-cpu | M, IO | 48 | 192 | 1490
-cpu | M-FMI | 240 | 192 | -
-cpu | L | 92 | 384 | -
-cpu | L, IO | 40 | 384 | 3600
-cpu | XL | 12 | 768 | 1490
-cpu | BM | 6 | 1500 | 5960
-gpu | GPU | 80 | 384 | 3600
+service | Utility | 5 | 384 | 2900
+service | Utility-FMI | 2 | 384 | ?
+service | AeroS MDS | 2 | - | -
+service | AeroS OSS | 4 | - | -
+service | ISMA | 4 | - | -
+service | Data Lake | 8 | - | -
 
-: Node types on Puhti \label{tab:node-types}
+: Service nodes on Puhti \label{tab:service-nodes}
 
-The *Puhti* cluster [@csccomputing] has several *utility nodes* and 1002 *compute nodes*.
+Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
+-|-|-|-|-
+compute | CPU, M | 484 | 192 | -
+compute | CPU, M, IO | 48 | 192 | 1490
+compute | CPU, M-FMI | 240 | 192 | -
+compute | CPU, L | 92 | 384 | -
+compute | CPU, L, IO | 40 | 384 | 3600
+compute | CPU, XL | 12 | 768 | 1490
+compute | CPU, BM | 6 | 1500 | 5960
+compute | GPU | 80 | 384 | 3600
+
+: Compute nodes on Puhti \label{tab:compute-nodes}
+
+The *Puhti* cluster has 23 *service nodes* and 1002 *compute nodes*.
+The services nodes consist of utility nodes used as cluster's *login nodes*, MDS nodes and OSS nodes for the Lustre file system, ISMA nodes used for managing the cluster and Data Lake nodes for [interfacing with object storage services?].
 The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
-Each node consists of 2 $\times$ *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency and varying amounts of memory (RAM) as described in table \ref{tab:node-types}.
-Also, some of the nodes have *fast local storage*, that is, a Solid State Disk (SSD) attached to the node via *NVMe* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
-Additionally, each GPU node has 4 $\times$ *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
-We divide the nodes into *node types* based on these attribute as on the table \ref{tab:node-types}.
+Each login and compute node consists of 2 $\times$ *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
+In addition to CPUs, each GPU node has 4 $\times$ *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
+We give compute nodes types based on how much memory (RAM) and *fast local storage* they contain, and whether they contains GPUs.
+Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volative Memory Express (NVMe)* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
 
-The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s HDR100) with a fat-tree network topology.
+The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to L1 switches which are connected to L2 switches in a *fat-tree* network topology.
+The network has a total of 28 L1 switches and 12 L2 switches.
+The InfiniBand cabling has 1:1 pruning for GPU nodes and 2:1 for other nodes.
 
-### Linux Operating System
-As the operating system, Puhti uses the *RedHat Enterprise Linux Server 7.9* distribution.
-
-```
-puhti> cat /etc/redhat-release
-Red Hat Enterprise Linux Server release 7.9 (Maipo)
-```
-
-### Lustre Configuration
-The global storage on Puhti consists of a Lustre file system that has 
-
-- 2 MDSs with 2 MDTs on each server with 20 x 800 GB NVMe
-- 8 OSSs with 3 OSTs on each server with 704 x 10 TB SAS HDD
-
-The total storage capacity of the file system is 4.8 PBs.
-Part of the total capacity of storage disks is reserved for redundancy.
-
-
-```
-puhti> lctl --version
-2.12.6_ddn72
-```
+The global storage on Puhti consists of a Lustre file system (version 2.12.6) that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
+Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
+Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
+The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
 ### Storage areas
 In the file system, each storage area has a dedicated directory.
@@ -407,25 +401,10 @@ gpu | 3 days | 80 | 20 | GPU
 
 : Slurm partitions on Puhti \label{tab:slurm-partitions}
 
-Slurm partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
+Slurm (version 21.08.7) partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
 
-The Slurm version is
-
-```
-puhti> sinfo --version
-slurm 21.08.7-1_issue_803
-```
-
-```
-puhti> scontrol show partition --all
-```
-
-```
-puhti> scontrol show node --all
-```
-
-### Lmod module system
-Puhti uses the *Lmod* module system developed by *Texas Advanced Computing Center (TACC)*.
+There are 2 cpu per node and 20 cores per cpu, which makes total of 40 cores per node.
+Therefore task limit can be at most 40 times the node limit, but lower for some partitions.
 
 ### Running a batch job via Slurm
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
