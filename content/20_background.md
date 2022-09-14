@@ -291,6 +291,21 @@ It also maintains a queue of jobs waiting for resources to become available for 
 Slurm can also perform accounting for resource usage.
 
 
+## Byte units
+Value | Metric | Value | IEC
+- | - | - | -
+$1$ | byte (B) | $1$ | byte (B)
+$1000^1$ | kilobyte (kB) | $1024^1$ | kibibyte (KiB)
+$1000^2$ | megabyte (MB) | $1024^2$ | mebibyte (MiB)
+$1000^3$ | gigabyte (GB) | $1024^3$ | gibibyte (GiB)
+$1000^4$ | terabyte (TB) | $1024^4$ | tebibyte (TiB)
+$1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
+
+: Units for bytes in base $10$ and $2$
+
+One byte represents a string of $8$ bits.
+
+
 ## Puhti cluster at CSC
 ### About CSC
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
