@@ -62,19 +62,17 @@ The values are formatted as a key-value pairs separated by commas and enclosed w
 The `samples` field counts how many operations the job has performed since the counter was started.
 The fields minimum (`min`), maximum (`max`), sum (`sum`) and sum of squares (`sumsq`) keep count of these aggregates values.
 These fields contain a values that is a nonnegative integers that increases monotonically until the counter is reset.
+A counter is reset if none of its values is updated in duration specified in the configuration, 10 minutes by default.
 The `unit` is either bytes (`bytes`) or microseconds (`usecs`).
 
+---
 
-## File operations and statistics
-Bolded monospace indicates a statistic (**`name`**) and monospace with brackets indicates a Linux system call (`name()`).
+Next, we list and explain the operations counted by jobstats.
+Each operation corresponds to a set of system calls. Monospace indicates an operation (`operation`) and brackets indicate a system call (`systemcall()`).
 
-[Does jobstats only count succesful file operations?]
-
-Job stats does not count cached operations.
-For example, there may be more close than open operations counted.
+---
 
 We have the following operations for MDTs.
-We keep their `samples` values and omit the other counts.
 
 `open`
 : collects the statistics from `open()`.
@@ -124,7 +122,9 @@ We keep their `samples` values and omit the other counts.
 `crossdir_rename`
 : todo
 
-We have the following operations for OSTs. We keep their `samples` values and omit the other counts.
+---
+
+We have the following operations for OSTs.
 
 `read`
 : todo
@@ -151,7 +151,7 @@ We have the following operations for OSTs. We keep their `samples` values and om
 : todo
 
 
-Addtionally, we have two operations with bytes. We keep their `sum` counts.
+Addtionally, we have two operations with bytes.
 
 `read_bytes`
 : todo
@@ -159,8 +159,17 @@ Addtionally, we have two operations with bytes. We keep their `sum` counts.
 `write_bytes`
 : todo
 
+---
+
+Lustre clients can cache certain file operations such as `open`.
+That is, if `open` is called multiple times with same arguments Lustre client can serve it from the cache instead of having to request it from MDS.
+Thus cached operations are not counted in the jobstats.
+This means for example, that there can be more `close` than `open` operations counted, because `close` cannot be cached.
+
 
 ## Processing the statistics
+We parse `sum` values from `read_bytes` and `write_bytes`, `samples` from the others and omit rest of the counts.
+
 We furher process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
 Each data point has the same fields for values and thus we can represent it in a tuple.
 Multiple tuples form a table (aka relation), therefore, we can efficiently store the differences into a tabular format for storage and analysis.
