@@ -63,101 +63,119 @@ The `samples` field counts how many operations the job has performed since the c
 The fields minimum (`min`), maximum (`max`), sum (`sum`) and sum of squares (`sumsq`) keep count of these aggregates values.
 These fields contain a values that is a nonnegative integers that increases monotonically until the counter is reset.
 A counter is reset if none of its values is updated in duration specified in the configuration, 10 minutes by default.
-The `unit` is either bytes (`bytes`) or microseconds (`usecs`).
+Units are (`<unit>`) either bytes (`bytes`) or microseconds (`usecs`).
 
 ---
 
 Next, we list and explain the operations counted by jobstats.
-Each operation corresponds to a set of system calls. Monospace indicates an operation (`operation`) and brackets indicate a system call (`systemcall()`).
+Each operation counts statistic from calls to specific system calls.
+Monospace indicates an operation (`operation`) and brackets indicate a system call (`systemcall()`).
 
----
-
-We have the following operations for MDTs.
+We have the following metadata operations performed on MDSs.
 
 `open`
-: collects the statistics from `open()`.
+: `open()` and it variants
+: Opening files.
 
 `close`
-: collects the statistics from `close()`.
+: `close()` and its variants
+: Closing files.
 
 `mknod`
-: collects statistics from `mknod()`.
+: `mknod()` and its variants
+: Creating new files referred to as file system nodes.
 
 `link`
-: collects statistics from `link()`.
+: `link()` and its variants
+: creating hard links. Does not count the first link created by `mknod()`.
 
 `unlink`
-: collect statistic from `unlink()`.
+: `unlink()` and variants
+: removing hard links.
 
 `mkdir`
-: make directory
+: `mkdir()` and variants
+: creating new directories.
 
 `rmdir`
-: remove directory
+: `rmdir()` and variants
+: removing empty directories.
 
 `rename`
-: rename file
+: `rename()` and variants
+: renaming files and directories.
 
 `getattr`
-:  get attribute
+: `stat()`
+: retrieve file access mode, ownership or timestamps.
 
 `setattr`
-:  set attribute
+: `chmod(), chown(), utime()` and variants
+: setting file access mode, ownership or timestamps.
 
 `getxattr`
-:  get extended attribute
+: `getxattr()` and variants
+: retrieving extended attributes.
 
 `setxattr`
-:  set extended attribute
+: `setxattr()` and variants
+: setting extended attributes.
 
 `statfs`
-:  get file system statistics
+: `statfs()` and variants
+: retrieving file system statistics.
 
 `sync`
-:  writes buffered data in memory to disk
+: `sync()` and variants
+: invoking the kernel to write buffered metadata in memory to disk.
 
 `samedir_rename`
-: todo
+: disambiguates which files are renamed within the same directory.
 
 `crossdir_rename`
-: todo
+: disambiguates which files are moved to another directory potentially with under new name.
 
----
-
-We have the following operations for OSTs.
+We have the following operations on the object data performed on OSSs.
 
 `read`
-: todo
+: `read()` and variants
+: reading data from a file.
 
 `write`
-: todo
+: `write()` and variants
+: writing data to a file.
+
+`getattr`
+: ???
 
 `setattr`
-: todo
+: ???
 
 `punch`
-: todo
+: `fallocate()`
+: punching a hole in a file.
 
 `sync`
-: todo
+: `sync()` and variants
+: invoking the kernel to write buffered data in memory to disk.
 
 `get_info`
-: todo
+: ???
 
 `set_info`
-: todo
+: ???
 
 `quotactl`
-: todo
+: `quotactl()`
+: manipulate disk quota.
 
-
-Addtionally, we have two operations with bytes.
+Additionally, we have two operations with bytes.
 
 `read_bytes`
-: todo
+: number of bytes read from a file. Return value from `read()` system call and its variants.
 
 `write_bytes`
-: todo
+: number of bytes written to a file. Return value from `write()` system call and its variants.
 
 ---
 
