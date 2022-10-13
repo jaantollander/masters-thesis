@@ -38,11 +38,10 @@ The `<source>` indicates the target of the data such as `scratch-MDT0000` or `sc
 The `job_stats` contains entries for each workload with unique identifier that has performed file system operations on the target.
 The `job_id` field contains a unique identifier in either of two formats:
 
-Utility nodes:
-: `<jobcomment>.<uid>`
+1) `<jobcomment>.<uid>`
+2) `<job>:<uid>:<nodename>`
 
-Compute nodes:
-: `<job>:<uid>:<nodename>`
+The `jobcomment` contains a value of the program run in a Login node, `uid` is a user identifier, `job` is a Slurm job identifier, and `nodename` the node identifier.
 
 Due to an unknown bug in the Lustre version 2.12.6, some of the identifiers are broken, for example, missing `job`, `uid` or `nodename` value, for small portion of jobs.
 We discuss how to deal with these issue later.
@@ -187,43 +186,44 @@ This means for example, that there can be more `close` than `open` operations co
 
 ## Monitoring and recording the statistics
 The pipeline for monitoring and recording the statistics consists of multiple instances of a monitoring daemon, and single instance of an ingest daemon and a relational database.
-[Daemon is a program that runs on the background.]
+Daemon is a program that runs on the background.
 We installed a monitoring daemon to each Lustre server on Puhti, and an ingest deamon along with a database to one of the Puhti's utility nodes.
 
-The Monitoring daemon calls the appropriate `lctl get_param` command at regular intervals.
-We found 2 minute interval to give a sufficient resolution at manageable rate of data accumulation.
-It then parses values from the output and sends them to the ingest daemon.
-For each unique identifier, we parse the fields as below and place them into a data structure.
+The Monitoring daemon calls the appropriate `lctl get_param` command at regular intervals to collect statistics.
+We found that 2 minute interval gives a sufficient resolution at manageable rate of data accumulation.
+For each output and unique identifier (`job_id`) in `job_stats`, the program parses the values as below and place them into a data structure with the following fields:
 
 - `snapshot_time` as an integer type.
 - `uid` as an integer type.
 - `job` as an integer type.
   We generate synthetic job ids for utility nodes and some of the broken identifier.
 - `nodename` as a string type.
-  For utility nodes, nodename is either `login` or `puhti`.
+  Login node don't have `nodename` value, but set it to `login`.
 - `source` as a string type.
-- `jobcomment` as a string type. For compute nodes this values is empty.
+- `jobcomment` as a string type. For `job_id`s without this value, we set it to an empty string.
 - all `<operation>`s for target as integer types.
   We parse the values the `sum` values from `read_bytes` and `write_bytes` and `samples` from the others counts.
   We omit the rest of the values.
 
-An instance of the data structure represents a single row in the relational database.
+Each instance of the data structure represents a single row in the relational database.
+The monitoring daemon sends this data to the ingest daemon.
+The ingest program listens to the requests from the monitoring daemons and stores the data into a relational database.
+We used a PostgreSQL with Timescale extension.
 
-Ingest program listens to the requests from the monitoring program and stores them to a relational database.
-
-Due to issues in the identifiers in jobstats, we stored the counter values into a relational database (PostgreSQL with Timescale extension) instead of calculating differences online.
+Due to issues in the identifiers (`job_id`s), we collected the counter values instead of calculating differences online.
 This was contrary to our initial goal.
 However, in order to develop a real-time monitoring system and to reduce the database size and improve query time, the processing must be done online.
+We can efficiently store the differences into a tabular format for storage and analysis.
 
 
 ## Analyzing the statistics
-We furher process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
+* `(uid, job, nodename, source)` along time forms a timeseries
+* we analyze each operation individually
+
+We further process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
 
 * First data point from a new job is lost.
 * Detecting new jobs from the data (first appears on the output).
 * Creating synthetic identifiers for missing and broken values.
 * How many broken identifiers?
-
-Each data point has the same fields for values and thus we can represent it in a tuple.
-Multiple tuples form a table (aka relation), therefore, we can efficiently store the differences into a tabular format for storage and analysis.
 
