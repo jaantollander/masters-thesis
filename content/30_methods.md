@@ -4,8 +4,8 @@
 - *Describe the research material and methodology*
 
 
-## Collecting usage statistics from a Lustre file system
-We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the documentation [@lustredocs, sec. 12.2].
+## Collecting operation statistics from Lustre file system
+We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the documentation, section 12.2 [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system related system calls.
 Each Lustre server keeps counters for all of its targets.
 We can query the values from the counter at given time by running the commands below on each server.
@@ -34,14 +34,14 @@ job_stats:
 
 ---
 
-The `<source>` contains a value such as `scratch-MDT0000` or `scratch-OST0000` indicating the target of the data.
+The `<source>` indicates the target of the data such as `scratch-MDT0000` or `scratch-OST0000`.
 The `job_stats` contains entries for each workload with unique identifier that has performed file system operations on the target.
 The `job_id` field contains a unique identifier in either of two formats:
 
-Identifier for utility nodes:
-: `<job-comment>.<uid>`
+Utility nodes:
+: `<jobcomment>.<uid>`
 
-Identifier for compute nodes:
+Compute nodes:
 : `<job>:<uid>:<nodename>`
 
 Due to an unknown bug in the Lustre version 2.12.6, some of the identifiers are broken, for example, missing `job`, `uid` or `nodename` value, for small portion of jobs.
@@ -65,116 +65,116 @@ These fields contain a values that is a nonnegative integers that increases mono
 A counter is reset if none of its values is updated in duration specified in the configuration, 10 minutes by default.
 Units are (`<unit>`) either bytes (`bytes`) or microseconds (`usecs`).
 
----
-
 Next, we list and explain the operations counted by jobstats.
 Each operation counts statistic from calls to specific system calls.
-Monospace indicates an operation (`operation`) and brackets indicate a system call (`systemcall()`).
+Bolded monospace indicates an operation (**`operation`**) and brackets indicate a system call (`systemcall()`).
 
 We have the following metadata operations performed on MDSs.
 
-`open`
+**`open`**
 : `open()` and it variants
 : Opening files.
 
-`close`
+**`close`**
 : `close()` and its variants
 : Closing files.
 
-`mknod`
+**`mknod`**
 : `mknod()` and its variants
 : Creating new files referred to as file system nodes.
 
-`link`
+**`link`**
 : `link()` and its variants
 : creating hard links. Does not count the first link created by `mknod()`.
 
-`unlink`
+**`unlink`**
 : `unlink()` and variants
 : removing hard links.
 
-`mkdir`
+**`mkdir`**
 : `mkdir()` and variants
 : creating new directories.
 
-`rmdir`
+**`rmdir`**
 : `rmdir()` and variants
 : removing empty directories.
 
-`rename`
+**`rename`**
 : `rename()` and variants
 : renaming files and directories.
 
-`getattr`
+**`getattr`**
 : `stat()`
 : retrieve file access mode, ownership or timestamps.
 
-`setattr`
+**`setattr`**
 : `chmod(), chown(), utime()` and variants
 : setting file access mode, ownership or timestamps.
 
-`getxattr`
+**`getxattr`**
 : `getxattr()` and variants
 : retrieving extended attributes.
 
-`setxattr`
+**`setxattr`**
 : `setxattr()` and variants
 : setting extended attributes.
 
-`statfs`
+**`statfs`**
 : `statfs()` and variants
 : retrieving file system statistics.
 
-`sync`
+**`sync`**
 : `sync()` and variants
 : invoking the kernel to write buffered metadata in memory to disk.
 
-`samedir_rename`
+**`samedir_rename`**
 : disambiguates which files are renamed within the same directory.
 
-`crossdir_rename`
+**`crossdir_rename`**
 : disambiguates which files are moved to another directory potentially with under new name.
 
 We have the following operations on the object data performed on OSSs.
 
-`read`
+**`read`**
 : `read()` and variants
 : reading data from a file.
 
-`write`
+**`write`**
 : `write()` and variants
 : writing data to a file.
 
-`getattr`
+**`getattr`**
 : ???
 
-`setattr`
+**`setattr`**
 : ???
 
-`punch`
+**`punch`**
 : `fallocate()`
 : punching a hole in a file.
 
-`sync`
+**`sync`**
 : `sync()` and variants
 : invoking the kernel to write buffered data in memory to disk.
 
-`get_info`
+**`get_info`**
 : ???
 
-`set_info`
+**`set_info`**
 : ???
 
-`quotactl`
+**`quotactl`**
 : `quotactl()`
 : manipulate disk quota.
 
 Additionally, we have two operations with bytes.
 
-`read_bytes`
+**`read_bytes`**
+: `read()`
 : number of bytes read from a file. Return value from `read()` system call and its variants.
 
-`write_bytes`
+**`write_bytes`**
+: `write()`
 : number of bytes written to a file. Return value from `write()` system call and its variants.
 
 ---
@@ -185,38 +185,45 @@ Thus cached operations are not counted in the jobstats.
 This means for example, that there can be more `close` than `open` operations counted, because `close` cannot be cached.
 
 
-## Processing the statistics
-We parse `sum` values from `read_bytes` and `write_bytes`, `samples` from the others and omit rest of the counts.
+## Monitoring and recording the statistics
+The pipeline for monitoring and recording the statistics consists of multiple instances of a monitoring daemon, and single instance of an ingest daemon and a relational database.
+[Daemon is a program that runs on the background.]
+We installed a monitoring daemon to each Lustre server on Puhti, and an ingest deamon along with a database to one of the Puhti's utility nodes.
 
-We furher process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
-Each data point has the same fields for values and thus we can represent it in a tuple.
-Multiple tuples form a table (aka relation), therefore, we can efficiently store the differences into a tabular format for storage and analysis.
+The Monitoring daemon calls the appropriate `lctl get_param` command at regular intervals.
+We found 2 minute interval to give a sufficient resolution at manageable rate of data accumulation.
+It then parses values from the output and sends them to the ingest daemon.
+For each unique identifier, we parse the fields as below and place them into a data structure.
 
+- `snapshot_time` as an integer type.
+- `uid` as an integer type.
+- `job` as an integer type.
+  We generate synthetic job ids for utility nodes and some of the broken identifier.
+- `nodename` as a string type.
+  For utility nodes, nodename is either `login` or `puhti`.
+- `source` as a string type.
+- `jobcomment` as a string type. For compute nodes this values is empty.
+- all `<operation>`s for target as integer types.
+  We parse the values the `sum` values from `read_bytes` and `write_bytes` and `samples` from the others counts.
+  We omit the rest of the values.
 
-## Problems with jobstats
-The only way to detect a counter reset from the data is to observe if the value decreases.
-However, if the value of counter grows larger after reset than it was before
-reset, we cannot detect it.
-
-First data point from a new job is lost.
-Detecting new jobs from the data (first appears on the output).
-Cached operations are not logged.
-
-Handing missing values by adding synthetic values.
-[Which values are missing? Why?]
-[How many missing values? Compute from sample data.]
-
-Due to a bug in Lustre version 2.?, the `<job>` values are missing for MPI jobs.
-
-
-## Building a data pipeline
-The data pipeline consists of a database, ingest program and monitoring program.
-
-We installed a monitoring program, which runs on the background as a daemon, querying the values every two minutes, parses them and computes the difference.
-The differences are sent to database via HTTP.
+An instance of the data structure represents a single row in the relational database.
 
 Ingest program listens to the requests from the monitoring program and stores them to a relational database.
 
+Due to issues in the identifiers in jobstats, we stored the counter values into a relational database (PostgreSQL with Timescale extension) instead of calculating differences online.
+This was contrary to our initial goal.
+However, in order to develop a real-time monitoring system and to reduce the database size and improve query time, the processing must be done online.
 
-## Analyzing the metrics
+
+## Analyzing the statistics
+We furher process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
+
+* First data point from a new job is lost.
+* Detecting new jobs from the data (first appears on the output).
+* Creating synthetic identifiers for missing and broken values.
+* How many broken identifiers?
+
+Each data point has the same fields for values and thus we can represent it in a tuple.
+Multiple tuples form a table (aka relation), therefore, we can efficiently store the differences into a tabular format for storage and analysis.
 
