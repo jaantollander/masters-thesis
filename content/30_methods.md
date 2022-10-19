@@ -46,20 +46,20 @@ We can specify its format with `jobid_name` parameter in Lustre with following f
 - `%g` group ID number
 - `%p` numeric process ID
 
-We have set Lusre parameters `job_id_name="%j:%u:H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job IDs for `%j`.
+We have set Lustre parameters `job_id_name="%j:%u:H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job IDs for `%j`.
 Then, we have two `job_id` formats:
 
 `<job>:<uid>:<nodename>`
 : with formating string `"%j:%u:H"` when `SLURM_JOB_ID` is set.
 
-`<process>.<uid>`
+`<executable>.<uid>`
 : with formatting string `"%e.%u"` when `SLURM_JOB_ID` is undefined, such as for Login nodes.
 
 Due to an unknown bug in Lustre (version 2.12.6), we found that some of the identifiers produces by jobstats were missing or broken.
 We discuss how to deal with these issue in later sections.
 
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the counter was last updated.
-Finally, the output contains statistics of each operation specific to the target type, that is, MDT or OST.
+Finally, the output contains statistics of each operation specific to the Lustre target, that is, MDT and OST track different operations.
 The values are formatted as a key-value pairs separated by commas and enclosed within curly brackets.
 
 ---
@@ -205,15 +205,15 @@ The Monitoring daemon calls the appropriate `lctl get_param` command at regular 
 We found that 2 minute interval gives a sufficient resolution at manageable rate of data accumulation.
 For each output and unique identifier (`job_id`) in `job_stats`, the program parses the values as below and place them into a data structure with the following fields:
 
-- `source` as a string type.
-- `snapshot_time` as an integer type.
-- `uid` as an integer type.
-- `job` as an integer type.
-  We generate synthetic job ids for utility nodes and some of the broken identifier.
-- `nodename` as a string type.
-  Login node don't have `nodename` value, but set it to `login`.
-- `process` as a string type. For `job_id`s without this value, we set it to an empty string.
-- all `<operation>`s for target as integer types.
+- `source` to a string type.
+- `snapshot_time` to an integer type.
+- `uid` to an integer type.
+- `job` to an integer type.
+  We generate synthetic `job` IDs for utility nodes and identifiers where only `job` is missing, but `uid` and `nodename` are intact.
+- `nodename` to a string type.
+  Login node don't have `nodename` value, thus we set it to `login`.
+- `executable` to a string type. For `job_id`s without this value, we set it to an empty string.
+- all `<operation>`s for target to integer types.
   We parse the values the `sum` values from `read_bytes` and `write_bytes` and `samples` from the others counts.
   We omit the rest of the values.
 
@@ -222,47 +222,36 @@ The ingest daemon listens to the requests from the monitoring daemons and stores
 We used a PostgreSQL database with Timescale extension.
 
 
-## Handling identifiers
-Deal with the different formatting for login and compute nodes.
+## Issues with identifiers
+We found formatting issues with `job_id` identifiers in the generated data from Lustre jobstats on the Puhti system.
+For example, there were many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
 
-We found issues with the formatting of `job_id` identifiers on Lustre with our Puhti system.
-
-Processes running on the Login nodes do not have a `job` identifier.
-For them, we generated a synthetic `job` identifier, that was quaranteed to be unique.
-
-As we gathered jobstats from Lustre, we found that the Slurm job identifier in the `<job>` field was sometimes missing from the `job_id` for Slurm jobs.
-Both, MDSs and OSSs were afflicted by the issue.
-Were generated another synthetic job identifier for the missing Slurm job identifiers.
-
-Furthermore, some (less than $1\%$) `job_id` values from the OSSs were so badly malformed that we could not be reliably parse them and we had to discard them.
+Furthermore, on the OSS `job_id`s had issues such as values missing from `uid` and `nodename` fields or fully-qualified hostname instead of the specified short hostname in the `nodename` field.
+Even more problematic was that sometimes `job_id` was malformed to an extent that we could not reliably parse information from it.
 For example, there were characters in the identifiers missing, overwritten or duplicated.
-We do not know the cause of the issue, but we suspect a data race.
+We had to discard these entries completely.
+We suspect that data race might be causing some these issues.
 
----
+For example, in one sample of 113 consequtive 2 minute intervals, the output contained ??? entries from MDS and ??? entries from OSS.
 
-For example, in one sample of 113 consequtive 2 minute intervals, the output contained
-
-* MDS and OSS
-
-`job` | `uid` | `nodename` | oss (user) | oss (system)
-:-:|:-:|:-:|:-: | :-:
--|u|l|
-x|u|c|
--|u|c|
-x|-|-|
-x|u|-|
--|u|-|
--|-|-|
+`job` | `uid` | `nodename` | oss (user uid) | % | oss (system uid) | %
+:-:|:-:|:-:|-:|-:|-:|-:
+-|u|l|271561|16.85|10074|1.61
+j|u|c|1126289|69.88|2003|0.32
+-|u|c|187101|11.61|610189|97.70
+-|u|s|9674|0.60|1519|0.24
+j|u|-|4769|0.30
+j|-|-|6928|0.43
+-|-|-|2766|0.17
+j|u|q|2655|0.16
+-|u|-|67|0.00416|540|0.086
+-|u|q|43|0.00267|237|0.038
+||||1611853||624562|
 
 : number of entries in a sample of raw data, percentage of entries with different fields
 
----
-
-* How many broken identifiers? calculate from sample `lctl` output.
 * Make computing job specific stats difficult and analysing individual timeseries.
-* Creating synthetic identifiers for missing and broken values.
 * We believe that the counter data was not affected by the issue and is reliable.
-* Estimate data loss
 * data is scattered to more than one timeseries, some data is lost
 * investigate ways to fix these issues (user and Lustre size)
 
