@@ -359,7 +359,7 @@ The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to 
 The network has a total of 28 L1 switches and 12 L2 switches.
 The InfiniBand cabling has 1:1 pruning for GPU nodes and 2:1 for other nodes.
 
-The global storage on Puhti consists of a Lustre file system (version 2.12.6) that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
+The global storage on Puhti consists of a Lustre file system (version 2.12.6) from *DataDirect Networks (DDN)* that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
 Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
 Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
