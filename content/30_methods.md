@@ -232,28 +232,45 @@ For example, there were characters in the identifiers missing, overwritten or du
 We had to discard these entries completely.
 We suspect that data race might be causing some these issues.
 
-For example, in one sample of 113 consequtive 2 minute intervals, the output contained ??? entries from MDS and ??? entries from OSS.
 
-`job` | `uid` | `nodename` | oss (user uid) | % | oss (system uid) | %
+`job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
 :-:|:-:|:-:|-:|-:|-:|-:
--|u|l|271561|16.85|10074|1.61
-j|u|c|1126289|69.88|2003|0.32
--|u|c|187101|11.61|610189|97.70
--|u|s|9674|0.60|1519|0.24
-j|u|-|4769|0.30
-j|-|-|6928|0.43
+-|uid|login|55077|24.19|6132|4.81
+job|uid|compute|145590|63.93|36909|28.98
+-|uid|compute|21037|9.24|84275|66.17
+-|uid|puhti|6012|2.64|45|0.04
+||||227716||127361|
+
+
+: MDS entries \label{tab:mds-entries}
+
+
+`job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
+:-:|:-:|:-:|-:|-:|-:|-:
+-|uid|login|271561|16.85|10074|1.61
+job|uid|compute|1126289|69.88|2003|0.32
+-|uid|compute|187101|11.61|610189|97.70
+-|uid|puhti|9674|0.60|1519|0.24
+job|uid|compute (q)|2655|0.16
+-|uid|compute (q)|43|<0.01|237|0.04
+job|uid|-|4769|0.30
+job|-|-|6928|0.43
+-|uid|-|67|<0.01|540|0.09
 -|-|-|2766|0.17
-j|u|q|2655|0.16
--|u|-|67|0.00416|540|0.086
--|u|q|43|0.00267|237|0.038
 ||||1611853||624562|
 
-: number of entries in a sample of raw data, percentage of entries with different fields
+: OSS entries \label{tab:oss-entries}
+
+For example, in one sample of 113 consequtive 2 minute intervals.
+Tables \ref{tab:mds-entries} and \ref{tab:oss-entries} shows the number of entries for normal or missing uids and system uids for different `job_id` compositions.
+Dash "-" indicates missing value, "login" indicates Login node, "compute" indicates compute nodes, "(q)" indicates fully-qualified nodename and "puhti" is node that is not login or compute node.
 
 * Make computing job specific stats difficult and analysing individual timeseries.
 * We believe that the counter data was not affected by the issue and is reliable.
 * data is scattered to more than one timeseries, some data is lost
 * investigate ways to fix these issues (user and Lustre size)
+* we should reduce entries for system jobs by setting same `job_id` for them, reduces database size
+* `job_id` format determines how many entries are generated, effect data accumulation rate, wasteful for system uids to generate many entries
 
 
 ## Analyzing the statistics
