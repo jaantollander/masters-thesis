@@ -261,16 +261,12 @@ job|-|-|6928|0.43
 
 : OSS entries \label{tab:oss-entries}
 
-For example, in one sample of 113 consequtive 2 minute intervals.
-Tables \ref{tab:mds-entries} and \ref{tab:oss-entries} shows the number of entries for normal or missing uids and system uids for different `job_id` compositions.
-Dash "-" indicates missing value, "login" indicates Login node, "compute" indicates compute nodes, "(q)" indicates fully-qualified nodename and "puhti" is node that is not login or compute node.
+For example, the tables \ref{tab:mds-entries} and \ref{tab:oss-entries} show the counts of entries of a sample of 113 consequtive 2 minute intervals for MDSs and OSSs separated by normal or missing uids and system uids for different `job_id` compositions.
+In the table, "job" indicates that job ID exists, "uid" indicates user ID exists, dash "-" indicates missing value, "login" indicates login node, "compute" indicates compute node, "(q)" indicates fully-qualified nodename and "puhti" indicates node that is not login or compute node.
 
-* Make computing job specific stats difficult and analysing individual timeseries.
-* We believe that the counter data was not affected by the issue and is reliable.
-* data is scattered to more than one timeseries, some data is lost
-* investigate ways to fix these issues (user and Lustre size)
-* we should reduce entries for system jobs by setting same `job_id` for them, reduces database size
-* `job_id` format determines how many entries are generated, effect data accumulation rate, wasteful for system uids to generate many entries
+As a consequence of these issues, data from the same job might be scattered into multiple timeseries without reliable indicators making it impossible to provide reliable job specific statistics.
+Also, discarded entries lead lead to some data loss.
+We do not know if the actual counter data is affected by issues.
 
 
 ## Analyzing the statistics
