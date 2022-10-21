@@ -225,12 +225,44 @@ We used a PostgreSQL database with Timescale extension.
 ## Issues with identifiers
 We found formatting issues with `job_id` identifiers in the generated data from Lustre jobstats on the Puhti system.
 For example, there were many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
+For example:
+
+`11317854:17627127:r01c01`
+: correct identifier
+
+`:17627127:r01c01`
+: `job` field missing
 
 Furthermore, on the OSS `job_id`s had issues such as values missing from `uid` and `nodename` fields or fully-qualified hostname instead of the specified short hostname in the `nodename` field.
 Even more problematic was that sometimes `job_id` was malformed to an extent that we could not reliably parse information from it.
 For example, there were characters in the identifiers missing, overwritten or duplicated.
 We had to discard these entries completely.
 We suspect that data race might be causing some these issues.
+For example:
+
+`11317854`
+: `job` field
+
+`11317854:`
+: `job` field and separator `:`
+
+`113178544`
+: `job` field with extra charater at the end
+
+`11317854:17627127`
+: `job` and `uid` fields
+
+`11317854:17627127:`
+: `job` and `uid` fields ending with separator
+
+`11317854:17627127:r01c01.bullx`
+: fully-qualified hostname instead of short hostname
+
+`:17627127:r01c01.bullx`
+: `job` field missing and fully-qualified hostname instead of short hostname
+
+`:1317854:17627127:r01c01`
+: first character in `job` overwritten by separator
 
 
 `job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
@@ -267,6 +299,7 @@ In the table, "job" indicates that job ID exists, "uid" indicates user ID exists
 As a consequence of these issues, data from the same job might be scattered into multiple timeseries without reliable indicators making it impossible to provide reliable job specific statistics.
 Also, discarded entries lead lead to some data loss.
 We do not know if the actual counter data is affected by issues.
+
 
 
 ## Analyzing the statistics
