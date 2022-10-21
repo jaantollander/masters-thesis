@@ -203,14 +203,15 @@ We installed a monitoring daemon to each Lustre server, and an ingest deamon alo
 
 The Monitoring daemon calls the appropriate `lctl get_param` command at regular intervals to collect statistics.
 We found that 2 minute interval gives a sufficient resolution at manageable rate of data accumulation.
-For each output and unique identifier (`job_id`) in `job_stats`, the program parses the values as below and place them into a data structure with the following fields:
+We record the time when we collected the statistics as `timestamp`.
+For each output and unique identifier (`job_id`) in `job_stats`, the program parses the values as below and place them into a data structure with the following fields along with the `timestamp` field.
 
-- `source` to a string type.
 - `snapshot_time` to an integer type.
 - `uid` to an integer type.
 - `job` to an integer type.
   We generate synthetic `job` IDs for utility nodes and identifiers where only `job` is missing, but `uid` and `nodename` are intact.
 - `nodename` to a string type.
+- `source` to a string type.
   Login node don't have `nodename` value, thus we set it to `login`.
 - `executable` to a string type. For `job_id`s without this value, we set it to an empty string.
 - all `<operation>`s for target to integer types.
@@ -303,17 +304,25 @@ We do not know if the actual counter data is affected by issues.
 
 
 ## Analyzing the statistics
-In the data, the tuple of values `(uid, job, nodename, source)` forms an unique identifier.
-For the same unique identifier, the values of the operations along time (`snapshot_time`) form a timeseries.
+For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms an unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
 
-* we analyze each operation individually
+For each unique identifier, each counter value $v$ of an operation along time $t$ form a timeseries.
+Given two points consequtive points in the timeseries, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the interval length as $\Delta t = t^\prime - t > 0$ and number of operations $\Delta v > 0$ during the interval as follows.
+If $v^\prime \ge v$, the counter is incremented and we have
 
-We further process the data by computing a difference between two concecutive intervals, which tells us how many operations occured during the interval.
+$$\Delta v = v^\prime - v.$$
 
-* First data point from a new job is lost.
-* Detecting new jobs from the data (first appears on the output).
+Otherwise, if $v^\prime < v$, the counter has reset and we have
+
+$$\Delta v = v^\prime.$$
+
+Then, we can calculate the average rate of operations per time unit during the interval for each operation as
+
+$$r=\Delta v / \Delta t.$$
 
 ---
+
+Detecting new jobs from the data (first appears on the output).
 
 Due to issues in the identifiers (`job_id`s), we collected the counter values instead of calculating differences online.
 This was contrary to our initial goal.
