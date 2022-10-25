@@ -324,16 +324,29 @@ Then, we can calculate the *average rate of change* during the interval for each
 $$r=\Delta v / \Delta t.$$
 
 If a particular `job_id` has not yet performed any file operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
-In these cases, we can infer the initial counter $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
-For the first recording interval, we cannot infer $t_0$ and we need to discard the initial counter. Then, given a series of counter values
+In these cases, we can infer the *initial counter* $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
+For the first recording interval, we cannot infer $t_0$ and we need to discard the initial counter.
+The *observed counters* are $(t_1,v_1),...,(t_n,v_n).$
+Then, given a series of counter values
 
 $$(t_0, v_0), (t_1, v_1), (t_2, v_2), ..., (t_{n-1}, v_{n-1}), (t_n, v_n),$$
 
-we can compute the series of average rates of change $r_i$ from timestamp $t_i$ to $t_{i+1}$ as described previously and obtain
+we can compute the series of average rates of change $r_i$ in the interval $[t_i,t_{i+1})$ as described previously and obtain
 
 $$(t_0, r_0), (t_1, r_1), (t_2, r_2),...,(t_{n-1}, r_{n-1}), (t_n, r_n),$$
 
 where $r_n=0,$ that is, the rate of change when there is no more counter values is set to zero.
+Additionally, the value of rate of change before timestamp $t_0$ is implicitly zero.
+
+Mathematically, the average rate of change is a step function such that
+
+$$r(t)=\begin{cases}
+0, & t < t_0 \\
+r_i, & t_i \le t < t_{i+1}, \forall i\in\{0,...,n-1\} \\
+0, & t \ge t_n
+\end{cases}.$$
+
+We can treat the average rates of change as step functions.
 
 
 ## Visualizing the rate of change
@@ -349,4 +362,5 @@ Due to issues in the identifiers (`job_id`s), we collected the counter values in
 This was contrary to our initial goal.
 However, in order to develop a real-time monitoring system and to reduce the database size and improve query time, the processing must be done online.
 We can efficiently store the differences into a tabular format for storage and analysis.
+Implement as stream processing.
 
