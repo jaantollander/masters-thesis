@@ -1,3 +1,0 @@
-Red Hat Enterprise Linux Server release 7.9 (Maipo)
-Lustre version: 2.12.6_ddn72
-slurm 21.08.7-1_issue_803
