@@ -110,7 +110,7 @@ The super user is used by *system administrators* for administrative tasks such 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
 
-## File system interface
+## Linux file system interface
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
@@ -237,7 +237,12 @@ int main()
 ---
 
 
-## Client-server architecture
+## Lustre cluster storage system
+Lustre provides storage architecture for Linux clusters [@lustre-storage-architecture; @lustredocs, secs. 1-2].
+The *Lustre file system* provides a POSIX standard-compliant file system interface.
+It aggregates storage such that all files are available on the entire cluster, not only on specific nodes.
+The Lustre file system is designed using the client-server architecture.
+
 A *client-server application* is an application that is broken into two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
 The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
@@ -245,13 +250,6 @@ The client and server may reside in the same host computer or separate host comp
 They communicate with each other by some Interprocess Communication (IPC) mechanism.
 "Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
 
-
-## Lustre cluster storage system
-Lustre provides storage architecture for Linux clusters [@lustre-storage-architecture; @lustredocs, secs. 1-2].
-The *Lustre file system* provides a POSIX standard-compliant file system interface.
-It aggregates storage such that all files are available on the entire cluster, not only on specific nodes.
-
-The Lustre file system is designed using the client-server architecture.
 *Lustre Clients* on a computer cluster are nodes running the Lustre client software and have the Lustre file system mounted.
 The Lustre client software provides an interface between the Linux virtual file system and the Lustre servers.
 For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
@@ -271,39 +269,20 @@ Lustre file system components are connected using *Lustre Networking (LNet)*, a 
 LNet supports many network types, including InfiniBand and IP networks, with simultaneous availability between them.
 
 
-## Batch processing
-Many clusters use a *workload manager* to run programs as *batch processes*.
-A batch process is a computation that runs from start to finish without user interaction, unlike interactive processes such as word editors or web servers which respond to user input.
-Typically, batch processes have predefined limits for resource usage.
-For example, a batch process should not use more than specified amount or memory or time.
-
-
 ## Slurm workload manager
+Typically, clusters rely on a *workload manager* for allocating access to computing resources, scheduling and running programs which may instantiate an interactive or a batch process.
+A batch process is a computation that runs from start to finish without user interaction compared to an interactive processes such as an active terminal, a word editor or a web server which respond to user input.
+We must specify limits for the resources we request.
+
 *Slurm* is a workload manager for Linux clusters [@slurmdocs].
-It is responsible for allocating access to the computing resources for users to perform batch processes.
 These computing resources include nodes, cores, memory, and time.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.
-We refer to such a resource allocation as a *job*.
+We refer to such a resource allocation as a *job* in a job script.
 An individual job may contain multiple *job steps* that may execute sequentially or in parallel.
 Slurm provides a framework for starting, executing, and monitoring work on the allocated nodes.
 Slurm groups nodes into *partitions*, which may be overlapping.
 It also maintains a queue of jobs waiting for resources to become available for them to be started.
 Slurm can also perform accounting for resource usage.
-
-
-## Byte units
-Value | Metric | Value | IEC
-- | - | - | -
-$1$ | byte (B) | $1$ | byte (B)
-$1000^1$ | kilobyte (kB) | $1024^1$ | kibibyte (KiB)
-$1000^2$ | megabyte (MB) | $1024^2$ | mebibyte (MiB)
-$1000^3$ | gigabyte (GB) | $1024^3$ | gibibyte (GiB)
-$1000^4$ | terabyte (TB) | $1024^4$ | tebibyte (TiB)
-$1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
-
-: Units for bytes in base $10$ and $2$
-
-One byte represents a string of $8$ bits.
 
 
 ## Puhti cluster at CSC
@@ -321,6 +300,20 @@ In Linux systems, each user account is associated with *user* and each project w
 
 We will be looking at the structure of CSC *Puhti* cluster.
 As the operating system, Puhti uses the *RedHat Enterprise Linux Server* (version 7.9) distribution.
+
+### Byte units
+Value | Metric | Value | IEC
+- | - | - | -
+$1$ | byte (B) | $1$ | byte (B)
+$1000^1$ | kilobyte (kB) | $1024^1$ | kibibyte (KiB)
+$1000^2$ | megabyte (MB) | $1024^2$ | mebibyte (MiB)
+$1000^3$ | gigabyte (GB) | $1024^3$ | gibibyte (GiB)
+$1000^4$ | terabyte (TB) | $1024^4$ | tebibyte (TiB)
+$1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
+
+: Units for bytes in base $10$ and $2$
+
+One byte represents a string of $8$ bits.
 
 ### Hardware Configuration
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)

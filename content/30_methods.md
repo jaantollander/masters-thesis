@@ -36,7 +36,11 @@ job_stats:
 
 The `<source>` indicates the target of the data such as `scratch-MDT0000` or `scratch-OST0000`.
 The `job_stats` contains entries for each workload with the unique identifier `job_id` that has performed file system operations on the target.
-We can specify its format with `jobid_name` parameter in Lustre with the following format codes:
+
+We can specify the format `job_id` with `jobid_name` parameter in Lustre.
+The formatting determines the granurarly of the statistics.
+More granularity also means that we accumulate data faster.
+We can use the following format codes.
 
 - `%e` executable name
 - `%h` fully-qualified hostname
