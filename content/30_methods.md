@@ -323,23 +323,25 @@ Then, we can calculate the *average rate of change* during the interval for each
 
 $$r=\Delta v / \Delta t.$$
 
-Given a series of counter values
+If a particular `job_id` has not yet performed any file operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
+In these cases, we can infer the initial counter $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
+For the first recording interval, we cannot infer $t_0$ and we need to discard the initial counter. Then, given a series of counter values
 
-$$(t_0, v_0), (t_1, v_1), (t_2, v_2), ..., (t_{n-1}, v_{n-1}), (t_n, v_n).$$
+$$(t_0, v_0), (t_1, v_1), (t_2, v_2), ..., (t_{n-1}, v_{n-1}), (t_n, v_n),$$
 
-where $(t_0, v_0)$ is an implicit zero counter, which we must infer.
+we can compute the series of average rates of change $r_i$ from timestamp $t_i$ to $t_{i+1}$ as described previously and obtain
 
-For the first recording interval, we cannot compute the rate of change.
-For the subsequent recording intervals, we can detect when new counters appear in the data and compute a rate of change for them by using $v_0=0$ and choosing $t_0$ as the timestamp of last recording interval.
+$$(t_0, r_0), (t_1, r_1), (t_2, r_2),...,(t_{n-1}, r_{n-1}), (t_n, r_n),$$
 
-Compute rate of change $r_i$ from timestamp $t_i$ to $t_{i+1}$ is given as
-
-$$(t_0, r_0), (t_1, r_1), (t_2, r_2),...,(t_{n-1}, r_{n-1}), (t_n, r_n)$$
-
-where $r_n=0$ the rate of change is zero after there is no more counter values.
+where $r_n=0,$ that is, the rate of change when there is no more counter values is set to zero.
 
 
-## Analyzing the rate of change
+## Visualizing the rate of change
+- transforming two series to same timestamps
+- Individual series of rates of change
+- multiple series of rates of change
+- heatmap
+- summation, binning with logarith and floor
 
 
 ## Notes
