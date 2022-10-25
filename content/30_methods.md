@@ -306,11 +306,11 @@ We do not know if the actual counter data is affected by issues.
 
 
 
-## Analyzing the statistics
+## Computing average rate of change
 For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms a unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
 
 For each unique identifier, each counter value $v$ of an operation along time $t$ form a time series.
-Given two points consequtive points in the timeseries, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the interval length as $\Delta t = t^\prime - t > 0$ and number of operations $\Delta v > 0$ during the interval as follows.
+Given two points consequtive points in the timeseries, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t = t^\prime - t > 0$ and *number of operations* $\Delta v > 0$ during the interval as follows.
 If $v^\prime \ge v$, the counter is incremented, and we have
 
 $$\Delta v = v^\prime - v.$$
@@ -319,17 +319,30 @@ Otherwise, if $v^\prime < v$, the counter has reset, and we have
 
 $$\Delta v = v^\prime.$$
 
-Then, we can calculate the average rate of operations per time unit during the interval for each operation as
+Then, we can calculate the *average rate of change* during the interval for each operation as
 
 $$r=\Delta v / \Delta t.$$
 
----
+Given a series of counter values
 
-Integral preserving transformation to uniform timestamps.
-Is using `timestamp` instead of `snapshot_time` integral preserving?
+$$(t_0, v_0), (t_1, v_1), (t_2, v_2), ..., (t_{n-1}, v_{n-1}), (t_n, v_n).$$
 
-Detecting new jobs from the data (first appears on the output).
+where $(t_0, v_0)$ is an implicit zero counter, which we must infer.
 
+For the first recording interval, we cannot compute the rate of change.
+For the subsequent recording intervals, we can detect when new counters appear in the data and compute a rate of change for them by using $v_0=0$ and choosing $t_0$ as the timestamp of last recording interval.
+
+Compute rate of change $r_i$ from timestamp $t_i$ to $t_{i+1}$ is given as
+
+$$(t_0, r_0), (t_1, r_1), (t_2, r_2),...,(t_{n-1}, r_{n-1}), (t_n, r_n)$$
+
+where $r_n=0$ the rate of change is zero after there is no more counter values.
+
+
+## Analyzing the rate of change
+
+
+## Notes
 Due to issues in the identifiers (`job_id`s), we collected the counter values instead of calculating differences online.
 This was contrary to our initial goal.
 However, in order to develop a real-time monitoring system and to reduce the database size and improve query time, the processing must be done online.
