@@ -341,20 +341,32 @@ Additionally, the value of rate of change before timestamp $t_0$ is implicitly z
 Mathematically, the average rate of change is a step function such that
 
 $$r(t)=\begin{cases}
-0, & t < t_0 \\
+0, & t < t_{0} \\
 r_i, & t_i \le t < t_{i+1}, \forall i\in\{0,...,n-1\} \\
 0, & t \ge t_n
 \end{cases}.$$
 
 We can treat the average rates of change as step functions.
 
+- sum step functions with same or different timestamps
+- transforming two step functions to same timestamps (in the case they do not have)
+
 
 ## Visualizing the rate of change
-- transforming two series to same timestamps
-- Individual series of rates of change
-- multiple series of rates of change
-- heatmap
-- summation, binning with logarith and floor
+We can visualize an individual time series as step plot.
+However, our configuration produces thousands of individual time series.
+To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
+
+For multiple step functions with same timestamps.
+
+Parameter *base* $b>1$ determines the resolution of the binning.
+Then, a logarithmic bin $k$ of rate $r$ is
+
+$$k=\lfloor \log_{b}(r) \rfloor.$$
+
+This mean that each bin $k$ contains the counts of rates between the values
+
+$$b^k \le r < b^{k+1}.$$
 
 
 ## Notes
