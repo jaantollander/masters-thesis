@@ -326,7 +326,7 @@ $$r=\Delta v / \Delta t.$$
 If a particular `job_id` has not yet performed any file operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
 In these cases, we can infer the *initial counter* $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
 For the first recording interval, we cannot infer $t_0$ and we need to discard the initial counter.
-The *observed counters* are $(t_1,v_1),...,(t_n,v_n).$
+The *observed counters* are $(t_1,v_1),...,(t_n,v_n),$ where $n\in\mathbb{N}.$
 Then, given a series of counter values
 
 $$(t_0, v_0), (t_1, v_1), (t_2, v_2), ..., (t_{n-1}, v_{n-1}), (t_n, v_n),$$
@@ -336,20 +336,38 @@ we can compute the series of average rates of change $r_i$ in the interval $[t_i
 $$(t_0, r_0), (t_1, r_1), (t_2, r_2),...,(t_{n-1}, r_{n-1}), (t_n, r_n),$$
 
 where $r_n=0,$ that is, the rate of change when there is no more counter values is set to zero.
-Additionally, the value of rate of change before timestamp $t_0$ is implicitly zero.
-
-Mathematically, the average rate of change is a step function such that
+Mathematically, the average rate of change forms a step function such that
 
 $$r(t)=\begin{cases}
 0, & t < t_{0} \\
 r_i, & t_i \le t < t_{i+1}, \forall i\in\{0,...,n-1\} \\
 0, & t \ge t_n
-\end{cases}.$$
+\end{cases},$$
 
-We can treat the average rates of change as step functions.
+where the rate of change is zero before we have observed any values, formally $t < t_{0}.$
 
-- sum step functions with same or different timestamps
-- transforming two step functions to same timestamps (in the case they do not have)
+We can recover the changes in counter values from the step function using an integral
+
+$$\Delta v_{i}=\int_{t_{i}}^{t_{i+1}} r(t)\,dt = r_{i} \cdot (t_{i+1}-t_{i}) = r_{i}\cdot\Delta t_{i},\quad \forall i\in\{1,...,n-1\}.$$
+
+---
+
+We can transform a step function $r(t)$ into a step function $r^\prime(t)$ defined by 
+
+$$(t_0^\prime, r_0^\prime), (t_1^\prime, r_1^\prime), (t_2^\prime, r_2^\prime),...,(t_{m-1}^\prime, r_{m-1}^\prime), (t_m^\prime, r_m^\prime),\quad m\in\mathbb{N}$$
+
+where
+$r_{j}^{\prime} = \Delta v_{j}^{\prime} / \Delta t_{j}^{\prime}$ and
+$\Delta t_{j}^{\prime} = (t_{j+1}^\prime - t_{j}^\prime)$
+such that it preserves the change in counter values in the new intervals
+
+$$
+\Delta v_{j}^\prime = 
+\int_{t_{j}^\prime}^{t_{j+1}^\prime} r^\prime(t)\,dt = 
+\int_{t_{j}^\prime}^{t_{j+1}^\prime} r(t)\,dt, \quad \forall j\in\{0,...,m-1\}.
+$$
+
+transforming two step functions to same timestamps (in the case they do not have)
 
 
 ## Visualizing the rate of change
