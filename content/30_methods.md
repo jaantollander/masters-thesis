@@ -268,6 +268,9 @@ For example:
 `:1317854:17627127:r01c01`
 : the first character in `job` overwritten by separator
 
+---
+
+> TODO: add plot of counted job ids
 
 `job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
 :-:|:-:|:-:|-:|-:|-:|-:
@@ -307,6 +310,8 @@ We do not know if the actual counter data is affected by issues.
 
 
 ## Computing average rate of change
+> TODO: add plot of raw counter values and computed rate of change
+
 For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms a unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
 
 For each unique identifier, each counter value $v$ of an operation along time $t$ form a time series.
@@ -367,10 +372,10 @@ $$
 \int_{t_{j}^\prime}^{t_{j+1}^\prime} r(t)\,dt, \quad \forall j\in\{0,...,m-1\}.
 $$
 
-transforming two step functions to same timestamps (in the case they do not have)
-
 
 ## Visualizing the rate of change
+> TODO: add plot of sum aggregate and heatmaps
+
 We can visualize an individual time series as step plot.
 However, our configuration produces thousands of individual time series.
 To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
