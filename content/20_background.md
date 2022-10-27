@@ -281,3 +281,14 @@ Slurm groups nodes into *partitions*, which may be overlapping.
 It also maintains a queue of jobs waiting for resources to become available for them to be started.
 Slurm can also perform accounting for resource usage.
 
+
+## Common file I/O problems
+[@tacc-io-guideline]
+
+
+## Computing at CSC
+*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
+It is owned by the Finnish-state and higher education institutions.
+These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
+We will be looking at the structure of CSC *Puhti* cluster.
+

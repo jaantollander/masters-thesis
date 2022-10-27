@@ -1,22 +1,6 @@
 \newpage
 
 # Puhti cluster at CSC
-## CSC --  The IT Center for Science
-*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
-It is owned by the Finnish-state and higher education institutions.
-These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
-
-In CSC systems, each user has one *user account* which can belong to one or more *projects*.
-Projects are used for setting quotas and accounting of computational resources and storage.
-The usage of computational resources is measured using *Billing Units (BU)*.
-These resources include reserved CPU cores, memory, local disk, and GPUs per unit of time.
-In Linux systems, each user account is associated with *user* and each project with a *group*.
-[@cscdocs]
-
-We will be looking at the structure of CSC *Puhti* cluster.
-As the operating system, Puhti uses the *RedHat Enterprise Linux Server* (version 7.9) distribution.
-
-
 Value | Metric | Value | IEC
 - | - | - | -
 $1$ | byte (B) | $1$ | byte (B)
@@ -74,8 +58,40 @@ Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
 Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
-## Storage areas
-In the file system, each storage area has a dedicated directory.
+
+## System configuration
+partition name | time limit | task limit | node limit | node type
+-|-|-|-|-|-|-
+test | 15 minutes | 80 | 2 | M
+interactive | 7 days | 8 | 1 | IO
+small | 3 days |  40 | 1 | M, L, IO
+large | 3 days | 1040 | 26 | M, L, IO
+longrun | 14 days | 40 | 1 | M, L, IO
+hugemem | 3 days | 160 | 4 | XL, BM
+hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM
+fmitest | 1 hour | 80 | 2 | M-FMI
+fmi | 12 days | 4000 | 100 | M-FMI
+gputest | 15 minutes | 8 | 2 | GPU
+gpu | 3 days | 80 | 20 | GPU
+
+: Slurm partitions on Puhti \label{tab:slurm-partitions}
+
+As the operating system, Puhti uses the *RedHat Enterprise Linux Server* (version 7.9) distribution.
+
+Slurm (version 21.08.7) partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
+
+There are 2 cpu per node and 20 cores per cpu, which makes total of 40 cores per node.
+Therefore task limit can be at most 40 times the node limit, but lower for some partitions.
+
+In CSC systems, each user has one *user account* which can belong to one or more *projects*.
+Projects are used for setting quotas and accounting of computational resources and storage.
+The usage of computational resources is measured using *Billing Units (BU)*.
+These resources include reserved CPU cores, memory, local disk, and GPUs per unit of time.
+In Linux systems, each user account is associated with *user* and each project with a *group*.
+[@cscdocs]
+
+File system is separated to *storage areas*.
+Each storage area has a dedicated directory.
 The global file system (Lustre) is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
 *home*
@@ -108,30 +124,8 @@ The quota depends on how much is requested for the job.
 It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
 
 
-## Slurm configuration
 
-partition name | time limit | task limit | node limit | node type
--|-|-|-|-|-|-
-test | 15 minutes | 80 | 2 | M
-interactive | 7 days | 8 | 1 | IO
-small | 3 days |  40 | 1 | M, L, IO
-large | 3 days | 1040 | 26 | M, L, IO
-longrun | 14 days | 40 | 1 | M, L, IO
-hugemem | 3 days | 160 | 4 | XL, BM
-hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM
-fmitest | 1 hour | 80 | 2 | M-FMI
-fmi | 12 days | 4000 | 100 | M-FMI
-gputest | 15 minutes | 8 | 2 | GPU
-gpu | 3 days | 80 | 20 | GPU
-
-: Slurm partitions on Puhti \label{tab:slurm-partitions}
-
-Slurm (version 21.08.7) partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
-
-There are 2 cpu per node and 20 cores per cpu, which makes total of 40 cores per node.
-Therefore task limit can be at most 40 times the node limit, but lower for some partitions.
-
-## Running jobs via Slurm
+## Running jobs
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
@@ -208,7 +202,4 @@ The program is some large parallel program such as a large, well parallelizing s
 The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and cpus from a single node.
 These programs could be, for example, programs for post processing steps, for example, processing and backing up the simulation results.
 
-
-## Common file I/O problems
-[@tacc-io-guideline]
 

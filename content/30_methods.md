@@ -309,7 +309,7 @@ We do not know if the actual counter data is affected by issues.
 
 
 
-## Computing average rate of change
+## Computing rates of change from the statistics
 > TODO: add plot of raw counter values and computed rate of change
 
 For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms a unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
@@ -374,7 +374,7 @@ This transformation is useful if we have multiple step functions with steps as d
 In practice, we can avoid the transformation by querying the counters at same times and using them as timestamps.
 
 
-## Visualizing the rate of change
+## Visualizing rates of change
 > TODO: add plot of sum aggregate and heatmaps
 
 We can visualize an individual time series as step plot.
