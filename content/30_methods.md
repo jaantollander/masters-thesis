@@ -314,7 +314,7 @@ We do not know if the actual counter data is affected by issues.
 
 For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms a unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
 
-For each unique identifier, each counter value $v$ of an operation along time $t$ form a time series.
+For each unique identifier, each counter value $v\ge 0$ of an operation along time $t\ge 0$ form a time series.
 Given two points consequtive points in the timeseries, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t = t^\prime - t > 0$ and *number of operations* $\Delta v > 0$ during the interval as follows.
 If $v^\prime \ge v$, the counter is incremented, and we have
 
@@ -355,8 +355,6 @@ We can recover the changes in counter values from the step function using an int
 
 $$\Delta v_{i}=\int_{t_{i}}^{t_{i+1}} r(t)\,dt = r_{i} \cdot (t_{i+1}-t_{i}) = r_{i}\cdot\Delta t_{i},\quad \forall i\in\{1,...,n-1\}.$$
 
----
-
 We can transform a step function $r(t)$ into a step function $r^\prime(t)$ defined by 
 
 $$(t_0^\prime, r_0^\prime), (t_1^\prime, r_1^\prime), (t_2^\prime, r_2^\prime),...,(t_{m-1}^\prime, r_{m-1}^\prime), (t_m^\prime, r_m^\prime),\quad m\in\mathbb{N}$$
@@ -372,6 +370,9 @@ $$
 \int_{t_{j}^\prime}^{t_{j+1}^\prime} r(t)\,dt, \quad \forall j\in\{0,...,m-1\}.
 $$
 
+This transformation is useful if we have multiple step functions with steps as different timestamp and we need to convert the steps to happen at same timestamps.
+In practice, we can avoid the transformation by querying the counters at same times and using them as timestamps.
+
 
 ## Visualizing the rate of change
 > TODO: add plot of sum aggregate and heatmaps
@@ -380,16 +381,26 @@ We can visualize an individual time series as step plot.
 However, our configuration produces thousands of individual time series.
 To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
 
-For multiple step functions with same timestamps.
+We define logarithmic binning function with *base* $b > 1$ as
 
-Parameter *base* $b>1$ determines the resolution of the binning.
-Then, a logarithmic bin $k$ of rate $r$ is
+$$f_{b}(x)=\lfloor \log_{b}(x) \rfloor.$$
 
-$$k=\lfloor \log_{b}(r) \rfloor.$$
+We define an indicator function for counting values as follows
 
-This mean that each bin $k$ contains the counts of rates between the values
+$$\mathbf{1}_{a}(x)=\begin{cases}
+1, & x=a \\
+0, & x\ne a
+\end{cases}.$$
 
-$$b^k \le r < b^{k+1}.$$
+Let $R$ be a set of step functions such that steps occur at same times $t.$
+Then, we can count many step values occur in the range $[b^k,b^{k-1})$ with base $b$ for bin $(t, k)$ as follows
+
+$$z_{b}(t, k)=\sum_{r\in R} \mathbf{1}_{k}(f_b(r(t))).$$
+
+The base parameter determines the *resolution* of the binning.
+
+
+## Measuring perceived lag on the file system
 
 
 ## Notes
