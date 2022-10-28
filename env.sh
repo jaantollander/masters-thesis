@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+# USAGE:
+#    source env.sh
+#    thesis_pdf
+
 CONTENT_DIR=$PWD/content
+FIGURES_DIR=$CONTENT_DIR/figures
 OUT_DIR=$PWD/build
 ASSETS_DIR=$PWD/assets
 METADATA_DIR=$PWD/metadata
@@ -31,9 +36,15 @@ thesis_download_citationstyle() {
     curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/vancouver-brackets.csl" --output "$ASSETS_DIR/citationstyle.csl"
 }
 
+thesis_copy_figures() {
+    cp -r "$FIGURES_DIR" "$OUT_DIR"
+}
+
 thesis_html() {
     mkdir -p "$OUT_DIR"
+    thesis_copy_figures
     pandoc $(__mdfiles) \
+        --resource-path="$CONTENT_DIR" \
         --citeproc \
         --standalone \
         --from "markdown+tex_math_dollars" \
@@ -52,6 +63,7 @@ thesis_html() {
 thesis_epub() {
     mkdir -p "$OUT_DIR"
     pandoc $(__mdfiles) \
+        --resource-path="$CONTENT_DIR" \
         --citeproc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
@@ -69,6 +81,7 @@ thesis_epub() {
 thesis_pdf() {
     mkdir -p "$OUT_DIR"
     pandoc $(__mdfiles) \
+        --resource-path="$CONTENT_DIR" \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
@@ -130,7 +143,7 @@ thesis_serve() {
 thesis_build() {
     git stash -u && \
     git checkout  --orphan "build" && \
-    thesis_pdf && thesis_epub && thesis_html && mv "$OUT_DIR"/* . && \
+    thesis_pdf && thesis_epub && thesis_html && thesis_tex && mv "$OUT_DIR"/* . && \
     git rm -rf . && \
     git add . && \
     git commit -m "build" && \
