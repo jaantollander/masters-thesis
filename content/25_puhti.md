@@ -20,11 +20,11 @@ One byte represents a string of $8$ bits.
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
 service | Utility | 5 | 384 | 2900
-service | Utility-FMI | 2 | 384 | ?
-service | AeroS MDS | 2 | - | -
-service | AeroS OSS | 4 | - | -
-service | ISMA | 4 | - | -
-service | Data Lake | 8 | - | -
+service | Utility-FMI | 2 | 384 | 2900
+service | AeroS MDS | 2 |   |  
+service | AeroS OSS | 4 |   |  
+service | ISMA | 4 |   |  
+service | Data Lake | 8 |   |  
 compute | CPU, M | 484 | 192 | -
 compute | CPU, M, IO | 48 | 192 | 1490
 compute | CPU, M-FMI | 240 | 192 | -
