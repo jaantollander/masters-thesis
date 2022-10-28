@@ -305,11 +305,11 @@ In the table, "job" indicates that job ID exists, "uid" indicates user ID exists
 
 As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable job-specific statistics.
 Also, discarded entries lead to some data loss.
-We do not know if the actual counter data is affected by issues.
-
+The reliability of the counter data does not seem to be affected by this issue.
 
 
 ## Computing rates of change from the statistics
+
 > TODO: add plot of raw counter values and computed rate of change
 
 For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms a unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
@@ -377,6 +377,8 @@ In practice, we can avoid the transformation by querying the counters at same ti
 ## Visualizing rates of change
 > TODO: add plot of sum aggregate and heatmaps
 
+> TODO: add another plot with different resolution
+
 We can visualize an individual time series as step plot.
 However, our configuration produces thousands of individual time series.
 To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
@@ -400,7 +402,7 @@ $$z_{b}(t, k)=\sum_{r\in R} \mathbf{1}_{k}(f_b(r(t))).$$
 The base parameter determines the *resolution* of the binning.
 
 
-## Measuring perceived lag on the file system
+## Heuristics for measuring lag on the Lustre file system
 
 
 ## Notes

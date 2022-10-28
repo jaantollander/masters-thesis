@@ -15,7 +15,7 @@ $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
 One byte represents a string of $8$ bits.
 
 ## Hardware configuration
-> TODO: diagram of Puhti's structure, nodes and connections
+![Diagram of Puhti's hardware structure](figures/puhti-hardware.drawio.svg)
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
@@ -25,11 +25,6 @@ service | AeroS MDS | 2 | - | -
 service | AeroS OSS | 4 | - | -
 service | ISMA | 4 | - | -
 service | Data Lake | 8 | - | -
-
-: Service nodes on Puhti \label{tab:service-nodes}
-
-Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
--|-|-|-|-
 compute | CPU, M | 484 | 192 | -
 compute | CPU, M, IO | 48 | 192 | 1490
 compute | CPU, M-FMI | 240 | 192 | -
@@ -39,7 +34,7 @@ compute | CPU, XL | 12 | 768 | 1490
 compute | CPU, BM | 6 | 1500 | 5960
 compute | GPU | 80 | 384 | 3600
 
-: Compute nodes on Puhti \label{tab:compute-nodes}
+: Nodes on Puhti \label{tab:compute-nodes}
 
 The *Puhti* cluster has 23 *service nodes* and 1002 *compute nodes*.
 The services nodes consist of utility nodes used as cluster's *login nodes*, MDS nodes and OSS nodes for the Lustre file system, ISMA nodes used for managing the cluster and Data Lake nodes for [interfacing with object storage services?].
@@ -125,7 +120,7 @@ It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` va
 
 
 
-## Running jobs
+## Running workloads
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
