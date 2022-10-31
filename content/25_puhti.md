@@ -57,7 +57,7 @@ The total storage capacity of the file system is 4.8 PBs since part of the total
 Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
-The format of the *node name* string using *Perl Compatible Regular Expression* (PCRE) syntax is **`puhti-[[:alnum:]]`** for utility nodes and **`r[0-9]{2}{c,m,g}[0-9]{2}`** for compute nodes.
+The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]]`** for utility nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
 For example, `puhti-login12.bullx` or `r01c01.bullx`.
 We can use node names to track file system operations in node specific level.
 
@@ -124,11 +124,12 @@ partition name | time limit | task limit | node limit | node type
 
 : Slurm partitions on Puhti \label{tab:slurm-partitions}
 
-Puhti uses Slurm version 21.08.7 and partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
+Puhti uses Slurm version 21.08.7 as a worload manager.
+It has partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify in which partition it will run, the project which used for billing, and the resource we wish to reserve.
-Slurm schedules the job to run when sufficient resource are available.
+Slurm schedules the job to run when sufficient resource are available using a fair share algorithm.
 It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
-Later, we will use the `SLURM_JOB_ID` as identifier to collect job specific file operations.
+We can use the `SLURM_JOB_ID` as identifier to collect job specific file operations.
 Slurm also performs accounting of other details about the submitted jobs.
 
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
@@ -137,8 +138,6 @@ The script specifies job steps using the `srun` command.
 Next, we explain some common types of jobs.
 
 ---
-
-Small sequential batch job with a single job step.
 
 ```sh
 #!/usr/bin/env bash
@@ -153,16 +152,17 @@ Small sequential batch job with a single job step.
 srun <program>
 ```
 
-Array job runs multiple similar, independent jobs
+The above script is an example of a small, sequential batch job with a single job step (`srun` command).
+It is also common to run multiple such jobs independent of each other with slight variation for example in initial conditions.
+We can achieve that by turning it into an array job by adding the `array` argument with desired range and accessing the array ID via an environment variable.
 
 ```sh
+#...
 #SBATCH --array=1-100
 srun <program> $SLURM_ARRAY_TASK_ID
 ```
 
 ---
-
-Large parallel batch job with four job steps.
 
 ```sh
 #!/usr/bin/env bash
@@ -187,14 +187,12 @@ srun --nodes 1 --ntasks 2 <program-4> &
 wait
 ```
 
----
-
-In the above example, the first program will run on the first job step and would load data to the local disk.
-
+The above script is an example of a large parallel batch job with four job steps.
+For example,
+The first program will run on the first job step and could load data to the local disk.
 The second program will run on the second job step utilizing all given nodes, tasks, and cpus and the majority of the given time.
-The program is some large parallel program such as a large, well parallelizing simulation.
-
-The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and cpus from a single node.
-These programs could be, for example, programs for post processing steps, for example, processing and backing up the simulation results.
+It would be is a large parallel program such as a large, well parallelizing simulation communicating via MPI.
+The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and CPUs from a single node.
+These programs could be programs for post processing steps, for example, processing and backing up the simulation results.
 
 
