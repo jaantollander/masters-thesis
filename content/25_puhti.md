@@ -13,9 +13,8 @@ $1000^3$ | gigabyte (GB) | $1024^3$ | gibibyte (GiB)
 $1000^4$ | terabyte (TB) | $1024^4$ | tebibyte (TiB)
 $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
 
-: Units for bytes in base $10$ and $2$
-
-One byte represents a string of $8$ bits.
+: Units for bytes in base $10$ and $2$.
+One byte is a string of $8$ bits.
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
@@ -57,7 +56,8 @@ The total storage capacity of the file system is 4.8 PBs since part of the total
 ## System configuration
 Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
-Each node in Puhti has a *hostname* in the form `<nodename>.bullx`, where the format of the node name string using *Perl Compatible Regular Expression* (PCRE) syntax is **`puhti-[[:alnum:]]`** for utility nodes and **`r[0-9]{2}{c,m,g}[0-9]{2}`** for compute nodes.
+Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
+The format of the *node name* string using *Perl Compatible Regular Expression* (PCRE) syntax is **`puhti-[[:alnum:]]`** for utility nodes and **`r[0-9]{2}{c,m,g}[0-9]{2}`** for compute nodes.
 For example, `puhti-login12.bullx` or `r01c01.bullx`.
 We can use node names to track file system operations in node specific level.
 
@@ -71,6 +71,7 @@ In Puhti, each user account is associated with a *user* and each project with a 
 We can use user IDs (UID) and group IDs (GID) as identifiers for measuring file system usage in user or group level.
 We should note that, UIDs from 0 to 999 to are reserved for system processes.
 For example, 0 is root and 666 is job control.
+It is useful to separate the file system operations performed by system UIDs from the other UIDS.
 
 File system is separated to *storage areas*.
 Each storage area has a dedicated directory.
@@ -123,13 +124,17 @@ partition name | time limit | task limit | node limit | node type
 
 : Slurm partitions on Puhti \label{tab:slurm-partitions}
 
-The Slurm version is 21.08.7 and it has partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
-
-Slurm set the `SLURM_JOB_ID` environment variable for each job.
+Puhti uses Slurm version 21.08.7 and partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
+When we submit a job to Slurm, we must specify in which partition it will run, the project which used for billing, and the resource we wish to reserve.
+Slurm schedules the job to run when sufficient resource are available.
+It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
+Later, we will use the `SLURM_JOB_ID` as identifier to collect job specific file operations.
+Slurm also performs accounting of other details about the submitted jobs.
 
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
+Next, we explain some common types of jobs.
 
 ---
 
@@ -145,18 +150,15 @@ Small sequential batch job with a single job step.
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=10G
-srun <program-1>
+srun <program>
 ```
-
-TODO: program that writes `SLURM_JOB_ID`
 
 Array job runs multiple similar, independent jobs
 
-```
+```sh
 #SBATCH --array=1-100
+srun <program> $SLURM_ARRAY_TASK_ID
 ```
-
-`SLURM_ARRAY_TASK_ID`
 
 ---
 
