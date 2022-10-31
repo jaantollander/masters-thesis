@@ -282,10 +282,6 @@ It also maintains a queue of jobs waiting for resources to become available for 
 Slurm can also perform accounting for resource usage.
 
 
-## Common file I/O problems
-[@tacc-io-guideline]
-
-
 ## Computing at CSC
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
 It is owned by the Finnish-state and higher education institutions.
