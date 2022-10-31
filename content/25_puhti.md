@@ -1,6 +1,9 @@
 \newpage
 
 # Puhti cluster at CSC
+## Hardware configuration
+![Diagram of Puhti's hardware from storage perspective](figures/puhti-hardware.drawio.svg)
+
 Value | Metric | Value | IEC
 - | - | - | -
 $1$ | byte (B) | $1$ | byte (B)
@@ -13,9 +16,6 @@ $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
 : Units for bytes in base $10$ and $2$
 
 One byte represents a string of $8$ bits.
-
-## Hardware configuration
-![Diagram of Puhti's hardware structure](figures/puhti-hardware.drawio.svg)
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
@@ -55,39 +55,26 @@ The total storage capacity of the file system is 4.8 PBs since part of the total
 
 
 ## System configuration
-partition name | time limit | task limit | node limit | node type
--|-|-|-|-|-|-
-test | 15 minutes | 80 | 2 | M
-interactive | 7 days | 8 | 1 | IO
-small | 3 days |  40 | 1 | M, L, IO
-large | 3 days | 1040 | 26 | M, L, IO
-longrun | 14 days | 40 | 1 | M, L, IO
-hugemem | 3 days | 160 | 4 | XL, BM
-hugemem\newline\_longrun | 14 days | 40 | 1 | XL, BM
-fmitest | 1 hour | 80 | 2 | M-FMI
-fmi | 12 days | 4000 | 100 | M-FMI
-gputest | 15 minutes | 8 | 2 | GPU
-gpu | 3 days | 80 | 20 | GPU
+Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
+The version transitioned from 7.9 to 8.6 during the thesis writing.
+Each node in Puhti has a *hostname* in the form `<nodename>.bullx`, where the format of the node name string using *Perl Compatible Regular Expression* (PCRE) syntax is **`puhti-[[:alnum:]]`** for utility nodes and **`r[0-9]{2}{c,m,g}[0-9]{2}`** for compute nodes.
+For example, `puhti-login12.bullx` or `r01c01.bullx`.
+We can use node names to track file system operations in node specific level.
 
-: Slurm partitions on Puhti \label{tab:slurm-partitions}
-
-As the operating system, Puhti uses the *RedHat Enterprise Linux Server* (version 7.9) distribution.
-
-Slurm (version 21.08.7) partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
-
-There are 2 cpu per node and 20 cores per cpu, which makes total of 40 cores per node.
-Therefore task limit can be at most 40 times the node limit, but lower for some partitions.
-
-In CSC systems, each user has one *user account* which can belong to one or more *projects*.
+In CSC systems, users have a *user account* which can belong to one or more *projects*.
 Projects are used for setting quotas and accounting of computational resources and storage.
 The usage of computational resources is measured using *Billing Units (BU)*.
-These resources include reserved CPU cores, memory, local disk, and GPUs per unit of time.
-In Linux systems, each user account is associated with *user* and each project with a *group*.
+Different rates of billing unit usage are set to resources including reserved CPU cores, memory, local disk, and GPUs.
 [@cscdocs]
+
+In Puhti, each user account is associated with a *user* and each project with a *group*.
+We can use user IDs (UID) and group IDs (GID) as identifiers for measuring file system usage in user or group level.
+We should note that, UIDs from 0 to 999 to are reserved for system processes.
+For example, 0 is root and 666 is job control.
 
 File system is separated to *storage areas*.
 Each storage area has a dedicated directory.
-The global file system (Lustre) is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
+The global, Lustre file system is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
 *home*
 : area is intended for storing personal data and configuration files.
@@ -119,8 +106,27 @@ The quota depends on how much is requested for the job.
 It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
 
 
-
 ## Running workloads
+partition name | time limit | task limit | node limit | node type
+-|-|-|-|-|-|-
+*test* | 15 minutes | 80 | 2 | M
+*interactive* | 7 days | 8 | 1 | IO
+*small* | 3 days |  40 | 1 | M, L, IO
+*large* | 3 days | 1040 | 26 | M, L, IO
+*longrun* | 14 days | 40 | 1 | M, L, IO
+*hugemem* | 3 days | 160 | 4 | XL, BM
+*hugemem\_longrun* | 14 days | 40 | 1 | XL, BM
+*fmitest* | 1 hour | 80 | 2 | M-FMI
+*fmi* | 12 days | 4000 | 100 | M-FMI
+*gputest* | 15 minutes | 8 | 2 | GPU
+*gpu* | 3 days | 80 | 20 | GPU
+
+: Slurm partitions on Puhti \label{tab:slurm-partitions}
+
+The Slurm version is 21.08.7 and it has partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
+
+Slurm set the `SLURM_JOB_ID` environment variable for each job.
+
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
@@ -142,23 +148,15 @@ Small sequential batch job with a single job step.
 srun <program-1>
 ```
 
----
+TODO: program that writes `SLURM_JOB_ID`
 
 Array job runs multiple similar, independent jobs
 
-```sh
-#!/usr/bin/env bash
-#SBATCH --job-name=<job-name>
-#SBATCH --account=<project>
-#SBATCH --partition=small
-#SBATCH --time=01:00:00
-#SBATCH --nodes=1
-#SBATCH --tasks-per-node=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=10G
-#SBATCH --array=1-100
-srun <program-1> ${SLURM_ARRAY_TASK_ID}
 ```
+#SBATCH --array=1-100
+```
+
+`SLURM_ARRAY_TASK_ID`
 
 ---
 
