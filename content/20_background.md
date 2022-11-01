@@ -11,6 +11,7 @@
 - *What is and why do we need high-performance computing?*
 - *What are the defining characteristics of high-performance computing (HPC)?*
 - *How does HPC related to computer clusters?*
+- Good references are needed in this section
 
 ---
 
@@ -62,12 +63,11 @@ A cluster may also be built for internal use in the organization.
 
 
 ## Linux operating system
+An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
 At the time of writing, all high-performance computer clusters use the *Linux operating system* [@osfam].
-The *Linux kernel* [@linuxkernel] is the core of the Linux operating system
+The *Linux kernel* [@linuxkernel] is the core of the Linux operating system and is written in the *C programming language*.
 It derives from the original *UNIX operating system* and closely follows the *POSIX standard*.
-Linux kernel is written in the *C programming language*.
 For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
-
 
 In this work, we will refer to the Linux kernel as the *kernel*.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
@@ -91,76 +91,39 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 
 
 ## Linux file system interface
+System call | Explanation
+:-|:-------
+`mknod()` | Creates a new file.
+`open()` | Opens a file and returns a file descriptor. It may also create a new file by calling `mknod` if it doesn't exists.
+`close()` | Closes a file descriptor which releases the resource from usage.
+`read()` | Reads bytes from a file.
+`write()` | Writes bytes to a file.
+`link()` | Creates a new hard link to an existing file. There can be multiple links to the same file.
+`unlink()` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
+`symlink()` | Create a symbolic (soft) link to a file.
+`mkdir()` | Creates new directory.
+`rmdir()` | Removes an empty directory.
+`rename()` | Renames a file by moving it to new location.
+`chown()` | Changes file ownership.
+`chmod()` | Changed file permissions such as read, write, and execute permissions.
+`stat()` | Return file information.
+`statfs()` | Returns file system information.
+`sync()` | Commits file system caches to disk.
+`fallocate()` | Manipulates file space.
+`quotactl()` | Manipulates disk quotas.
+
+: \label{tab:systemcalls} Linux systemcalls for file system
+
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
 We explain the most important system calls below.
 For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
 We denote system calls using the syntax `systemcall()`.
-
-`mknod()`
-: creates a new file.
-
-`open()`
-: opens a file and returns a file descriptor.
-It may also create a new file by calling `mknod` if it doesn't exists.
-
-`close()`
-: closes a file descriptor which releases the resource from usage.
-
-`read()`
-: reads bytes from a file.
-
-`write()`
-: writes bytes to a file.
-
-`link()`
-: creates a new hard link to an existing file.
-There can be multiple links to the same file.
-
-`unlink()`
-: removes a hard link to a file.
-If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
-
-`symlink()`
-: create a symbolic (soft) link to a file.
-
-`mkdir()`
-: creates new directory.
-
-`rmdir()`
-: removes an empty directory.
-
-`rename()`
-: renames a file by moving it to new location.
-
-`chown()`
-: changes file ownership.
-
-`chmod()`
-: changed file permissions such as read, write, and execute permissions.
-
-`stat()`
-: return file information.
-
-`statfs()`
-: returns file system information.
-
-`sync()`
-: commits file system caches to disk.
-
-`fallocate()`
-: manipulates file space.
-
-`quotactl()`
-: manipulates disk quotas.
+We present and explain the common system calls for the file system interface in the table \ref{tab:systemcalls}.
 
 Next, we present two examples of performing file I/O using system calls.
 Please note that these examples do not perform any error handling that should be done by proper programs.
-
-The first example program demonstrates opening and closing file descriptors, reading bytes from a file and writing bytes to a file.
-It opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
-The code performs the `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
 
 ---
 
@@ -187,13 +150,9 @@ int main()
 }
 ```
 
----
-
-The second example demonstrates a less common feature of "punching a hole" to a file, creating a sparse file.
-The hole appears as null bytes when reading the file, without takeing any space on the disk.
-This feature supported by certain Linux file systems such as ext4.
-The following code writes `hello hole world` to a `output.txt` file.
-It then deallocate bytes from 5 to 10 such that the file keeps its original size using `fallocate` with mode `FALLOC_FL_PUNCH_HOLE` and `FALLOC_FL_KEEP_HOLE`.
+The first example program demonstrates opening and closing file descriptors, reading bytes from a file and writing bytes to a file.
+It opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
+The code performs the `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
 
 ---
 
@@ -214,10 +173,14 @@ int main()
 }
 ```
 
----
+The second example demonstrates a less common feature of "punching a hole" to a file, creating a sparse file.
+The hole appears as null bytes when reading the file, without takeing any space on the disk.
+This feature supported by certain Linux file systems such as ext4.
+The following code writes `hello hole world` to a `output.txt` file.
+It then deallocate bytes from 5 to 10 such that the file keeps its original size using `fallocate` with mode `FALLOC_FL_PUNCH_HOLE` and `FALLOC_FL_KEEP_HOLE`.
 
 
-## Lustre cluster storage system
+## Lustre parallel file system
 Lustre provides storage architecture for Linux clusters [@lustre-storage-architecture; @lustredocs, secs. 1-2].
 The *Lustre file system* provides a POSIX standard-compliant file system interface.
 It aggregates storage such that all files are available on the entire cluster, not only on specific nodes.

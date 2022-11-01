@@ -196,6 +196,6 @@ The third and fourth programs job steps will run in parallel after the first ste
 These programs could be programs for post processing steps, for example, processing and backing up the simulation results.
 
 
-## File system problems
+## Issues with parallel file system
 [@tacc-io-guideline]
 
