@@ -42,13 +42,13 @@ The formatting determines the granurarly of the statistics.
 More granularity also means that we accumulate data faster.
 We can use the following format codes.
 
-- `%e` executable name
-- `%h` fully-qualified hostname
-- `%H` short hostname (everything after the first dot `.` is dropped)
-- `%j` job ID from environment variable specified by `jobid_var` setting.
-- `%u` user ID number
-- `%g` group ID number
-- `%p` numeric process ID
+- `%e` for executable name
+- `%h` for fully-qualified hostname
+- `%H` for short hostname (`%h` with everything after the first dot `.` is removed)
+- `%j` for job ID from environment variable specified by `jobid_var` setting.
+- `%u` for user ID number
+- `%g` for group ID number
+- `%p` for numeric process ID
 
 We have set Lustre parameters `job_id_name="%j:%u:H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job IDs for `%j`.
 Then, we have two `job_id` formats:
@@ -80,121 +80,51 @@ These fields contain nonnegative integers that increase monotonically except in 
 A counter is reset if none of its values are updated in the duration specified in the configuration, 10 minutes by default.
 Units are (`<unit>`) either bytes (`bytes`) or microseconds (`usecs`).
 
-Next, we list and explain the operations counted by Jobstats.
+
+## Operations
+operation | system call | notes
+---|--|------
+**`open`** | `open()`
+**`close`** | `close()`
+**`mknod`** | `mknod()`
+**`link`** | `link()` |  Does not count the first link created by `mknod()`.
+**`unlink`** | `unlink()`
+**`mkdir`** | `mkdir()`
+**`rmdir`** | `rmdir()`
+**`rename`** | `rename()`
+**`getattr`** | `stat()` | Retrieve file attributes.
+**`setattr`** | `chmod()`, `chown()`, `utime()` | Set file attributes
+**`getxattr`** | `getxattr()` | Retrieving extended attributes.
+**`setxattr`** | `setxattr()` | Setting extended attributes.
+**`statfs`** | `statfs()` | Retrieving file system statistics.
+**`sync`** | `sync()` | Invoking the kernel to write buffered metadata in memory to disk.
+**`samedir_rename`** || Disambiguates which files are renamed within the same directory.
+**`crossdir_rename`** || Disambiguates which files are moved to another directory, potentially under a new name.
+
+: \label{tab:mdt-operations} We have the following metadata operations performed on MDSs.
+
+
+operation | system call | notes
+---|--|------
+**`read`** | `read()` | Reading data from a file.
+**`write`** | `write()` | Writing data to a file.
+**`getattr`** | 
+**`setattr`** | 
+**`punch`** | `fallocate()` | Punch a hole in a file.
+**`sync`** | `sync()` | Invoking the kernel to write buffered data in memory to disk.
+**`get_info`** | 
+**`set_info`** | 
+**`quotactl`** | `quotactl()` | Manipulate disk quota.
+**`read_bytes`** | `read()` | Number of bytes read from a file. Return value from `read()` system call.
+**`write_bytes`** | `write()` | Number of bytes written to a file. Return value from `write()` system call.
+
+: \label{tab:ost-operations} We have the following operations on the object data performed on OSSs.
+
+In tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list and explain the operations counted by Jobstats.
+We have omitted some rarely encountered operations from the tables.
 Each operation counts statistics from calls to specific system calls.
-A bolded monospace indicates an operation (**`operation`**), and brackets indicate a system call (`systemcall()`).
 
-We have the following metadata operations performed on MDSs.
-
-**`open`**
-: `open()` and it variants
-: Opening files.
-
-**`close`**
-: `close()` and its variants
-: Closing files.
-
-**`mknod`**
-: `mknod()` and its variants
-: Creating new files referred to as file system nodes.
-
-**`link`**
-: `link()` and its variants
-: creating hard links. Does not count the first link created by `mknod()`.
-
-**`unlink`**
-: `unlink()` and variants
-: removing hard links.
-
-**`mkdir`**
-: `mkdir()` and variants
-: creating new directories.
-
-**`rmdir`**
-: `rmdir()` and variants
-: removing empty directories.
-
-**`rename`**
-: `rename()` and variants
-: renaming files and directories.
-
-**`getattr`**
-: `stat()`
-: retrieve file access mode, ownership or timestamps.
-
-**`setattr`**
-: `chmod(), chown(), utime()` and variants
-: setting file access mode, ownership or timestamps.
-
-**`getxattr`**
-: `getxattr()` and variants
-: retrieving extended attributes.
-
-**`setxattr`**
-: `setxattr()` and variants
-: setting extended attributes.
-
-**`statfs`**
-: `statfs()` and variants
-: retrieving file system statistics.
-
-**`sync`**
-: `sync()` and variants
-: invoking the kernel to write buffered metadata in memory to disk.
-
-**`samedir_rename`**
-: disambiguates which files are renamed within the same directory.
-
-**`crossdir_rename`**
-: disambiguates which files are moved to another directory, potentially under a new name.
-
-We have the following operations on the object data performed on OSSs.
-
-**`read`**
-: `read()` and variants
-: reading data from a file.
-
-**`write`**
-: `write()` and variants
-: writing data to a file.
-
-**`getattr`**
-: ???
-
-**`setattr`**
-: ???
-
-**`punch`**
-: `fallocate()`
-: punching a hole in a file.
-
-**`sync`**
-: `sync()` and variants
-: invoking the kernel to write buffered data in memory to disk.
-
-**`get_info`**
-: ???
-
-**`set_info`**
-: ???
-
-**`quotactl`**
-: `quotactl()`
-: manipulate disk quota.
-
-Additionally, we have two operations with bytes.
-
-**`read_bytes`**
-: `read()`
-: number of bytes read from a file. Return value from `read()` system call and its variants.
-
-**`write_bytes`**
-: `write()`
-: number of bytes written to a file. Return value from `write()` system call and its variants.
-
----
-
-Lustre clients can cache certain file operations such as `open`.
+Lustre clients may cache certain file operations such as `open`.
 That is if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS.
 Thus, cached operations are not counted in the Jobstats, which means, for example, that there can be more `close` than `open` operations because `close` cannot be cached.
 
