@@ -4,7 +4,7 @@
 - *Describe the research material and methodology*
 
 
-## Collecting operation statistics from the Lustre file system
+## Collecting statistics from the Lustre file system
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the documentation, section 12.2 [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
 Each Lustre server keeps counters for all of its targets.

@@ -8,32 +8,32 @@
 ---
 
 ## High-performance computing
-We can thing about *computing* as applying rules on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
-At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
-For example, first applicable rule at a time or all applicable rules at once.
-Both, the set of rules and set of symbols must be discrete.
-A *computation* is the process of applying the rules until we can no longer apply any rules, that is, the process halts.
-The *memory* requirement of a computation is the maximum size of the string during the computation.
-We can visualize the progression of a computation as a directed, acyclic graph where each string of symbols, known as a state, is a node and transformation from one state to another is an edge.
-
-Real-world computers derive from these concepts.
-
-- symbols are bits typically read in bytes (8 bits)
-- rules are intructions to the processor
-- memory is hierarchical, and divided into working and storage memories
-
----
-
 - *What is and why do we need high-performance computing?*
 - *What are the defining characteristics of high-performance computing (HPC)?*
 - *How does HPC related to computer clusters?*
 
+---
+
+Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
+At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
+For example, first applicable rule at a time or multiple rules at once.
+Both, the set of rules and set of symbols must be discrete.
+*Computation* is the process of applying the rules until we can no longer apply any rules and the process halts.
+The *memory* requirement of a computation is the maximum size of the string during the computation.
+Some models of computation are only theoretical tools while others we can implement in the real world using physical processes.
+
+Contemporary computers use *off* and *on* states of a transistor to represent symbols 0 and 1, referred to as *bits*.
+Multiple bits in a row form a binary string which for example, might represent an integer.
+A binary string of 8 bits is called a *byte*.
+Rules correspond to intructions to a computer processor that manipulate bytes, for example adding two 32-bit integers together represented by 4 bytes.
+Memory is separated into multiple levels volatile *working* memory and non-volatile *storage* memory in hierarchical fashion based on proximity to the processor.
+Models of computation include serial and parallel computing.
 *Serial computing* refers to performing one operation at a time.
 In contrast, *parallel computing* is about performing multiple independent operations simultaneously, with the goal of reducing run time, performing larger calculations, and decreasing energy consumption.
 
 *High-performance computing (HPC)* relies on parallel computing to provide large amount of computing resources for solving computationally intensive problems.
 These problems include simulating complex systems, solving large computational models, data science and training machine learning models.
-Examples of commercial and research applications of HPC include [@definition-hpc]:
+Examples of commercial and research applications of HPC include:
 
 - Weather modeling for weather forecasting
 - Climate modeling for understanding climate change
@@ -43,34 +43,17 @@ Examples of commercial and research applications of HPC include [@definition-hpc
 - Molecular dynamics simulation for pharmaceutical design
 - Cosmological simulation for understanding galaxy creation
 
-The performance of HPC system is traditionally measured in operations per unit of time.
-However, the role of data is becoming increasingly important with data science and machine learning.
+The performance of HPC system is traditionally measured in linear algebra operations per unit of time.
+However, the role of data is becoming increasingly important with data science and machine learning and thus the role of storage is becoming more important.
 
----
-
-A *computer* consists of processor and memory.
 We can link multiple computers together to form a computer network.
-
-Parallelism in practice exist in multiple, hierarchical levels.
-[@parallel-and-high-performance-computing]
-
-- Process-based parallelization, communication between processes using message passing in distributed memory
-- Thread-based parallelization, communication between threads using shared data via memory
-- Vectorization to perform multiple operations with one instruction
-- Stream processing through specialized processors
-
-HPC may also employ *parallel storage* to aggregate a large amount of storage memory.
-
----
-
-*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine [@definition-computercluster].
-Individual computers in the system are called *compute nodes*.
+*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine.
+Individual computers in the system are called *nodes*.
 They consist of processors, memory, and optionally *fast local storage*.
 A computer cluster is a homogenous system where each node performs the same task.
 Nodes are connected via high-speed, local area *networks*.
 Clusters also have *global storage* for storing data such as programs and results from the computation.
-
-The components of computer clusters consist of commercially available consumer hardware.
+Typically, computer clusters are built from commercially available consumer hardware.
 
 Typically, a computer cluster is centrally managed by an organization such as a company or university.
 It relies on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate its services and maintain it.
