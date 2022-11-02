@@ -89,33 +89,36 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 ## Linux file system interface
 System call | Explanation
 :-|:-------
-`mknod()` | Creates a new file.
-`open()` | Opens a file and returns a file descriptor. It may also create a new file by calling `mknod` if it doesn't exists.
-`close()` | Closes a file descriptor which releases the resource from usage.
-`read()` | Reads bytes from a file.
-`write()` | Writes bytes to a file.
-`link()` | Creates a new hard link to an existing file. There can be multiple links to the same file.
-`unlink()` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
-`symlink()` | Create a symbolic (soft) link to a file.
-`mkdir()` | Creates new directory.
-`rmdir()` | Removes an empty directory.
-`rename()` | Renames a file by moving it to new location.
-`chown()` | Changes file ownership.
-`chmod()` | Changed file permissions such as read, write, and execute permissions.
-`stat()` | Return file information.
-`statfs()` | Returns file system information.
-`sync()` | Commits file system caches to disk.
-`fallocate()` | Manipulates file space.
-`quotactl()` | Manipulates disk quotas.
+`mknod` | Creates a new file.
+`open` | Opens a file and returns a file descriptor. It may also create a new file by calling `mknod` if it doesn't exists.
+`close` | Closes a file descriptor which releases the resource from usage.
+`read` | Reads bytes from a file.
+`write` | Writes bytes to a file.
+`link` | Creates a new hard link to an existing file. There can be multiple links to the same file.
+`unlink` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
+`symlink` | Create a symbolic (soft) link to a file.
+`mkdir` | Creates new directory.
+`rmdir` | Removes an empty directory.
+`rename` | Renames a file by moving it to new location.
+`chown` | Change file ownership.
+`chmod` | Change file permissions such as read, write, and execute permissions.
+`utime` | Change file timestamps
+`stat` | Return file information.
+`statfs` | Returns file system information.
+`sync` | Commits file system caches to disk.
+`fallocate` | Manipulates file space.
+`quotactl` | Manipulates disk quotas.
+`setxattr` | Set an extended attribute value
+`getxattr` | Retrieve an extended attribute value
 
-: \label{tab:systemcalls} Linux systemcalls for file system
+: \label{tab:systemcalls} Linux systemcalls (and their variants) for file system
 
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
 We explain the most important system calls below.
 For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
-We denote system calls using the syntax `systemcall()`.
+In Linux, you can use `man 2 <systemcall>` command to read the manual page of an system call.
 We present and explain the common system calls for the file system interface in the table \ref{tab:systemcalls}.
 
 Next, we present two examples of performing file I/O using system calls.
@@ -177,33 +180,31 @@ It then deallocate bytes from 5 to 10 such that the file keeps its original size
 
 
 ## Lustre parallel file system
-Lustre provides storage architecture for Linux clusters [@lustre-storage-architecture; @lustredocs, secs. 1-2].
-The *Lustre file system* provides a POSIX standard-compliant file system interface.
-It aggregates storage such that all files are available on the entire cluster, not only on specific nodes.
+Parallel file system is a file system designed for clusters.
+It stores data on multiple networked servers to facilitate high performance access and makes the data available via global namespace such that users do not need to know the physical location of the data blocks to access a file.
+*Lustre* is a parallel file system which provides a POSIX standard-compliant file system interface for Linux clusters.
 The Lustre file system is designed using the client-server architecture.
+[@lustre-storage-architecture; @lustredocs, secs. 1-2]
 
 A *client-server application* is an application that is broken into two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
 The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
 The client and server may reside in the same host computer or separate host computers connected by a network.
 They communicate with each other by some Interprocess Communication (IPC) mechanism.
+
 "Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
 
-*Lustre Clients* on a computer cluster are nodes running the Lustre client software and have the Lustre file system mounted.
-The Lustre client software provides an interface between the Linux virtual file system and the Lustre servers.
+Nodes running the Lustre client software are known as *Lustre Clients*
+The Lustre client software provides an interface between the Linux virtual file system and *Lustre servers*.
 For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
-
-Lustre file system separates file metadata and data operations and handles them using dedicated servers.
-Each server is connected to one or more storage units called targets.
+Lustre file system separates file metadata and data operations and handles them using dedicated Lustre servers.
+Each server is connected to one or more storage units called *Lustre targets*.
 
 *Metadata Servers (MDS)* provide access to file metadata and handle metadata operations for Lustre clients.
 The metadata, such as filenames, directories, permissions, and file layout, is stored on *Metadata Targets (MDT)*, which are storage units attached to an MDS.
-
-*Object Storage Servers (OSS)* provide access to and handle file data operations for Lustre clients.
+On the other hand, *Object Storage Servers (OSS)* provide access to and handle file data operations for Lustre clients.
 The file data is stored in one or more objects, each object on a separate *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
-
-*Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
-
+Finally, the *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
 LNet supports many network types, including InfiniBand and IP networks, with simultaneous availability between them.
 
