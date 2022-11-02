@@ -210,8 +210,11 @@ LNet supports many network types, including InfiniBand and IP networks, with sim
 
 
 ## Slurm workload manager
-Typically, clusters rely on a *workload manager* for allocating access to computing resources, scheduling and running programs which may instantiate an interactive or a batch process.
-A batch process is a computation that runs from start to finish without user interaction compared to an interactive processes such as an active terminal, a word editor or a web server which respond to user input.
+Typically, the nodes on a cluster are separated to *frontend* and *backend*.
+Frontend consist of login and utility nodes and backend consists of compute nodes.
+Clusters rely on a *workload manager* for allocating access to the computing resources, scheduling and running programs on the backend.
+The programs may instantiate an interactive or a batch process.
+A batch process is a computation that runs from start to finish without user interaction compared to an interactive processes such as an active terminal prompt or a text editor which respond to user input.
 We must specify limits for the resources we request.
 
 *Slurm* is a workload manager for Linux clusters [@slurmdocs].

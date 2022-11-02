@@ -84,20 +84,20 @@ Units are (`<unit>`) either bytes (`bytes`) or microseconds (`usecs`).
 ## Operations
 operation | system call | notes
 ---|--|------
-**`open`** | `open()`
-**`close`** | `close()`
-**`mknod`** | `mknod()`
-**`link`** | `link()` |  Does not count the first link created by `mknod()`.
-**`unlink`** | `unlink()`
-**`mkdir`** | `mkdir()`
-**`rmdir`** | `rmdir()`
-**`rename`** | `rename()`
-**`getattr`** | `stat()` | Retrieve file attributes.
-**`setattr`** | `chmod()`, `chown()`, `utime()` | Set file attributes
-**`getxattr`** | `getxattr()` | Retrieving extended attributes.
-**`setxattr`** | `setxattr()` | Setting extended attributes.
-**`statfs`** | `statfs()` | Retrieving file system statistics.
-**`sync`** | `sync()` | Invoking the kernel to write buffered metadata in memory to disk.
+**`open`** | `open`
+**`close`** | `close`
+**`mknod`** | `mknod`
+**`link`** | `link` |  Does not count the first link created by `mknod`.
+**`unlink`** | `unlink`
+**`mkdir`** | `mkdir`
+**`rmdir`** | `rmdir`
+**`rename`** | `rename`
+**`getattr`** | `stat` | Retrieve file attributes.
+**`setattr`** | `chmod`, `chown`, `utime` | Set file attributes
+**`getxattr`** | `getxattr` | Retrieving extended attributes.
+**`setxattr`** | `setxattr` | Setting extended attributes.
+**`statfs`** | `statfs` | Retrieving file system statistics.
+**`sync`** | `sync` | Invoking the kernel to write buffered metadata in memory to disk.
 **`samedir_rename`** || Disambiguates which files are renamed within the same directory.
 **`crossdir_rename`** || Disambiguates which files are moved to another directory, potentially under a new name.
 
@@ -106,17 +106,17 @@ operation | system call | notes
 
 operation | system call | notes
 ---|--|------
-**`read`** | `read()` | Reading data from a file.
-**`write`** | `write()` | Writing data to a file.
+**`read`** | `read` | Reading data from a file.
+**`write`** | `write` | Writing data to a file.
 **`getattr`** | 
 **`setattr`** | 
-**`punch`** | `fallocate()` | Punch a hole in a file.
-**`sync`** | `sync()` | Invoking the kernel to write buffered data in memory to disk.
+**`punch`** | `fallocate` | Punch a hole in a file.
+**`sync`** | `sync` | Invoking the kernel to write buffered data in memory to disk.
 **`get_info`** | 
 **`set_info`** | 
-**`quotactl`** | `quotactl()` | Manipulate disk quota.
-**`read_bytes`** | `read()` | Number of bytes read from a file. Return value from `read()` system call.
-**`write_bytes`** | `write()` | Number of bytes written to a file. Return value from `write()` system call.
+**`quotactl`** | `quotactl` | Manipulate disk quota.
+**`read_bytes`** | `read` | Number of bytes read from a file. Return value from `read` system call.
+**`write_bytes`** | `write` | Number of bytes written to a file. Return value from `write` system call.
 
 : \label{tab:ost-operations} We have the following operations on the object data performed on OSSs.
 
@@ -159,46 +159,29 @@ We used a PostgreSQL database with a Timescale extension.
 
 
 ## Issues with identifiers
+`job_id` | notes
+-|-
+`11317854:17627127:r01c01` | correct identifier
+`:17627127:r01c01` | `job` missing
+`11317854` | `job` field
+`11317854:` | `job` field and separator `:`
+`113178544` | `job` field with extra character at the end
+`11317854:17627127` | `job` and `uid` fields
+`11317854:17627127:` | `job` and `uid` fields ending with a separator
+`11317854:17627127:r01c01.bullx` | fully-qualified hostname instead of a short hostname
+`:17627127:r01c01.bullx` | `job` field is missing and fully qualified hostname instead of a short hostname
+`:1317854:17627127:r01c01` | the first character in `job` overwritten by separator
+
+: `<job>`, `<uid>`, and `<nodename>` separated with colon `:`
+
 We found formatting issues with `job_id` identifiers in the generated data from Lustre Jobstats on the Puhti system.
 For example, we found many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
-For example:
-
-`11317854:17627127:r01c01`
-: correct identifier
-
-`:17627127:r01c01`
-: `job` field missing
 
 Furthermore, on the OSS, `job_id`s had issues such as values missing from `uid` and `nodename` fields or fully-qualified hostname instead of the specified short hostname in the `nodename` field.
 Even more problematic was that sometimes `job_id` was malformed to the extent that we could not reliably parse information from it.
 For example, there were characters in the identifiers missing, overwritten, or duplicated.
 We had to discard these entries completely.
 We suspect that data race might be causing some of these issues.
-For example:
-
-`11317854`
-: `job` field
-
-`11317854:`
-: `job` field and separator `:`
-
-`113178544`
-: `job` field with extra character at the end
-
-`11317854:17627127`
-: `job` and `uid` fields
-
-`11317854:17627127:`
-: `job` and `uid` fields ending with a separator
-
-`11317854:17627127:r01c01.bullx`
-: fully-qualified hostname instead of a short hostname
-
-`:17627127:r01c01.bullx`
-: `job` field is missing and fully qualified hostname instead of a short hostname
-
-`:1317854:17627127:r01c01`
-: the first character in `job` overwritten by separator
 
 ---
 
@@ -248,13 +231,15 @@ For a row in the relational database, the tuple of values `(uid, job, nodename, 
 
 For each unique identifier, each counter value $v\ge 0$ of an operation along time $t\ge 0$ form a time series.
 Given two points consequtive points in the timeseries, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t = t^\prime - t > 0$ and *number of operations* $\Delta v > 0$ during the interval as follows.
-If $v^\prime \ge v$, the counter is incremented, and we have
+If $v^\prime \ge v$, the counter is incremented, and we have $\Delta v = v^\prime - v.$
+Otherwise, if $v^\prime < v$, the counter has reset, and we have $\Delta v = v^\prime.$
+Combined, we can write
 
-$$\Delta v = v^\prime - v.$$
-
-Otherwise, if $v^\prime < v$, the counter has reset, and we have
-
-$$\Delta v = v^\prime.$$
+$$\Delta v = 
+\begin{cases}
+v^{\prime} - v, & v^{\prime} \ge v \\
+v^{\prime}, & v^{\prime} < v
+\end{cases}.$$
 
 Then, we can calculate the *average rate of change* during the interval for each operation as
 
