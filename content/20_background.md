@@ -23,16 +23,15 @@ Both, the set of rules and set of symbols must be discrete.
 The *memory* requirement of a computation is the maximum size of the string during the computation.
 Some models of computation are only theoretical tools while others we can implement in the real world using physical processes.
 
-Contemporary computers use *off* and *on* states of a transistor to represent symbols 0 and 1, referred to as *bits*.
-Multiple bits in a row form a binary string which for example, might represent an integer.
-A binary string of 8 bits is called a *byte*.
+Contemporary computers represent data in digital form, typically as binary digits using symbols 0 and 1 referred as *bits*.
+Multiple bits in a row form a binary string and a binary string of 8 bits is called a *byte*.
 Rules correspond to intructions to a computer processor that manipulate bytes, for example adding two 32-bit integers together represented by 4 bytes.
-Memory is separated into multiple levels volatile *working* memory and non-volatile *storage* memory in hierarchical fashion based on proximity to the processor.
+Memory is consists of multiple levels volatile *working* memory and non-volatile *storage* memory organized in hierarchical way based on factors such as proximity to the processor, access speed, and cost.
 Models of computation include serial and parallel computing.
 *Serial computing* refers to performing one operation at a time.
 In contrast, *parallel computing* is about performing multiple independent operations simultaneously, with the goal of reducing run time, performing larger calculations, and decreasing energy consumption.
 
-*High-performance computing (HPC)* relies on parallel computing to provide large amount of computing resources for solving computationally intensive problems.
+*High-performance computing (HPC)* relies on parallel computing to provide large amount of computing resources for solving computationally demanding and data intensive problems.
 These problems include simulating complex systems, solving large computational models, data science and training machine learning models.
 Examples of commercial and research applications of HPC include:
 
@@ -44,22 +43,19 @@ Examples of commercial and research applications of HPC include:
 - Molecular dynamics simulation for pharmaceutical design
 - Cosmological simulation for understanding galaxy creation
 
-The performance of HPC system is traditionally measured in linear algebra operations per unit of time.
-However, the role of data is becoming increasingly important with data science and machine learning and thus the role of storage is becoming more important.
-
-We can link multiple computers together to form a computer network.
-*Computer cluster* is a system comprised of multiple connected computers that form a single, more powerful machine.
-Individual computers in the system are called *nodes*.
-They consist of processors, memory, and optionally *fast local storage*.
-A computer cluster is a homogenous system where each node performs the same task.
-Nodes are connected via high-speed, local area *networks*.
-Clusters also have *global storage* for storing data such as programs and results from the computation.
-Typically, computer clusters are built from commercially available consumer hardware.
-
-Typically, a computer cluster is centrally managed by an organization such as a company or university.
-It relies on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate its services and maintain it.
-The organization may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, and processors requested.
+We can connect multiple computers together to form a computer network.
+We refer to the individual computers in the network as *nodes*.
+Most *HPC systems* are computer clusters.
+*Computer cluster* is a computer network that uses high-speed fiber optic cables between network switches to connect large amounts of homogenous nodes to form a more powerful system.
+It usually has a large amount of storage memory as well.
+Computer clusters are usually centrally managed by an organization such as a company or university.
+They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services and maintain them.
+The organizations may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, and processors requested.
 A cluster may also be built for internal use in the organization.
+
+The performance of HPC system is traditionally measured in standard linear algebra operations per second and focused on processor and working memory.
+However, the storage is becoming increasingly important with data science and machine learning which require huge amounts of data that must be transported between storage and working memory.
+This is also an important reason for studying storage in HPC systems.
 
 
 ## Linux operating system
