@@ -5,8 +5,6 @@
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
 We can specify the format `job_id` with `jobid_name` parameter.
-The formatting effects the resolution of the statistics.
-Higher resolution also means that we accumulate data faster.
 We can use the following format codes.
 
 - `%e` for executable name.
@@ -17,11 +15,13 @@ We can use the following format codes.
 - `%g` for group ID number.
 - `%p` for numeric process ID.
 
+The formatting effects the resolution of the statistics.
+Using more formatting codes results in higher resolution but will also accumulate data faster.
 We have set parameters `job_id_name="%j:%u:%H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job ID.
 Then, we have two `job_id` formats:
 
 `<job>:<uid>:<nodename>`
-: with formatting string `"%j:%u:%H"` when `SLURM_JOB_ID` is set.
+: with formatting string `"%j:%u:%H"` when `SLURM_JOB_ID` is set. This formatting allows us to separate statistics based on job ID, user ID and nodename.
 
 `<executable>.<uid>`
 : with formatting string `"%e.%u"` when `SLURM_JOB_ID` is undefined, such as for Login nodes.
@@ -89,6 +89,8 @@ The `<source>` indicates the target of the data.
 In Puhti, `scratch-MDT0000` or `scratch-OST0000`.
 
 The `job_stats` contains entries for each workload with the unique identifier `job_id` that has performed file system operations on the target.
+
+We can form an unique indentifier over all target by using `<source>` and `<job_id>`.
 
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the counter was last updated.
 
@@ -174,6 +176,7 @@ Thus, cached operations are not counted in the Jobstats, which means, for exampl
 
 We found formatting issues with `job_id` identifiers in the generated data from Lustre Jobstats on the Puhti system.
 For example, we found many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
+We believe that this problem is related to `SLURM_JOB_ID` environment variables which could be either no set for some processes, cannot be read in some cases or lost for some other reason.
 
 Furthermore, on the OSS, `job_id`s had issues such as values missing from `uid` and `nodename` fields or fully-qualified hostname instead of the specified short hostname in the `nodename` field.
 Even more problematic was that sometimes `job_id` was malformed to the extent that we could not reliably parse information from it.
