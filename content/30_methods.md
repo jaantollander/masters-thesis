@@ -4,38 +4,9 @@
 - *Describe the research material and methodology*
 
 
-## Collecting statistics from the Lustre file system
+## Lustre Jobstats
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the documentation, section 12.2 [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
-Each Lustre server keeps counters for all of its targets.
-We can query the values from the counter at a given time by running the commands below on each server.
-
-MDS jobstats:
-: `lctl get_param mdt.*.jobstats`
-
-OSS jobstats:
-: `lctl get_param obdfilter.*.jobstats`
-
-These commands fetch the values and print them in a text format.
-We can parse the output into a data structure for further processing using regular expressions.
-The output for all targets on the same server is concatenated into a single output.
-The raw output for each target is formatted as below.
-We indicate variables using the syntax `<name>`.
-
----
-
-```text
-obdfilter.<source>.job_stats=
-job_stats:
-- job_id: <unique-identifier>
-  snapshot_time: 1646385002
-  <operation>: <statistics>
-```
-
----
-
-The `<source>` indicates the target of the data such as `scratch-MDT0000` or `scratch-OST0000`.
-The `job_stats` contains entries for each workload with the unique identifier `job_id` that has performed file system operations on the target.
 
 We can specify the format `job_id` with `jobid_name` parameter in Lustre.
 The formatting determines the granurarly of the statistics.
@@ -61,6 +32,71 @@ Then, we have two `job_id` formats:
 
 Due to an unknown bug in Lustre (version 2.12.6), we found that some of the identifiers produced by Jobstats were missing or broken.
 We discuss how to deal with these issues in later sections.
+
+
+## Collecting statistics from the Lustre file system
+Each Lustre server keeps counters for all of its targets.
+We can query the values from the counter at a given time by running `lctl get_param` command.
+These commands fetch the values and print them in a text format.
+We can parse the output into a data structure for further processing using regular expressions.
+The raw output for each target is formatted as below.
+We indicate variables using the syntax `<name>`.
+
+---
+
+We can query jobstats from MDS as follows:
+
+```sh
+lctl get_param mdt.<source>.jobstats
+```
+
+The command output
+
+```text
+mdt.<source>.job_stats=
+job_stats:
+- job_id: <identifier_1>
+  snapshot_time: <unix-epoch>
+  <operation_1>: <statistics_1>
+  <operation_2>: <statistics_2>
+  ...
+- job_id: <identifier_2>
+  snapshot_time: <unix-epoch>
+  <operation_1>: <statistics_1>
+  <operation_2>: <statistics_2>
+  ...
+```
+
+---
+
+We can query jobstats from OSS as follows:
+
+```sh
+lctl get_param obdfilter.<source>.jobstats
+```
+
+```text
+obdfilter.<source>.job_stats=
+job_stats:
+- job_id: <identifier_1>
+  snapshot_time: <unix-epoch>
+  <operation_1>: <statistics_1>
+  <operation_2>: <statistics_2>
+  ...
+- job_id: <identifier_2>
+  snapshot_time: <unix-epoch>
+  <operation_1>: <statistics_1>
+  <operation_2>: <statistics_2>
+  ...
+```
+
+---
+
+The `<source>` indicates the target of the data.
+In Puhti, `scratch-MDT0000` or `scratch-OST0000`.
+
+The `job_stats` contains entries for each workload with the unique identifier `job_id` that has performed file system operations on the target.
+
 
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the counter was last updated.
 Finally, the output contains statistics of each operation specific to the Lustre target; that is, MDT and OST track different operations.
@@ -224,15 +260,18 @@ The reliability of the counter data does not seem to be affected by this issue.
 
 
 ## Computing rates of change from the statistics
-
-> TODO: add plot of raw counter values and computed rate of change
+> TODO: add plot of raw counter values and computed rate of change, generate fake data
 
 For a row in the relational database, the tuple of values `(uid, job, nodename, source)` forms a unique identifier, `timestamp` is time, and `<operation>` fields contain the counter values for each operation.
 
-For each unique identifier, each counter value $v\ge 0$ of an operation along time $t\ge 0$ form a time series.
-Given two points consequtive points in the timeseries, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t = t^\prime - t > 0$ and *number of operations* $\Delta v > 0$ during the interval as follows.
-If $v^\prime \ge v$, the counter is incremented, and we have $\Delta v = v^\prime - v.$
-Otherwise, if $v^\prime < v$, the counter has reset, and we have $\Delta v = v^\prime.$
+For each unique identifier, each counter value $v\in\mathbb{R}$ such that $v\ge 0$ of an operation along time $t\in\mathbb{R}$ form a time series.
+Given two points consequtive points in the time series, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t > 0$ and *number of operations* $\Delta v > 0$ during the interval.
+The interval length is
+
+$$\Delta t = t^{\prime} - t.$$
+
+If $v^\prime \ge v$, the previous counter value is incremented, and we have $\Delta v = v^\prime - v.$
+Otherwise, if $v^\prime < v$, the counter has reset and the previous counter value is implicitly zero, and we have $\Delta v = v^\prime - 0.$
 Combined, we can write
 
 $$\Delta v = 
@@ -245,7 +284,7 @@ Then, we can calculate the *average rate of change* during the interval for each
 
 $$r=\Delta v / \Delta t.$$
 
-If a particular `job_id` has not yet performed any file operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
+If a particular `job_id` has not yet performed any operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
 In these cases, we can infer the *initial counter* $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
 For the first recording interval, we cannot infer $t_0$ and we need to discard the initial counter.
 The *observed counters* are $(t_1,v_1),...,(t_n,v_n),$ where $n\in\mathbb{N}.$
@@ -317,6 +356,9 @@ Then, we can count many step values occur in the range $[b^k,b^{k-1})$ with base
 $$z_{b}(t, k)=\sum_{r\in R} \mathbf{1}_{k}(f_b(r(t))).$$
 
 The base parameter determines the *resolution* of the binning.
+
+
+## Querying the database
 
 
 ## Heuristics for measuring lag on the Lustre file system
