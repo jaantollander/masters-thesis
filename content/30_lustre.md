@@ -2,44 +2,38 @@
 
 # Collecting usage statistics with Lustre Jobstats
 ## Setting identifier format
-We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the documentation, section 12.2 [@lustredocs, sec. 12.2].
+We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
-
-We can specify the format `job_id` with `jobid_name` parameter in Lustre.
-The formatting determines the granurarly of the statistics.
-More granularity also means that we accumulate data faster.
+We can specify the format `job_id` with `jobid_name` parameter.
+The formatting effects the resolution of the statistics.
+Higher resolution also means that we accumulate data faster.
 We can use the following format codes.
 
-- `%e` for executable name
-- `%h` for fully-qualified hostname
-- `%H` for short hostname (`%h` with everything after the first dot `.` is removed)
+- `%e` for executable name.
+- `%h` for fully-qualified hostname.
+- `%H` for short hostname, that is, `%h` such that everything after the first dot (`.`) is removed.
 - `%j` for job ID from environment variable specified by `jobid_var` setting.
-- `%u` for user ID number
-- `%g` for group ID number
-- `%p` for numeric process ID
+- `%u` for user ID number.
+- `%g` for group ID number.
+- `%p` for numeric process ID.
 
-We have set Lustre parameters `job_id_name="%j:%u:H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job IDs for `%j`.
+We have set parameters `job_id_name="%j:%u:%H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job ID.
 Then, we have two `job_id` formats:
 
 `<job>:<uid>:<nodename>`
-: with formatting string `"%j:%u:H"` when `SLURM_JOB_ID` is set.
+: with formatting string `"%j:%u:%H"` when `SLURM_JOB_ID` is set.
 
 `<executable>.<uid>`
 : with formatting string `"%e.%u"` when `SLURM_JOB_ID` is undefined, such as for Login nodes.
 
-Due to an unknown bug in Lustre (version 2.12.6), we found that some of the identifiers produced by Jobstats were missing or broken.
+Due to an unknown bug in Lustre (version 2.12.6 from DDN), we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
 We discuss how to deal with these issues in later sections.
 
 
 ## Querying statistics
 Each Lustre server keeps counters for all of its targets.
-We can query the values from the counter at a given time by running `lctl get_param` command.
-These commands fetch the values and print them in a text format.
-We can parse the output into a data structure for further processing using regular expressions.
-The raw output for each target is formatted as below.
+We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 We indicate variables using the syntax `<name>`.
-
----
 
 We can query jobstats from MDS as follows:
 
@@ -47,7 +41,7 @@ We can query jobstats from MDS as follows:
 lctl get_param mdt.<source>.jobstats
 ```
 
-The command output
+The text output is formatted as follows.
 
 ```text
 mdt.<source>.job_stats=
@@ -66,11 +60,13 @@ job_stats:
 
 ---
 
-We can query jobstats from OSS as follows:
+Similarly, we can query jobstats from OSS as follows:
 
 ```sh
 lctl get_param obdfilter.<source>.jobstats
 ```
+
+The text output is also similar.
 
 ```text
 obdfilter.<source>.job_stats=
@@ -95,25 +91,9 @@ In Puhti, `scratch-MDT0000` or `scratch-OST0000`.
 The `job_stats` contains entries for each workload with the unique identifier `job_id` that has performed file system operations on the target.
 
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the counter was last updated.
-Finally, the output contains statistics of each operation specific to the Lustre target; that is, MDT and OST track different operations.
-The values are formatted as key-value pairs separated by commas and enclosed within curly brackets.
-
----
-
-```text
-{ samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
-```
-
----
-
-The `samples` field counts how many operations the job has performed since the counter was started.
-The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
-These fields contain nonnegative integers that increase monotonically except in counter resets.
-A counter is reset if none of its values are updated in the duration specified in the configuration, 10 minutes by default.
-Units are (`<unit>`) either bytes (`bytes`) or microseconds (`usecs`).
 
 
-## File operations
+## File operations and statistics
 operation | system call | notes
 ---|--|------
 **`open`** | `open`
@@ -152,9 +132,24 @@ operation | system call | notes
 
 : \label{tab:ost-operations} We have the following operations on the object data performed on OSSs.
 
-In tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list and explain the operations counted by Jobstats.
+In tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
 We have omitted some rarely encountered operations from the tables.
-Each operation counts statistics from calls to specific system calls.
+Each `<operation>` field contains line of `<statistics>` which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
+
+---
+
+```text
+{ samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
+```
+
+---
+
+The `samples` field counts how many operations the job has requested since the counter was started.
+The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
+These fields contain nonnegative integer values.
+The samples and sums increase monotonically except then the counter resets.
+A counter is reset if none of its values are updated in the duration specified in the configuration, 10 minutes by default.
+Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
 
 Lustre clients may cache certain file operations such as `open`.
 That is if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS.

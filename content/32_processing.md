@@ -5,7 +5,7 @@
 > TODO: add plot of raw counter values and computed rate of change, generate fake data
 
 For each unique identifier, each counter value $v\in\mathbb{R}$ such that $v\ge 0$ of an operation along time $t\in\mathbb{R}$ form a time series.
-Given two points consequtive points in the time series, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t > 0$ and *number of operations* $\Delta v > 0$ during the interval.
+Given two points consequtive points in the time series, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t > 0$ and *increment* $\Delta v > 0$ during the interval.
 The interval length is
 
 $$\Delta t = t^{\prime} - t.$$
@@ -70,7 +70,7 @@ This transformation is useful if we have multiple step functions with steps as d
 In practice, we can avoid the transformation by querying the counters at same times and using them as timestamps.
 
 
-## Computing density
+## Computing density over time
 > TODO: add plot of sum aggregate and heatmaps
 
 > TODO: add another plot with different resolution
