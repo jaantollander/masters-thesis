@@ -4,18 +4,19 @@
 > TODO: add plot of raw counter values and computed rate of change, generate fake data
 
 ## Computing the rate of change
-Let $t\in\mathbb{R}$ denote a *timestamp* and $v_{k}(t)\in\mathbb{R}$ such that $v_{k}(t)\ge 0$ denote a *counter value* of an operation at time $t$ for identifier $k.$
-The *set of identifiers* $K(t)$ at time $t$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
+Let $t\in\mathbb{R}$ denote a *timestamp* and $v_{k}(t)\in\mathbb{R}$ such that $v_{k}(t)\ge 0$ denote a *counter value* of an operation at time $t$ for identifier $k\in K.$
+Let the set of all possible identifiers be $K$ and the set of concrete identifiers at time $t$ be $K(t)\subseteq K$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
 
-- If $k\in K(t),$ the counter value is the *observed value* $v_{k}(t).$
-- Otherwise, $k\notin K(t),$ then the counter value is *implicitly zero*, that is, $v_k(t)=0.$ This is the case with initial and final counter values.
+If $k\in K(t),$ the counter value $v_{k}(t)$ is the value observed from the counter.
+Otherwise, if $k\notin K(t),$ then the counter value is *implicitly zero*, that is, $v_k(t)=0.$
+For example, the initial counter values are implicitly zero.
 
 Sampling a counter value over time forms a time series.
 Given two consequtive timestamps $t^{\prime}$ and $t$ where $t^\prime < t,$ we can calculate the *interval length* as 
 
 $$\tau(t^{\prime}, t) = t - t^{\prime}.$$
 
-If the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\Delta v$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\Delta v$
+Given an identifier $k\in K(t^{\prime})\cup K(t),$ if the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\Delta v$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\Delta v$
 Otherwise, the counter value has reset and the previous counter value is implicitly zero, hence $v_{k}(t)=0+\Delta v.$
 Combined, we can define the *counter increment* during the interval as
 
@@ -31,7 +32,7 @@ $$r_k(t^{\prime},t)=\frac{\Delta v_{k}(t^{\prime},t)}{\tau(t^{\prime}, t)}.$$
 
 Notewthat the rate of change is always positive given $t > t^{\prime},$ since we have $\tau(t^{\prime}, t) > 0$ and $\Delta v_{k}(t^{\prime}, t) > 0,$ which implies $r_k(t^{\prime}, t) > 0.$
 
-To generalize, for any sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ we can represent the rate of change as a step function
+To generalize, for any sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and identifier $k\in K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ we can represent the rate of change as a step function
 
 $$r_k(t)=\begin{cases}
 r_k(t_1, t_2), & t_1 \le t < t_{2} \\
