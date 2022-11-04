@@ -1,34 +1,40 @@
 \newpage
 
 # Processing statistics
-## Time series
-Query time as timestamp.
-
-We can form an *unique indentifier* over all target by using the values of `<target>` and `<job_id>`.
-
-
-## Computing rates of change
 > TODO: add plot of raw counter values and computed rate of change, generate fake data
 
-For each unique identifier, each counter value $v\in\mathbb{R}$ such that $v\ge 0$ of an operation along time $t\in\mathbb{R}$ form a time series.
-Given two points consequtive points in the time series, $(t, v)$ and $(t^\prime, v^\prime)$ where $t < t^\prime,$ we can calculate the *interval length* as $\Delta t > 0$ and *increment* $\Delta v > 0$ during the interval.
-The interval length is
+## Computing the rate of change
+Let $t\in\mathbb{R}$ denote a *timestamp* and $v_{k}(t)\in\mathbb{R}$ such that $v_{k}(t)\ge 0$ denote a *counter value* of an operation at time $t$ for identifier $k\in K(t)$.
 
-$$\Delta t = t^{\prime} - t.$$
+The *set of identifiers* $K(t)$ at time $t$ consisting of tuples `(<target>, <job_id>)` for all queried entries for each target.
 
-If $v^\prime \ge v$, the previous counter value is incremented, and we have $\Delta v = v^\prime - v.$
-Otherwise, if $v^\prime < v$, the counter has reset and the previous counter value is implicitly zero, and we have $\Delta v = v^\prime - 0.$
-Combined, we can write
+---
 
-$$\Delta v = 
+We denote $v$ with subscript as counter value for some $k.$
+
+Sampling the counters over time forms a time series.
+Given two consequtive timestamps $t$ and $t^{\prime}$ where $t < t^\prime,$ we can calculate the *interval length* as 
+
+$$\Delta t(t,t^{\prime}) = t^{\prime} - t.$$
+
+If the new counter value $v(t^{\prime})$ is greater that of equal to the previous $v(t)$, the previous counter value was incremented by $\Delta v$ during the interval, that is, $v(t^{\prime})=v(t)+\Delta v$
+Otherwise, the counter value has reset and the previous counter value is implicitly zero, hence $v(t^\prime)=0+\Delta v.$
+Combined, we define the *counter increment* during the interval as
+
+$$\Delta v(t,t^{\prime}) = 
 \begin{cases}
-v^{\prime} - v, & v^{\prime} \ge v \\
-v^{\prime}, & v^{\prime} < v
+v(t^{\prime}) - v(t), & v(t^{\prime}) \ge v(t) \\
+v(t^{\prime}), & v(t^{\prime}) < v(t)
 \end{cases}.$$
 
-Then, we can calculate the *average rate of change* during the interval for each operation as
 
-$$r=\Delta v / \Delta t.$$
+Then, we can calculate the *rate of change* during the interval for each operation as
+
+$$r(t,t^{\prime})=\frac{\Delta v(t,t^{\prime})}{\Delta t(t,t^{\prime})}.$$
+
+Given $t^{\prime} > t,$ we have $\Delta t(t,t^{\prime}) > 0$ and $\Delta v(t,t^{\prime}) > 0,$ which implies $r(t,t^{\prime}) > 0.$
+
+---
 
 If a particular `job_id` has not yet performed any operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
 In these cases, we can infer the *initial counter* $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
@@ -38,12 +44,12 @@ Then, given a series of counter values
 
 $$(t_0, v_0), (t_1, v_1), (t_2, v_2), ..., (t_{n-1}, v_{n-1}), (t_n, v_n),$$
 
-we can compute the series of average rates of change $r_i$ in the interval $[t_i,t_{i+1})$ as described previously and obtain
+we can compute the series of rates of change $r_i$ in the interval $[t_i,t_{i+1})$ as described previously and obtain
 
 $$(t_0, r_0), (t_1, r_1), (t_2, r_2),...,(t_{n-1}, r_{n-1}), (t_n, r_n),$$
 
 where $r_n=0,$ that is, the rate of change when there is no more counter values is set to zero.
-Mathematically, the average rate of change forms a step function such that
+Mathematically, the rate of change forms a step function such that
 
 $$r(t)=\begin{cases}
 0, & t < t_{0} \\
@@ -57,6 +63,8 @@ We can recover the changes in counter values from the step function using an int
 
 $$\Delta v_{i}=\int_{t_{i}}^{t_{i+1}} r(t)\,dt = r_{i} \cdot (t_{i+1}-t_{i}) = r_{i}\cdot\Delta t_{i},\quad \forall i\in\{1,...,n-1\}.$$
 
+
+## Transforming
 We can transform a step function $r(t)$ into a step function $r^\prime(t)$ defined by 
 
 $$(t_0^\prime, r_0^\prime), (t_1^\prime, r_1^\prime), (t_2^\prime, r_2^\prime),...,(t_{m-1}^\prime, r_{m-1}^\prime), (t_m^\prime, r_m^\prime),\quad m\in\mathbb{N}$$
