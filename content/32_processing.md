@@ -1,6 +1,12 @@
 \newpage
 
 # Processing statistics
+## Time series
+Query time as timestamp.
+
+We can form an *unique indentifier* over all target by using the values of `<target>` and `<job_id>`.
+
+
 ## Computing rates of change
 > TODO: add plot of raw counter values and computed rate of change, generate fake data
 

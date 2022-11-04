@@ -38,13 +38,13 @@ We indicate variables using the syntax `<name>`.
 We can query jobstats from MDS as follows:
 
 ```sh
-lctl get_param mdt.<source>.jobstats
+lctl get_param mdt.<target>.jobstats
 ```
 
 The text output is formatted as follows.
 
 ```text
-mdt.<source>.job_stats=
+mdt.<target>.job_stats=
 job_stats:
 - job_id: <identifier_1>
   snapshot_time: <unix-epoch>
@@ -63,13 +63,13 @@ job_stats:
 Similarly, we can query jobstats from OSS as follows:
 
 ```sh
-lctl get_param obdfilter.<source>.jobstats
+lctl get_param obdfilter.<target>.jobstats
 ```
 
 The text output is also similar.
 
 ```text
-obdfilter.<source>.job_stats=
+obdfilter.<target>.job_stats=
 job_stats:
 - job_id: <identifier_1>
   snapshot_time: <unix-epoch>
@@ -85,17 +85,19 @@ job_stats:
 
 ---
 
-The `<source>` indicates the target of the data.
-In Puhti, `scratch-MDT0000` or `scratch-OST0000`.
+The `<target>` indicates the target of the data.
+In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>` and eight OSSs with three OSTs each, named `scratch-OST<index>`.
+The `<index>` is four digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
+Indexing starts from zero.
+For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
 
-The `job_stats` contains entries for each workload with the unique identifier `job_id` that has performed file system operations on the target.
+After the `job_stats:` line, we have a list of entries for workloads that have performed file system operations on the target.
+Each entry denoted by dash `-` and has `job_id` identifier, `snapshot_time` and various operations with statistics.
+The value in `snapshot_time` field contains a timestamp as a Unix epoch when the statistics of one of the operations was last updated.
+We explain the file operations and statistics in section \ref{sec:file-operations-and-statistics}.
 
-We can form an unique indentifier over all target by using `<source>` and `<job_id>`.
 
-The value in `snapshot_time` field contains a timestamp as a Unix epoch when the counter was last updated.
-
-
-## File operations and statistics
+## File operations and statistics \label{sec:file-operations-and-statistics}
 operation | system call | notes
 ---|--|------
 **`open`** | `open`
@@ -149,9 +151,12 @@ Each `<operation>` field contains line of `<statistics>` which are formatted as 
 The `samples` field counts how many operations the job has requested since the counter was started.
 The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
 These fields contain nonnegative integer values.
-The samples and sums increase monotonically except then the counter resets.
-A counter is reset if none of its values are updated in the duration specified in the configuration, 10 minutes by default.
 Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
+
+The samples and sums increase monotonically except when the counter resets.
+A counter is reset if none of its values are updated within the duration specified in the configuration using `job_cleanup_interval` parameter.
+That is, entries with `snapshot_time` older than the cleanup interval are removed.
+We used the default interval of 10 minutes.
 
 Lustre clients may cache certain file operations such as `open`.
 That is if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS.

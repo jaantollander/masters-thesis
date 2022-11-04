@@ -1,6 +1,6 @@
 \newpage
 
-# Monitoring and analysis workflow
+# Monitoring workflow
 ## Monitoring and recording the statistics
 ![](figures/lustre-monitor.drawio.svg)
 
