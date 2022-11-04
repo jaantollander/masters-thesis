@@ -4,8 +4,11 @@
 > TODO: add plot of raw counter values and computed rate of change, generate fake data
 
 ## Computing the rate of change
-Let $t\in\mathbb{R}$ denote a *timestamp* and $v_{k}(t)\in\mathbb{R}$ such that $v_{k}(t)\ge 0$ denote a *counter value* of an operation at time $t$ for identifier $k\in K(t)$.
+Let $t\in\mathbb{R}$ denote a *timestamp* and $v_{k}(t)\in\mathbb{R}$ such that $v_{k}(t)\ge 0$ denote a *counter value* of an operation at time $t$ for identifier $k.$
 The *set of identifiers* $K(t)$ at time $t$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
+
+- If $k\in K(t),$ the counter value is the *observed value* $v_{k}(t).$
+- If $k\notin K(t),$ then the counter value is *implicitly zero*, that is, $v_k(t)=0.$
 
 For conciseness, we denote $v$ without the subscript as counter value for unspecified $k$ when it is not important which identifier is in question.
 
@@ -14,16 +17,8 @@ Given two consequtive timestamps $t^{\prime}$ and $t$ where $t^\prime < t,$ we c
 
 $$\tau(t^{\prime}, t) = t - t^{\prime}.$$
 
-We have four cases for counter values
-
-1) If $k \in K(t^{\prime})$ and $k\in K(t)$, counter values are the observed values $v_(t^{\prime})$ and $v_(t)$
-2) If $k \notin K(t^{\prime})$ and $k\in K(t)$, initial counter is implicitly zero, $v_k(t^{\prime})=0$
-3) If $k \in K(t^{\prime})$ and $k\notin K(t)$, final counter is implicitly zero, $v_k(t)=0$
-4) If $k \notin K(t^{\prime})$ and $k\notin K(t)$, non existent counter values are implicitly zero, $v_k(t^{\prime})=0$ and $v_k(t)=0$
-
 If the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\Delta v$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\Delta v$
 Otherwise, the counter value has reset and the previous counter value is implicitly zero, hence $v_{k}(t)=0+\Delta v.$
-
 Combined, we can define the *counter increment* during the interval as
 
 $$\Delta v_{k}(t^{\prime},t) = 
