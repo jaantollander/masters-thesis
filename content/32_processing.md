@@ -5,37 +5,42 @@
 
 ## Computing the rate of change
 Let $t\in\mathbb{R}$ denote a *timestamp* and $v_{k}(t)\in\mathbb{R}$ such that $v_{k}(t)\ge 0$ denote a *counter value* of an operation at time $t$ for identifier $k\in K(t)$.
+The *set of identifiers* $K(t)$ at time $t$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
 
-The *set of identifiers* $K(t)$ at time $t$ consisting of tuples `(<target>, <job_id>)` for all queried entries for each target.
+For conciseness, we denote $v$ without the subscript as counter value for unspecified $k$ when it is not important which identifier is in question.
 
----
+Sampling a counter value over time forms a time series.
+Given two consequtive timestamps $t^{\prime}$ and $t$ where $t^\prime < t,$ we can calculate the *interval length* as 
 
-We denote $v$ with subscript as counter value for some $k.$
+$$\tau(t^{\prime}, t) = t - t^{\prime}.$$
 
-Sampling the counters over time forms a time series.
-Given two consequtive timestamps $t$ and $t^{\prime}$ where $t < t^\prime,$ we can calculate the *interval length* as 
+We have four cases for counter values
 
-$$\Delta t(t,t^{\prime}) = t^{\prime} - t.$$
+1) If $k \in K(t^{\prime})$ and $k\in K(t)$, counter values are the observed values $v_(t^{\prime})$ and $v_(t)$
+2) If $k \notin K(t^{\prime})$ and $k\in K(t)$, initial counter is implicitly zero, $v_k(t^{\prime})=0$
+3) If $k \in K(t^{\prime})$ and $k\notin K(t)$, final counter is implicitly zero, $v_k(t)=0$
+4) If $k \notin K(t^{\prime})$ and $k\notin K(t)$, non existent counter values are implicitly zero, $v_k(t^{\prime})=0$ and $v_k(t)=0$
 
-If the new counter value $v(t^{\prime})$ is greater that of equal to the previous $v(t)$, the previous counter value was incremented by $\Delta v$ during the interval, that is, $v(t^{\prime})=v(t)+\Delta v$
-Otherwise, the counter value has reset and the previous counter value is implicitly zero, hence $v(t^\prime)=0+\Delta v.$
-Combined, we define the *counter increment* during the interval as
+If the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\Delta v$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\Delta v$
+Otherwise, the counter value has reset and the previous counter value is implicitly zero, hence $v_{k}(t)=0+\Delta v.$
 
-$$\Delta v(t,t^{\prime}) = 
+Combined, we can define the *counter increment* during the interval as
+
+$$\Delta v_{k}(t^{\prime},t) = 
 \begin{cases}
-v(t^{\prime}) - v(t), & v(t^{\prime}) \ge v(t) \\
-v(t^{\prime}), & v(t^{\prime}) < v(t)
+v_{k}(t) - v_{k}(t^{\prime}), & v_{k}(t) \ge v_{k}(t^{\prime}) \\
+v_{k}(t), & v_{k}(t) < v_{k}(t^{\prime})
 \end{cases}.$$
 
 
-Then, we can calculate the *rate of change* during the interval for each operation as
+Then, we can calculate the *rate of change* during the interval as
 
-$$r(t,t^{\prime})=\frac{\Delta v(t,t^{\prime})}{\Delta t(t,t^{\prime})}.$$
+$$r(t^{\prime},t)=\frac{\Delta v_{k}(t^{\prime},t)}{\tau(t^{\prime}, t)}.$$
 
-Given $t^{\prime} > t,$ we have $\Delta t(t,t^{\prime}) > 0$ and $\Delta v(t,t^{\prime}) > 0,$ which implies $r(t,t^{\prime}) > 0.$
+Note that the rate of change is always positive given $t > t^{\prime},$ since we have $\tau(t^{\prime}, t) > 0$ and $\Delta v_{k}(t^{\prime}, t) > 0,$ which implies $r(t^{\prime}, t) > 0.$
 
----
 
+## Boundaries
 If a particular `job_id` has not yet performed any operations, its counters contain implicit zeros, that is, they not in the output of the statistics.
 In these cases, we can infer the *initial counter* $(t_0, v_0)$ where $v_0=0$ and set $t_0$ to the timestmap of last recording interval.
 For the first recording interval, we cannot infer $t_0$ and we need to discard the initial counter.
