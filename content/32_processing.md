@@ -1,25 +1,25 @@
 \newpage
 
 # Processing statistics
-> TODO: add plot of raw counter values and computed rate of change, generate fake data
+## Rate of change over an interval
+Let $K$ denote the set of *all possible identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
+Then, we define $K(t)\subseteq K$ as the set of *concrete identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *concrete counter value* at time $t$ for concrete identifier $k\in K(t).$
 
-## Rate of change
-Let $t\in\mathbb{R}$ denote a *timestamp* and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ denote a *concrete counter value* of an operation at time $t$ for identifier $k\in K.$
-Let the set of all possible identifiers be $K$ and the set of concrete identifiers at time $t$ be $K(t)\subseteq K$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
+We denote *counter value* as $v_k(t)$ for an arbitraty identifier $k\in K$ at time $t.$
+Its value is the concrete counter value if the identifier $k$ is concrete and zero value if the identifier is not concrete.
+Formally, we have
 
-We denote *counter value* as $v_k(t).$
-If $k\in K(t),$ the counter value $c_{k}(t)$ is the value observed from the counter.
-Otherwise, if $k\notin K(t),$ then the counter value is *implicitly zero*.
-For example, the initial counter values are implicitly zero.
-
-$$v_{k}(t)=
+\begin{equation}
+v_{k}(t)=
 \begin{cases}
 c_k(t), & k\in K(t) \\
 0, & k\notin K(t) \\
-\end{cases}.$$
+\end{cases}.
+\label{eq:counter-value}
+\end{equation}
 
-Sampling a counter value over time forms a time series.
-Given two consequtive timestamps $t^{\prime}$ and $t$ where $t^\prime < t,$ we can calculate the *interval length* as 
+We can sample the counter value over time as a streaming time series.
+Given previous timestamp $t^{\prime}$ and current timestamp $t$ in the stream such that $t^\prime < t,$ we can calculate an *interval length* as 
 
 $$\tau(t^{\prime}, t) = t - t^{\prime}.$$
 
@@ -37,8 +37,10 @@ Then, we can calculate the *rate of change* during the interval as
 
 $$r_k(t^{\prime},t)=\frac{\delta_{k}(t^{\prime},t)}{\tau(t^{\prime}, t)}.$$
 
-Notewthat the rate of change is always positive given $t > t^{\prime},$ since we have $\tau(t^{\prime}, t) > 0$ and $\delta_{k}(t^{\prime}, t) \ge 0,$ which implies $r_k(t^{\prime}, t) \ge 0.$
+Note that the rate of change is always non-negative given $t > t^{\prime},$ since we have $\tau(t^{\prime}, t) > 0$ and $\delta_{k}(t^{\prime}, t) \ge 0,$ which implies $r_k(t^{\prime}, t) \ge 0.$
 
+
+## Rate of change over time
 To generalize, for any sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and identifier $k\in K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ we can represent the rate of change as a step function
 
 $$r_k(t)=\begin{cases}
@@ -99,6 +101,8 @@ The base parameter determines the *resolution* of the binning.
 
 ## Practical Usage
 TODO
+
+$K(t)$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
 
 We can visualize an individual time series as step plot.
 However, our configuration produces thousands of individual time series.
