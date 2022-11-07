@@ -41,13 +41,10 @@ Note that the rate of change is always non-negative given $t > t^{\prime},$ sinc
 
 
 ## Rate of change over time
-To generalize, for any sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and identifier $k\in K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ we can represent the rate of change as a step function
+Generally, we can represent the rate of change as a step function over continuous time $t$ given a sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ with identifier $k\in K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ as
 
 $$r_k(t)=\begin{cases}
-r_k(t_1, t_2), & t_1 < t \le t_{2} \\
-r_k(t_2, t_3), & t_2 < t \le t_{3} \\
-\vdots \\
-r_k(t_{n-1}, t_n), & t_{n-1} < t \le t_{n} \\
+r_k(t_{i-1}, t_{i}), & t_{i-1} < t \le t_{i},\quad \forall i\in\{2,...,n\} \\
 0 & \text{otherwise}
 \end{cases}.$$
 
@@ -60,6 +57,10 @@ $$
 =
 r_k(t_{i-1}, t_{i}) \cdot \tau(t_{i-1}, t_{i}),\quad \forall i\in\{2,...,n\}.
 $$
+
+Sum $r_{K^\prime}(t)$ over identifiers $K^{\prime}\subseteq K$ is defined as
+
+$$r_{K^{\prime}}(t) = \sum_{k\in K^{\prime}} r_{k}(t).$$
 
 
 ## Transforming
@@ -76,27 +77,26 @@ This transformation is useful if we have multiple step functions with steps as d
 In practice, we can avoid the transformation by querying the counters at same times.
 
 
-## Summation
-Sum $r_{K^\prime}(t)$ over identifiers $K^{\prime}\subseteq K$ is defined as
-
-$$r_{K^{\prime}}(t) = \sum_{k\in K^{\prime}} r_{k}(t).$$
-
-
 ## Density over time
-We define a function which indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bin* $y\in \mathbb{Z}$ as
+We define a function which indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 $$\mathbf{1}_{b}(x, y)=\begin{cases}
-1, & (x > 0) \wedge (\lfloor \log_{b}(x) \rfloor = y) \\
+1, & b^y \le x < b^{y+1} \\
 0, & \text{otherwise} \\
 \end{cases}.$$
 
 Let $R$ be a set of step functions.
+Then, we define the density over time as a counting function
 
 $$z_{b}(t, y)=\sum_{r_k\in R} \mathbf{1}_{b}(r_k(t), y).$$
 
-Then, we can count many step values occur in the range $[b^k,b^{k-1})$ with base $b$ for bin $(t, a)$ as follows
+The base parameter determines the *resolution* of the bucketing.
 
-The base parameter determines the *resolution* of the binning.
+In pratice, we can use the logarithmic floor function to compute the bucket $y$ of a value $x,$ because of the relationship 
+
+$$(x > 0) \wedge (\lfloor \log_{b}(x) \rfloor = y)
+\quad\equiv\quad
+b^y \le x < b^{y+1}.$$
 
 
 ## Practical Usage
