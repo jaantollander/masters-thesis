@@ -4,26 +4,15 @@
 ## Hardware configuration
 ![Diagram of Puhti's hardware from storage perspective](figures/puhti-hardware.drawio.svg)
 
-Value | Metric | Value | IEC
-- | - | - | -
-$1$ | byte (B) | $1$ | byte (B)
-$1000^1$ | kilobyte (kB) | $1024^1$ | kibibyte (KiB)
-$1000^2$ | megabyte (MB) | $1024^2$ | mebibyte (MiB)
-$1000^3$ | gigabyte (GB) | $1024^3$ | gibibyte (GiB)
-$1000^4$ | terabyte (TB) | $1024^4$ | tebibyte (TiB)
-$1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
-
-: Units for bytes in base $10$ and $2$.
-One byte is a string of $8$ bits.
+> TODO: improve the caption of figure
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
-service | Utility | 5 | 384 | 2900
-service | Utility-FMI | 2 | 384 | 2900
-service | AeroS MDS | 2 |   |  
-service | AeroS OSS | 4 |   |  
-service | ISMA | 4 |   |  
-service | Data Lake | 8 |   |  
+service | Utility | 3 | 384 | 2900
+service | Login | 2 | 384 | 2900
+service | Login-FMI | 2 | 384 | 2900
+service | Lustre MDS | 2 |   |  
+service | Lustre OSS | 4 |   |  
 compute | CPU, M | 484 | 192 | -
 compute | CPU, M, IO | 48 | 192 | 1490
 compute | CPU, M-FMI | 240 | 192 | -
@@ -36,7 +25,7 @@ compute | GPU | 80 | 384 | 3600
 : Nodes on Puhti \label{tab:compute-nodes}
 
 The *Puhti* cluster has 23 *service nodes* and 1002 *compute nodes*.
-The services nodes consist of utility nodes used as cluster's *login nodes*, MDS nodes and OSS nodes for the Lustre file system, ISMA nodes used for managing the cluster and Data Lake nodes for [interfacing with object storage services?].
+The services nodes consist of utility nodes used as cluster's *login nodes*, MDS nodes and OSS nodes for the Lustre file system, and ISMA nodes used for managing the cluster.
 The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
 Each login and compute node consists of 2 $\times$ *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 In addition to CPUs, each GPU node has 4 $\times$ *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
@@ -45,7 +34,6 @@ Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Vol
 
 The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to L1 switches which are connected to L2 switches in a *fat-tree* network topology.
 The network has a total of 28 L1 switches and 12 L2 switches.
-The InfiniBand cabling has 1:1 pruning for GPU nodes and 2:1 for other nodes.
 
 The global storage on Puhti consists of a Lustre file system (version 2.12.6) from *DataDirect Networks (DDN)* that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
 Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
@@ -79,14 +67,14 @@ The global, Lustre file system is shared across *home*, *projappl*, and *scratch
 
 *home*
 : area is intended for storing personal data and configuration files.
-In the file system, it resides at `/home/<user>` available via the `$HOME` variable and has a default quota of 10 GB per user.
+In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB per user.
 
 *projappl*
 : area is intended for storing project-specific application files such as compiled libraries.
 It resides at `/projappl/<project>` and has a default quota of 50 GB per project.
 
 *scratch*
-: area is intended for short-term storage (90 days) of data used in the cluster.
+: area is intended for short-term storage of data used in the cluster.
 It resides at `/scratch/<project>` and has a default quota of 1 TB per project.
 Files that require long-term storage should be moved to a long-term data storage outside Puhti.
 
@@ -97,14 +85,18 @@ The fast local storage, mounted on a local SSD, is called *tmp* or *local scratc
 It is intended as temporary file storage for I/O heavy operations.
 User should copy data that they wish to keep after the job has completed to *scratch* since files in these temporary storage areas are cleaned regularly.
 
-*tmp*
-: is an area for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
-It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
-
 *local scratch*
 : is an area for batch jobs to perform I/O heavy operations.
 The quota depends on how much is requested for the job.
 It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
+
+---
+
+> TODO: *tmp* is ramdisk
+
+*tmp*
+: is an area for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
+It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
 
 ## Running workloads
@@ -135,67 +127,9 @@ Slurm also performs accounting of other details about the submitted jobs.
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
-Next, we explain some common types of jobs.
-
----
-
-```sh
-#!/usr/bin/env bash
-#SBATCH --job-name=<job-name>
-#SBATCH --account=<project>
-#SBATCH --partition=small
-#SBATCH --time=01:00:00
-#SBATCH --nodes=1
-#SBATCH --tasks-per-node=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=10G
-srun <program>
-```
-
-The above script is an example of a small, sequential batch job with a single job step (`srun` command).
-It is also common to run multiple such jobs independent of each other with slight variation for example in initial conditions.
-We can achieve that by turning it into an array job by adding the `array` argument with desired range and accessing the array ID via an environment variable.
-
-```sh
-#...
-#SBATCH --array=1-100
-srun <program> $SLURM_ARRAY_TASK_ID
-```
-
----
-
-```sh
-#!/usr/bin/env bash
-#SBATCH --job-name=<job-name>
-#SBATCH --account=<project>
-#SBATCH --partition=large
-#SBATCH --time=02:00:00
-#SBATCH --nodes=2
-#SBATCH --tasks-per-node=2
-#SBATCH --cpus-per-task=20
-#SBATCH --mem-per-cpu=2G
-#SBATCH --gres=nvme:100
-# 1. job step
-srun --nodes 2 --ntasks 1 <program-1>
-# 2. job step
-srun <program-2>
-# 3. job step
-srun --nodes 1 --ntasks 2 <program-3> &
-# 4. job step
-srun --nodes 1 --ntasks 2 <program-4> &
-# Wait for job 2. and 3. to complete
-wait
-```
-
-The above script is an example of a large parallel batch job with four job steps.
-For example,
-The first program will run on the first job step and could load data to the local disk.
-The second program will run on the second job step utilizing all given nodes, tasks, and cpus and the majority of the given time.
-It would be is a large parallel program such as a large, well parallelizing simulation communicating via MPI.
-The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and CPUs from a single node.
-These programs could be programs for post processing steps, for example, processing and backing up the simulation results.
+We explain some common types of jobs in the appendix ???.
 
 
-## Issues with parallel file system
+## Issues with  parallel file system
 [@tacc-io-guideline]
 

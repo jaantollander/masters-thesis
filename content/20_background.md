@@ -23,10 +23,10 @@ Both, the set of rules and set of symbols must be discrete.
 The *memory* requirement of a computation is the maximum size of the string during the computation.
 Some models of computation are only theoretical tools while others we can implement in the real world using physical processes.
 
-Contemporary computers represent data in digital form, typically as binary digits using symbols 0 and 1 referred as *bits*.
-Multiple bits in a row form a binary string and a binary string of 8 bits is called a *byte*.
-Rules correspond to intructions to a computer processor that manipulate bytes, for example adding two 32-bit integers together represented by 4 bytes.
-Memory is consists of multiple levels volatile *working* memory and non-volatile *storage* memory organized in hierarchical way based on factors such as proximity to the processor, access speed, and cost.
+Contemporary computers represent data in digital form, typically as binary digits called *bits*.
+Multiple bits in a row form a *binary string*.
+Rules correspond to intructions to a computer processor that manipulate binary strings.
+Memory consists of multiple levels volatile *working* memory and non-volatile *storage* memory organized in hierarchical way based on factors such as proximity to the processor, access speed, and cost.
 Models of computation include serial and parallel computing.
 *Serial computing* refers to performing one operation at a time.
 In contrast, *parallel computing* is about performing multiple independent operations simultaneously, with the goal of reducing run time, performing larger calculations, and decreasing energy consumption.
@@ -42,6 +42,7 @@ Examples of commercial and research applications of HPC include:
 - Fluid simulation such as airflow for cars and airplanes
 - Molecular dynamics simulation for pharmaceutical design
 - Cosmological simulation for understanding galaxy creation
+- Bio sciences such as next generation sequencing for studying genomes
 
 We can connect multiple computers together to form a computer network.
 We refer to the individual computers in the network as *nodes*.
@@ -60,7 +61,7 @@ This is also an important reason for studying storage in HPC systems.
 
 ## Linux operating system
 An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
-At the time of writing, all high-performance computer clusters use the *Linux operating system* [@osfam].
+At the time of writing, practically all high-performance computer clusters use the *Linux operating system* [@osfam].
 The *Linux kernel* [@linuxkernel] is the core of the Linux operating system and is written in the *C programming language*.
 It derives from the original *UNIX operating system* and closely follows the *POSIX standard*.
 For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
@@ -87,6 +88,14 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 
 
 ## Linux file system interface
+The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
+This allows programs to use different file systems in a uniform way using the operations defined by the interface.
+The interface contains the file system-specific system calls.
+We explain the most important system calls below.
+For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
+In Linux, you can use `man 2 <systemcall>` command to read the manual page of an system call.
+We present and explain the common system calls for the file system interface in the table \ref{tab:systemcalls}.
+
 System call | Explanation
 :-|:-------
 `mknod` | Creates a new file.
@@ -113,73 +122,12 @@ System call | Explanation
 
 : \label{tab:systemcalls} Linux systemcalls (and their variants) for file system
 
-The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
-This allows programs to use different file systems in a uniform way using the operations defined by the interface.
-The interface contains the file system-specific system calls.
-We explain the most important system calls below.
-For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
-In Linux, you can use `man 2 <systemcall>` command to read the manual page of an system call.
-We present and explain the common system calls for the file system interface in the table \ref{tab:systemcalls}.
-
-Next, we present two examples of performing file I/O using system calls.
-Please note that these examples do not perform any error handling that should be done by proper programs.
-
----
-
-```c
-#include<fcntl.h>
-#include<sys/types.h>
-#include<unistd.h>
-#include<sys/stat.h>
-
-int main()
-{
-    int n;  // number of bytes read
-    int fd1, fd2;  // file descriptors
-    const int size = 4096;  // buffer size
-    char buffer[size];  // reserve memory for reading bytes
-    // Read input file
-    fd1 = open("input.txt", O_RDONLY);
-    n = read(fd1, buffer, size);
-    close(fd1);
-    // Write output file
-    fd2 = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
-    write(fd2, buffer, n);
-    close(fd2);
-}
-```
-
-The first example program demonstrates opening and closing file descriptors, reading bytes from a file and writing bytes to a file.
-It opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
-The code performs the `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
-
----
-
-```c
-#define _GNU_SOURCE
-#include<fcntl.h>
-#include<sys/types.h>
-#include<unistd.h>
-#include<sys/stat.h>
-
-int main()
-{
-    int fd;  // file descriptor
-    fd = open("output.txt", O_CREAT|O_WRONLY, S_IRUSR|S_IWUSR);
-    write(fd, "hello hole world", 16);
-    fallocate(fd, FALLOC_FL_PUNCH_HOLE|FALLOC_FL_KEEP_SIZE, 5, 5);
-    close(fd);
-}
-```
-
-The second example demonstrates a less common feature of "punching a hole" to a file, creating a sparse file.
-The hole appears as null bytes when reading the file, without takeing any space on the disk.
-This feature supported by certain Linux file systems such as ext4.
-The following code writes `hello hole world` to a `output.txt` file.
-It then deallocate bytes from 5 to 10 such that the file keeps its original size using `fallocate` with mode `FALLOC_FL_PUNCH_HOLE` and `FALLOC_FL_KEEP_HOLE`.
+> TODO: improve the table caption
 
 
 ## Lustre parallel file system
+> TODO: Lustre is kernel module, works in the kernel space (not user space)
+
 Parallel file system is a file system designed for clusters.
 It stores data on multiple networked servers to facilitate high performance access and makes the data available via global namespace such that users do not need to know the physical location of the data blocks to access a file.
 *Lustre* is a parallel file system which provides a POSIX standard-compliant file system interface for Linux clusters.
@@ -206,6 +154,9 @@ On the other hand, *Object Storage Servers (OSS)* provide access to and handle f
 The file data is stored in one or more objects, each object on a separate *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
 Finally, the *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
+
+> TODO: replace InfiniBand and IP networks to high-speed networks used in HPC clusters, general instead of specific
+
 LNet supports many network types, including InfiniBand and IP networks, with simultaneous availability between them.
 
 
@@ -215,7 +166,7 @@ Frontend consist of login and utility nodes and backend consists of compute node
 Clusters rely on a *workload manager* for allocating access to the computing resources, scheduling and running programs on the backend.
 The programs may instantiate an interactive or a batch process.
 A batch process is a computation that runs from start to finish without user interaction compared to an interactive processes such as an active terminal prompt or a text editor which respond to user input.
-We must specify limits for the resources we request.
+We must specify the resources we request and limits for them.
 
 *Slurm* is a workload manager for Linux clusters [@slurmdocs].
 These computing resources include nodes, cores, memory, and time.
@@ -233,4 +184,6 @@ Slurm can also perform accounting for resource usage.
 It is owned by the Finnish-state and higher education institutions.
 These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
 We will be looking at the structure of CSC *Puhti* cluster.
+
+> TODO: explain cloud side, object storage, etc
 

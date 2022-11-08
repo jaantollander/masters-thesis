@@ -2,6 +2,8 @@
 
 # Collecting usage statistics with Lustre Jobstats
 ## Setting identifier format
+> TODO: reference to the background section about Lustre
+
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
 We can specify the format `job_id` with `jobid_name` parameter.
@@ -93,8 +95,12 @@ For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `
 
 After the `job_stats:` line, we have a list of entries for workloads that have performed file system operations on the target.
 Each entry denoted by dash `-` and has `job_id` identifier, `snapshot_time` and various operations with statistics.
+
+> TODO: explain what is Unix epoch
+
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the statistics of one of the operations was last updated.
 We explain the file operations and statistics in section \ref{sec:file-operations-and-statistics}.
+
 
 
 ## File operations and statistics \label{sec:file-operations-and-statistics}
@@ -157,6 +163,8 @@ The samples and sums increase monotonically except when the counter resets.
 A counter is reset if none of its values are updated within the duration specified in the configuration using `job_cleanup_interval` parameter.
 That is, entries with `snapshot_time` older than the cleanup interval are removed.
 We used the default interval of 10 minutes.
+
+> TODO: we don't know if caching causes difference between open and close operations
 
 Lustre clients may cache certain file operations such as `open`.
 That is if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS.
