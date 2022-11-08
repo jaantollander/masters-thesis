@@ -1,8 +1,22 @@
 \newpage
 
 # Processing statistics
+## Explanation
+Set of all identifiers is the set of all strings with allowed characters.
+
+Timestamp ...
+
+Set of concrete identifier are the observed tuples `(<target>, <job_id>)` for all entries for all targets.
+
+Concrete counter values are ..
+
+We can visualize an individual time series as step plot.
+However, our configuration produces thousands of individual time series.
+To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
+
+
 ## Rate of change over an interval
-Let $K$ denote the set of *all possible identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
+Let $K$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
 Then, we define $K(t)\subseteq K$ as the set of *concrete identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *concrete counter value* at time $t$ for concrete identifier $k\in K(t).$
 
 We denote *counter value* as $v_k(t)$ for an arbitraty identifier $k\in K$ at time $t.$
@@ -124,15 +138,4 @@ In pratice, we can use the logarithmic floor function to compute the bucket $y$ 
 \quad\equiv\quad
 b^y \le x < b^{y+1}.
 \end{equation}
-
-
-## Practical Usage
-TODO
-
-* $K$ can be though as the set of all strings with allowed characters
-* $K(t)$ consisting of tuples `(<target>, <job_id>)` for all entries for all targets.
-
-We can visualize an individual time series as step plot.
-However, our configuration produces thousands of individual time series.
-To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
 

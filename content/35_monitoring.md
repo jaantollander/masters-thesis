@@ -1,9 +1,9 @@
 \newpage
 
 # Monitoring workflow
-## Monitoring and recording the statistics
 ![](figures/lustre-monitor.drawio.svg)
 
+## Monitoring and recording the statistics
 The pipeline for monitoring and recording the statistics consists of multiple instances of a monitoring daemon and a single instance of an ingest daemon, and a relational database.
 *Daemon* is a program that runs in the background.
 We installed a monitoring daemon to each Lustre server, and an ingest daemon and a database to a utility node on Puhti.
@@ -37,7 +37,4 @@ For a row in the relational database, the tuple of values `(uid, job, nodename, 
 
 
 ## Querying the database
-
-
-## Heuristics for measuring lag on the Lustre file system
 

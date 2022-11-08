@@ -8,13 +8,6 @@
 ---
 
 ## High-performance computing
-- *What is and why do we need high-performance computing?*
-- *What are the defining characteristics of high-performance computing (HPC)?*
-- *How does HPC related to computer clusters?*
-- Good references are needed in this section
-
----
-
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
 For example, first applicable rule at a time or multiple rules at once.
@@ -79,21 +72,9 @@ Consequently, the user can use the same file utilities to perform various tasks,
 The kernel only provides one file type, a sequential stream of bytes.
 In this work, we focus on the storage file system I/O.
 
-Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
-The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
-Linux systems have one special user, called the *super user* or *root user*, which has the privileges to access everything on the system.
-The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance. [@tlpi, secs. 2-3]
-
-A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
-
-
-## Linux file system interface
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
-We explain the most important system calls below.
-For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
-In Linux, you can use `man 2 <systemcall>` command to read the manual page of an system call.
 We present and explain the common system calls for the file system interface in the table \ref{tab:systemcalls}.
 
 System call | Explanation
@@ -120,18 +101,24 @@ System call | Explanation
 `setxattr` | Set an extended attribute value
 `getxattr` | Retrieve an extended attribute value
 
-: \label{tab:systemcalls} Linux systemcalls (and their variants) for file system
+: \label{tab:systemcalls} System calls and their variants for file system interface.
+For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
+In Linux, you can use `man 2 <system-call>` command to read the manual page of an system call.
 
-> TODO: improve the table caption
+Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
+The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
+Linux systems have one special user, called the *super user* or *root user*, which has the privileges to access everything on the system.
+The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance. [@tlpi, secs. 2-3]
+
+A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
 
 ## Lustre parallel file system
-> TODO: Lustre is kernel module, works in the kernel space (not user space)
-
 Parallel file system is a file system designed for clusters.
 It stores data on multiple networked servers to facilitate high performance access and makes the data available via global namespace such that users do not need to know the physical location of the data blocks to access a file.
 *Lustre* is a parallel file system which provides a POSIX standard-compliant file system interface for Linux clusters.
-The Lustre file system is designed using the client-server architecture.
+The Lustre file system is a *kernel module* designed using the client-server architecture.
+Kernel module is a software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @lustredocs, secs. 1-2]
 
 A *client-server application* is an application that is broken into two processes, a client and a server.
@@ -154,10 +141,7 @@ On the other hand, *Object Storage Servers (OSS)* provide access to and handle f
 The file data is stored in one or more objects, each object on a separate *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
 Finally, the *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
-
-> TODO: replace InfiniBand and IP networks to high-speed networks used in HPC clusters, general instead of specific
-
-LNet supports many network types, including InfiniBand and IP networks, with simultaneous availability between them.
+LNet supports many network types, including high-speed networks used in HPC clusters.
 
 
 ## Slurm workload manager

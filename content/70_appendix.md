@@ -18,7 +18,7 @@ $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
 
 \clearpage
 
-# System calls
+# Programming with system call
 Next, we present two examples of performing file I/O using system calls.
 Please note that these examples do not perform any error handling that should be done by proper programs.
 
@@ -84,6 +84,9 @@ It then deallocate bytes from 5 to 10 such that the file keeps its original size
 \clearpage
 
 # Slurm job scripts
+We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
+We can specify the options as command line arguments as we invoke the command or in the script as comments.
+The script specifies job steps using the `srun` command.
 
 ```sh
 #!/usr/bin/env bash

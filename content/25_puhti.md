@@ -25,7 +25,7 @@ compute | GPU | 80 | 384 | 3600
 : Nodes on Puhti \label{tab:compute-nodes}
 
 The *Puhti* cluster has 23 *service nodes* and 1002 *compute nodes*.
-The services nodes consist of utility nodes used as cluster's *login nodes*, MDS nodes and OSS nodes for the Lustre file system, and ISMA nodes used for managing the cluster.
+The services nodes consist of utility nodes used as cluster's *login nodes* and MDS nodes and OSS nodes for the Lustre file system.
 The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
 Each login and compute node consists of 2 $\times$ *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 In addition to CPUs, each GPU node has 4 $\times$ *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
@@ -123,11 +123,7 @@ Slurm schedules the job to run when sufficient resource are available using a fa
 It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
 We can use the `SLURM_JOB_ID` as identifier to collect job specific file operations.
 Slurm also performs accounting of other details about the submitted jobs.
-
-We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
-We can specify the options as command line arguments as we invoke the command or in the script as comments.
-The script specifies job steps using the `srun` command.
-We explain some common types of jobs in the appendix ???.
+Examples of Slurm job in the appendix ???.
 
 
 ## Issues with  parallel file system
