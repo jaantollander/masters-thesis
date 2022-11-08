@@ -1,6 +1,9 @@
 Linux version 3.10.0-1160.59.1.el7.x86_64 (mockbuild@x86-vm-37.build.eng.bos.redhat.com) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-44) (GCC) ) #1 SMP Wed Feb 16 12:17:35 UTC 2022
+
 Red Hat Enterprise Linux Server release 7.9 (Maipo)
+
 Lustre version: 2.12.6_ddn72
-slurm 21.08.7-1_issue_803
 jobid_name=%j:%u:%H
 jobid_var=SLURM_JOB_ID
+
+slurm 21.08.7-1_issue_803
