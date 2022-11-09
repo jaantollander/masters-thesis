@@ -94,7 +94,7 @@ Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
 
 After the `job_stats:` line, we have a list of entries for workloads that have performed file system operations on the target.
-Each entry denoted by dash `-` and has `job_id` identifier, `snapshot_time` and various operations with statistics.
+Each *entry* is denoted by dash `-` and contains `job_id` identifier, `snapshot_time` and various operations with statistics.
 
 > TODO: explain what is Unix epoch
 

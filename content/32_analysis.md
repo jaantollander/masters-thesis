@@ -30,11 +30,11 @@ c_k(t), & k\in K(t) \\
 \end{equation}
 
 We can sample the counter value over time as a streaming time series.
-Given previous timestamp $t^{\prime}$ and current timestamp $t$ in the stream such that $t^\prime < t,$ we can calculate an *interval length* as 
+Given previous timestamp $t^{\prime}$ and current timestamp $t$ in the stream such that $t^\prime < t,$ we can calculate an *observation interval* as 
 
 \begin{equation}
 \tau(t^{\prime}, t) = t - t^{\prime}.
-\label{eq:interval-length}
+\label{eq:observation-interval}
 \end{equation}
 
 Given an identifier $k\in K(t^{\prime})\cup K(t),$ if the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\delta_{k}(t^{\prime},t)$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\delta_{k}(t^{\prime},t)$
