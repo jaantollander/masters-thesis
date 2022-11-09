@@ -1,26 +1,23 @@
 \newpage
 
 # Processing statistics
-## Explanation
-Set of all identifiers is the set of all strings with allowed characters.
-
-Timestamp ...
-
-Set of concrete identifier are the observed tuples `(<target>, <job_id>)` for all entries for all targets.
-
-Concrete counter values are ..
-
-We can visualize an individual time series as step plot.
-However, our configuration produces thousands of individual time series.
-To visualize multiple time series, we must either compute an aggregate such as as sum or plot a heatmap of the distribution of values in each interval.
+In this section, we explain the theory of how to process the stream of counter values from Lustre Jobstats into a time series of average rates of change.
+Furthermore, we define operations such as computing sum and logarithmic density for analyzing multiple rates of change, and transforming timestamps for the rates of change.
+We will referer to the values obtained from Jobstast as *observed* values in contrast to implicit values such as counters that are not observed yet.
+The observation time is called *timestamp*.
+Counters have identifiers which consist of the combined `<target>` and `<job_id>` strings, referred to as *observed identifiers*.
+In practice, we also parse the fields from `<job_id>` such as `<job>`, `<uid>`, and `<nodename>`, when they are not broken.
+The size of the observed counters tells us how many individual time series Jobstats if tracking at given time.
+It has implications to how much data we accumulate at each observation.
+We regard the observed identifiers as a subset of *all identifiers* which is the set of all strings with allowed characters.
 
 
 ## Rate of change over an interval
-Let $K$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
-Then, we define $K(t)\subseteq K$ as the set of *concrete identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *concrete counter value* at time $t$ for concrete identifier $k\in K(t).$
+Let $\mathcal{K}$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
+Then, we define $K(t)\subseteq \mathcal{K}$ as the set of *observed identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *observed counter value* at time $t$ for observed identifier $k\in K(t).$
 
-We denote *counter value* as $v_k(t)$ for an arbitraty identifier $k\in K$ at time $t.$
-Its value is the concrete counter value if the identifier $k$ is concrete and zero value if the identifier is not concrete.
+We denote *counter value* as $v_k(t)$ for an arbitraty identifier $k\in \mathcal{K}$ at time $t.$
+Its value is the observed counter value if the identifier $k$ is observed and zero value if the identifier is not observed.
 Formally, we have
 
 \begin{equation}
@@ -64,7 +61,7 @@ Note that the rate of change is always non-negative given $t > t^{\prime},$ sinc
 
 
 ## Rate of change over time
-Generally, we can represent the rate of change as a step function over continuous time $t$ given a sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ with identifier $k\in K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ as
+Generally, we can represent the rate of change as a step function over continuous time $t$ with identifier $k\in K$ given a sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and $K = K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ as
 
 \begin{equation}
 r_k(t)=\begin{cases}
@@ -85,15 +82,8 @@ r_k(t_{i-1}, t_{i}) \cdot \tau(t_{i-1}, t_{i}),\quad \forall i\in\{2,...,n\}.
 \label{eq:rate-of-change-integral}
 \end{equation}
 
-Sum of rates of change over identifiers $K^{\prime}\subseteq K$ is defined as
 
-\begin{equation}
-r_{K^{\prime}}(t) = \sum_{k\in K^{\prime}} r_{k}(t).
-\label{eq:rate-of-change-sum}
-\end{equation}
-
-
-## Transforming
+## Transforming timestamps
 Using the property \eqref{eq:rate-of-change-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting
 
 \begin{equation}
@@ -110,7 +100,16 @@ This transformation is useful if we have multiple step functions with steps as d
 In practice, we can avoid the transformation by querying the counters at same times.
 
 
-## Density over time
+## Summation
+Sum of rates of change over identifiers $K \subseteq \mathcal{K}$ is defined as
+
+\begin{equation}
+r_{K}(t) = \sum_{k\in K} r_{k}(t).
+\label{eq:rate-of-change-sum}
+\end{equation}
+
+
+## Logarithmic density
 We define a function which indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 \begin{equation}

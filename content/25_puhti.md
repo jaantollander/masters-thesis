@@ -8,19 +8,19 @@
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
-service | Utility | 3 | 384 | 2900
-service | Login | 2 | 384 | 2900
-service | Login-FMI | 2 | 384 | 2900
-service | Lustre MDS | 2 |   |  
-service | Lustre OSS | 4 |   |  
-compute | CPU, M | 484 | 192 | -
-compute | CPU, M, IO | 48 | 192 | 1490
-compute | CPU, M-FMI | 240 | 192 | -
-compute | CPU, L | 92 | 384 | -
-compute | CPU, L, IO | 40 | 384 | 3600
-compute | CPU, XL | 12 | 768 | 1490
-compute | CPU, BM | 6 | 1500 | 5960
-compute | GPU | 80 | 384 | 3600
+*Service* | *Utility* | 3 | 384 | 2900
+*Service* | *Login* | 2 | 384 | 2900
+*Service* | *Login-FMI* | 2 | 384 | 2900
+*Service* | *Lustre-MDS* | 2 |   |  
+*Service* | *Lustre-OSS* | 4 |   |  
+*Compute* | *CPU*, *M* | 484 | 192 | -
+*Compute* | *CPU*, *M-IO* | 48 | 192 | 1490
+*Compute* | *CPU*, *M-FMI* | 240 | 192 | -
+*Compute* | *CPU*, *L* | 92 | 384 | -
+*Compute* | *CPU*, *L-IO* | 40 | 384 | 3600
+*Compute* | *CPU*, *XL* | 12 | 768 | 1490
+*Compute* | *CPU*, *BM* | 6 | 1500 | 5960
+*Compute* | *GPU* | 80 | 384 | 3600
 
 : Nodes on Puhti \label{tab:compute-nodes}
 
@@ -100,19 +100,19 @@ It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
 
 ## Running workloads
-partition name | time limit | task limit | node limit | node type
+Partition name | Time limit | Task limit | Node limit | Node type
 -|-|-|-|-|-|-
-*test* | 15 minutes | 80 | 2 | M
-*interactive* | 7 days | 8 | 1 | IO
-*small* | 3 days |  40 | 1 | M, L, IO
-*large* | 3 days | 1040 | 26 | M, L, IO
-*longrun* | 14 days | 40 | 1 | M, L, IO
-*hugemem* | 3 days | 160 | 4 | XL, BM
-*hugemem\_longrun* | 14 days | 40 | 1 | XL, BM
-*fmitest* | 1 hour | 80 | 2 | M-FMI
-*fmi* | 12 days | 4000 | 100 | M-FMI
-*gputest* | 15 minutes | 8 | 2 | GPU
-*gpu* | 3 days | 80 | 20 | GPU
+*test* | 15 minutes | 80 | 2 | *M*
+*interactive* | 7 days | 8 | 1 | *M-IO*, *L-IO*
+*small* | 3 days |  40 | 1 | *M*, *L*, *M-IO*, *L-IO*
+*large* | 3 days | 1040 | 26 | *M*, *L*, *M-IO*, *L-IO*
+*longrun* | 14 days | 40 | 1 | *M*, *L*, *M-IO*, *L-IO*
+*hugemem* | 3 days | 160 | 4 | *XL*, *BM*
+*hugemem\_longrun* | 14 days | 40 | 1 | *XL*, *BM*
+*fmitest* | 1 hour | 80 | 2 | *M-FMI*
+*fmi* | 12 days | 4000 | 100 | *M-FMI*
+*gputest* | 15 minutes | 8 | 2 | *GPU*
+*gpu* | 3 days | 80 | 20 | *GPU*
 
 : Slurm partitions on Puhti \label{tab:slurm-partitions}
 

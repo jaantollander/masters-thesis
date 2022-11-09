@@ -1,12 +1,6 @@
 \newpage
 
 # Background
-- *What has been done previously?*
-- *What do we know about the research topic beforehand?*
-- *Balanced explanation of the whole research field.*
-
----
-
 ## High-performance computing
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
@@ -101,9 +95,10 @@ System call | Explanation
 `setxattr` | Set an extended attribute value
 `getxattr` | Retrieve an extended attribute value
 
-: \label{tab:systemcalls} System calls and their variants for file system interface.
-For in-depth documentation about system calls, we refer to *The Linux man-pages project* [@linuxmanpages, sec. 2].
-In Linux, you can use `man 2 <system-call>` command to read the manual page of an system call.
+: \label{tab:systemcalls}
+This table lists the system calls for virtual file system.
+For in-depth documentation about system calls, we recommend the Linux Man Pages [@linuxmanpages, sec. 2].
+In Linux, we can use `man 2 <system-call>` command to read the manual page of specific system call.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
@@ -164,10 +159,10 @@ Slurm can also perform accounting for resource usage.
 
 
 ## Computing at CSC
+- TODO: expand the discussion
+
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
 It is owned by the Finnish-state and higher education institutions.
 These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
-We will be looking at the structure of CSC *Puhti* cluster.
-
-> TODO: explain cloud side, object storage, etc
+We will be focusing on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
 
