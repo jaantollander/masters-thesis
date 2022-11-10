@@ -1,7 +1,11 @@
 \newpage
 
 # Collecting usage statistics with Lustre Jobstats
+\label{sec:collecting-usage-statistics-with-lustre-jobstats}
+
 ## Setting identifier format
+\label{sec:setting-identifier-format}
+
 > TODO: reference to the background section about Lustre
 
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
@@ -33,6 +37,8 @@ We discuss how to deal with these issues in later sections.
 
 
 ## Querying statistics
+\label{sec:querying-statistics}
+
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 We indicate variables using the syntax `<name>`.
@@ -103,7 +109,9 @@ We explain the file operations and statistics in section \ref{sec:file-operation
 
 
 
-## File operations and statistics \label{sec:file-operations-and-statistics}
+## File operations and statistics
+\label{sec:file-operations-and-statistics}
+
 operation | system call | notes
 ---|--|------
 **`open`** | `open`
@@ -172,6 +180,8 @@ Thus, cached operations are not counted in the Jobstats, which means, for exampl
 
 
 ## Issues with identifiers
+\label{sec:issues-with-identifiers}
+
 `job_id` | notes
 -|-
 `11317854:17627127:r01c01` | correct identifier

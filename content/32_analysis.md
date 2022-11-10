@@ -1,6 +1,8 @@
 \newpage
 
 # Analyzing statistics
+\label{sec:analyzing-statistics}
+
 In this section, we explain the theory of how to analyze the stream of counter values from Lustre Jobstats into a time series of average rates of change.
 Furthermore, we define operations such as computing sum and logarithmic density for analyzing multiple rates of change, and transforming timestamps for the rates of change.
 We will referer to the values obtained from Jobstast as *observed* values in contrast to implicit values such as counters that are not observed yet.
@@ -13,6 +15,8 @@ We regard the observed identifiers as a subset of *all identifiers* which is the
 
 
 ## Rate of change over an interval
+\label{rate-of-change-over-an-interval}
+
 Let $\mathcal{K}$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
 Then, we define $K(t)\subseteq \mathcal{K}$ as the set of *observed identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *observed counter value* at time $t$ for observed identifier $k\in K(t).$
 
@@ -30,7 +34,7 @@ c_k(t), & k\in K(t) \\
 \end{equation}
 
 We can sample the counter value over time as a streaming time series.
-Given previous timestamp $t^{\prime}$ and current timestamp $t$ in the stream such that $t^\prime < t,$ we can calculate an *observation interval* as 
+Given previous timestamp $t^{\prime}$ and current timestamp $t$ in the stream such that $t^\prime < t,$ we can calculate the *observation interval* as 
 
 \begin{equation}
 \tau(t^{\prime}, t) = t - t^{\prime}.
@@ -61,6 +65,8 @@ Note that the rate of change is always non-negative given $t > t^{\prime},$ sinc
 
 
 ## Rate of change over time
+\label{sec:rate-of-change-over-time}
+
 Generally, we can represent the rate of change as a step function over continuous time $t$ with identifier $k\in K$ given a sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and $K = K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ as
 
 \begin{equation}
@@ -84,6 +90,8 @@ r_k(t_{i-1}, t_{i}) \cdot \tau(t_{i-1}, t_{i}),\quad \forall i\in\{2,...,n\}.
 
 
 ## Transforming timestamps
+\label{sec:transforming-timestamps}
+
 Using the property \eqref{eq:rate-of-change-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting
 
 \begin{equation}
@@ -101,6 +109,8 @@ In practice, we can avoid the transformation by querying the counters at same ti
 
 
 ## Summation
+\label{sec:summation}
+
 Sum of rates of change over identifiers $K \subseteq \mathcal{K}$ is defined as
 
 \begin{equation}
@@ -110,6 +120,8 @@ r_{K}(t) = \sum_{k\in K} r_{k}(t).
 
 
 ## Logarithmic density
+\label{sec:logarithmic-density}
+
 We define a function which indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 \begin{equation}
