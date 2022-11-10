@@ -1,7 +1,7 @@
 \newpage
 
 # Monitoring workflow
-![](figures/lustre-monitor.drawio.svg)
+![Monitoring workflow \label{fig:monitoring-workflow}](figures/lustre-monitor.drawio.svg)
 
 The pipeline for monitoring and recording the statistics consists of multiple instances of a monitoring daemon and a single instance of an ingest daemon, and a time series database.
 *Daemon* is a program that runs in the background.
@@ -16,8 +16,8 @@ We used TimescaleDB which expands PostgreSQL for time series and analytics.
 TODO: explain the characteristics of time series data and benefits of time series database from timescale docs
 
 Field | Type | Value
----|-|----------
-`identifier` | integer | Hash of the tuple `(<target>, <job_id>)`.
+---|--|----------
+`identifier` | integer | Primary key. Hash of the tuple `(<target>, <job_id>)`.
 `target` | string | `<target>` value.
 `job` | integer | `<job>` value if exists, otherwise `NULL`.
 `uid` | integer | `<uid>` value if exists, otherwise `NULL`.
@@ -30,13 +30,17 @@ Mapping between the time series identifier and the metadata.
 
 
 Field | Type | Value
----|-|----------
-`timestamp` | integer | Timestamp of the query time as Universal Coordinated Time (UTC).
-`identifier` | integer | Hash of the tuple `(target, job_id)`.
-`<operation_*>` | integer | The `sum` value for the `read_bytes` and `write_bytes` operations and `samples` value for the other operations from the `<statistics_*>` key-value pairs.
+---|--|----------
+`timestamp` | datetime | Primary key. Timestamp of the query time as datetime type with Universal Coordinated Time (UTC) timezone.
+`identifier` | integer | Primary key. Hash of the tuple `(target, job_id)`.
+`<operation_*>` | double | The `sum` value for the `read_bytes` and `write_bytes` operations and `samples` value for the other operations from the `<statistics_*>` key-value pairs.
 
 : \label{tab:time-series-schema}
 Schema of the time series table.
+Wide-table model.
+
+Timescale can join the metadata table and time series table during queries.
+We need to cast counts to double precision in order to perform analysis on the database.
 
 
 ## Monitoring and ingest daemons

@@ -2,7 +2,7 @@
 
 # Puhti cluster at CSC
 ## Hardware configuration
-![Diagram of Puhti's hardware from storage perspective](figures/puhti-hardware.drawio.svg)
+![Diagram of Puhti's hardware from storage perspective. \label{fig:puhti-configuration}](figures/puhti-hardware.drawio.svg)
 
 > TODO: improve the caption of figure
 
