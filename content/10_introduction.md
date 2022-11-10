@@ -1,8 +1,6 @@
 \newpage
 
 # Introduction
-\label{sec:introduction}
-
 In this thesis, we investigate performance issues in a parallel file system of a computer cluster.
 Notably, we examine issues related to file system usage of programs instances run by users, referred as jobs.
 Due to the shared nature of the file system, performance issues can cause noticeable slow-down across the whole cluster, harming all users.

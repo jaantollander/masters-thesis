@@ -1,8 +1,6 @@
 \newpage
 
 # Monitoring workflow
-\label{sec:monitoring-workflow}
-
 ![](figures/lustre-monitor.drawio.svg)
 
 The pipeline for monitoring and recording the statistics consists of multiple instances of a monitoring daemon and a single instance of an ingest daemon, and a time series database.
@@ -11,8 +9,6 @@ We installed a monitoring daemon to each Lustre server, and an ingest daemon and
 
 
 ## Time series database
-\label{sec:time-series-database}
-
 *Time series database* is a database that is optimized for storing and querying time series data.
 
 We used a PostgreSQL database with a Timescale extension.
@@ -22,8 +18,6 @@ We used a PostgreSQL database with a Timescale extension.
 
 
 ## Monitoring and ingest daemons
-\label{sec:monitoring-and-ingest-daemons}
-
 Each monitoring daemon calls the appropriate `lctl get_param` command at regular observation intervals to collect statistics.
 Then, it parses the `<target>` and the output of each entry (a line beginning with dash `-`) into a data structure as explained in table \ref{tab:data-structure}.
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
@@ -52,8 +46,6 @@ If we encounter a new identifier, we should also append a data structure with th
 
 
 ## Querying the database
-\label{sec:querying-the-database}
-
 Querying the database
 
 * select a time interval and desired identifiers

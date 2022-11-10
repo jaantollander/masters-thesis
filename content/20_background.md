@@ -1,11 +1,7 @@
 \newpage
 
 # Background
-\label{sec:background}
-
 ## High-performance computing
-\label{sec:high-performance-computing}
-
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
 For example, first applicable rule at a time or multiple rules at once.
@@ -51,8 +47,6 @@ This is also an important reason for studying storage in HPC systems.
 
 
 ## Linux operating system
-\label{sec:linux-operating-system}
-
 An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
 At the time of writing, practically all high-performance computer clusters use the *Linux operating system* [@osfam].
 The *Linux kernel* [@linuxkernel] is the core of the Linux operating system and is written in the *C programming language*.
@@ -115,8 +109,6 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 
 
 ## Lustre parallel file system
-\label{sec:lustre-parallel-file-system}
-
 Parallel file system is a file system designed for clusters.
 It stores data on multiple networked servers to facilitate high performance access and makes the data available via global namespace such that users do not need to know the physical location of the data blocks to access a file.
 *Lustre* is a parallel file system which provides a POSIX standard-compliant file system interface for Linux clusters.
@@ -148,8 +140,6 @@ LNet supports many network types, including high-speed networks used in HPC clus
 
 
 ## Slurm workload manager
-\label{sec:slurm-workload-manager}
-
 Typically, the nodes on a cluster are separated to *frontend* and *backend*.
 Frontend consist of login and utility nodes and backend consists of compute nodes.
 Clusters rely on a *workload manager* for allocating access to the computing resources, scheduling and running programs on the backend.
@@ -169,8 +159,6 @@ Slurm can also perform accounting for resource usage.
 
 
 ## Computing at CSC
-\label{sec:computing-at-csc}
-
 - TODO: expand the discussion
 
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.

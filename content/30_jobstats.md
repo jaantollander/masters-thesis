@@ -1,14 +1,10 @@
 \newpage
 
 # Collecting usage statistics with Lustre Jobstats
-\label{sec:collecting-usage-statistics-with-lustre-jobstats}
-
 ## Setting identifier format
-\label{sec:setting-identifier-format}
-
 > TODO: reference to the background section about Lustre
 
-Lustre section \ref{sec:lustre-parallel-file-system}
+Lustre section \ref{lustre-parallel-file-system}
 
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
@@ -39,8 +35,6 @@ We discuss how to deal with these issues in later sections.
 
 
 ## Querying statistics
-\label{sec:querying-statistics}
-
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 We indicate variables using the syntax `<name>`.
@@ -107,12 +101,10 @@ Each *entry* is denoted by dash `-` and contains `job_id` identifier, `snapshot_
 > TODO: explain what is Unix epoch
 
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the statistics of one of the operations was last updated.
-We explain the file operations and statistics in section \ref{sec:file-operations-and-statistics}.
+We explain the file operations and statistics in section \ref{file-operations-and-statistics}.
 
 
 ## File operations and statistics
-\label{sec:file-operations-and-statistics}
-
 operation | system call | notes
 ---|--|------
 **`open`** | `open`
@@ -179,8 +171,6 @@ For example, if `open` is called multiple times with the same arguments Lustre c
 
 
 ## Detecting resets
-\label{sec:detecting-counter-resets}
-
 Jobstats removes an entry if none of its statistics are updated within the *cleanup interval* specified in the configuration as `job_cleanup_interval` parameter.
 That is, Jobstats automatically removes entries with `snapshot_time` older than the cleanup interval.
 The default cleanup interval is 10 minutes.
@@ -193,8 +183,6 @@ This method might underestimate increment if counter resets and then does more o
 
 
 ## Issues with identifiers
-\label{sec:issues-with-identifiers}
-
 `job_id` | notes
 -|-
 `11317854:17627127:r01c01` | correct identifier

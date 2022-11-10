@@ -1,11 +1,7 @@
 \newpage
 
 # Puhti cluster at CSC
-\label{sec:puhti-clustre-at-csc}
-
 ## Hardware configuration
-\label{sec:hardware-configuration}
-
 ![Diagram of Puhti's hardware from storage perspective](figures/puhti-hardware.drawio.svg)
 
 > TODO: improve the caption of figure
@@ -47,8 +43,6 @@ The total storage capacity of the file system is 4.8 PBs since part of the total
 
 
 ## System configuration
-\label{sec:system-configuration}
-
 Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
@@ -104,8 +98,6 @@ It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
 
 ## Running workloads
-\label{sec:running-workloads}
-
 Partition name | Time limit | Task limit | Node limit | Node type
 -|-|-|-|-|-|-
 *test* | 15 minutes | 80 | 2 | *M*
@@ -134,7 +126,5 @@ Examples of Slurm job in the appendix ???.
 
 
 ## Issues with parallel file system
-\label{sec:issues-with-parallel-file-system}
-
 [@tacc-io-guideline]
 
