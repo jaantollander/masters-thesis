@@ -26,7 +26,8 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Compute* | *CPU*, *BM* | 6 | 1500 | 5960
 *Compute* | *GPU* | 80 | 384 | 3600
 
-: Nodes on Puhti \label{tab:compute-nodes}
+: \label{tab:compute-nodes}
+Nodes on Puhti
 
 The *Puhti* cluster has 23 *service nodes* and 1002 *compute nodes*.
 The services nodes consist of utility nodes used as cluster's *login nodes* and MDS nodes and OSS nodes for the Lustre file system.
@@ -39,7 +40,7 @@ Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Vol
 The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to L1 switches which are connected to L2 switches in a *fat-tree* network topology.
 The network has a total of 28 L1 switches and 12 L2 switches.
 
-The global storage on Puhti consists of a Lustre file system (version 2.12.6) from *DataDirect Networks (DDN)* that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
+The global storage on Puhti consists of a Lustre file system, version 2.12.6 from *DataDirect Networks (DDN)*, that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
 Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
 Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
@@ -87,21 +88,18 @@ Files that require long-term storage should be moved to a long-term data storage
 Jobs should use the *scratch* area for storing data.
 They should access *home* or *projappl* areas only to read or copy configuration files or application specific files in the beginning of the job.
 
-The fast local storage, mounted on a local SSD, is called *tmp* or *local scratch*.
-It is intended as temporary file storage for I/O heavy operations.
+There are two local storage areas, *local scratch* and *tmp*, that are intended for temporary file storage for I/O heavy operations.
 User should copy data that they wish to keep after the job has completed to *scratch* since files in these temporary storage areas are cleaned regularly.
 
 *local scratch*
 : is an area for batch jobs to perform I/O heavy operations.
+It is mounted on local SSD.
 The quota depends on how much is requested for the job.
 It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
 
----
-
-> TODO: *tmp* is ramdisk
-
 *tmp*
 : is an area for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
+It is mounted on RAMDisk.
 It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
 
@@ -122,7 +120,8 @@ Partition name | Time limit | Task limit | Node limit | Node type
 *gputest* | 15 minutes | 8 | 2 | *GPU*
 *gpu* | 3 days | 80 | 20 | *GPU*
 
-: Slurm partitions on Puhti \label{tab:slurm-partitions}
+: \label{tab:slurm-partitions}
+Slurm partitions on Puhti.
 
 Puhti uses Slurm version 21.08.7 as a worload manager.
 It has partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.

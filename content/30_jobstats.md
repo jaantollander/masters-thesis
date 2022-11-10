@@ -8,6 +8,8 @@
 
 > TODO: reference to the background section about Lustre
 
+Lustre section \ref{sec:lustre-parallel-file-system}
+
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
 We can specify the format `job_id` with `jobid_name` parameter.
@@ -108,7 +110,6 @@ The value in `snapshot_time` field contains a timestamp as a Unix epoch when the
 We explain the file operations and statistics in section \ref{sec:file-operations-and-statistics}.
 
 
-
 ## File operations and statistics
 \label{sec:file-operations-and-statistics}
 
@@ -131,7 +132,8 @@ operation | system call | notes
 **`samedir_rename`** || Disambiguates which files are renamed within the same directory.
 **`crossdir_rename`** || Disambiguates which files are moved to another directory, potentially under a new name.
 
-: \label{tab:mdt-operations} We have the following metadata operations performed on MDSs.
+: \label{tab:mdt-operations}
+We have the following metadata operations performed on MDSs.
 
 
 operation | system call | notes
@@ -148,7 +150,8 @@ operation | system call | notes
 **`read_bytes`** | `read` | Number of bytes read from a file. Return value from `read` system call.
 **`write_bytes`** | `write` | Number of bytes written to a file. Return value from `write` system call.
 
-: \label{tab:ost-operations} We have the following operations on the object data performed on OSSs.
+: \label{tab:ost-operations}
+We have the following operations on the object data performed on OSSs.
 
 In tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
 We have omitted some rarely encountered operations from the tables.
@@ -167,16 +170,22 @@ The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares
 These fields contain nonnegative integer values.
 Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
 
-The samples and sums increase monotonically except when the counter resets.
-A counter is reset if none of its values are updated within the duration specified in the configuration using `job_cleanup_interval` parameter.
-That is, entries with `snapshot_time` older than the cleanup interval are removed.
-We used the default interval of 10 minutes.
-
 > TODO: we don't know if caching causes difference between open and close operations
 
 Lustre clients may cache certain file operations such as `open`.
 That is if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS.
 Thus, cached operations are not counted in the Jobstats, which means, for example, that there can be more `close` than `open` operations because `close` cannot be cached.
+
+
+## Detecting counter resets
+\label{sec:detecting-counter-resets}
+
+The samples and sums increase monotonically except when the counter resets.
+A counter is reset if none of its values are updated within the *cleanup interval* specified in the configuration as `job_cleanup_interval` parameter.
+That is, Jobstats automatically removes entries with `snapshot_time` older than the cleanup interval.
+The default cleanup interval is 10 minutes.
+
+> TODO: how to detect counter reset in practice
 
 
 ## Issues with identifiers
@@ -206,6 +215,7 @@ Even more problematic was that sometimes `job_id` was malformed to the extent th
 For example, there were characters in the identifiers missing, overwritten, or duplicated.
 We had to discard these entries completely.
 We suspect that data race might be causing some of these issues.
+[@jobid-atomic]
 
 ---
 
@@ -219,8 +229,8 @@ job|uid|compute|145590|63.93|36909|28.98
 -|uid|puhti|6012|2.64|45|0.04
 ||||227716||127361|
 
-
-: MDS entries \label{tab:mds-entries}
+: \label{tab:mds-entries}
+MDS entries
 
 
 `job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
@@ -237,7 +247,9 @@ job|-|-|6928|0.43
 -|-|-|2766|0.17
 ||||1611853||624562|
 
-: OSS entries \label{tab:oss-entries}
+: \label{tab:oss-entries}
+OSS entries
+
 
 For example, the tables \ref{tab:mds-entries} and \ref{tab:oss-entries} show the counts of entries of a sample of 113 consecutive 2-minute intervals for MDSs and OSSs separated by normal or missing `uid`s and system `uid`s for different `job_id` compositions.
 In the table, "job" indicates that job ID exists, "uid" indicates user ID exists, dash "-" indicates missing value, "login" indicates login node, "compute" indicates compute node, "(q)" indicates fully-qualified nodename and "puhti" indicates node that is not login or compute node.

@@ -32,15 +32,16 @@ We used a 2-minute interval and 10-minute cleanup interval.
 Field | Type | Value
 ---|-|---------
 `timestamp` | integer | Timestamp of the query time as Universal Coordinated Time (UTC).
-`snapshot_time` | integer | Parsed from `<snapshot_time>`.
-`job` | integer | Parsed from `<job_id>`. We generate synthetic identifiers for missing `job` values.
-`uid` | integer | Parsed from `<job_id>`.
-`nodename` | string | Parsed from `<job_id>`. For login nodes we set it to `login`.
-`target` | string | Parsed from `<target>`.
-`executable` | string | Parsed from `<executable>`. Empty string if doesn't exist.
-`<operation_1>`, `<operation_2>`, ... | integer | We parse the `sum` counts for the `read_bytes` and `write_bytes` operations and `samples` for the other operations.
+`snapshot_time` | integer | Parsed from `<snapshot_time>` value.
+`job` | integer | Parsed from `<job_id>` value. We generate synthetic identifiers for missing `job` values.
+`uid` | integer | Parsed from `<job_id>` value.
+`nodename` | string | Parsed from `<job_id>` value. For login nodes we set it to `login`.
+`target` | string | Parsed from `<target>` value.
+`executable` | string | Parsed from `<executable>` value. Empty string if doesn't exist.
+`<operation_*>` | integer | We parse the `sum` value for the `read_bytes` and `write_bytes` operations and `samples` value for the other operations from the `<statistics_*>` key-value pairs.
 
-: Data structure of parsed Jobstats entry. \label{tab:data-structure}
+: \label{tab:data-structure}
+Data structure of parsed Jobstats entry.
 
 The monitoring daemons send these data structures to the ingest daemon in batches.
 The ingest daemon listens to the requests from the monitoring daemons and stores the data in a time series database such that each instance of the data structure represents a single row.
