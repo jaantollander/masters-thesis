@@ -168,24 +168,28 @@ Each `<operation>` field contains line of `<statistics>` which are formatted as 
 The `samples` field counts how many operations the job has requested since the counter was started.
 The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
 These fields contain nonnegative integer values.
+The `samples`, `sum`, and `sumsq` values increase monotonically.
 Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
+Statistics of an entry that has not performed any operations yet are implicitly zero.
 
-> TODO: we don't know if caching causes difference between open and close operations
+We found that the counters may report more samples for `close` than `open` operations.
+It should not be possible to do more `close` than `open` system calls because a file descriptor returned by open can be closed only once.
+We suspect that the Lustre clients cache certain file operations and Jobstast does not count cached operations.
+For example, if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS thus request is not recorded.
 
-Lustre clients may cache certain file operations such as `open`.
-That is if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS.
-Thus, cached operations are not counted in the Jobstats, which means, for example, that there can be more `close` than `open` operations because `close` cannot be cached.
 
-
-## Detecting counter resets
+## Detecting resets
 \label{sec:detecting-counter-resets}
 
-The samples and sums increase monotonically except when the counter resets.
-A counter is reset if none of its values are updated within the *cleanup interval* specified in the configuration as `job_cleanup_interval` parameter.
+Jobstats removes an entry if none of its statistics are updated within the *cleanup interval* specified in the configuration as `job_cleanup_interval` parameter.
 That is, Jobstats automatically removes entries with `snapshot_time` older than the cleanup interval.
 The default cleanup interval is 10 minutes.
 
-> TODO: how to detect counter reset in practice
+> TODO: there is no certain way of detecting resets, not sure if looking at snapshot times if totally reliable, over estimation is worse than underestimating counter increments, simplicity
+
+We refer to the removal of an entry as *reset*.
+In pratice, we detect a *reset* by detecting if any of the counter values decrease which can only happen if the entry.
+This method might underestimate increment if counter resets and then does more operations than last count.
 
 
 ## Issues with identifiers

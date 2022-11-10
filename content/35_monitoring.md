@@ -14,6 +14,7 @@ We installed a monitoring daemon to each Lustre server, and an ingest daemon and
 \label{sec:time-series-database}
 
 *Time series database* is a database that is optimized for storing and querying time series data.
+
 We used a PostgreSQL database with a Timescale extension.
 [@timescaledocs]
 
@@ -27,7 +28,7 @@ Each monitoring daemon calls the appropriate `lctl get_param` command at regular
 Then, it parses the `<target>` and the output of each entry (a line beginning with dash `-`) into a data structure as explained in table \ref{tab:data-structure}.
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
-We used a 2-minute interval and 10-minute cleanup interval.
+We used a 2-minute observation interval and 10-minute cleanup interval.
 
 Field | Type | Value
 ---|-|---------
