@@ -1,13 +1,14 @@
 \newpage
 
 # Analyzing statistics
+## Overview
 In this section, we explain the theory of how to analyze the stream of counter values from Lustre Jobstats into a time series of average rates of change.
 Furthermore, we define operations such as computing sum and logarithmic density for analyzing multiple rates of change, and transforming timestamps for the rates of change.
-We will referer to the values obtained from Jobstast as *observed* values in contrast to implicit values such as counters that are not observed yet.
+We will referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside of the observation intervals such as the initial counter.
 The observation time is called *timestamp*.
-Counters have identifiers which consist of the combined `<target>` and `<job_id>` strings, referred to as *observed identifiers*.
-In practice, we also parse the fields from `<job_id>` such as `<job>`, `<uid>`, and `<nodename>`, when they are not broken.
-The size of the observed counters tells us how many individual time series Jobstats if tracking at given time.
+Each time series of counter values is identified by an *unique identifier* which we obtain as a concatenation of the strings `<target><job_id>`.
+We refer to the identifiers of the observed counters as *observed identifiers*.
+The size of the set of observed identifiers tells us how many individual time series Jobstats is tracking at given time.
 It has implications to how much data we accumulate at each observation.
 We regard the observed identifiers as a subset of *all identifiers* which is the set of all strings with allowed characters.
 

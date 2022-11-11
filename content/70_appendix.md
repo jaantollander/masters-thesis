@@ -144,3 +144,42 @@ It would be is a large parallel program such as a large, well parallelizing simu
 The third and fourth programs job steps will run in parallel after the first step, both utilizing all tasks and CPUs from a single node.
 These programs could be programs for post processing steps, for example, processing and backing up the simulation results.
 
+
+# Time series database
+```sql
+-- Metadata is regular relational table.
+CREATE TABLE metadata (
+    identifier BIGINT NOT NULL,
+    target TEXT NOT NULL,
+    nodename TEXT NULL,
+    job BIGINT NULL,
+    uid BIGINT NULL,
+    executable TEXT NULL,
+    PRIMARY KEY (identifier)
+);
+```
+
+```sql
+-- Lustre jobstats table
+CREATE TABLE lustre_jobstats (
+    identifier BIGINT NOT NULL,
+    timestamp TIMESTAMPTZ NOT NULL,
+    read DOUBLE PRECISION NOT NULL,
+    write DOUBLE PRECISION NOT NULL,
+    -- etc
+    PRIMARY KEY('identifier', 'timestamp')
+);
+```
+
+```sql
+-- Create hypertable
+SELECT create_hypertable('lustre_jobstats','timestamp');
+SELECT set_chunk_time_interval('lustre_jobstats', INTERVAL '1 hour');
+```
+
+```sql
+-- Create index for fast queries.
+CREATE INDEX 'ix_identifier_timestamp'
+    ON 'lustre_jobstats' ('identifier', 'timestamp' DESC);
+```
+

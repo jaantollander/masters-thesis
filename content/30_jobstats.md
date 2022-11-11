@@ -30,6 +30,8 @@ Then, we have two `job_id` formats:
 `<executable>.<uid>`
 : with formatting string `"%e.%u"` when `SLURM_JOB_ID` is undefined, such as for Login nodes.
 
+TODO: recording group ID could also be useful.
+
 Due to an unknown bug in Lustre (version 2.12.6 from DDN), we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
 We discuss how to deal with these issues in later sections.
 
