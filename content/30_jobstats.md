@@ -1,13 +1,14 @@
 \newpage
 
 # Collecting usage statistics with Lustre Jobstats
-## Setting identifier format
-> TODO: reference to the background section about Lustre
+## Overview
+In section \ref{lustre-parallel-file-system}, we described Lustre parallel file system and in section \ref{puhti-cluster-at-csc}, we described the Puhti cluster.
 
-Lustre section \ref{lustre-parallel-file-system}
-
-We can configure Lustre to collect file system usage statistics with *Lustre Jobstats* by setting a value for `jobid_name` parameter, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
+We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
+
+## Setting identifier format
+We can enable Jobstats by setting a value for `jobid_name` parameter.
 We can specify the format `job_id` with `jobid_name` parameter.
 We can use the following format codes.
 
@@ -40,6 +41,8 @@ We discuss how to deal with these issues in later sections.
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 We indicate variables using the syntax `<name>`.
+
+TODO: we measure the usage of the `scratch` storage area
 
 We can query jobstats from MDS as follows:
 
@@ -100,10 +103,11 @@ For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `
 After the `job_stats:` line, we have a list of entries for workloads that have performed file system operations on the target.
 Each *entry* is denoted by dash `-` and contains `job_id` identifier, `snapshot_time` and various operations with statistics.
 
-> TODO: explain what is Unix epoch
-
 The value in `snapshot_time` field contains a timestamp as a Unix epoch when the statistics of one of the operations was last updated.
-We explain the file operations and statistics in section \ref{file-operations-and-statistics}.
+*Unix epoch* is the standard way of representing time in Unix systems.
+It measures time as the number of seconds that has elapsed since 00:00:00 UTC on 1 January 1970, exluding leap seconds.
+
+Next, we explain the file operations and statistics.
 
 
 ## File operations and statistics

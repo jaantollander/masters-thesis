@@ -13,9 +13,7 @@ It has implications to how much data we accumulate at each observation.
 We regard the observed identifiers as a subset of *all identifiers* which is the set of all strings with allowed characters.
 
 
-## Rate of change over an interval
-\label{rate-of-change-over-an-interval}
-
+## Rate over an interval
 Let $\mathcal{K}$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
 Then, we define $K(t)\subseteq \mathcal{K}$ as the set of *observed identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *observed counter value* at time $t$ for observed identifier $k\in K(t).$
 
@@ -57,13 +55,13 @@ Then, we can calculate the *rate of change* during the interval as
 
 \begin{equation}
 r_k(t^{\prime},t)=\frac{\delta_{k}(t^{\prime},t)}{\tau(t^{\prime}, t)}.
-\label{eq:rate-of-change}
+\label{eq:rate}
 \end{equation}
 
 Note that the rate of change is always non-negative given $t > t^{\prime},$ since we have $\tau(t^{\prime}, t) > 0$ and $\delta_{k}(t^{\prime}, t) \ge 0,$ which implies $r_k(t^{\prime}, t) \ge 0.$
 
 
-## Rate of change over time
+## Rate over time
 Generally, we can represent the rate of change as a step function over continuous time $t$ with identifier $k\in K$ given a sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and $K = K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ as
 
 \begin{equation}
@@ -71,7 +69,7 @@ r_k(t)=\begin{cases}
 r_k(t_{i-1}, t_{i}), & t_{i-1} < t \le t_{i},\quad \forall i\in\{2,...,n\} \\
 0 & \text{otherwise}
 \end{cases}.
-\label{eq:rate-of-change-general}
+\label{eq:rate-general}
 \end{equation}
 
 We can recover the counter increments from the step function using a definite integral
@@ -82,12 +80,12 @@ We can recover the counter increments from the step function using a definite in
 \int_{t_{i-1}}^{t_{i}} r_k(t)\,dt
 =
 r_k(t_{i-1}, t_{i}) \cdot \tau(t_{i-1}, t_{i}),\quad \forall i\in\{2,...,n\}.
-\label{eq:rate-of-change-integral}
+\label{eq:rate-integral}
 \end{equation}
 
 
 ## Transforming timestamps
-Using the property \eqref{eq:rate-of-change-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting
+Using the property \eqref{eq:rate-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting
 
 \begin{equation}
 \delta_k^{\prime}(t_{i-1}^{\prime}, t_{i}^{\prime})
@@ -98,21 +96,21 @@ Using the property \eqref{eq:rate-of-change-integral}, we can transform a step f
 \label{eq:counter-increment-new}
 \end{equation}
 
-Then, by computing the rate of change using \eqref{eq:rate-of-change}.
+Then, by computing the rate of change using \eqref{eq:rate}.
 This transformation is useful if we have multiple step functions with steps as different timestamp and we need to convert the steps to happen at same timestamps.
 In practice, we can avoid the transformation by querying the counters at same times.
 
 
-## Summation
+## Sum of rates
 Sum of rates of change over identifiers $K \subseteq \mathcal{K}$ is defined as
 
 \begin{equation}
 r_{K}(t) = \sum_{k\in K} r_{k}(t).
-\label{eq:rate-of-change-sum}
+\label{eq:rate-sum}
 \end{equation}
 
 
-## Logarithmic density
+## Logarithmic density of rates
 We define a function which indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 \begin{equation}

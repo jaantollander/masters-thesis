@@ -1,6 +1,8 @@
 \newpage
 
 # Puhti cluster at CSC
+## Overview
+
 ## Hardware configuration
 ![Diagram of Puhti's hardware from storage perspective. \label{fig:puhti-configuration}](figures/puhti-hardware.drawio.svg)
 
