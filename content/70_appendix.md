@@ -20,10 +20,11 @@ $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
 
 # Programming with system call
 Next, we present two examples of performing file I/O using system calls.
+Flags and modes are constants that modify the behaviour of an system call.
+The bitwise-or of two modes or flags means that both of them apply.
 Please note that these examples do not perform any error handling that should be done by proper programs.
 
----
-
+## Read, write, open and close operations
 ```c
 #include<fcntl.h>
 #include<sys/types.h>
@@ -47,14 +48,11 @@ int main()
 }
 ```
 
-> TODO: explain flags and modes, how they change operations behaviour
-
 The first example program demonstrates opening and closing file descriptors, reading bytes from a file and writing bytes to a file.
 It opens `input.txt` in read only mode, reads at most `size` bytes to a buffer and then creates and writes them into `output.txt` file in write only mode.
 The code performs the `open`, `close`, `read`, and `write` system calls with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
 
----
-
+## Punch operation
 ```c
 #define _GNU_SOURCE
 #include<fcntl.h>
@@ -72,8 +70,6 @@ int main()
 }
 ```
 
-> TODO: move the explanation of punch to section about Lustre
-
 The second example demonstrates a less common feature of "punching a hole" to a file, creating a sparse file.
 The hole appears as null bytes when reading the file, without takeing any space on the disk.
 This feature supported by certain Linux file systems such as ext4.
@@ -84,6 +80,7 @@ It then deallocate bytes from 5 to 10 such that the file keeps its original size
 \clearpage
 
 # Slurm job scripts
+## Small sequential job
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
@@ -111,8 +108,7 @@ We can achieve that by turning it into an array job by adding the `array` argume
 srun <program> $SLURM_ARRAY_TASK_ID
 ```
 
----
-
+## Large parallel job
 ```sh
 #!/usr/bin/env bash
 #SBATCH --job-name=<job-name>
@@ -145,11 +141,13 @@ The third and fourth programs job steps will run in parallel after the first ste
 These programs could be programs for post processing steps, for example, processing and backing up the simulation results.
 
 
+\clearpage
+
 # Time series database
 ```sql
 -- Metadata is regular relational table.
 CREATE TABLE metadata (
-    identifier BIGINT NOT NULL,
+    identifier UUID NOT NULL,
     target TEXT NOT NULL,
     nodename TEXT NULL,
     job BIGINT NULL,
@@ -162,7 +160,7 @@ CREATE TABLE metadata (
 ```sql
 -- Lustre jobstats table
 CREATE TABLE lustre_jobstats (
-    identifier BIGINT NOT NULL,
+    identifier UUID NOT NULL,
     timestamp TIMESTAMPTZ NOT NULL,
     read DOUBLE PRECISION NOT NULL,
     write DOUBLE PRECISION NOT NULL,
@@ -172,9 +170,11 @@ CREATE TABLE lustre_jobstats (
 ```
 
 ```sql
--- Create hypertable
-SELECT create_hypertable('lustre_jobstats','timestamp');
+-- Create hypertable and set policies
+SELECT create_hypertable('lustre_jobstats', 'timestamp', 'identifier');
 SELECT set_chunk_time_interval('lustre_jobstats', INTERVAL '1 hour');
+SELECT add_compression_policy('lustre_jobstats', INTERVAL '1 days');
+SELECT add_retention_policy('lustre_jobstats', INTERVAL '1 months');
 ```
 
 ```sql

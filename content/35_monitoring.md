@@ -7,7 +7,7 @@
 ## Storing time series data
 Field | Type | Value
 ---|----|----------
-`identifier` | `UUID NOT NULL` | Unique identifier of an individual time series
+`identifier` | `UUID NOT NULL` | Universally Unique Identifier of an individual time series
 `timestamp` | `TIMESTAMPTZ NOT NULL` | Timestamp with UTC timezone.
 `<value>` | `<type>` | One or more observed values.
 
@@ -17,7 +17,7 @@ Field | Type | Value
 
 Field | Type | Value
 ---|----|----------
-`identifier` | `UUID NOT NULL` | Unique identifier of an individual time series
+`identifier` | `UUID NOT NULL` | Universally Unique Identifier of an individual time series
 `<value>` | `<type>` | One or more metadata values related to the identifier.
 
 : \label{tab:schema-metadata}
@@ -44,12 +44,8 @@ The time series table is a *TimescaleDB hypertable* with *indices* for efficient
 The metadata table is regular PostgreSQL table.
 We can join the metadata table and time series table during queries.
 
-TimescaleDB has built-in hyperfunction for aggregating metrics from time series data with queries.
 
-TODO: explain hyperfunctions and queries
-
-
-## Database schema
+## Database schema and queries
 Field | Type | Value
 ---|---|----------
 `identifier` | `UUID` |
@@ -77,10 +73,20 @@ Mapping between the time series identifier and the metadata.
 The `identifier` uniquely identifies a row.
 
 
-* `identifier` is UUID value of `<target><job_id>`
-* indices by `(identifier, timestamp)` for efficient group by and time interval constraints
+The `identifier` is UUID value of computer from the string `<target><job_id>`.
+
+* indices by `(identifier, timestamp DESC)` for efficient group by and time interval constraints
+* chunk by `(identifier, timestamp)`
 * counter aggregates
 * We need to cast counts to double precision in order to perform analysis on the database.
+
+Querying the database
+
+* select a time interval and desired identifiers
+* group by `identifier` to form multiple time series
+* compute rates of change for each time series
+
+See appendix \ref{time-series-database} for conrete examples. 
 
 
 ## Monitoring and ingest daemons
@@ -103,12 +109,4 @@ The ingest daemon listens to the requests from the monitoring daemons and stores
 
 We need to keep track of previous observed identifiers and previous timestamp.
 If we encounter a new identifier, we should also *backfill* a record with the new identifier, the previous timestamp and zeros for operation values to mark the beginning of time series.
-
-
-## Querying the database
-Querying the database
-
-* select a time interval and desired identifiers
-* group by `identifier` to form multiple time series
-* compute rates of change for each time series
 
