@@ -80,11 +80,11 @@ It then deallocate bytes from 5 to 10 such that the file keeps its original size
 \clearpage
 
 # Slurm job scripts
-## Small sequential job
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
 
+## Small sequential job
 ```sh
 #!/usr/bin/env bash
 #SBATCH --job-name=<job-name>
@@ -99,14 +99,24 @@ srun <program>
 ```
 
 The above script is an example of a small, sequential batch job with a single job step (`srun` command).
-It is also common to run multiple such jobs independent of each other with slight variation for example in initial conditions.
-We can achieve that by turning it into an array job by adding the `array` argument with desired range and accessing the array ID via an environment variable.
 
+## Multiple similar sequential jobs
 ```sh
-#...
+#!/usr/bin/env bash
+#SBATCH --job-name=<job-name>
+#SBATCH --account=<project>
+#SBATCH --partition=small
+#SBATCH --time=01:00:00
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=10G
 #SBATCH --array=1-100
 srun <program> $SLURM_ARRAY_TASK_ID
 ```
+
+It is also common to run multiple such jobs independent of each other with slight variation for example in initial conditions.
+We can achieve that by turning it into an array job by adding the `array` argument with desired range and accessing the array ID via an environment variable.
 
 ## Large parallel job
 ```sh
@@ -146,26 +156,26 @@ These programs could be programs for post processing steps, for example, process
 # Time series database
 ```sql
 -- Metadata is regular relational table.
-CREATE TABLE metadata (
-    identifier UUID NOT NULL,
-    target TEXT NOT NULL,
-    nodename TEXT NULL,
-    job BIGINT NULL,
-    uid BIGINT NULL,
-    executable TEXT NULL,
-    PRIMARY KEY (identifier)
+CREATE TABLE 'metadata' (
+    'identifier' UUID NOT NULL,
+    'target' TEXT NOT NULL,
+    'nodename' TEXT NULL,
+    'job' BIGINT NULL,
+    'uid' BIGINT NULL,
+    'executable' TEXT NULL,
+    PRIMARY KEY ('identifier')
 );
 ```
 
 ```sql
 -- Lustre jobstats table
-CREATE TABLE lustre_jobstats (
-    identifier UUID NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL,
-    read DOUBLE PRECISION NOT NULL,
-    write DOUBLE PRECISION NOT NULL,
+CREATE TABLE 'lustre_jobstats' (
+    'identifier' UUID NOT NULL,
+    'timestamp' TIMESTAMPTZ NOT NULL,
+    'read' DOUBLE PRECISION NOT NULL,
+    'write' DOUBLE PRECISION NOT NULL,
     -- etc
-    PRIMARY KEY('identifier', 'timestamp')
+    PRIMARY KEY ('identifier', 'timestamp')
 );
 ```
 
@@ -174,7 +184,7 @@ CREATE TABLE lustre_jobstats (
 SELECT create_hypertable('lustre_jobstats', 'timestamp', 'identifier');
 SELECT set_chunk_time_interval('lustre_jobstats', INTERVAL '1 hour');
 SELECT add_compression_policy('lustre_jobstats', INTERVAL '1 days');
-SELECT add_retention_policy('lustre_jobstats', INTERVAL '1 months');
+SELECT add_retention_policy('lustre_jobstats', INTERVAL '6 months');
 ```
 
 ```sql

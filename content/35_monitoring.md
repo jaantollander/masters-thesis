@@ -2,31 +2,37 @@
 
 # Monitoring workflow
 ## Overview
+![
+The pipeline for monitoring and recording the statistics is built using the client-server architecture.
+It consists of multiple monitoring clients and an ingest server connected to a time series database.
+On each Lustre server, a monitoring client queries the jobstats on regular intervals and sends the data to the ingest server that inserts them to a time series database.
+\label{fig:monitoring-workflow}
+](figures/lustre-monitor.drawio.svg)
 
 
 ## Storing time series data
 Field | Type | Value
 ---|----|----------
-`identifier` | `UUID NOT NULL` | Universally Unique Identifier of an individual time series
+`identifier` | `UUID NOT NULL` | Universally Unique Identifier of an individual time series.
 `timestamp` | `TIMESTAMPTZ NOT NULL` | Timestamp with UTC timezone.
 `<value>` | `<type>` | One or more observed values.
 
 : \label{tab:schema-time-series}
-  Each *record of time series data* consists of an unique identifier and timestamp with one or more values or the observations.
+  Each *record of time series data* consists of an `identifier` and `timestamp` with one or more values of the observations and is uniquely identified by the tuple of values `(identifier, timestamp)`.
 
 
 Field | Type | Value
 ---|----|----------
-`identifier` | `UUID NOT NULL` | Universally Unique Identifier of an individual time series
+`identifier` | `UUID NOT NULL` | Universally Unique Identifier of an individual time series.
 `<value>` | `<type>` | One or more metadata values related to the identifier.
 
 : \label{tab:schema-metadata}
-  Each *record of metadata* for each unique identifier consists of the identifier and one or more metadata values.
+  Each *record of metadata* consists of the `identifier` and one or more metadata values and is uniquely identified by the `identifier`.
 
 
 Time series data has distinctive properties that allow optimizations for storing and querying them.
 *Time series database* is a database that is built around these optimizations to effcienly handle time series data.
-For example, we used *TimescaleDB* which expands PostgreSQL for storing and analyzing time series data.
+We used *TimescaleDB* (version ???) which expands PostgreSQL for storing and analyzing time series data.
 TimescaleDB documentation characterize the properties of time series data as follows:
 [@timescaledocs]
 
@@ -40,22 +46,24 @@ TimescaleDB documentation characterize the properties of time series data as fol
 : New data is typically about recent time intervals, and we more rarely make updates or backfill missing data about old intervals.
 
 An instance of time series database consist of *time series table* with schema as in table \ref{tab:schema-time-series} and optional *metadata table* with schema as in table \ref{tab:schema-metadata}.
+We use Universally Unique Identifier (UUID) for the identifier instead of hash because it allows 
+
+* TODO: explain UUID and TIMESTAMPTZ, why UUID instead of simple hash?
+* TODO: separate metadata table reduces data bloat and makes it easier to alter schema and add new metadata later
+
 The time series table is a *TimescaleDB hypertable* with *indices* for efficient queries, *chunks* by chosen time interval for improved performance, a *compression policy* to compress data that is older than specified time to reduce storage, and a *retention policy* for dropping data that is older than specified time to limit data accumulation or for privacy and regulatory reasons.
 The metadata table is regular PostgreSQL table.
 We can join the metadata table and time series table during queries.
 
 
-## Database schema and queries
+## Database schema
 Field | Type | Value
 ---|---|----------
 `identifier` | `UUID` |
 `timestamp` | `TIMESTAMPTZ` | Timestamp of the query time with UTC timezone.
-`<operation_*>` | `DOUBLE` | The `sum` value for the `read_bytes` and `write_bytes` operations and `samples` value for the other operations from the `<statistics_*>` key-value pairs.
+`<operation_*>` | `DOUBLE PRECISION` | The `sum` counter value for the `read_bytes` and `write_bytes` operations and `samples` counter value for the other operations from the `<statistics_*>` key-value pairs.
 
 : \label{tab:schema-jobstats-time-series}
-Schema of the time series table.
-Wide-table model, values for multiple operations in one record.
-The tuple `(timestamp, identifier)` uniquely identifies a row.
 
 
 Field | Type | Value
@@ -68,45 +76,48 @@ Field | Type | Value
 `executable` | `TEXT` | `<executable>` value if exists, otherwise an empty string.
 
 : \label{tab:schema-jobstats-metadata}
-Schema of metadata table.
-Mapping between the time series identifier and the metadata.
-The `identifier` uniquely identifies a row.
 
 
 The `identifier` is UUID value of computer from the string `<target><job_id>`.
+We need to also account for the format of `<target>` and `<job_id>` in the UUID if we change them later.
+We should create indices by `(identifier, timestamp DESC)` for efficient grouping by the identifier with time interval constraints.
+We can also chunk the hypertable by `(identifier, timestamp)`.
+We need to cast counts to double precision in order to perform analysis on the database.
+See appendix \ref{time-series-database} for conrete examples.
 
-* indices by `(identifier, timestamp DESC)` for efficient group by and time interval constraints
-* chunk by `(identifier, timestamp)`
-* counter aggregates
-* We need to cast counts to double precision in order to perform analysis on the database.
 
+## Monitoring Lustre jobstats
+Each monitoring daemon calls the appropriate `lctl get_param` command at regular observation intervals to collect statistics.
+The observation interval should be less than half of the cleanup interval for reliable reset detection.
+Smaller observation interval increases the resolution but also increase the rate of data accumulation.
+We used a 2-minute observation interval and 10-minute cleanup interval.
+
+Monitoring daemon parses the `<target>` value and the values of each entry from the output, and creates an list of data structures with the data.
+
+Compute identifier (UUID) from the string `<target><job_id>`.
+
+* compose message of time series data
+
+We need to keep track of previous observed identifiers and previous observation timestamp.
+If we encounter a new identifier, we must
+
+* parse metadata and compose message for ingest
+* *backfill* a record with the new identifier, the previous timestamp and zeros for operation values to mark the beginning of time series.
+
+The monitoring daemons send these data structures to the ingest daemon in batches.
+
+
+## Ingesting data
+The ingest daemon listens to the requests from the monitoring daemons and stores the data in a time series database such that each instance of the data structure represents a single row.
+
+TODO: batch insert data into the database
+
+
+## Querying and computing aggregates
 Querying the database
 
 * select a time interval and desired identifiers
 * group by `identifier` to form multiple time series
 * compute rates of change for each time series
 
-See appendix \ref{time-series-database} for conrete examples. 
-
-
-## Monitoring and ingest daemons
-![
-The pipeline for monitoring and recording the statistics consists of multiple instances of a monitoring daemon and a single instance of an ingest daemon, and a time series database.
-*Daemon* is a program that runs in the background.
-We installed a monitoring daemon to each Lustre server, and an ingest daemon and a database to a utility node on Puhti.
-\label{fig:monitoring-workflow}
-](figures/lustre-monitor.drawio.svg)
-
-Each monitoring daemon calls the appropriate `lctl get_param` command at regular observation intervals to collect statistics.
-Then, it parses the `<target>` and the output of each entry (a line beginning with dash `-`) into a data structure.
-
-The observation interval should be less than half of the cleanup interval for reliable reset detection.
-Smaller observation interval increases the resolution but also increase the rate of data accumulation.
-We used a 2-minute observation interval and 10-minute cleanup interval.
-
-The monitoring daemons send these data structures to the ingest daemon in batches.
-The ingest daemon listens to the requests from the monitoring daemons and stores the data in a time series database such that each instance of the data structure represents a single row.
-
-We need to keep track of previous observed identifiers and previous timestamp.
-If we encounter a new identifier, we should also *backfill* a record with the new identifier, the previous timestamp and zeros for operation values to mark the beginning of time series.
 
