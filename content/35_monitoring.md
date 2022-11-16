@@ -91,28 +91,28 @@ See appendix \ref{time-series-database} for conrete examples.
 
 ## Monitoring client
 The monitoring client calls the appropriate `lctl get_param` command at regular observation intervals to collect statistics.
+The time at which the call was made is referred as `timestamp`.
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and 10-minute cleanup interval.
 
-Monitoring client parses the target value and for each entry, it parses the values and creates a data structure with the identifier, timestamp and all of the parsed values.
-The identifier is the UUID computed from the string `<target><job_id>`.
+Monitoring client parses the `target` value and for each entry, it parses the `job_id`, `snapshot_time`, and statistics values and creates a data structure with the `timestamp`, `target`, `job_id`, `snapshot_time`, and all of the parsed statistics.
 
-We need to keep track of previously observed identifiers and the previous observation timestamp.
-If we encounter a new identifier, we must
+We need to keep track of previously observed identifiers, in this case the raw `(<target>, <job_id>)` pairs, and the previous observation timestamp.
+If we encounter an identifier that was not present in the previous observation interval, we must fill a data structure with the new `target`, `job_id`, the previous `timestamp` and zeros for `snapshot_time` and statistics to mark the beginning of time series which will be *backfilled* to the database.
 
-* parse metadata from `<job_id>`, create metadata structure and add it to a dictionary of metadata structures
-* create a time series stucture with the new identifier, the previous timestamp and zeros for operation values to mark the beginning of time series which will be *backfilled* to the database.
-
-Finally, compose messages of the metadata and time series data as text-based key-value format.
-
-The monitoring clients send these data structures to the ingest server in batches.
+Finally, we compose a message of the data as text-based format such as a series of key-value pairs with an distinct separator character or using JSON format.
+The monitoring clients send these data structures to the ingest server.
 
 
 ## Ingest server
 The ingest server listens to the requests from the monitoring clients and stores the data in a time series database such that each instance of the data structure represents a single row.
 
 TODO: ingest server listens to some port for messages from different monitoring clients
+
+TODO: The identifier is the UUID computed from the string `<target><job_id>`.
+
+TODO: if not in metadata table, parse metadata from `<job_id>`, metadata parsing is done in the ingest server because it is closer to the database and can query if metadat is already on the metadata table
 
 TODO: batch insert data into the database
 

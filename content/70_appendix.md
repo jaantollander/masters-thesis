@@ -194,6 +194,27 @@ CREATE INDEX 'ix_identifier_timestamp'
     ON 'lustre_jobstats' ('identifier', 'timestamp' DESC);
 ```
 
+## Message format
+```json
+{
+"jobstats": [
+    {
+        "timestamp": "<timestamp>",
+        "target": "<target>",
+        "job_id": "<job_id>",
+        "snapshot_time": "<job_id.snapshot_time>",
+        "read": "<job_id.read.samples>",
+        "write": "<job_id.write.samples>",
+        "open": "<job_id.open.samples>",
+        "close": "<job_id.close.samples>",
+        "...": "...",
+        "read_bytes": "<job_id.read_bytes.sum>",
+        "write_bytes": "<job_id.write_bytes.sum>",
+    },
+],
+}
+```
+
 ## Generating UUIDs
 ```sh
 NAMESPACE=$(uuidgen --random)

@@ -56,12 +56,12 @@ The text output is formatted as follows.
 mdt.<target>.job_stats=
 job_stats:
 - job_id: <job_id_1>
-  snapshot_time: <unix-epoch>
+  snapshot_time: <snapshot_time_1>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
   ...
 - job_id: <job_id_2>
-  snapshot_time: <unix-epoch>
+  snapshot_time: <snapshot_time_2>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
   ...
@@ -81,12 +81,12 @@ The text output is also similar.
 obdfilter.<target>.job_stats=
 job_stats:
 - job_id: <job_id_1>
-  snapshot_time: <unix-epoch>
+  snapshot_time: <snapshot_time_1>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
   ...
 - job_id: <job_id_2>
-  snapshot_time: <unix-epoch>
+  snapshot_time: <snapshot_time_2>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
   ...
