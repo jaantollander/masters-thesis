@@ -154,6 +154,7 @@ These programs could be programs for post processing steps, for example, process
 \clearpage
 
 # Time series database
+## Setting up the database
 ```sql
 -- Metadata is regular relational table.
 CREATE TABLE 'metadata' (
@@ -191,5 +192,14 @@ SELECT add_retention_policy('lustre_jobstats', INTERVAL '6 months');
 -- Create index for fast queries.
 CREATE INDEX 'ix_identifier_timestamp'
     ON 'lustre_jobstats' ('identifier', 'timestamp' DESC);
+```
+
+## Generating UUIDs
+```sh
+NAMESPACE=$(uuidgen --random)
+```
+
+```sh
+uuidgen --sha1 --namespace="$NAMESPACE" --name="<target><job_id>"
 ```
 
