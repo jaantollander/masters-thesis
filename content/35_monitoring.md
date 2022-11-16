@@ -106,15 +106,15 @@ The monitoring clients send these data structures to the ingest server.
 
 
 ## Ingest server
-The ingest server listens to the requests from the monitoring clients and stores the data in a time series database such that each instance of the data structure represents a single row.
+The ingest server maintains a connection to the database, listens to the messages from the monitoring clients and inserts data from the messages to the database.
 
-TODO: ingest server listens to some port for messages from different monitoring clients
+It parses the messages, computes `identifier`s (UUID with `<namespace>`) from `<target><job_id>` strings, and forms instances of *metadata row* and *time series row* data structures.
 
-TODO: The identifier is the UUID computed from the string `<target><job_id>`.
+If an `identifier` does not exist in the metadata table, the ingest server forms new metadata row from the `identifier`, `<target>`, and parsed `<job_id>` values.
+We perform the metadata parsing in the ingest server because it is closer to the database and can query if metadata already exists on the metadata table.
 
-TODO: if not in metadata table, parse metadata from `<job_id>`, metadata parsing is done in the ingest server because it is closer to the database and can query if metadat is already on the metadata table
-
-TODO: batch insert data into the database
+The ingest server forms database *inserts* from the metadata row and time series row instances.
+It should perform a batch insert of data into the database.
 
 
 ## Computing aggregates
