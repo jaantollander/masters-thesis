@@ -111,42 +111,42 @@ Next, we explain the file operations and statistics.
 
 
 ## File operations and statistics
-operation | system call | notes
+Operation | System call | Parsed statistics
 ---|--|------
-**`open`** | `open`
-**`close`** | `close`
-**`mknod`** | `mknod`
-**`link`** | `link` |  Does not count the first link created by `mknod`.
-**`unlink`** | `unlink`
-**`mkdir`** | `mkdir`
-**`rmdir`** | `rmdir`
-**`rename`** | `rename`
-**`getattr`** | `stat` | Retrieve file attributes.
-**`setattr`** | `chmod`, `chown`, `utime` | Set file attributes
-**`getxattr`** | `getxattr` | Retrieving extended attributes.
-**`setxattr`** | `setxattr` | Setting extended attributes.
-**`statfs`** | `statfs` | Retrieving file system statistics.
-**`sync`** | `sync` | Invoking the kernel to write buffered metadata in memory to disk.
-**`samedir_rename`** || Disambiguates which files are renamed within the same directory.
-**`crossdir_rename`** || Disambiguates which files are moved to another directory, potentially under a new name.
+**`open`** | `open` | `samples`
+**`close`** | `close` | `samples`
+**`mknod`** | `mknod` | `samples`
+**`link`** | `link` | `samples`
+**`unlink`** | `unlink` | `samples`
+**`mkdir`** | `mkdir` | `samples`
+**`rmdir`** | `rmdir` | `samples`
+**`rename`** | `rename` | `samples`
+**`getattr`** | `stat` | `samples`
+**`setattr`** | `chmod`, `chown`, `utime` | `samples`
+**`getxattr`** | `getxattr` | `samples`
+**`setxattr`** | `setxattr` | `samples`
+**`statfs`** | `statfs` | `samples`
+**`sync`** | `sync` | `samples`
+**`samedir_rename`** | `rename` | `samples` (Count of files are renamed within the same directory.)
+**`crossdir_rename`** | `rename` | `samples` (Count of files are moved to another directory, potentially under a new name.)
 
 : \label{tab:mdt-operations}
 We have the following metadata operations performed on MDSs.
 
 
-operation | system call | notes
+Operation | System call | Parsed statistics
 ---|--|------
-**`read`** | `read` | Reading data from a file.
-**`write`** | `write` | Writing data to a file.
-**`getattr`** | 
-**`setattr`** | 
-**`punch`** | `fallocate` | Punch a hole in a file.
-**`sync`** | `sync` | Invoking the kernel to write buffered data in memory to disk.
-**`get_info`** | 
-**`set_info`** | 
-**`quotactl`** | `quotactl` | Manipulate disk quota.
-**`read_bytes`** | `read` | Number of bytes read from a file. Return value from `read` system call.
-**`write_bytes`** | `write` | Number of bytes written to a file. Return value from `write` system call.
+**`read`** | `read` | `samples`
+**`write`** | `write` | `samples`
+**`getattr`** | `samples`
+**`setattr`** | `samples`
+**`punch`** | `fallocate` | `samples` (see appendix \ref{punch-operation} for details)
+**`sync`** | `sync` | `samples`
+**`get_info`** | | `samples`
+**`set_info`** | | `samples`
+**`quotactl`** | `quotactl` | `samples`
+**`read_bytes`** | `read` | `sum` (sum of return values from `read`)
+**`write_bytes`** | `write` | `sum` (sum of return values from `write`)
 
 : \label{tab:ost-operations}
 We have the following operations on the object data performed on OSSs.

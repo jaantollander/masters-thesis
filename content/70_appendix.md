@@ -173,8 +173,8 @@ CREATE TABLE 'metadata' (
 CREATE TABLE 'lustre_jobstats' (
     'identifier' UUID NOT NULL,
     'timestamp' TIMESTAMPTZ NOT NULL,
-    'read' DOUBLE PRECISION NOT NULL,
-    'write' DOUBLE PRECISION NOT NULL,
+    'read' DOUBLE PRECISION,
+    'write' DOUBLE PRECISION,
     -- etc
     PRIMARY KEY ('identifier', 'timestamp')
 );
@@ -197,7 +197,7 @@ CREATE INDEX 'ix_identifier_timestamp'
 ## Message format
 ```json
 {
-"jobstats": [
+"job_stats": [
     {
         "timestamp": "<timestamp>",
         "target": "<target>",
