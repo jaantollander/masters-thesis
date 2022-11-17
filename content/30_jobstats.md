@@ -31,18 +31,13 @@ Then, we have two `job_id` formats:
 `<executable>.<uid>`
 : with formatting string `"%e.%u"` when `SLURM_JOB_ID` is undefined, such as for Login nodes.
 
-TODO: recording group ID could also be useful.
-
-Due to an unknown bug in Lustre (version 2.12.6 from DDN), we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
-We discuss how to deal with these issues in later sections.
+We did not record the group ID, but it could also be useful for identifying if members of a particular group perform problematic file I/O patterns.
 
 
 ## Querying statistics
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 We indicate variables using the syntax `<name>`.
-
-TODO: we measure the usage of the `scratch` storage area
 
 We can query jobstats from MDS as follows:
 
@@ -94,8 +89,9 @@ job_stats:
 
 ---
 
-The `<target>` indicates the target of the data.
+The `<target>` indicates the Lustre target of the query.
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>` and eight OSSs with three OSTs each, named `scratch-OST<index>`.
+The prefix `scratch-` indicates that we measure the usage of in the `scratch` storage area.
 The `<index>` is four digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
 Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
@@ -204,6 +200,7 @@ This method might underestimate increment if counter resets and then does more o
 
 : `<job>`, `<uid>`, and `<nodename>` separated with colon `:`
 
+Due to an bug in Lustre (version 2.12.6 from DDN), we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
 We found formatting issues with `job_id` identifiers in the generated data from Lustre Jobstats on the Puhti system.
 For example, we found many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
 We believe that this problem is related to `SLURM_JOB_ID` environment variables which could be either no set for some processes, cannot be read in some cases or lost for some other reason.
