@@ -103,14 +103,13 @@ Monitoring client parses the `target` value and for each entry, it parses the `j
 We need to keep track of previously observed identifiers, in this case the raw `(<target>, <job_id>)` pairs, and the previous observation timestamp.
 If we encounter an identifier that was not present in the previous observation interval, we must fill a data structure with the new `target`, `job_id`, the previous `timestamp` and zeros for `snapshot_time` and statistics to mark the beginning of time series which will be *backfilled* to the database.
 
-Finally, we compose a message of the data as text-based format such as a series of key-value pairs with an distinct separator character or using JSON format.
+Finally, we compose a message of the data as text-based format such JSON.
 The monitoring clients send the message to the ingest server via HTTP.
 
 
 ## Ingest server
-The ingest server maintains a connection to the database, listens to the messages from the monitoring clients, parses data from the messages and inserts it to the database.
-
-The server parses the data from the messages and for each `<target><job_id>` string, computes an UUID with a namespace to form an `identifier`.
+The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them and inserts the data to the database.
+For each `<target><job_id>` string in a parsed message, computes an UUID with a namespace to form an `identifier`.
 Then, it forms a *time series row* as in table \ref{tab:schema-jobstats-time-series} and for the identifiers that do not yet exists in the metadata table, the ingest server forms a *metadata row* from the `identifier`, `<target>`, and parsed `<job_id>` values as in table \ref{tab:schema-jobstats-metadata}.
 The server should keep memorize the recent identifiers included in the metadata table to avoid unnecessary queries the database.
 Finally, the ingest server *inserts* the metadata and time series rows to the database in a batch to appropriate tables.
@@ -122,5 +121,4 @@ Querying the database
 * select a time interval and desired identifiers
 * group by `identifier` to form multiple time series
 * compute rates of change for each time series
-
 

@@ -4,9 +4,6 @@
 ## Overview
 
 ## Hardware configuration
-![Diagram of Puhti's hardware from storage perspective. \label{fig:puhti-configuration}](figures/puhti-hardware.drawio.svg)
-
-> TODO: improve the caption of figure
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
@@ -24,31 +21,38 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Compute* | *CPU*, *BM* | 6 | 1500 | 5960
 *Compute* | *GPU* | 80 | 384 | 3600
 
-: \label{tab:compute-nodes}
-Nodes on Puhti
+: \label{tab:puhti-nodes}
+Nodes counts by type and category on the Puhti cluster.
 
-The *Puhti* cluster has 23 *service nodes* and 1002 *compute nodes*.
-The services nodes consist of utility nodes used as cluster's *login nodes* and MDS nodes and OSS nodes for the Lustre file system.
+The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen on the table \ref{tab:puhti-nodes}.
+The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to login to the system and MDS and OSS nodes for the Lustre file system.
 The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
-Each login and compute node consists of 2 $\times$ *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
-In addition to CPUs, each GPU node has 4 $\times$ *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
+Each login and compute node consists of two *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
+In addition to CPUs, each GPU node has four *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
 We give compute nodes types based on how much memory (RAM) and *fast local storage* they contain, and whether they contains GPUs.
 Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volative Memory Express (NVMe)* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
-
-The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to L1 switches which are connected to L2 switches in a *fat-tree* network topology.
-The network has a total of 28 L1 switches and 12 L2 switches.
 
 The global storage on Puhti consists of a Lustre file system, version 2.12.6 from *DataDirect Networks (DDN)*, that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
 Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
 Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
+The network configuration is presented on the figure \ref{fig:puhti-network}.
+
+![
+High-level overview of the network connections in the Puhti cluster.
+Every node is connected to every L1 switch, and every L1 switch is connected to every L2 switch.
+The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to L1 switches which are connected to L2 switches in a *fat-tree* network topology.
+The network has a total of 28 L1 switches and 12 L2 switches.
+\label{fig:puhti-network}
+](figures/puhti-hardware.drawio.svg)
+
 
 ## System configuration
 Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
-The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]]`** for utility nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
+The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for utility nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
 For example, `puhti-login12.bullx` or `r01c01.bullx`.
 We can use node names to track file system operations in node specific level.
 
@@ -124,7 +128,7 @@ Slurm schedules the job to run when sufficient resource are available using a fa
 It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
 We can use the `SLURM_JOB_ID` as identifier to collect job specific file operations.
 Slurm also performs accounting of other details about the submitted jobs.
-Examples of Slurm job in the appendix ???.
+See examples of Slurm job scripts in the appendix \ref{slurm-job-scripts}.
 
 
 ## Issues with parallel file system

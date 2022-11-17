@@ -200,7 +200,7 @@ This method might underestimate increment if counter resets and then does more o
 
 : `<job>`, `<uid>`, and `<nodename>` separated with colon `:`
 
-Due to an bug in Lustre (version 2.12.6 from DDN), we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
+Due to an bug in Lustre version 2.12.6 from DDN, we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
 We found formatting issues with `job_id` identifiers in the generated data from Lustre Jobstats on the Puhti system.
 For example, we found many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
 We believe that this problem is related to `SLURM_JOB_ID` environment variables which could be either no set for some processes, cannot be read in some cases or lost for some other reason.

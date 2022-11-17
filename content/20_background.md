@@ -107,6 +107,13 @@ The super user is used by *system administrators* for administrative tasks such 
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
+A *client-server application* is an application that is broken into two processes, a client and a server.
+The *client* requests a server to perform some service by sending a message.
+The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
+The client and server may reside in the same host computer or separate host computers connected by a network.
+They communicate with each other by some Interprocess Communication (IPC) mechanism.
+"Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
+
 
 ## Lustre parallel file system
 Parallel file system is a file system designed for clusters.
@@ -115,14 +122,6 @@ It stores data on multiple networked servers to facilitate high performance acce
 The Lustre file system is a *kernel module* designed using the client-server architecture.
 Kernel module is a software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @lustredocs, secs. 1-2]
-
-A *client-server application* is an application that is broken into two processes, a client and a server.
-The *client* requests a server to perform some service by sending a message.
-The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
-The client and server may reside in the same host computer or separate host computers connected by a network.
-They communicate with each other by some Interprocess Communication (IPC) mechanism.
-
-"Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
 
 Nodes running the Lustre client software are known as *Lustre Clients*
 The Lustre client software provides an interface between the Linux virtual file system and *Lustre servers*.
@@ -148,6 +147,7 @@ A batch process is a computation that runs from start to finish without user int
 We must specify the resources we request and limits for them.
 
 *Slurm* is a workload manager for Linux clusters [@slurmdocs].
+Unlike Lustre, Slurm operates in the user-space, not in the kernel space.
 These computing resources include nodes, cores, memory, and time.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.
 We refer to such a resource allocation as a *job* in a job script.
