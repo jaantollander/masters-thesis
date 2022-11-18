@@ -7,7 +7,7 @@ In section \ref{lustre-parallel-file-system}, we described Lustre parallel file 
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
 
-## Setting identifier format
+## Setting jobid format
 We can enable Jobstats by setting a value for `jobid_name` parameter.
 We can specify the format `job_id` with `jobid_name` parameter.
 We can use the following format codes.
@@ -184,10 +184,10 @@ In pratice, we detect a *reset* by detecting if any of the counter values decrea
 This method might underestimate increment if counter resets and then does more operations than last count.
 
 
-## Issues with identifiers
+## Issues with jobid values
 `job_id` | notes
 -|-
-`11317854:17627127:r01c01` | correct identifier
+`11317854:17627127:r01c01` | correct format
 `:17627127:r01c01` | `job` missing
 `11317854` | `job` field
 `11317854:` | `job` field and separator `:`
@@ -198,12 +198,17 @@ This method might underestimate increment if counter resets and then does more o
 `:17627127:r01c01.bullx` | `job` field is missing and fully qualified hostname instead of a short hostname
 `:1317854:17627127:r01c01` | the first character in `job` overwritten by separator
 
-: `<job>`, `<uid>`, and `<nodename>` separated with colon `:`
+: Examples of various observed jobid values.
 
 Due to an bug in Lustre version 2.12.6 from DDN, we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
 We found formatting issues with `job_id` identifiers in the generated data from Lustre Jobstats on the Puhti system.
+
+TODO: either `jobid_var` is not set or unable to fetch it
+
 For example, we found many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
 We believe that this problem is related to `SLURM_JOB_ID` environment variables which could be either no set for some processes, cannot be read in some cases or lost for some other reason.
+
+TODO: likely an issue with thread safety, occurs only in OSS, not MDS
 
 Furthermore, on the OSS, `job_id`s had issues such as values missing from `uid` and `nodename` fields or fully-qualified hostname instead of the specified short hostname in the `nodename` field.
 Even more problematic was that sometimes `job_id` was malformed to the extent that we could not reliably parse information from it.

@@ -6,11 +6,12 @@ In this section, we explain the theory of how to analyze the stream of counter v
 Furthermore, we define operations such as computing sum and logarithmic density for analyzing multiple rates of change, and transforming timestamps for the rates of change.
 We will referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside of the observation intervals such as the initial counter.
 The observation time is called *timestamp*.
-Each time series of counter values is identified by an *unique identifier* which we obtain as a concatenation of the strings `<target><job_id>`.
+Each time series of counter values is identified by an *unique identifier*.
 We refer to the identifiers of the observed counters as *observed identifiers*.
 The size of the set of observed identifiers tells us how many individual time series Jobstats is tracking at given time.
 It has implications to how much data we accumulate at each observation.
-We regard the observed identifiers as a subset of *all identifiers* which is the set of all strings with allowed characters.
+We regard the observed identifiers as a subset of *all identifiers* which is the set of all possible identifier, depending the chosen identifier scheme.
+We will explore the identifier scheme in the section \ref{monitoring-system}.
 
 
 ## Rate over an interval

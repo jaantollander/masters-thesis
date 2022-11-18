@@ -26,4 +26,3 @@ It should also reduce the amount of manual work involved.
 
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
 
-

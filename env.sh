@@ -57,7 +57,8 @@ thesis_html() {
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --toc \
         --number-sections \
-        --toc-depth 2
+        --toc-depth 2 \
+        --strip-comments
 }
 
 thesis_epub() {
@@ -75,7 +76,8 @@ thesis_epub() {
         --csl "$ASSETS_DIR/citationstyle.csl" \
         --toc \
         --number-sections \
-        --toc-depth 2
+        --toc-depth 2 \
+        --strip-comments
 }
 
 thesis_pdf() {
@@ -94,7 +96,8 @@ thesis_pdf() {
         --include-in-header "$CONTENT_DIR/header.tex" \
         --include-before-body "$CONTENT_DIR/body.tex" \
         --number-sections \
-        --toc-depth 2
+        --toc-depth 2 \
+        --strip-comments
 }
 
 thesis_tex() {
@@ -111,7 +114,8 @@ thesis_tex() {
         --include-in-header "$CONTENT_DIR/header.tex" \
         --include-before-body "$CONTENT_DIR/body.tex" \
         --number-sections \
-        --toc-depth 2
+        --toc-depth 2 \
+        --strip-comments
 }
 
 thesis_preview() {

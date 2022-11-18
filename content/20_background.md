@@ -159,7 +159,7 @@ Slurm can also perform accounting for resource usage.
 
 
 ## Computing at CSC
-- TODO: expand the discussion
+<!-- TODO: expand the discussion -->
 
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
 It is owned by the Finnish-state and higher education institutions.
