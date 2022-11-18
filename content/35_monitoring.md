@@ -120,5 +120,8 @@ Querying the database
 
 * select a time interval and desired identifiers
 * group by `identifier` to form multiple time series
-* compute rates of change for each time series
+* compute rate for each time series
+* analyze and visualize the rates
+
+Ideally, performed in continuous fashion as new data arrives to the database.
 

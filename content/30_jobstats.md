@@ -7,29 +7,36 @@ In section \ref{lustre-parallel-file-system}, we described Lustre parallel file 
 We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
 Jobstats keeps counters of various statistics of file system-related system calls.
 
-## Setting jobid format
-We can enable Jobstats by setting a value for `jobid_name` parameter.
-We can specify the format `job_id` with `jobid_name` parameter.
+## Setting identifier format for entries
+We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter.
 We can use the following format codes.
 
 - `%e` for executable name.
 - `%h` for fully-qualified hostname.
-- `%H` for short hostname, that is, `%h` such that everything after the first dot (`.`) is removed.
+- `%H` for short hostname aka nodename, that is, `%h` such that everything after the first dot (`.`) is removed.
 - `%j` for job ID from environment variable specified by `jobid_var` setting.
 - `%u` for user ID number.
 - `%g` for group ID number.
 - `%p` for numeric process ID.
 
 The formatting effects the resolution of the statistics.
-Using more formatting codes results in higher resolution but will also accumulate data faster.
-We have set parameters `job_id_name="%j:%u:%H"` and `jobid_var=SLURM_JOB_ID` to user Slurm job ID.
-Then, we have two `job_id` formats:
+Using more formatting codes results in higher resolution but also leads to higher rate of data accumulatation.
 
-`<job>:<uid>:<nodename>`
-: with formatting string `"%j:%u:%H"` when `SLURM_JOB_ID` is set. This formatting allows us to separate statistics based on job ID, user ID and nodename.
 
-`<executable>.<uid>`
-: with formatting string `"%e.%u"` when `SLURM_JOB_ID` is undefined, such as for Login nodes.
+We have set the entry identifier to include Slurm job ID, user ID and nodename.
+It is used for compute and utility nodes.
+
+```
+jobid_name="%j:%u:%H"
+jobid_var=SLURM_JOB_ID
+```
+
+The default formatting string includes the executable name and user ID.
+It is used for login nodes..
+
+```
+jobid_name="%e.%u"
+```
 
 We did not record the group ID, but it could also be useful for identifying if members of a particular group perform problematic file I/O patterns.
 
@@ -37,7 +44,6 @@ We did not record the group ID, but it could also be useful for identifying if m
 ## Querying statistics
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
-We indicate variables using the syntax `<name>`.
 
 We can query jobstats from MDS as follows:
 
@@ -50,12 +56,12 @@ The text output is formatted as follows.
 ```text
 mdt.<target>.job_stats=
 job_stats:
-- job_id: <job_id_1>
+- job_id: <entry_id_1>
   snapshot_time: <snapshot_time_1>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
   ...
-- job_id: <job_id_2>
+- job_id: <entry_id_2>
   snapshot_time: <snapshot_time_2>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
@@ -75,12 +81,12 @@ The text output is also similar.
 ```text
 obdfilter.<target>.job_stats=
 job_stats:
-- job_id: <job_id_1>
+- job_id: <entry_id_1>
   snapshot_time: <snapshot_time_1>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
   ...
-- job_id: <job_id_2>
+- job_id: <entry_id_2>
   snapshot_time: <snapshot_time_2>
   <operation_1>: <statistics_1>
   <operation_2>: <statistics_2>
@@ -96,10 +102,9 @@ The `<index>` is four digit integer in hexadecimal format using the characters `
 Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
 
-After the `job_stats:` line, we have a list of entries for workloads that have performed file system operations on the target.
-Each *entry* is denoted by dash `-` and contains `job_id` identifier, `snapshot_time` and various operations with statistics.
-
-The value in `snapshot_time` field contains a timestamp as a Unix epoch when the statistics of one of the operations was last updated.
+After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
+Each *entry* is denoted by dash `-` and contains the entry identifier (`job_id`), *snapshot time* (`snapshot_time`) and various operations with statistics.
+The value of snapshot time is a timestamp as a Unix epoch when the statistics of one of the operations was last updated.
 *Unix epoch* is the standard way of representing time in Unix systems.
 It measures time as the number of seconds that has elapsed since 00:00:00 UTC on 1 January 1970, exluding leap seconds.
 
@@ -149,7 +154,7 @@ We have the following operations on the object data performed on OSSs.
 
 In tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
 We have omitted some rarely encountered operations from the tables.
-Each `<operation>` field contains line of `<statistics>` which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
+Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
 
 ---
 
@@ -174,7 +179,7 @@ For example, if `open` is called multiple times with the same arguments Lustre c
 
 ## Detecting resets
 Jobstats removes an entry if none of its statistics are updated within the *cleanup interval* specified in the configuration as `job_cleanup_interval` parameter.
-That is, Jobstats automatically removes entries with `snapshot_time` older than the cleanup interval.
+That is, Jobstats automatically removes entries with snapshot time older than the cleanup interval.
 The default cleanup interval is 10 minutes.
 
 > TODO: there is no certain way of detecting resets, not sure if looking at snapshot times if totally reliable, over estimation is worse than underestimating counter increments, simplicity
@@ -184,77 +189,110 @@ In pratice, we detect a *reset* by detecting if any of the counter values decrea
 This method might underestimate increment if counter resets and then does more operations than last count.
 
 
-## Issues with jobid values
-`job_id` | notes
--|-
-`11317854:17627127:r01c01` | correct format
-`:17627127:r01c01` | `job` missing
-`11317854` | `job` field
-`11317854:` | `job` field and separator `:`
-`113178544` | `job` field with extra character at the end
-`11317854:17627127` | `job` and `uid` fields
-`11317854:17627127:` | `job` and `uid` fields ending with a separator
-`11317854:17627127:r01c01.bullx` | fully-qualified hostname instead of a short hostname
-`:17627127:r01c01.bullx` | `job` field is missing and fully qualified hostname instead of a short hostname
-`:1317854:17627127:r01c01` | the first character in `job` overwritten by separator
+## Issues with entry identifiers
 
-: Examples of various observed jobid values.
+Issue | Entry identifier | Notes
+-|-----|-----
+- |`11317854:17627127:r01c01` | correct format
+1|`:17627127:r01c01` | `job` missing
+2|`11317854` | `job` field without separator
+2|`11317854:` | `job` field with separator
+2|`113178544` | `job` field with separator at the end is overwritten by a digit
+2|`11317854:17627127` | `job` and `uid` fields
+2|`11317854:17627127:` | `job` and `uid` fields ending with a separator
+2|`11317854:17627127:r01c01.bullx` | fully-qualified hostname instead of a short hostname
+2|`:17627127:r01c01.bullx` | `job` field is missing and fully qualified hostname instead of a short hostname
+2|`:1317854:17627127:r01c01` | the first character in `job` overwritten by separator
 
-Due to an bug in Lustre version 2.12.6 from DDN, we found that some of the identifiers produced by Jobstats were had missing `<job>` or were broken.
-We found formatting issues with `job_id` identifiers in the generated data from Lustre Jobstats on the Puhti system.
+: \label{tab:jobid-examples}
+Examples of various observed entry identifiers on compute nodes.
+We refer to colon (`:`) as *separator*.
 
-TODO: either `jobid_var` is not set or unable to fetch it
+Unfortunately, we found two separate issues with the entry identifiers on the Puhti system.
+That is, did not conform to the format described in Section \ref{setting-identifier-format-for-entries}.
 
-For example, we found many identifiers without the value in the `job` field on MDS and OSS data from compute nodes.
-We believe that this problem is related to `SLURM_JOB_ID` environment variables which could be either no set for some processes, cannot be read in some cases or lost for some other reason.
+The first issues is missing job ID values in some entries from normal user in compute nodes even thought the `SLURM_JOB_ID` environment variable is set.
+It might be related to some issues in fetching the value of the environment variable.
+This issues occured in both MDS and OSS.
 
-TODO: likely an issue with thread safety, occurs only in OSS, not MDS
-
-Furthermore, on the OSS, `job_id`s had issues such as values missing from `uid` and `nodename` fields or fully-qualified hostname instead of the specified short hostname in the `nodename` field.
-Even more problematic was that sometimes `job_id` was malformed to the extent that we could not reliably parse information from it.
-For example, there were characters in the identifiers missing, overwritten, or duplicated.
-We had to discard these entries completely.
-We suspect that data race might be causing some of these issues.
+The second issues is that some entry identifiers were malformed.
+We cannot reliably parse job ID, user ID, and nodename information from these entry identifiers.
+It occured only in OSS.
+We believe that this issue is related to lack of thread-safety in some of the functions that produce the entry identifier strings.
 [@jobid-atomic]
 
----
+Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we found.
 
-> TODO: add plot of counted job ids
 
-`job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
+## Sample of parsed entry identifiers
+<!-- TODO: add plot of counted job ids in respect to time -->
+
+Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
--|uid|login|55077|24.19|6132|4.81
-job|uid|compute|145590|63.93|36909|28.98
--|uid|compute|21037|9.24|84275|66.17
--|uid|puhti|6012|2.64|45|0.04
-||||227716||127361|
+-|user|login|55077|24.19
+slurm|user|compute|145590|63.93
+-|user|compute|21037|9.24
+-|user|utility|6012|2.64
+||||227716
 
-: \label{tab:mds-entries}
-MDS entries
+: \label{tab:jobids-mds-user}
+MDS, user
 
-
-`job` | `uid` | `nodename` | \# entries with user or missing uid | % | \# entries with system uid | %
+Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
--|uid|login|271561|16.85|10074|1.61
-job|uid|compute|1126289|69.88|2003|0.32
--|uid|compute|187101|11.61|610189|97.70
--|uid|puhti|9674|0.60|1519|0.24
-job|uid|compute (q)|2655|0.16
--|uid|compute (q)|43|<0.01|237|0.04
-job|uid|-|4769|0.30
+-|system|login|6132|4.81
+slurm|system|compute|36909|28.98
+-|system|compute|84275|66.17
+-|system|utility|45|0.04
+||||127361
+
+: \label{tab:jobids-mds-system}
+MDS system
+
+Job ID | User ID | Nodename | Count | Ratio
+:-:|:-:|:-:|-:|-:|-:|-:
+-|user|login|271561|16.85
+job|user|compute|1126289|69.88
+-|user|compute|187101|11.61
+-|user|utility|9674|0.60
+job|user|compute (q)|2655|0.16
+-|user|compute (q)|43|<0.01
+job|user|-|4769|0.30
 job|-|-|6928|0.43
--|uid|-|67|<0.01|540|0.09
+-|user|-|67|<0.01
 -|-|-|2766|0.17
-||||1611853||624562|
+||||1611853
 
-: \label{tab:oss-entries}
-OSS entries
+: \label{tab:jobids-oss-user}
+OSS, user
+
+Job ID | User ID | Nodename | Count | Ratio
+:-:|:-:|:-:|-:|-:|-:|-:
+-|system|login|10074|1.61
+job|system|compute|2003|0.32
+-|system|compute|610189|97.70
+-|system|utility|1519|0.24
+job|system|compute (q)|0|0
+-|system|compute (q)|237|0.04
+job|system|-|0|0
+job|-|-|0|0
+-|system|-|540|0.09
+-|-|-|0|0
+||||624562|
+
+: \label{tab:jobids-oss-system}
+OSS system
 
 
-For example, the tables \ref{tab:mds-entries} and \ref{tab:oss-entries} show the counts of entries of a sample of 113 consecutive 2-minute intervals for MDSs and OSSs separated by normal or missing `uid`s and system `uid`s for different `job_id` compositions.
+For example, the tables \ref{tab:jobids-mds-user}, \ref{tab:jobids-mds-system}, \ref{tab:jobids-oss-user}, and \ref{tab:jobids-oss-system} show the counts of entries of a sample of 113 consecutive 2-minute intervals for MDSs and OSSs separated by normal or missing `uid`s and system `uid`s for different entry identifier compositions.
+
+TODO: difference between MDS and OSS, missing job, thread safety issues
+
 In the table, "job" indicates that job ID exists, "uid" indicates user ID exists, dash "-" indicates missing value, "login" indicates login node, "compute" indicates compute node, "(q)" indicates fully-qualified nodename and "puhti" indicates node that is not login or compute node.
 
 As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable job-specific statistics.
 Also, discarded entries lead to some data loss.
 The reliability of the counter data does not seem to be affected by this issue.
+
+<!-- TODO: system uids create lots of entries, which leads to data bloat, how to improve? -->
 
