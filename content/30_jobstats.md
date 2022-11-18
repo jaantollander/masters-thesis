@@ -11,19 +11,19 @@ Jobstats keeps counters of various statistics of file system-related system call
 We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter.
 We can use the following format codes.
 
-- `%e` for executable name.
-- `%h` for fully-qualified hostname.
-- `%H` for short hostname aka nodename, that is, `%h` such that everything after the first dot (`.`) is removed.
-- `%j` for job ID from environment variable specified by `jobid_var` setting.
-- `%u` for user ID number.
-- `%g` for group ID number.
-- `%p` for numeric process ID.
+- `%e` for *Executable name*.
+- `%h` for *Fully-qualified Hostname*.
+- `%H` for short hostname aka *Nodename*, that is, `%h` such that everything after the first dot (`.`) is removed.
+- `%j` for *Job ID* from environment variable specified by `jobid_var` setting.
+- `%u` for *User ID* number.
+- `%g` for *Group ID* number.
+- `%p` for *Process ID* number.
 
 The formatting effects the resolution of the statistics.
 Using more formatting codes results in higher resolution but also leads to higher rate of data accumulatation.
 
 
-We have set the entry identifier to include Slurm job ID, user ID and nodename.
+We have set the entry identifier to include Slurm Job ID, User ID and Nodename.
 It is used for compute and utility nodes.
 
 ```
@@ -31,14 +31,14 @@ jobid_name="%j:%u:%H"
 jobid_var=SLURM_JOB_ID
 ```
 
-The default formatting string includes the executable name and user ID.
+The default formatting string includes the *Executable name* and User ID.
 It is used for login nodes..
 
 ```
 jobid_name="%e.%u"
 ```
 
-We did not record the group ID, but it could also be useful for identifying if members of a particular group perform problematic file I/O patterns.
+We did not record the Group ID, but it could also be useful for identifying if members of a particular group perform problematic file I/O patterns.
 
 
 ## Querying statistics
@@ -191,10 +191,10 @@ This method might underestimate increment if counter resets and then does more o
 
 ## Issues with entry identifiers
 
-Issue | Entry identifier | Notes
+Type | Entry identifier | Notes
 -|-----|-----
-- |`11317854:17627127:r01c01` | correct format
-1|`:17627127:r01c01` | `job` missing
+0 |`11317854:17627127:r01c01` | Correct format
+1|`:17627127:r01c01` | Job ID missing
 2|`11317854` | `job` field without separator
 2|`11317854:` | `job` field with separator
 2|`113178544` | `job` field with separator at the end is overwritten by a digit
@@ -211,12 +211,12 @@ We refer to colon (`:`) as *separator*.
 Unfortunately, we found two separate issues with the entry identifiers on the Puhti system.
 That is, did not conform to the format described in Section \ref{setting-identifier-format-for-entries}.
 
-The first issues is missing job ID values in some entries from normal user in compute nodes even thought the `SLURM_JOB_ID` environment variable is set.
+The first type of issue is missing Job ID values in some entries from normal user in compute nodes even thought the `SLURM_JOB_ID` environment variable is set.
 It might be related to some issues in fetching the value of the environment variable.
 This issues occured in both MDS and OSS.
 
-The second issues is that some entry identifiers were malformed.
-We cannot reliably parse job ID, user ID, and nodename information from these entry identifiers.
+The second type of issue is that some entry identifiers were malformed.
+We cannot reliably parse Job ID, User ID, and Nodename information from these entry identifiers.
 It occured only in OSS.
 We believe that this issue is related to lack of thread-safety in some of the functions that produce the entry identifier strings.
 [@jobid-atomic]
@@ -252,13 +252,13 @@ MDS system
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
 -|user|login|271561|16.85
-job|user|compute|1126289|69.88
+slurm|user|compute|1126289|69.88
 -|user|compute|187101|11.61
 -|user|utility|9674|0.60
-job|user|compute (q)|2655|0.16
+slurm|user|compute (q)|2655|0.16
 -|user|compute (q)|43|<0.01
-job|user|-|4769|0.30
-job|-|-|6928|0.43
+slurm|user|-|4769|0.30
+slurm|-|-|6928|0.43
 -|user|-|67|<0.01
 -|-|-|2766|0.17
 ||||1611853
@@ -269,13 +269,13 @@ OSS, user
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
 -|system|login|10074|1.61
-job|system|compute|2003|0.32
+slurm|system|compute|2003|0.32
 -|system|compute|610189|97.70
 -|system|utility|1519|0.24
-job|system|compute (q)|0|0
+slurm|system|compute (q)|0|0
 -|system|compute (q)|237|0.04
-job|system|-|0|0
-job|-|-|0|0
+slurm|system|-|0|0
+slurm|-|-|0|0
 -|system|-|540|0.09
 -|-|-|0|0
 ||||624562|
@@ -284,13 +284,13 @@ job|-|-|0|0
 OSS system
 
 
-For example, the tables \ref{tab:jobids-mds-user}, \ref{tab:jobids-mds-system}, \ref{tab:jobids-oss-user}, and \ref{tab:jobids-oss-system} show the counts of entries of a sample of 113 consecutive 2-minute intervals for MDSs and OSSs separated by normal or missing `uid`s and system `uid`s for different entry identifier compositions.
+The Tables \ref{tab:jobids-mds-user}, \ref{tab:jobids-mds-system}, \ref{tab:jobids-oss-user}, and \ref{tab:jobids-oss-system} show the counts of different entry identifiers in a sample of 113 consecutive 2-minute intervals from all MDSs and OSSs.
+In the tables, dash *-* indicates missing value, *system* is User ID reserved for ssystem processes, *user* is User ID reverved for user processes, *slurm* is Slurm Job ID, *login* is login Nodename, *compute* is compute Nodename, *utility* is utility Nodename and *compute (q)* is fully-qualified hostname for compute node.
 
 TODO: difference between MDS and OSS, missing job, thread safety issues
 
-In the table, "job" indicates that job ID exists, "uid" indicates user ID exists, dash "-" indicates missing value, "login" indicates login node, "compute" indicates compute node, "(q)" indicates fully-qualified nodename and "puhti" indicates node that is not login or compute node.
+As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
 
-As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable job-specific statistics.
 Also, discarded entries lead to some data loss.
 The reliability of the counter data does not seem to be affected by this issue.
 
