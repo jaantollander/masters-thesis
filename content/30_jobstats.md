@@ -11,9 +11,9 @@ Jobstats keeps counters of various statistics of file system-related system call
 We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter.
 We can use the following format codes.
 
-- `%e` for *Executable name*.
-- `%h` for *Fully-qualified Hostname*.
-- `%H` for short hostname aka *Nodename*, that is, `%h` such that everything after the first dot (`.`) is removed.
+- `%e` for *executable name*.
+- `%h` for *fully-qualified hostname*.
+- `%H` for short hostname aka *nodename*, that is, `%h` such that everything after the first dot (`.`) is removed.
 - `%j` for *Job ID* from environment variable specified by `jobid_var` setting.
 - `%u` for *User ID* number.
 - `%g` for *Group ID* number.
@@ -22,8 +22,7 @@ We can use the following format codes.
 The formatting effects the resolution of the statistics.
 Using more formatting codes results in higher resolution but also leads to higher rate of data accumulatation.
 
-
-We have set the entry identifier to include Slurm Job ID, User ID and Nodename.
+We have set the entry identifier to include *Slurm Job ID*, User ID and nodename.
 It is used for compute and utility nodes.
 
 ```
@@ -95,7 +94,7 @@ job_stats:
 
 ---
 
-The `<target>` indicates the Lustre target of the query.
+The *target* (`<target>`) contains the mount point and name of Lustre target of the query.
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>` and eight OSSs with three OSTs each, named `scratch-OST<index>`.
 The prefix `scratch-` indicates that we measure the usage of in the `scratch` storage area.
 The `<index>` is four digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.

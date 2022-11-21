@@ -126,7 +126,7 @@ It has partitions with different resource limits as seen on table \ref{tab:slurm
 When we submit a job to Slurm, we must specify in which partition it will run, the project which used for billing, and the resource we wish to reserve.
 Slurm schedules the job to run when sufficient resource are available using a fair share algorithm.
 It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
-We can use the `SLURM_JOB_ID` as identifier to collect job specific file operations.
+We can use the *Slurm job identifier* (`SLURM_JOB_ID` environment variable) as identifier to collect job specific file operations.
 Slurm also performs accounting of other details about the submitted jobs.
 See examples of Slurm job scripts in the appendix \ref{slurm-job-scripts}.
 
