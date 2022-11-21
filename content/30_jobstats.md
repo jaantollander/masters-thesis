@@ -284,12 +284,11 @@ OSS system
 The Tables \ref{tab:jobids-mds-user}, \ref{tab:jobids-mds-system}, \ref{tab:jobids-oss-user}, and \ref{tab:jobids-oss-system} show the counts of different entry identifiers in a sample of 113 consecutive 2-minute intervals from all MDSs and OSSs.
 In the tables, dash *-* indicates missing value, *system* is User ID reserved for ssystem processes, *user* is User ID reverved for user processes, *slurm* is Slurm Job ID, *login* is login Nodename, *compute* is compute Nodename, *utility* is utility Nodename and *compute (q)* is fully-qualified hostname for compute node.
 
-TODO: difference between MDS and OSS, missing job, thread safety issues
-
 As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
 
 Also, discarded entries lead to some data loss.
 The reliability of the counter data does not seem to be affected by this issue.
 
-<!-- TODO: system uids create lots of entries, which leads to data bloat, how to improve? -->
+Additionally, we see lot of entries for with system user ID.
+These entries increase data bloat and generally don't add that much useful information.
 

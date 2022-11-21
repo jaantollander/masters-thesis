@@ -158,6 +158,10 @@ It also maintains a queue of jobs waiting for resources to become available for 
 Slurm can also perform accounting for resource usage.
 
 
+## Issues with parallel file system
+[@tacc-io-guideline]
+
+
 ## Computing at CSC
 <!-- TODO: expand the discussion -->
 

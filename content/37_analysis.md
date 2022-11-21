@@ -11,7 +11,6 @@ We refer to the identifiers of the observed counters as *observed identifiers*.
 The size of the set of observed identifiers tells us how many individual time series Jobstats is tracking at given time.
 It has implications to how much data we accumulate at each observation.
 We regard the observed identifiers as a subset of *all identifiers* which is the set of all possible identifier, depending the chosen identifier scheme.
-We will explore the identifier scheme in the section \ref{monitoring-system}.
 
 
 ## Rate over an interval

@@ -131,6 +131,3 @@ Slurm also performs accounting of other details about the submitted jobs.
 See examples of Slurm job scripts in the appendix \ref{slurm-job-scripts}.
 
 
-## Issues with parallel file system
-[@tacc-io-guideline]
-

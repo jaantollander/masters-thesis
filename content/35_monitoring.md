@@ -9,9 +9,6 @@ On each Lustre server, a monitoring client queries the jobstats on regular inter
 \label{fig:monitoring-workflow}
 ](figures/lustre-monitor.drawio.svg)
 
-* we tried two different methods
-* timescaledb over influx, cardinality problem
-
 
 ## Storing time series data
 Field | Type | Value
