@@ -222,8 +222,6 @@ We believe that this issue is related to lack of thread-safety in some of the fu
 
 Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we found.
 
-
-## Sample of parsed entry identifiers
 <!-- TODO: add plot of counted job ids in respect to time -->
 
 Job ID | User ID | Nodename | Count | Ratio
