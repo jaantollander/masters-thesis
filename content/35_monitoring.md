@@ -9,6 +9,9 @@ On each Lustre server, a monitoring client queries the jobstats on regular inter
 \label{fig:monitoring-workflow}
 ](figures/lustre-monitor.drawio.svg)
 
+We tried two methods for building a monitoring system.
+
+
 
 ## Storing time series data
 Field | Type | Value
@@ -30,20 +33,18 @@ Field | Type | Value
   Each *record of metadata* consists of the times series identifier and one or more metadata values.
 
 
-Time series data has distinctive properties that allow optimizations for storing and querying them.
-*Time series database* is a database that is built around these optimizations to effcienly handle time series data.
-We used *TimescaleDB* (version ???) which expands PostgreSQL for storing and analyzing time series data.
-TimescaleDB documentation characterize the properties of time series data as follows:
-[@timescaledocs]
+We can use a *time series database* to efficiently store and handle time series data from multiple distinct time series.
+*Time series data* has distinctive properties that allow optimizations for storing and querying them.
+TimescaleDB documentation [@timescaledocs] characterizes these properties as:
 
-*Time-centric*:
-: Data records always have a timestamp.
+1) *time-centric* meaning that records always have a timestamp.
+2) *append-only* meaning that we almost always append new records and rarely update existing data or backfill missing data about old intervals.
+3) *recent* new data is typically about recent time intervals.
 
-*Append-only*:
-: Data is almost solely append-only.
-
-*Recent*:
-: New data is typically about recent time intervals, and we more rarely make updates or backfill missing data about old intervals.
+There are different options for choosing a time series databases.
+One key differentiation between time series databases is whether they are built to handle fixed or growing amount of distinct time series.
+Since we handle data that has a growing number of distinct time series we chose *TimescaleDB*.
+It expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distict time series with its performance suffering drastically.
 
 An instance of time series database consist of *time series table* with schema as in Table \ref{tab:schema-time-series} and optional *metadata table* with schema as in Table \ref{tab:schema-metadata}.
 A separate metadata table reduces data bloat and makes it easier to alter its schema later.
