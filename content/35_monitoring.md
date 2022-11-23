@@ -2,15 +2,39 @@
 
 # Monitoring system
 ## Overview
-![
-The pipeline for monitoring and recording the statistics is built using the client-server architecture.
-It consists of multiple monitoring clients and an ingest server connected to a time series database.
-On each Lustre server, a monitoring client queries the jobstats on regular intervals and sends the data to the ingest server that inserts them to a time series database.
-\label{fig:monitoring-workflow}
-](figures/lustre-monitor.drawio.svg)
+![Overview of the monitoring system. Rounded rectangles indicate programs, arrows indicates data flow and diamond indicates many-to-one connection. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
 
-We tried two methods for building a monitoring system.
+We built the monitoring system using the client-server architecture as seen on the Figure \ref{fig:monitoring-system}.
+On each Lustre server, a monitoring clients collects the usage statistics on regular intervals and sends them to the ingest server as a message.
+The ingest server processes the data from the messages and inserts it to the time series database.
+Then, we can perform queries on the database or dump data from the database and analyze outside of the database.
+Ideally, we would like to perform continuous analytics on the database as new data arrives, but that is left for future development.
 
+We explain how to compute rates from counter values in the Section \ref{analyzing-statistics}.
+
+Initially, we computed the rates online in the monitoring clients and sent the processed values to the database as it would have made database queries easier.
+However, we discovered some problems with that approach.
+
+1) First, because our parser wrongly assumed that the entry identifier would be in the correct format, but due to the issues covered in Section \ref{issues-with-entry-identifiers}, we accidentally parsed two distict time series to the same identifier.
+The problem resulted in wrong computes rates, which we discoved because some of the values were so large that the system could not possibly produce them.
+
+2) Second, if a message from the monitoring client to the ingest server is lost we cannot interpolate the missing value.
+Correctness would require tracking both, the start and end of an interval rather than a single timestamp.
+
+To remedy these problems, we switched to recording the raw values to the database and compute the rates outside the database.
+This approach makes the monitoring system simpler, and we can easily interpolate the values for missing intervals and we can rely only on one timestamp.
+We also fixed the parser.
+
+However, we lost fair amount of time and data becauce of the problems
+
+<!--
+TODO: timestamp vs snapshot time
+TODO: we take these programs as given, only explain them at high-level
+-->
+
+We stored everything on single table.
+However, ideally we should have separate metadata and time series tables.
+Furthermore, we should have a separate time series table for MDT data and OST data, since they mostly contain different operations.
 
 
 ## Storing time series data
@@ -44,7 +68,8 @@ TimescaleDB documentation [@timescaledocs] characterizes these properties as:
 There are different options for choosing a time series databases.
 One key differentiation between time series databases is whether they are built to handle fixed or growing amount of distinct time series.
 Since we handle data that has a growing number of distinct time series we chose *TimescaleDB*.
-It expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distict time series with its performance suffering drastically.
+TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distict time series with its performance suffering drastically.
+Initially, we used *InfluxDB*, but found out that it did not scale well for our use case.
 
 An instance of time series database consist of *time series table* with schema as in Table \ref{tab:schema-time-series} and optional *metadata table* with schema as in Table \ref{tab:schema-metadata}.
 A separate metadata table reduces data bloat and makes it easier to alter its schema later.
@@ -101,7 +126,7 @@ For example, if the previous data structure is the first observation, we have:
 Finally, the monitoring client composes a message of the data by listing the individual data structures in a JSON array and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
 
 
-## Ingest server and database
+## Ingest server
 The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them and inserts the data to the database.
 
 We can generate the time series identifier as UUID from the concatenated string of target and entry identifier (`<target>:<entry_id>`) with a randomly generated UUID as *namespace* associated with the formatting of the target and entry identifier strings.
@@ -129,7 +154,7 @@ af854063-c381-585f-b551-ce0b6c4440a3
 
 
 Now, we can separate the ingested data into *time series structure* and *metadata structure*.
-We always append the time series structure to the time series table.
+We should append the time series structure to the appropriate time series table.
 
 ```json
 {
