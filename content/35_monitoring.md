@@ -12,18 +12,21 @@ Ideally, we would like to perform continuous analytics on the database as new da
 
 We explain how to compute rates from counter values in the Section \ref{analyzing-statistics}.
 
-Initially, we computed the rates online in the monitoring clients and sent the processed values to the database as it would have made database queries easier.
+Initially, we computed the difference between two counters online in the monitoring clients and stored them to the database.
+This approach made database queries easier since the differences are proportional to the rates because we used a constant interval.
 However, we discovered some problems with that approach.
 
-1) First, because our parser wrongly assumed that the entry identifier would be in the correct format, but due to the issues covered in Section \ref{issues-with-entry-identifiers}, we accidentally parsed two distict time series to the same identifier.
-The problem resulted in wrong computes rates, which we discoved because some of the values were so large that the system could not possibly produce them.
+1) Our parser wrongly assumed that the entry identifier would be in the correct format, but due to the issues covered in Section \ref{issues-with-entry-identifiers}, we accidentally parsed two distict time series to the same identifier.
+For these instance, the problem resulted in values that were wrong.
+We discoved because some of the values were so large that the system could not possibly produce them.
 
-2) Second, if a message from the monitoring client to the ingest server is lost we cannot interpolate the missing value.
-Correctness would require tracking both, the start and end of an interval rather than a single timestamp.
+2) Correctness would require tracking both, the start and end of an interval rather than a single timestamp for computing correct rates if the interval is variable length.
+
+3) If a message from the monitoring client to the ingest server is lost, we cannot interpolate the missing value.
 
 To remedy these problems, we switched to recording the raw values to the database and compute the rates outside the database.
 This approach makes the monitoring system simpler, and we can easily interpolate the values for missing intervals and we can rely only on one timestamp.
-We also fixed the parser.
+We also patched the parser.
 
 However, we lost fair amount of time and data becauce of the problems
 

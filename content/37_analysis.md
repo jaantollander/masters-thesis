@@ -131,11 +131,5 @@ z_{b,y}(t)=\sum_{r_k\in R} \mathbf{1}_{b,y}(r_k(t)).
 
 The base parameter determines the *resolution* of the bucketing.
 
-In pratice, we can use the logarithmic floor function to compute the bucket $y$ of a value $x,$ because of the relationship 
-
-\begin{equation}
-(x > 0) \wedge (\lfloor \log_{b}(x) \rfloor = y)
-\quad\equiv\quad
-b^y \le x < b^{y+1}.
-\end{equation}
+In pratice, we can use the logarithmic floor function to compute the bucket $y$ of a value $x>0,$ because of the relationship $\lfloor \log_{b}(x) \rfloor = y$ is logically equivalent to $b^y \le x < b^{y+1}.$
 
