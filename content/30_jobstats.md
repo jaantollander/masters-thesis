@@ -2,18 +2,23 @@
 
 # Collecting usage statistics with Lustre Jobstats
 ## Overview
-In section \ref{lustre-parallel-file-system}, we described Lustre parallel file system and in section \ref{puhti-cluster-at-csc}, we described the Puhti cluster.
+We described the architecture of the Lustre parallel file system in Section \ref{lustre-parallel-file-system}.
+Now, we focus on enabling the monitoring in Lustre with Jobstats, covering important settings for Jobstats, the kinds of statistics it tracks, how to query them, and the format of the query output.
+We also explain issues we encountered using the Jobstats, such as missing and broken identifiers.
+We explain these in the context of the Puhti cluster described in Section \ref{puhti-cluster-at-csc}.
 
-We can configure Lustre to collect file system usage statistics with *Lustre Jobstats*, as explained in the section 12.2 of Lustre manual [@lustredocs, sec. 12.2].
-Jobstats keeps counters of various statistics of file system-related system calls.
+Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
+
+TODO: *describe previous works that used Jobstats for monitoring*
+
 
 ## Setting identifier format for entries
-We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter.
+We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter as explained in the *Lustre Manual* [@lustredocs, sec. 12.2].
 We can use the following format codes.
 
 - `%e` for *executable name*.
 - `%h` for *fully-qualified hostname*.
-- `%H` for short hostname aka *nodename*, that is, `%h` such that everything after the first dot (`.`) is removed.
+- `%H` for *short hostname* aka *nodename*, that is, the fully-qualified hostname such that everything after the first dot including the dot is removed.
 - `%j` for *Job ID* from environment variable specified by `jobid_var` setting.
 - `%u` for *User ID* number.
 - `%g` for *Group ID* number.
@@ -181,7 +186,7 @@ Jobstats removes an entry if none of its statistics are updated within the *clea
 That is, Jobstats automatically removes entries with snapshot time older than the cleanup interval.
 The default cleanup interval is 10 minutes.
 
-> TODO: there is no certain way of detecting resets, not sure if looking at snapshot times if totally reliable, over estimation is worse than underestimating counter increments, simplicity
+TODO: *there is no certain way of detecting resets, not sure if looking at snapshot times if totally reliable, over estimation is worse than underestimating counter increments, simplicity*
 
 We refer to the removal of an entry as *reset*.
 In pratice, we detect a *reset* by detecting if any of the counter values decrease which can only happen if the entry.
@@ -194,14 +199,15 @@ Type | Entry identifier | Notes
 -|-----|-----
 0 |`11317854:17627127:r01c01` | Correct format
 1|`:17627127:r01c01` | Job ID missing
-2|`11317854` | `job` field without separator
-2|`11317854:` | `job` field with separator
-2|`113178544` | `job` field with separator at the end is overwritten by a digit
-2|`11317854:17627127` | `job` and `uid` fields
-2|`11317854:17627127:` | `job` and `uid` fields ending with a separator
+2|`11317854` | job ID field without separator
+2|`11317854:` | job ID field with separator
+2|`113178544` | job ID field with separator at the end is overwritten by a digit
+2|`11317854:17627127` | job ID and user ID fields
+2|`11317854:17627127:` | job ID and uid ID fields ending with a separator
 2|`11317854:17627127:r01c01.bullx` | fully-qualified hostname instead of a short hostname
-2|`:17627127:r01c01.bullx` | `job` field is missing and fully qualified hostname instead of a short hostname
-2|`:1317854:17627127:r01c01` | the first character in `job` overwritten by separator
+2|`:17627127:r01c01.bullx` | job ID field is missing and fully qualified hostname instead of a short hostname
+2|`:1317854:17627127:r01c01` | the first character in job ID overwritten by separator
+2|...| There were many more ways the identifier were broken.
 
 : \label{tab:jobid-examples}
 Examples of various observed entry identifiers on compute nodes.
@@ -210,7 +216,7 @@ We refer to colon (`:`) as *separator*.
 Unfortunately, we found two separate issues with the entry identifiers on the Puhti system.
 That is, did not conform to the format described in Section \ref{setting-identifier-format-for-entries}.
 
-The first type of issue is missing Job ID values in some entries from normal user in compute nodes even thought the `SLURM_JOB_ID` environment variable is set.
+The first type of issue is missing Job ID values in some entries from normal user in compute nodes even thought the Slurm job identifier is set.
 It might be related to some issues in fetching the value of the environment variable.
 This issues occured in both MDS and OSS.
 

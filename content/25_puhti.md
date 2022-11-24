@@ -79,16 +79,13 @@ File system is separated to *storage areas*.
 Each storage area has a dedicated directory.
 The global, Lustre file system is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
-*home*
-: area is intended for storing personal data and configuration files.
+- *home* is intended for storing personal data and configuration files.
 In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB per user.
 
-*projappl*
-: area is intended for storing project-specific application files such as compiled libraries.
+- *projappl* is intended for storing project-specific application files such as compiled libraries.
 It resides at `/projappl/<project>` and has a default quota of 50 GB per project.
 
-*scratch*
-: area is intended for short-term storage of data used in the cluster.
+- *scratch* is intended for short-term storage of data used in the cluster.
 It resides at `/scratch/<project>` and has a default quota of 1 TB per project.
 Files that require long-term storage should be moved to a long-term data storage outside Puhti.
 
@@ -98,14 +95,12 @@ They should access *home* or *projappl* areas only to read or copy configuration
 There are two local storage areas, *local scratch* and *tmp*, that are intended for temporary file storage for I/O heavy operations.
 User should copy data that they wish to keep after the job has completed to *scratch* since files in these temporary storage areas are cleaned regularly.
 
-*local scratch*
-: is an area for batch jobs to perform I/O heavy operations.
+- *local scratch* is indented for batch jobs to perform I/O heavy operations.
 It is mounted on local SSD.
 The quota depends on how much is requested for the job.
 It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
 
-*tmp*
-: is an area for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
+- *tmp* is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing of data, compiling libraries, or compressing data.
 It is mounted on RAMDisk.
 It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
