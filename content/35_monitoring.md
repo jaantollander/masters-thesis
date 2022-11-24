@@ -4,40 +4,32 @@
 ## Overview
 ![Overview of the monitoring system. Rounded rectangles indicate programs, arrows indicates data flow and diamond indicates many-to-one connection. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
 
-We built the monitoring system using the client-server architecture as seen on the Figure \ref{fig:monitoring-system}.
-On each Lustre server, a monitoring clients collects the usage statistics on regular intervals and sends them to the ingest server as a message.
-The ingest server processes the data from the messages and inserts it to the time series database.
-Then, we can perform queries on the database or dump data from the database and analyze outside of the database.
-Ideally, we would like to perform continuous analytics on the database as new data arrives, but that is left for future development.
 
-We explain how to compute rates from counter values in the Section \ref{analyzing-statistics}.
+We built the monitoring system using the client-server architecture as seen in Figure \ref{fig:monitoring-system}.
+On each Lustre server, a monitoring client collects the usage statistics at regular intervals and sends them to the ingest server.
+The ingest server processes the data from the monitoring clients and inserts it into the time series database.
+Then, we can perform queries on the database or dump data from it and analyze it outside the database.
+Ideally, we would like to perform continuous analytics on the database as new data arrives, but we leave it for future development.
 
-Initially, we computed the difference between two counters online in the monitoring clients and stored them to the database.
-This approach made database queries easier since the differences are proportional to the rates because we used a constant interval.
-However, we discovered some problems with that approach.
+We experienced some problems during the development.
+For example, we had a problem directly related to the issues with entry identifiers, covered in Section \ref{issues-with-entry-identifiers}, 
+Because we assumed that all nodenames would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
+The mistake led us to identify two different time series as the same, resulting in wrong values when analyzing the statistics.
+We patch-fixed it by modifying our parser to disambiguate between the two formats.
+However, we lost a fair amount of time and data due to this problem.
 
-1) Our parser wrongly assumed that the entry identifier would be in the correct format, but due to the issues covered in Section \ref{issues-with-entry-identifiers}, we accidentally parsed two distict time series to the same identifier.
-For these instance, the problem resulted in values that were wrong.
-We discoved because some of the values were so large that the system could not possibly produce them.
+The next problem was related to how we computed rates from counter values, which we describe in Section \ref{analyzing-statistics}.
+Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
+This approach made database queries easier since we used a constant interval, so the differences are proportional to the rates.
+However, we discovered that if a message from the monitoring client to the ingest server is lost, we cannot interpolate the missing value, and the information is lost.
+Also, the program design is much more complicated if we compute the rates on the monitoring clients.
 
-2) Correctness would require tracking both, the start and end of an interval rather than a single timestamp for computing correct rates if the interval is variable length.
+To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
+This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
+We can also use a variable interval length if we need.
 
-3) If a message from the monitoring client to the ingest server is lost, we cannot interpolate the missing value.
-
-To remedy these problems, we switched to recording the raw values to the database and compute the rates outside the database.
-This approach makes the monitoring system simpler, and we can easily interpolate the values for missing intervals and we can rely only on one timestamp.
-We also patched the parser.
-
-However, we lost fair amount of time and data becauce of the problems
-
-<!--
-TODO: timestamp vs snapshot time
-TODO: we take these programs as given, only explain them at high-level
--->
-
-We stored everything on single table.
-However, ideally we should have separate metadata and time series tables.
-Furthermore, we should have a separate time series table for MDT data and OST data, since they mostly contain different operations.
+As an author's note, my advisor was responsible for programming and installing these programs.
+Therefore we take the precise design of programs as given and explain them only at a high-level.
 
 
 ## Storing time series data
