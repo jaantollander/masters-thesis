@@ -49,6 +49,8 @@ We did not record the Group ID, but it could also be useful for identifying if m
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 
+---
+
 We can query jobstats from MDS as follows:
 
 ```sh
@@ -101,7 +103,7 @@ job_stats:
 
 The *target* (`<target>`) contains the mount point and name of Lustre target of the query.
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>` and eight OSSs with three OSTs each, named `scratch-OST<index>`.
-The prefix `scratch-` indicates that we measure the usage of in the `scratch` storage area.
+<!-- TODO: explain the `scratch-` prefix -->
 The `<index>` is four digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
 Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
@@ -116,6 +118,22 @@ Next, we explain the file operations and statistics.
 
 
 ## File operations and statistics
+Tables \ref{tab:mdt-operations} and \ref{tab:ost-operations} list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
+We have omitted some rarely encountered operations from the tables.
+Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
+
+```text
+    { samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
+```
+
+The `samples` field counts how many operations the job has requested since the counter was started.
+The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
+These fields contain nonnegative integer values.
+The `samples`, `sum`, and `sumsq` values increase monotonically.
+Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
+Statistics of an entry that has not performed any operations yet are implicitly zero.
+
+
 Operation | System call | Parsed statistics
 ---|--|------
 **`open`** | `open` | `samples`
@@ -156,24 +174,6 @@ Operation | System call | Parsed statistics
 : \label{tab:ost-operations}
 We have the following operations on the object data performed on OSSs.
 
-In Tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
-We have omitted some rarely encountered operations from the tables.
-Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
-
----
-
-```text
-{ samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
-```
-
----
-
-The `samples` field counts how many operations the job has requested since the counter was started.
-The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
-These fields contain nonnegative integer values.
-The `samples`, `sum`, and `sumsq` values increase monotonically.
-Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
-Statistics of an entry that has not performed any operations yet are implicitly zero.
 
 We found that the counters may report more samples for `close` than `open` operations.
 It should not be possible to do more `close` than `open` system calls because a file descriptor returned by open can be closed only once.
@@ -181,7 +181,7 @@ We suspect that the Lustre clients cache certain file operations and Jobstast do
 For example, if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS thus request is not recorded.
 
 
-## Detecting resets
+## Entry resets
 If Jobstats has not updated the statistics of an entry within the *cleanup interval*, it removes the entry.
 That is if the snapshot time is older than the cleanup interval.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
@@ -218,13 +218,17 @@ That is, did not conform to the format described in Section \ref{setting-identif
 
 The first type of issue is missing Job ID values in some entries from normal user in compute nodes even thought the Slurm job identifier is set.
 It might be related to some issues in fetching the value of the environment variable.
-This issues occured in both MDS and OSS.
+This issues occured in both MDSs and OSSs.
 
 The second type of issue is that some entry identifiers were malformed.
 We cannot reliably parse Job ID, User ID, and Nodename information from these entry identifiers.
-It occured only in OSS.
+This issue occured only in OSSs.
 We believe that this issue is related to lack of thread-safety in some of the functions that produce the entry identifier strings.
 [@jobid-atomic]
+
+As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
+As we cannot use these entries in the analysis, we have to discard them and we lose some data.
+The reliability of the counter data does not seem to be affected by this issue.
 
 Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we found.
 
@@ -290,11 +294,6 @@ OSS system
 The Tables \ref{tab:jobids-mds-user}, \ref{tab:jobids-mds-system}, \ref{tab:jobids-oss-user}, and \ref{tab:jobids-oss-system} show the counts of different entry identifiers in a sample of 113 consecutive 2-minute intervals from all MDSs and OSSs.
 In the tables, dash *-* indicates missing value, *system* is User ID reserved for ssystem processes, *user* is User ID reverved for user processes, *slurm* is Slurm Job ID, *login* is login Nodename, *compute* is compute Nodename, *utility* is utility Nodename and *compute (q)* is fully-qualified hostname for compute node.
 
-As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
-
-Also, discarded entries lead to some data loss.
-The reliability of the counter data does not seem to be affected by this issue.
-
-Additionally, we see lot of entries for with system user ID.
+Apart from the broken identifiers, we see lot of entries for with system user ID.
 These entries increase data bloat and generally don't add that much useful information.
 
