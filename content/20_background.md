@@ -1,7 +1,7 @@
 \newpage
 
-# Background
-## High-performance computing
+# High-performance computing
+## Overview
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
 For example, first applicable rule at a time or multiple rules at once.
@@ -161,12 +161,4 @@ Slurm can also perform accounting for resource usage.
 ## Issues with parallel file system
 [@tacc-io-guideline]
 
-
-## Computing at CSC
-<!-- TODO: expand the discussion -->
-
-*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
-It is owned by the Finnish-state and higher education institutions.
-These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
-We will be focusing on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
 

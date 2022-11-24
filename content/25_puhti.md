@@ -2,6 +2,13 @@
 
 # Puhti cluster at CSC
 ## Overview
+<!-- TODO: expand the discussion -->
+
+*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
+It is owned by the Finnish-state and higher education institutions.
+These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
+We will be focusing on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
+
 
 ## Hardware configuration
 
