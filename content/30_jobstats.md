@@ -143,8 +143,8 @@ Operation | System call | Parsed statistics
 ---|--|------
 **`read`** | `read` | `samples`
 **`write`** | `write` | `samples`
-**`getattr`** | `samples`
-**`setattr`** | `samples`
+**`getattr`** | | `samples`
+**`setattr`** | | `samples`
 **`punch`** | `fallocate` | `samples` (see appendix \ref{punch-operation} for details)
 **`sync`** | `sync` | `samples`
 **`get_info`** | | `samples`
@@ -182,15 +182,15 @@ For example, if `open` is called multiple times with the same arguments Lustre c
 
 
 ## Detecting resets
-Jobstats removes an entry if none of its statistics are updated within the *cleanup interval* specified in the configuration as `job_cleanup_interval` parameter.
-That is, Jobstats automatically removes entries with snapshot time older than the cleanup interval.
+If Jobstats has not updated the statistics of an entry within the *cleanup interval*, it removes the entry.
+That is if the snapshot time is older than the cleanup interval.
+We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
 
-TODO: *there is no certain way of detecting resets, not sure if looking at snapshot times if totally reliable, over estimation is worse than underestimating counter increments, simplicity*
-
-We refer to the removal of an entry as *reset*.
-In pratice, we detect a *reset* by detecting if any of the counter values decrease which can only happen if the entry.
-This method might underestimate increment if counter resets and then does more operations than last count.
+The removal of an entry *resets* the entry.
+If a job subsequently performs more operations, we can detect the reset by looking if any of the counter values have decreased.
+This method does not detect reset if the new counter value is larger than the old one, but it is uncommon because counter values typically grow large.
+We will underestimate the counter increment in this case when calculating the difference between two counter values.
 
 
 ## Issues with entry identifiers
@@ -207,7 +207,7 @@ Type | Entry identifier | Notes
 2|`11317854:17627127:r01c01.bullx` | fully-qualified hostname instead of a short hostname
 2|`:17627127:r01c01.bullx` | job ID field is missing and fully qualified hostname instead of a short hostname
 2|`:1317854:17627127:r01c01` | the first character in job ID overwritten by separator
-2|...| There were many more ways the identifier were broken.
+2|...| There were many more ways the identifier was broken.
 
 : \label{tab:jobid-examples}
 Examples of various observed entry identifiers on compute nodes.
