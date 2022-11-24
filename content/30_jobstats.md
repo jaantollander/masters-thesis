@@ -145,7 +145,7 @@ Operation | System call | Parsed statistics
 **`write`** | `write` | `samples`
 **`getattr`** | | `samples`
 **`setattr`** | | `samples`
-**`punch`** | `fallocate` | `samples` (see appendix \ref{punch-operation} for details)
+**`punch`** | `fallocate` | `samples` (see Appendix \ref{punch-operation} for details)
 **`sync`** | `sync` | `samples`
 **`get_info`** | | `samples`
 **`set_info`** | | `samples`
@@ -156,7 +156,7 @@ Operation | System call | Parsed statistics
 : \label{tab:ost-operations}
 We have the following operations on the object data performed on OSSs.
 
-In tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
+In Tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}, we list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
 We have omitted some rarely encountered operations from the tables.
 Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
 

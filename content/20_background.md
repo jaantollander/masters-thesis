@@ -69,7 +69,7 @@ In this work, we focus on the storage file system I/O.
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls.
-We present and explain the common system calls for the file system interface in the table \ref{tab:systemcalls}.
+We present and explain the common system calls for the file system interface in the Table \ref{tab:systemcalls}.
 
 System call | Explanation
 :-|:-------

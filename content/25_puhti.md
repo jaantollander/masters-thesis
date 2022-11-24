@@ -31,7 +31,7 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 : \label{tab:puhti-nodes}
 Nodes counts by type and category on the Puhti cluster.
 
-The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen on the table \ref{tab:puhti-nodes}.
+The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen on the Table \ref{tab:puhti-nodes}.
 The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to login to the system and MDS and OSS nodes for the Lustre file system.
 The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
 Each login and compute node consists of two *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
@@ -44,7 +44,7 @@ Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
 Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
-The network configuration is presented on the figure \ref{fig:puhti-network}.
+The network configuration is presented on the Figure \ref{fig:puhti-network}.
 
 ![
 High-level overview of the network connections in the Puhti cluster.
@@ -124,12 +124,12 @@ Partition name | Time limit | Task limit | Node limit | Node type
 Slurm partitions on Puhti.
 
 Puhti uses Slurm version 21.08.7 as a worload manager.
-It has partitions with different resource limits as seen on table \ref{tab:slurm-partitions}.
+It has partitions with different resource limits as seen on Table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify in which partition it will run, the project which used for billing, and the resource we wish to reserve.
 Slurm schedules the job to run when sufficient resource are available using a fair share algorithm.
 It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
 We can use the *Slurm job identifier* (`SLURM_JOB_ID` environment variable) as identifier to collect job specific file operations.
 Slurm also performs accounting of other details about the submitted jobs.
-See examples of Slurm job scripts in the appendix \ref{slurm-job-scripts}.
+See examples of Slurm job scripts in the Appendix \ref{slurm-job-scripts}.
 
 
