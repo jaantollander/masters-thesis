@@ -29,7 +29,8 @@ This approach simplifies the monitoring system, and we can easily interpolate th
 We can also use a variable interval length if we need.
 
 As an author's note, my advisor was responsible for programming and installing these programs.
-Therefore we take the precise design of programs as given and explain them only at a high-level.
+We adapted the program code from a GPU monitoring program written in the Go language using InfluxDB as a database.
+We take the precise design of programs as given and explain them only at a high level.
 
 
 ## Storing time series data
@@ -66,16 +67,18 @@ Since we handle data that has a growing number of distinct time series we chose 
 TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distict time series with its performance suffering drastically.
 Initially, we used *InfluxDB*, but found out that it did not scale well for our use case.
 
-An instance of time series database consist of *time series table* with schema as in Table \ref{tab:schema-time-series} and optional *metadata table* with schema as in Table \ref{tab:schema-metadata}.
+An instance of time series database consist of one or more *time series tables* with schema as in Table \ref{tab:schema-time-series} and optional *metadata table* with schema as in Table \ref{tab:schema-metadata}.
 A separate metadata table reduces data bloat and makes it easier to alter its schema later.
 We can join the metadata table and time series table during queries.
 
-For the *time series identifier*, we generate a *Universally Unique Identifier (UUID)* because it is standardized and has explicit support for namespaces.
-
-For the *timestamp*, we should always use datetime with the *Coordinated Universal Time (UTC)* timezone instead of local timezones to avoid problems with having to convert between different timezones.
+For the *time series identifier* (`time_series_id`), we can use a *Universally Unique Identifier (UUID)* because it is standardized and has explicit support for namespaces.
+For the *timestamp* (`timestamp`), we should always use datetime with the *Coordinated Universal Time (UTC)* timezone instead of local timezones to avoid problems with having to convert between different timezones.
 
 The time series table is a *TimescaleDB hypertable* with *indices* for efficient queries, *chunked* by a chosen time interval for improved performance, a *compression policy* to compress data that is older than specified time to reduce storage, and a *retention policy* for dropping data that is older than specified time to limit data accumulation or for privacy and regulatory reasons.
 The metadata table is regular PostgreSQL table.
+
+In our implementation, we stored everything on a single table.
+Ideally, we should use a metadata table and time series tables for MDT and OST data since they mainly contain different fields.
 
 
 ## Monitoring client
