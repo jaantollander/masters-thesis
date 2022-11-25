@@ -9,10 +9,6 @@ We explain these in the context of the Puhti cluster described in Section \ref{p
 
 Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
 
-\textcolor{red}{
-TODO: describe previous works that used Jobstats for monitoring
-}
-
 
 ## Entry identifier format
 We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the *Lustre Manual* [@lustredocs, sec. 12.2].
@@ -115,7 +111,7 @@ The value of snapshot time is a timestamp as a Unix epoch when the statistics of
 *Unix epoch* is the standard way of representing time in Unix systems.
 It measures time as the number of seconds that has elapsed since 00:00:00 UTC on 1 January 1970, exluding leap seconds.
 
-Tables \ref{tab:mdt-operations} and \ref{tab:ost-operations} list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
+Table \ref{tab:operations} list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
 We have omitted some rarely encountered operations from the tables.
 Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets:
 
@@ -131,45 +127,35 @@ Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`
 Statistics of an entry that has not performed any operations are implicitly zero.
 
 
-Operation | System call | Parsed statistics
----|--|------
-**`open`** | `open` | `samples`
-**`close`** | `close` | `samples`
-**`mknod`** | `mknod` | `samples`
-**`link`** | `link` | `samples`
-**`unlink`** | `unlink` | `samples`
-**`mkdir`** | `mkdir` | `samples`
-**`rmdir`** | `rmdir` | `samples`
-**`rename`** | `rename` | `samples`
-**`getattr`** | `stat` | `samples`
-**`setattr`** | `chmod`, `chown`, `utime` | `samples`
-**`getxattr`** | `getxattr` | `samples`
-**`setxattr`** | `setxattr` | `samples`
-**`statfs`** | `statfs` | `samples`
-**`sync`** | `sync` | `samples`
-**`samedir_rename`** | `rename` | `samples` (Count of files are renamed within the same directory.)
-**`crossdir_rename`** | `rename` | `samples` (Count of files are moved to another directory, potentially under a new name.)
+Targets | Operation | System call | Parsed statistics
+--|---|--|------
+MDT | **`open`** | `open` | `samples`
+MDT | **`close`** | `close` | `samples`
+MDT | **`mknod`** | `mknod` | `samples`
+MDT | **`link`** | `link` | `samples`
+MDT | **`unlink`** | `unlink` | `samples`
+MDT | **`mkdir`** | `mkdir` | `samples`
+MDT | **`rmdir`** | `rmdir` | `samples`
+MDT | **`rename`** | `rename` | `samples`
+MDT, OST     | **`getattr`** | `stat` | `samples`
+MDT, OST | **`setattr`** | `chmod`, `chown`, `utime` | `samples`
+MDT | **`getxattr`** | `getxattr` | `samples`
+MDT | **`setxattr`** | `setxattr` | `samples`
+MDT | **`statfs`** | `statfs` | `samples`
+MDT, OST | **`sync`** | `sync` | `samples`
+MDT | **`samedir_rename`** | `rename` | `samples` (Count of files are renamed within the same directory.)
+MDT | **`crossdir_rename`** | `rename` | `samples` (Count of files are moved to another directory, potentially under a new name.)
+OST | **`read`** | `read` | `samples`
+OST | **`write`** | `write` | `samples`
+OST | **`punch`** | `fallocate` | `samples` (see Appendix \ref{punch-operation} for details)
+OST | **`get_info`** | | `samples`
+OST | **`set_info`** | | `samples`
+OST | **`quotactl`** | `quotactl` | `samples`
+OST | **`read_bytes`** | `read` | `sum` (sum of return values from `read`)
+OST | **`write_bytes`** | `write` | `sum` (sum of return values from `write`)
 
-: \label{tab:mdt-operations}
-We have the following metadata operations performed on MDSs.
-
-
-Operation | System call | Parsed statistics
----|--|------
-**`read`** | `read` | `samples`
-**`write`** | `write` | `samples`
-**`getattr`** | | `samples`
-**`setattr`** | | `samples`
-**`punch`** | `fallocate` | `samples` (see Appendix \ref{punch-operation} for details)
-**`sync`** | `sync` | `samples`
-**`get_info`** | | `samples`
-**`set_info`** | | `samples`
-**`quotactl`** | `quotactl` | `samples`
-**`read_bytes`** | `read` | `sum` (sum of return values from `read`)
-**`write_bytes`** | `write` | `sum` (sum of return values from `write`)
-
-: \label{tab:ost-operations}
-We have the following operations on the object data performed on OSSs.
+: \label{tab:operations}
+We have the following operations on the object data performed on targets.
 
 
 We found that the counters may report more samples for `close` than `open` operations.

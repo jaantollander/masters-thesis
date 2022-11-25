@@ -128,12 +128,3 @@ Slurm groups nodes into *partitions*, which may be overlapping.
 It also maintains a queue of jobs waiting for resources to become available for them to be started.
 Slurm can also perform accounting for resource usage.
 
-
-## Issues with parallel file system
-Issues related to usage of parallel file system are widely known.
-[@tacc-io-guideline]
-
-\textcolor{red}{
-TODO: explain known issues and solutions related to usage of parallel file systems
-}
-

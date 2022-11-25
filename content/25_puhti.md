@@ -2,16 +2,11 @@
 
 # Puhti cluster at CSC
 ## Overview
-*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
-It is owned by the Finnish-state and higher education institutions.
-These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
-
-We focus on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
-[@cscdocs]
-
 \textcolor{red}{
-TODO: expand the discussion
+TODO: what do we cover in this section?
 }
+
+[@cscdocs]
 
 
 ## Hardware configuration
@@ -71,7 +66,6 @@ In CSC systems, users have a *user account* which can belong to one or more *pro
 Projects are used for setting quotas and accounting of computational resources and storage.
 The usage of computational resources is measured using *Billing Units (BU)*.
 Different rates of billing unit usage are set to resources including reserved CPU cores, memory, local disk, and GPUs.
-[@cscdocs]
 
 In Puhti, each user account is associated with a *user* and each project with a *group*.
 We can use user IDs (UID) and group IDs (GID) as identifiers for measuring file system usage in user or group level.

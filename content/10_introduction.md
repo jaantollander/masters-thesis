@@ -5,8 +5,16 @@ In this thesis, we investigate performance issues in a parallel file system of a
 Notably, we examine issues related to file system usage of programs instances run by users, referred as jobs.
 Due to the shared nature of the file system, performance issues can cause noticeable slow-down across the whole cluster, harming all users.
 
-*CSC - IT Center for Science* in Finland has two high-performance computer clusters, *Puhti* and *Mahti*.
+*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
+It is owned by the Finnish-state and higher education institutions.
+These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
+CSC has two high-performance computer clusters, *Puhti* and *Mahti*.
 Specifically, we will explore these issues in *Puhti*, a computer cluster that runs lots of heterogenous, small, medium and large scale jobs from a large number of users.
+We focus on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
+
+\textcolor{red}{
+TODO: expand the discussion
+}
 
 Currently, there's only system-level load monitoring from processor usage and job information from job scheduler without any metrics from the file system usage.
 However, load monitoring can only tell us if problems are occuring, but not identify their causes.
@@ -25,4 +33,15 @@ With active monitoring, system administrator should be able to identify the caus
 It should also reduce the amount of manual work involved.
 
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
+
+Issues related to usage of parallel file system are widely known.
+[@tacc-io-guideline]
+
+\textcolor{red}{
+TODO: explain known issues and solutions related to usage of parallel file systems
+}
+
+\textcolor{red}{
+TODO: describe previous works that used Jobstats for monitoring
+}
 
