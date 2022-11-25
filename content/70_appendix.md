@@ -16,9 +16,39 @@ $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
   One byte is a string of $8$ bits.
 
 
-\clearpage
+# File system interface
 
-# Programming with system call
+System call | Explanation
+:-|:-------
+`mknod` | Creates a new file.
+`open` | Opens a file and returns a file descriptor. It may also create a new file by calling `mknod` if it doesn't exists.
+`close` | Closes a file descriptor which releases the resource from usage.
+`read` | Reads bytes from a file.
+`write` | Writes bytes to a file.
+`link` | Creates a new hard link to an existing file. There can be multiple links to the same file.
+`unlink` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
+`symlink` | Create a symbolic (soft) link to a file.
+`mkdir` | Creates new directory.
+`rmdir` | Removes an empty directory.
+`rename` | Renames a file by moving it to new location.
+`chown` | Change file ownership.
+`chmod` | Change file permissions such as read, write, and execute permissions.
+`utime` | Change file timestamps
+`stat` | Return file information.
+`statfs` | Returns file system information.
+`sync` | Commits file system caches to disk.
+`fallocate` | Manipulates file space.
+`quotactl` | Manipulates disk quotas.
+`setxattr` | Set an extended attribute value
+`getxattr` | Retrieve an extended attribute value
+
+: \label{tab:systemcalls}
+This table lists the system calls for virtual file system.
+For in-depth documentation about system calls, we recommend the Linux Man Pages [@linuxmanpages, sec. 2].
+In Linux, we can use `man 2 <system-call>` command to read the manual page of specific system call.
+
+
+# Programming with system calls
 Next, we present two examples of performing file I/O using system calls.
 Flags and modes are constants that modify the behaviour of an system call.
 The bitwise-or of two modes or flags means that both of them apply.
@@ -76,8 +106,6 @@ This feature supported by certain Linux file systems such as ext4.
 The following code writes `hello hole world` to a `output.txt` file.
 It then deallocate bytes from 5 to 10 such that the file keeps its original size using `fallocate` with mode `FALLOC_FL_PUNCH_HOLE` and `FALLOC_FL_KEEP_HOLE`.
 
-
-\clearpage
 
 # Slurm job scripts
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.

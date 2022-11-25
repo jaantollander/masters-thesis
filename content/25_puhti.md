@@ -2,12 +2,16 @@
 
 # Puhti cluster at CSC
 ## Overview
-<!-- TODO: expand the discussion -->
-
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
 It is owned by the Finnish-state and higher education institutions.
 These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
-We will be focusing on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
+
+We focus on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
+[@cscdocs]
+
+\textcolor{red}{
+TODO: expand the discussion
+}
 
 
 ## Hardware configuration
@@ -79,6 +83,10 @@ File system is separated to *storage areas*.
 Each storage area has a dedicated directory.
 The global, Lustre file system is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
+\textcolor{red}{
+TODO: mention file count quotas
+}
+
 - *home* is intended for storing personal data and configuration files.
 In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB per user.
 
@@ -123,7 +131,8 @@ Partition name | Time limit | Task limit | Node limit | Node type
 : \label{tab:slurm-partitions}
 Slurm partitions on Puhti.
 
-Puhti uses Slurm version 21.08.7 as a worload manager.
+Puhti uses Slurm as a worload manager.
+At the time of writing the version was 21.08.7, but it is updated regularly.
 It has partitions with different resource limits as seen on Table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify in which partition it will run, the project which used for billing, and the resource we wish to reserve.
 Slurm schedules the job to run when sufficient resource are available using a fair share algorithm.

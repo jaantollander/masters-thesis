@@ -13,7 +13,15 @@ It has implications to how much data we accumulate at each observation.
 We regard the observed identifiers as a subset of *all identifiers* which is the set of all possible identifier, depending the chosen identifier scheme.
 
 
-## Rate over an interval
+## Computing rates from counters
+\textcolor{red}{
+TODO: add graphs visualizing the counter and calculated rate over time
+}
+
+\textcolor{red}{
+TODO: improve the way we describe the math
+}
+
 Let $\mathcal{K}$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
 Then, we define $K(t)\subseteq \mathcal{K}$ as the set of *observed identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *observed counter value* at time $t$ for observed identifier $k\in K(t).$
 
@@ -60,8 +68,6 @@ r_k(t^{\prime},t)=\frac{\delta_{k}(t^{\prime},t)}{\tau(t^{\prime}, t)}.
 
 Note that the rate of change is always non-negative given $t > t^{\prime},$ since we have $\tau(t^{\prime}, t) > 0$ and $\delta_{k}(t^{\prime}, t) \ge 0,$ which implies $r_k(t^{\prime}, t) \ge 0.$
 
-
-## Rate over time
 Generally, we can represent the rate of change as a step function over continuous time $t$ with identifier $k\in K$ given a sampling $(t_1, t_2, ..., t_n)$ where $t_1 < t_2 < ... < t_n$ and $n\in\mathbb{N}$ and $K = K(t_1)\cup K(t_2)\cup ... \cup K(t_n)$ as
 
 \begin{equation}

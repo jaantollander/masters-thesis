@@ -64,26 +64,32 @@ TimescaleDB documentation [@timescaledocs] characterizes these properties as:
 There are different options for choosing a time series databases.
 One key differentiation between time series databases is whether they are built to handle fixed or growing amount of distinct time series.
 Since we handle data that has a growing number of distinct time series we chose *TimescaleDB*.
-TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distict time series with its performance suffering drastically.
+TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distict time series without its performance suffering drastically.
 Initially, we used *InfluxDB*, but found out that it did not scale well for our use case.
 
 An instance of time series database consist of one or more *time series tables* with schema as in Table \ref{tab:schema-time-series} and optional *metadata table* with schema as in Table \ref{tab:schema-metadata}.
 A separate metadata table reduces data bloat and makes it easier to alter its schema later.
 We can join the metadata table and time series table during queries.
 
-For the *time series identifier* (`time_series_id`), we can use a *Universally Unique Identifier (UUID)* because it is standardized and has explicit support for namespaces.
-For the *timestamp* (`timestamp`), we should always use datetime with the *Coordinated Universal Time (UTC)* timezone instead of local timezones to avoid problems with having to convert between different timezones.
+For the *time series identifier* (`time_series_id`), we can use a *Universally Unique Identifier (UUID)* which has the benefit of being standardized and has explicit support for namespaces.
+
+For the *timestamp* (`timestamp`), we use datetime with *Coordinated Universal Time (UTC)* timezone instead of local timezones to avoid problems with daylight saving time.
+We recommend datetime instead of Unix epoch, because datetimes are human readable.
 
 The time series table is a *TimescaleDB hypertable* with *indices* for efficient queries, *chunked* by a chosen time interval for improved performance, a *compression policy* to compress data that is older than specified time to reduce storage, and a *retention policy* for dropping data that is older than specified time to limit data accumulation or for privacy and regulatory reasons.
 The metadata table is regular PostgreSQL table.
 
 In our implementation, we stored everything on a single table.
-Ideally, we should use a metadata table and time series tables for MDT and OST data since they mainly contain different fields.
+In future implementations, we should use a separate metadata table and time series tables for MDT and OST data since they mainly contain different fields.
+Also, we could combine the metadata infromation with Slurm job information.
 
 
 ## Monitoring client
-The monitoring client calls the appropriate command (`lctl get_param`) as explained in Section \ref{querying-statistics}, at regular observation intervals to collect statistics.
-The time at which the call was made is the timestamp.
+The monitoring client calls the appropriate command (`lctl get_param`) as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
+In the description that we present here, we used the the time at which the call was made as the timestamp and store the snapshot time as value similar to the statistics.
+In practise, our first version used the call time and second version used the snapshot time as timestamp.
+The downside of using snapshot time as timestamp is that we lose some information about periods where the job does not perform any operations.
+
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and 10-minute cleanup interval.
@@ -122,14 +128,24 @@ For example, if the previous data structure is the first observation, we have:
 ```
 
 Finally, the monitoring client composes a message of the data by listing the individual data structures in a JSON array and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
+Our implementation actually used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
+Due to the scaling problem, we switched to TimescaleDB and suggest using JSON for communication instead.
 
 
 ## Ingest server
 The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them and inserts the data to the database.
 
+In our implementation we did not use a time series identifier.
+Instead we identified different time series as distict tuples of target, nodename, job ID, and user ID.
+For login nodes, which do not have a job ID, we generated synthetic job ID using the executable name and user ID values.
+We also parsed the values on the monitoring clients, rather than in the ingest server.
+However, a time series identifier is easier to use in database queries, reduces ambiguity about how to identify an individual time series and allows separating the metadata and time series data.
+
+For future implementations we should use a time series identifier.
 We can generate the time series identifier as UUID from the concatenated string of target and entry identifier (`<target>:<entry_id>`) with a randomly generated UUID as *namespace* associated with the formatting of the target and entry identifier strings.
 If the formatting changes, we should change the namespace to avoid collision with time series identifiers.
 If the namespace is kept secret, the UUID also anonymizes the metadata values associated with time series data.
+For example, we can generate a namespace as follows:
 
 ```sh
 uuidgen --random
@@ -139,8 +155,9 @@ uuidgen --random
 2e79b8a1-c4fc-45ba-9023-d16fdce6e3fe
 ```
 
+Then, we can generate the time series identifier using the namespace and concatenated string of target and entry identifier.
+
 ```sh
-# --name=<target>:<entry_id>
 uuidgen --sha1 \
     --namespace="2e79b8a1-c4fc-45ba-9023-d16fdce6e3fe" \
     --name="scratch-OST0001:11317854:17627127:r01c01"
@@ -149,7 +166,6 @@ uuidgen --sha1 \
 ```
 af854063-c381-585f-b551-ce0b6c4440a3
 ```
-
 
 Now, we can separate the ingested data into *time series structure* and *metadata structure*.
 We should append the time series structure to the appropriate time series table.
@@ -173,8 +189,8 @@ We need to parse and update metadata only if it does not already exists in the m
   "time_series_id": "af854063-c381-585f-b551-ce0b6c4440a3",
   "target": "scratch-OST0001",
   "entry_id": "11317854:17627127:r01c01",
-  "job": 11317854,
-  "user": 17627127,
+  "job_id": 11317854,
+  "user_id": 17627127,
   "nodename": "r01c01",
   "executable": null
 }

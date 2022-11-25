@@ -68,37 +68,8 @@ In this work, we focus on the storage file system I/O.
 
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
-The interface contains the file system-specific system calls.
-We present and explain the common system calls for the file system interface in the Table \ref{tab:systemcalls}.
-
-System call | Explanation
-:-|:-------
-`mknod` | Creates a new file.
-`open` | Opens a file and returns a file descriptor. It may also create a new file by calling `mknod` if it doesn't exists.
-`close` | Closes a file descriptor which releases the resource from usage.
-`read` | Reads bytes from a file.
-`write` | Writes bytes to a file.
-`link` | Creates a new hard link to an existing file. There can be multiple links to the same file.
-`unlink` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
-`symlink` | Create a symbolic (soft) link to a file.
-`mkdir` | Creates new directory.
-`rmdir` | Removes an empty directory.
-`rename` | Renames a file by moving it to new location.
-`chown` | Change file ownership.
-`chmod` | Change file permissions such as read, write, and execute permissions.
-`utime` | Change file timestamps
-`stat` | Return file information.
-`statfs` | Returns file system information.
-`sync` | Commits file system caches to disk.
-`fallocate` | Manipulates file space.
-`quotactl` | Manipulates disk quotas.
-`setxattr` | Set an extended attribute value
-`getxattr` | Retrieve an extended attribute value
-
-: \label{tab:systemcalls}
-This table lists the system calls for virtual file system.
-For in-depth documentation about system calls, we recommend the Linux Man Pages [@linuxmanpages, sec. 2].
-In Linux, we can use `man 2 <system-call>` command to read the manual page of specific system call.
+The interface contains the file system-specific system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
+We have listed some of the common system calls for the file system interface in the Appendix \ref{file-system-interface} and programming examples in Appendix \ref{programming-with-system-calls}.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
@@ -159,6 +130,10 @@ Slurm can also perform accounting for resource usage.
 
 
 ## Issues with parallel file system
+Issues related to usage of parallel file system are widely known.
 [@tacc-io-guideline]
 
+\textcolor{red}{
+TODO: explain known issues and solutions related to usage of parallel file systems
+}
 

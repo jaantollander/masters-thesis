@@ -9,11 +9,14 @@ We explain these in the context of the Puhti cluster described in Section \ref{p
 
 Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
 
-TODO: *describe previous works that used Jobstats for monitoring*
+\textcolor{red}{
+TODO: describe previous works that used Jobstats for monitoring
+}
 
 
-## Setting identifier format for entries
-We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter as explained in the *Lustre Manual* [@lustredocs, sec. 12.2].
+## Entry identifier format
+We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the *Lustre Manual* [@lustredocs, sec. 12.2].
+We can configure each Lustre client separately and specify different configurations for different clients.
 We can use the following format codes.
 
 - `%e` for *executable name*.
@@ -27,25 +30,24 @@ We can use the following format codes.
 The formatting effects the resolution of the statistics.
 Using more formatting codes results in higher resolution but also leads to higher rate of data accumulatation.
 
-We have set the entry identifier to include *Slurm Job ID*, User ID and nodename.
-It is used for compute and utility nodes.
+For Lustre client on login nodes, the formatting includes the *Executable name* and User ID.
+
+```
+jobid_name="%e.%u"
+```
+
+For Lustre client on compute and utility nodes, the formatting includes *Slurm Job ID*, User ID and nodename.
 
 ```
 jobid_name="%j:%u:%H"
 jobid_var=SLURM_JOB_ID
 ```
 
-The default formatting string includes the *Executable name* and User ID.
-It is used for login nodes..
-
-```
-jobid_name="%e.%u"
-```
-
-We did not record the Group ID, but it could also be useful for identifying if members of a particular group perform problematic file I/O patterns.
+We can use the Slurm job ID to retrieve Slurm job information such as project and partition.
+For example, the project could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
 
 
-## Querying statistics
+## Operations and statistics
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running `lctl get_param` command with an argument that points to the desired jobstats.
 
@@ -103,7 +105,6 @@ job_stats:
 
 The *target* (`<target>`) contains the mount point and name of Lustre target of the query.
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>` and eight OSSs with three OSTs each, named `scratch-OST<index>`.
-<!-- TODO: explain the `scratch-` prefix -->
 The `<index>` is four digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
 Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
@@ -114,24 +115,20 @@ The value of snapshot time is a timestamp as a Unix epoch when the statistics of
 *Unix epoch* is the standard way of representing time in Unix systems.
 It measures time as the number of seconds that has elapsed since 00:00:00 UTC on 1 January 1970, exluding leap seconds.
 
-Next, we explain the file operations and statistics.
-
-
-## File operations and statistics
 Tables \ref{tab:mdt-operations} and \ref{tab:ost-operations} list the operations and corresponding system calls counted by Jobstats for MDTs and OSTs.
 We have omitted some rarely encountered operations from the tables.
-Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets.
+Each operation (`<operation>`) contains line of statistics (`<statistics>`) which are formatted as key-value pairs separated by commas and enclosed within curly brackets:
 
 ```text
     { samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
 ```
 
-The `samples` field counts how many operations the job has requested since the counter was started.
+The samples (`samples`) field counts how many operations the job has requested since the counter was started.
 The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
 These fields contain nonnegative integer values.
-The `samples`, `sum`, and `sumsq` values increase monotonically.
+The samples, sum, and sum of squares increase monotonically unless reset.
 Units (`<unit>`) are either request (`reqs`), bytes (`bytes`) or microseconds (`usecs`).
-Statistics of an entry that has not performed any operations yet are implicitly zero.
+Statistics of an entry that has not performed any operations are implicitly zero.
 
 
 Operation | System call | Parsed statistics
@@ -214,7 +211,7 @@ Examples of various observed entry identifiers on compute nodes.
 We refer to colon (`:`) as *separator*.
 
 Unfortunately, we found two separate issues with the entry identifiers on the Puhti system.
-That is, did not conform to the format described in Section \ref{setting-identifier-format-for-entries}.
+That is, did not conform to the format described in Section \ref{entry-identifier-format}.
 
 The first type of issue is missing Job ID values in some entries from normal user in compute nodes even thought the Slurm job identifier is set.
 It might be related to some issues in fetching the value of the environment variable.
@@ -232,7 +229,9 @@ The reliability of the counter data does not seem to be affected by this issue.
 
 Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we found.
 
-<!-- TODO: add plot of counted job ids in respect to time -->
+\textcolor{red}{
+TODO: add plot of counted job ids in respect to time
+}
 
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
