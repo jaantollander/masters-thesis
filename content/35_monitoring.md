@@ -95,7 +95,7 @@ Smaller observation interval increases the resolution but also increase the rate
 We used a 2-minute observation interval and 10-minute cleanup interval.
 
 Monitoring client parses the target and all entries from the output.
-For all entries, it creates a data structure with the timestamp, target, and parsed entry identifier, snapshot time and statistics listed on Tables \ref{tab:mdt-operations} and \ref{tab:ost-operations}.
+For all entries, it creates a data structure with the timestamp, target, and parsed entry identifier, snapshot time and statistics listed on Table \ref{tab:operations}.
 An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
 
 ```json

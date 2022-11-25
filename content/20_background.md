@@ -69,6 +69,7 @@ In this work, we focus on the storage file system I/O.
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
+For in-depth documentation about system calls, we recommend the Linux Man Pages [@linuxmanpages, sec. 2]
 We have listed some of the common system calls for the file system interface in the Appendix \ref{file-system-interface} and programming examples in Appendix \ref{programming-with-system-calls}.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
