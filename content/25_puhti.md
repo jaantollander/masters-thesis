@@ -29,7 +29,10 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Compute* | *GPU* | 80 | 384 | 3600
 
 : \label{tab:puhti-nodes}
-Nodes counts by type and category on the Puhti cluster.
+All nodes on the Puhti cluster by category and type.
+For service nodes, they node type associates them with their function in the cluster.
+For compute nodes, the node types associate them with the amount of computing resources they have.
+The node count tells us how many nodes there are of the given node type.
 
 The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen on the Table \ref{tab:puhti-nodes}.
 The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to login to the system and MDS and OSS nodes for the Lustre file system.
@@ -125,6 +128,8 @@ Partition name | Time limit | Task limit | Node limit | Node type
 
 : \label{tab:slurm-partitions}
 Slurm partitions on Puhti.
+Each partition has a name and is associated with resources limits and set of node types from Table \ref{tab:puhti-nodes}.
+Typically, memory and local storage limits are the same as for the node type.
 
 Puhti uses Slurm as a worload manager.
 At the time of writing the version was 21.08.7, but it is updated regularly.

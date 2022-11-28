@@ -29,14 +29,14 @@ Using more formatting codes results in higher resolution but also leads to highe
 For Lustre client on login nodes, the formatting includes the *Executable name* and User ID.
 
 ```
-jobid_name="%e.%u"
+    jobid_name="%e.%u"
 ```
 
 For Lustre client on compute and utility nodes, the formatting includes *Slurm Job ID*, User ID and nodename.
 
 ```
-jobid_name="%j:%u:%H"
-jobid_var=SLURM_JOB_ID
+    jobid_name="%j:%u:%H"
+    jobid_var=SLURM_JOB_ID
 ```
 
 We can use the Slurm job ID to retrieve Slurm job information such as project and partition.
@@ -52,24 +52,24 @@ We can fetch the counters and print them in a text format by running `lctl get_p
 We can query jobstats from MDS as follows:
 
 ```sh
-lctl get_param mdt.<target>.jobstats
+    lctl get_param mdt.<target>.jobstats
 ```
 
 The text output is formatted as follows.
 
 ```text
-mdt.<target>.job_stats=
-job_stats:
-- job_id: <entry_id_1>
-  snapshot_time: <snapshot_time_1>
-  <operation_1>: <statistics_1>
-  <operation_2>: <statistics_2>
-  ...
-- job_id: <entry_id_2>
-  snapshot_time: <snapshot_time_2>
-  <operation_1>: <statistics_1>
-  <operation_2>: <statistics_2>
-  ...
+    mdt.<target>.job_stats=
+    job_stats:
+    - job_id: <entry_id_1>
+      snapshot_time: <snapshot_time_1>
+      <operation_1>: <statistics_1>
+      <operation_2>: <statistics_2>
+      ...
+    - job_id: <entry_id_2>
+      snapshot_time: <snapshot_time_2>
+      <operation_1>: <statistics_1>
+      <operation_2>: <statistics_2>
+      ...
 ```
 
 ---
@@ -77,24 +77,24 @@ job_stats:
 Similarly, we can query jobstats from OSS as follows:
 
 ```sh
-lctl get_param obdfilter.<target>.jobstats
+    lctl get_param obdfilter.<target>.jobstats
 ```
 
 The text output is also similar.
 
 ```text
-obdfilter.<target>.job_stats=
-job_stats:
-- job_id: <entry_id_1>
-  snapshot_time: <snapshot_time_1>
-  <operation_1>: <statistics_1>
-  <operation_2>: <statistics_2>
-  ...
-- job_id: <entry_id_2>
-  snapshot_time: <snapshot_time_2>
-  <operation_1>: <statistics_1>
-  <operation_2>: <statistics_2>
-  ...
+    obdfilter.<target>.job_stats=
+    job_stats:
+    - job_id: <entry_id_1>
+      snapshot_time: <snapshot_time_1>
+      <operation_1>: <statistics_1>
+      <operation_2>: <statistics_2>
+      ...
+    - job_id: <entry_id_2>
+      snapshot_time: <snapshot_time_2>
+      <operation_1>: <statistics_1>
+      <operation_2>: <statistics_2>
+      ...
 ```
 
 ---
@@ -137,26 +137,30 @@ MDT | **`unlink`** | `unlink` | `samples`
 MDT | **`mkdir`** | `mkdir` | `samples`
 MDT | **`rmdir`** | `rmdir` | `samples`
 MDT | **`rename`** | `rename` | `samples`
-MDT, OST     | **`getattr`** | `stat` | `samples`
+MDT, OST | **`getattr`** | `stat` | `samples`
 MDT, OST | **`setattr`** | `chmod`, `chown`, `utime` | `samples`
 MDT | **`getxattr`** | `getxattr` | `samples`
 MDT | **`setxattr`** | `setxattr` | `samples`
-MDT | **`statfs`** | `statfs` | `samples`
+MDT\textcolor{lightgray}{, OST} | **`statfs`** | `statfs` | `samples`
 MDT, OST | **`sync`** | `sync` | `samples`
 MDT | **`samedir_rename`** | `rename` | `samples`
 MDT | **`crossdir_rename`** | `rename` | `samples`
 OST | **`read`** | `read` | `samples`
 OST | **`write`** | `write` | `samples`
-OST | **`punch`** | `fallocate` | `samples` 
+\textcolor{lightgray}{MDT,} OST | **`punch`** | `fallocate` | `samples` 
 OST | **`get_info`** | | `samples`
 OST | **`set_info`** | | `samples`
 OST | **`quotactl`** | `quotactl` | `samples`
-OST | **`read_bytes`** | `read` | `sum`
-OST | **`write_bytes`** | `write` | `sum`
+\textcolor{lightgray}{MDT,} OST | **`read_bytes`** | `read` | `sum`
+\textcolor{lightgray}{MDT,} OST | **`write_bytes`** | `write` | `sum`
+\textcolor{lightgray}{OST} | **`create`** | 
+\textcolor{lightgray}{OST} | **`destroy`** | 
+\textcolor{lightgray}{OST} | **`prealloc`** | 
 
 : \label{tab:operations}
-We have the following operations on the object data performed on targets.
-For the detils about the **`punch`** operation, see the Appendix \ref{punch-operation}.
+All operations tracked by the Jobstats for each Lustre target.
+For the details about the **`punch`** operation, see the Appendix \ref{punch-operation}.
+The \textcolor{lightgray}{light gray} operation names indicates that the operation field is present in the output, but we did not include it our analysis.
 
 
 We found that the counters may report more samples for `close` than `open` operations.
