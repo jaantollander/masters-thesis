@@ -75,7 +75,7 @@ We have listed some of the common system calls for the file system interface in 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
 Linux systems have one special user, called the *super user* or *root user*, which has the privileges to access everything on the system.
-The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance. [@tlpi, secs. 2-3]
+The super user is used by *system administrators* for administrative tasks such as installing or removing software and system maintenance.
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
@@ -84,7 +84,8 @@ The *client* requests a server to perform some service by sending a message.
 The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
 The client and server may reside in the same host computer or separate host computers connected by a network.
 They communicate with each other by some Interprocess Communication (IPC) mechanism.
-"Typically, the client application interacts with a user, while the server application provides access to some shared resource. Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process." [@tlpi, sec. 2]
+Usually, the client application interacts with a user, while the server application provides access to a shared resource.
+Commonly, there are multiple instances of client processes communicating with one or a few instances of the server process.
 
 
 ## Lustre parallel file system
