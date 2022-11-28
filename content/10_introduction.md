@@ -14,18 +14,13 @@ The authors of [@tacc-io-guideline] discuss common issues related to heavy file 
 Problematic practices include using many small files instead of a few large files, too many files in a single directory, inappropriate striping, suboptimal file I/O patterns such as opening and closing the same file multiple times, performing unnecessary file I/O, and accessing the same file from multiple processes simultaneously.
 They provide solutions for the problematic practices drawn from practical experience in operating systems at the *Texas Advanced Computing Center (TACC)*.
 
-Regarding the previous work in monitoring and analyzing file system statistics, the authors of [@paul2020_1] collected system-level usage statistics of how different jobs performed file system operations from two clusters in *Lawrence Livermore National Laboratory (LLNL)* from two over year-long periods.
+Previous work in monitoring and analyzing file system statistics exists.
+For example, the authors of [@paul2020_1] collected and analyzed usage statistics of file system operations from two clusters in *Lawrence Livermore National Laboratory (LLNL)* over a long period to obtain insight for improving storage design.
 
 Regarding developing and improving the performance of parallel file systems, the authors of [@paul2020_2] ...
 
-*CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
-It is owned by the Finnish-state and higher education institutions.
-These services include access to high-performance computing, cloud computing and data storage, as well as, training and technical support for using them.
-CSC has two high-performance computer clusters, *Puhti* and *Mahti*.
-Specifically, we will explore these issues in *Puhti*, a computer cluster that runs lots of heterogenous, small, medium and large scale jobs from a large number of users.
-We focus on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
-
-TODO: reference to Section \ref{puhti-cluster-at-csc}
+To study the file system monitoring in practice, we deploy our monitoring system on the *Puhti* cluster at CSC and collect and analyze statistics.
+We cover the configuration of the Puhti cluster in Section \ref{puhti-cluster-at-csc}.
 
 Currently, there's only system-level load monitoring from processor usage and job information from job scheduler without any metrics from the file system usage.
 However, load monitoring can only tell us if problems occur but not identify their causes.
