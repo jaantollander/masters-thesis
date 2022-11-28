@@ -1,16 +1,22 @@
 \newpage
 
 # Introduction
-In this thesis, we investigate performance issues in a parallel file system of a computer cluster.
-Notably, we examine issues related to usage of the parallel file system of programs instances run by users, usually referred as jobs.
-Due to the shared nature of the file system, performance issues can cause noticeable slow-down across the whole cluster, harming all users.
+File storage is an essential part of any computing system for persistent data storage.
+Many large-scale computing systems, such as computer clusters, rely on a global, shared, parallel file system for large amounts of storage capacity and bandwidth.
+This file system is available for all users on the whole system, making it user-friendly but prone to problems from heavy use or misuse.
+Furthermore, these problems can noticeably slow down the whole system, harming all users, not just the users responsible for it.
+In this thesis, we investigate if file system monitoring can effectively identify the causes of these issues and the users responsible for them in the *Lustre* parallel file system.
 
-Issues related to usage of parallel file system are widely known.
-[@tacc-io-guideline; @paul2020_1; @paul2020_2]
+TODO: reference to Section \ref{high-performance-computing}
 
-\textcolor{red}{
-TODO: explain known issues and solutions related to usage of parallel file systems and previous work in file system monitoring
-}
+Previous work exists regarding issues and solutions for performing heavy file I/O on a Lustre file system.
+The authors of [@tacc-io-guideline] discuss common issues related to heavy file I/O on a parallel file system, various novel tools designed to solve problems caused by heavy file I/O, and provide general guidelines for avoiding problems.
+Problematic practices include using many small files instead of a few large files, too many files in a single directory, inappropriate striping, suboptimal file I/O patterns such as opening and closing the same file multiple times, performing unnecessary file I/O, and accessing the same file from multiple processes simultaneously.
+They provide solutions for the problematic practices drawn from practical experience in operating systems at the *Texas Advanced Computing Center (TACC)*.
+
+Regarding the previous work in monitoring and analyzing file system statistics, the authors of [@paul2020_1] collected system-level usage statistics of how different jobs performed file system operations from two clusters in *Lawrence Livermore National Laboratory (LLNL)* from two over year-long periods.
+
+Regarding developing and improving the performance of parallel file systems, the authors of [@paul2020_2] ...
 
 *CSC - The IT Center for Science* provides ICT services for higher education institutions, research institutes, culture, public administration and enterprises.
 It is owned by the Finnish-state and higher education institutions.
@@ -19,9 +25,11 @@ CSC has two high-performance computer clusters, *Puhti* and *Mahti*.
 Specifically, we will explore these issues in *Puhti*, a computer cluster that runs lots of heterogenous, small, medium and large scale jobs from a large number of users.
 We focus on the *Puhti* cluster, explains its structure and the issues related the usage of the Lustre file system.
 
+TODO: reference to Section \ref{puhti-cluster-at-csc}
+
 Currently, there's only system-level load monitoring from processor usage and job information from job scheduler without any metrics from the file system usage.
-However, load monitoring can only tell us if problems are occuring, but not identify their causes.
-To identify the causes we need specific metrics of the file system usage.
+However, load monitoring can only tell us if problems occur but not identify their causes.
+To identify the causes, we need specific metrics of the file system usage.
 
 The software that controls the file system keeps statistics of file system operations performed by different jobs.
 We can query these statistics at regular intervals to obtain the file system metrics as a time series.
@@ -30,10 +38,14 @@ Furthermore, we aim to develop tools for monitoring and analyzing the cluster's 
 Our goal is to create active monitoring and near real-time warning systems to identify users whose programs use the file system in a problematic way.
 We believe that real-time monitoring will provide valuable information for improving the usability and throughput of the system.
 
+TODO: reference to Section \ref{monitoring-system} and \ref{analyzing-statistics}
+
 Currently, when file system issues emerge, administrators have to determine the reason manually.
 In many cases, the problem disappears before they have identified the actual cause.
-With active monitoring, system administrator should be able to identify the causes and take action as the issues occur, not afterwards.
+With active monitoring, system administrators should be able to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
+
+TODO: reference to Section \ref{results}
 
