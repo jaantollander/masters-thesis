@@ -14,10 +14,17 @@ Problematic practices include using many small files instead of a few large file
 They provide solutions for the problematic practices drawn from practical experience in operating systems at the *Texas Advanced Computing Center (TACC)*.
 
 Previous work in monitoring and analyzing file system statistics exists.
+The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and existing tools.
+
 The authors of [@understanding-io-behaviour] collected and analyzed usage statistics of file system usage from two clusters in *Lawrence Livermore National Laboratory (LLNL)* to obtain insight for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
 
+Other computing centers have also employed file system monitoring such as the *Oak Ridge Leadership Computing Facility (OLFC)* [@lustre-job-stats-metric-aggregation] and *National Computational Instrastructure (NCI)* [@fine-grained-file-system-monitoring].
+*Aalto Scientific Computing* uses commercial product called *View for ClusterStor* created by *Cray Inc* [@view-for-clusterstor].
+
 Regarding developing and improving the performance of parallel file systems, the authors of [@efficient-metadata-indexing] ...
+
+[@year-in-life-of-parallel-file-system]
 
 In practice, we monitor the file system usage on the *Puhti* cluster at *CSC*, whose configuration we cover in Section \ref{puhti-cluster-at-csc}.
 Currently, there's only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
