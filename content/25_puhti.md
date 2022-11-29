@@ -2,12 +2,9 @@
 
 # Puhti cluster at CSC
 ## Overview
-*CSC -- The IT Center for Science* provides ICT services, including high-performance computing, cloud computing, data storage, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-[@docs-csc]
-
-\textcolor{red}{
-TODO: what do we cover in this section?
-}
+This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
+Puhti is a Finnish noun that means having energy.
+*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 
 
 ## Hardware configuration
@@ -41,6 +38,7 @@ Each login and compute node consists of two *Intel Xeon Gold 6230* CPUs with 20 
 In addition to CPUs, each GPU node has four *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
 We give compute nodes types based on how much memory (RAM) and *fast local storage* they contain, and whether they contains GPUs.
 Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volative Memory Express (NVMe)* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
+[@docs-csc]
 
 The global storage on Puhti consists of a Lustre file system, version 2.12.6 from *DataDirect Networks (DDN)*, that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
 Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.

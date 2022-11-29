@@ -19,19 +19,22 @@ The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a
 The authors of [@understanding-io-behaviour] collected and analyzed usage statistics of file system usage from two clusters in *Lawrence Livermore National Laboratory (LLNL)* to obtain insight for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
 
-Other computing centers have also employed file system monitoring such as the *Oak Ridge Leadership Computing Facility (OLFC)* [@lustre-job-stats-metric-aggregation] and *National Computational Instrastructure (NCI)* [@fine-grained-file-system-monitoring].
-*Aalto Scientific Computing* uses commercial product called *View for ClusterStor* created by *Cray Inc* [@view-for-clusterstor].
+Other computing centers have also employed file system usage monitoring.
+For example, the *Oak Ridge Leadership Computing Facility (OLFC)* [@lustre-job-stats-metric-aggregation] and *National Computational Infrastructure (NCI)* [@fine-grained-file-system-monitoring] have collected job statistics from Lustre.
+Discussions with the admins of the *Aalto Scientific Computing* revealed that they use a commercial product called *View for ClusterStor* by *Cray Inc* [@view-for-clusterstor] for collecting Lustre job statistics.
 
-Regarding developing and improving the performance of parallel file systems, the authors of [@efficient-metadata-indexing] ...
+There is also another commercial product from *DataDirect Networks (DDN)* called *DDN Insight* [@ddn-insight].
 
-[@year-in-life-of-parallel-file-system]
+Regarding developing and improving the performance of parallel file systems.
+
+TODO: [@efficient-metadata-indexing], [@year-in-life-of-parallel-file-system]
 
 In practice, we monitor the file system usage on the *Puhti* cluster at *CSC*, whose configuration we cover in Section \ref{puhti-cluster-at-csc}.
 Currently, there's only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
 However, load monitoring only tells us if problems occur but do not identify their causes.
 The file system usage metrics should help us identify the causes.
-Currently, when file system issues emerge, administrators have to determine the reason manually.
-In many cases, the problem disappears before they have identified the actual cause.
+When file system issues emerge, administrators have to determine the reason manually.
+However, the problem often disappears before they have identified the actual cause.
 With active monitoring, system administrators should be able to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
@@ -40,7 +43,7 @@ We can query these statistics at regular intervals to obtain time series data, w
 Our objective is to obtain insights and understand the causes of issues from these metrics using data visualization and analysis techniques.
 Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
 Our goal is to create active monitoring and near real-time warning systems to identify users whose programs cause problems in the file system.
-We believe that real-time monitoring will provide valuable information for improving the usability and throughput of the system.
+Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
 We describe our monitoring system in Section \ref{monitoring-system} and how we analyze the statistics into metrics in Section \ref{analyzing-statistics}.
 
 <!--
