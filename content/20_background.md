@@ -49,7 +49,7 @@ This is also an important reason for studying storage in HPC systems.
 ## Linux operating system
 An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
 At the time of writing, practically all high-performance computer clusters use the *Linux operating system* [@osfam].
-The *Linux kernel* [@linuxkernel] is the core of the Linux operating system and is written in the *C programming language*.
+The *Linux kernel* [@linux-kernel-source] is the core of the Linux operating system and is written in the *C programming language*.
 It derives from the original *UNIX operating system* and closely follows the *POSIX standard*.
 For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
 
@@ -69,7 +69,7 @@ In this work, we focus on the storage file system I/O.
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
 The interface contains the file system-specific system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
-For in-depth documentation about system calls, we recommend the Linux Man Pages [@linuxmanpages, sec. 2]
+For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2]
 We have listed some of the common system calls for the file system interface in the Appendix \ref{file-system-interface} and programming examples in Appendix \ref{programming-with-system-calls}.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
@@ -94,7 +94,7 @@ It stores data on multiple networked servers to facilitate high performance acce
 *Lustre* is a parallel file system which provides a POSIX standard-compliant file system interface for Linux clusters.
 The Lustre file system is a *kernel module* designed using the client-server architecture.
 Kernel module is a software that extends the kernel, in this case, to provide a new file system.
-[@lustre-storage-architecture; @lustredocs, secs. 1-2]
+[@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 
 Nodes running the Lustre client software are known as *Lustre Clients*
 The Lustre client software provides an interface between the Linux virtual file system and *Lustre servers*.
@@ -119,7 +119,7 @@ The programs may instantiate an interactive or a batch process.
 A batch process is a computation that runs from start to finish without user interaction compared to an interactive processes such as an active terminal prompt or a text editor which respond to user input.
 We must specify the resources we request and limits for them.
 
-*Slurm* is a workload manager for Linux clusters [@slurmdocs].
+*Slurm* is a workload manager for Linux clusters [@docs-slurm].
 Unlike Lustre, Slurm operates in the user-space, not in the kernel space.
 These computing resources include nodes, cores, memory, and time.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.

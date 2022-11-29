@@ -3,7 +3,7 @@
 # Puhti cluster at CSC
 ## Overview
 *CSC -- The IT Center for Science* provides ICT services, including high-performance computing, cloud computing, data storage, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-[@cscdocs]
+[@docs-csc]
 
 \textcolor{red}{
 TODO: what do we cover in this section?

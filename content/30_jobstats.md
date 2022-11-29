@@ -11,7 +11,7 @@ Due to the issues we found, we recommend experimenting with the settings, record
 
 
 ## Entry identifier format
-We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the *Lustre Manual* [@lustredocs, sec. 12.2].
+We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the *Lustre Manual* [@docs-lustre, sec. 12.2].
 We can configure each Lustre client separately and specify different configurations for different clients.
 We can use the following format codes.
 

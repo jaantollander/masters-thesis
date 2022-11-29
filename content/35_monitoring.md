@@ -55,7 +55,7 @@ Field | Type | Value
 
 We can use a *time series database* to efficiently store and handle time series data from multiple distinct time series.
 *Time series data* has distinctive properties that allow optimizations for storing and querying them.
-TimescaleDB documentation [@timescaledocs] characterizes these properties as:
+TimescaleDB documentation [@docs-timescale] characterizes these properties as:
 
 1) *time-centric* meaning that records always have a timestamp.
 2) *append-only* meaning that we almost always append new records and rarely update existing data or backfill missing data about old intervals.

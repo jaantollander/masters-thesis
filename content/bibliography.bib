@@ -1,4 +1,4 @@
-@manual{cscdocs,
+@manual{docs-csc,
     url={https://docs.csc.fi/},
     title={Docs CSC},
     author={},
@@ -6,16 +6,25 @@
     year={2022},
 }
 
-@manual{lustredocs,
+@manual{docs-lustre,
     url={https://doc.lustre.org/lustre_manual.xhtml},
     title={Lustre* Software Release 2.X: Operations Manual},
     author={},
-    organization={lustre.org},
+    organization={Lustre},
     year={2022},
     month={June},
 }
 
-@manual{timescaledocs,
+@manual{lustre-monitoring-guide,
+    url={https://wiki.lustre.org/Lustre_Monitoring_and_Statistics_Guide},
+    title={Lustre Monitoring and Statistic Guide},
+    author={},
+    organization={Lustre},
+    year={2022},
+    month={October},
+}
+
+@manual{docs-timescale,
     url={https://docs.timescale.com/},
     title={TimescaleDB documentation},
     author={},
@@ -23,7 +32,7 @@
     year={2022},
 }
 
-@manual{linuxmanpages,
+@manual{man-pages,
     url={https://www.kernel.org/doc/man-pages/},
     title={The Linux man-pages project},
     author={Kerrisk, Michael},
@@ -41,14 +50,14 @@
     url={https://man7.org/tlpi/},
 }
 
-@manual{slurmdocs,
+@manual{docs-slurm,
     url={https://slurm.schedmd.com/},
     title={Slurm Workload Manager},
     organization={SchedMD},
     year={2022},
 }
 
-@online{linuxkernel,
+@online{linux-kernel-source,
     url={https://github.com/torvalds/linux},
     title={Linux kernel source tree},
     author={Linux Torvals and others},
@@ -66,58 +75,44 @@
     year={2022},
 }
 
-@online{definition-computercluster,
-    url={https://www.suse.com/suse-defines/definition/computer-cluster/},
-    title={Definition - Computer Cluster},
-    organization={SUSE},
-    year={2022},
-}
-
-@online{definition-hpc,
-    url={https://www.suse.com/suse-defines/definition/high-performance-computing/},
-    title={Definition - High-Performance Computing},
-    organization={SUSE},
-    year={2022},
-}
-
 @inproceedings{tacc-io-guideline,
-author = {Liu, Si and Huang, Lei and Liu, Hang and Ruhela, Amit and Trueheart, Virginia and Lindsey, Susan and Yuan, Quan},
-title = {Practice Guideline for Heavy I/O Workloads with Lustre File Systems on TACC Supercomputers},
-year = {2021},
-isbn = {9781450382922},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3437359.3465570},
-doi = {10.1145/3437359.3465570},
-booktitle = {Practice and Experience in Advanced Research Computing},
-articleno = {5},
-numpages = {8},
-keywords = {User support, Parallel I/O, Best practice, Lustre, Supercomputers, MDS, OSS, Input/Output},
-location = {Boston, MA, USA},
-series = {PEARC '21}
+    author={Liu, Si and Huang, Lei and Liu, Hang and Ruhela, Amit and Trueheart, Virginia and Lindsey, Susan and Yuan, Quan},
+    title={Practice Guideline for Heavy I/O Workloads with Lustre File Systems on TACC Supercomputers},
+    year={2021},
+    isbn={9781450382922},
+    publisher={Association for Computing Machinery},
+    address={New York, NY, USA},
+    url={https://doi.org/10.1145/3437359.3465570},
+    doi={10.1145/3437359.3465570},
+    booktitle={Practice and Experience in Advanced Research Computing},
+    articleno={5},
+    numpages={8},
+    keywords={User support, Parallel I/O, Best practice, Lustre, Supercomputers, MDS, OSS, Input/Output},
+    location={Boston, MA, USA},
+    series={PEARC '21}
 }
 
 @article{lustre-storage-architecture,
-  author    = {Peter Braam},
-  title     = {The Lustre Storage Architecture},
-  journal   = {CoRR},
-  volume    = {abs/1903.01955},
-  year      = {2019},
-  url       = {http://arxiv.org/abs/1903.01955},
-  eprinttype = {arXiv},
-  eprint    = {1903.01955},
+    author={Peter Braam},
+    title={The Lustre Storage Architecture},
+    journal={CoRR},
+    volume={abs/1903.01955},
+    year={2019},
+    url={http://arxiv.org/abs/1903.01955},
+    eprinttype={arXiv},
+    eprint={1903.01955},
 }
 
 @book{parallel-and-high-performance-computing,
-  title={Parallel and High Performance Computing},
-  author={Robey, Robert and Zamora, Yuliana},
-  isbn={9781617296468},
-  url={https://www.manning.com/books/parallel-and-high-performance-computing},
-  year={2021},
-  publisher={Manning}
+    title={Parallel and High Performance Computing},
+    author={Robey, Robert and Zamora, Yuliana},
+    isbn={9781617296468},
+    url={https://www.manning.com/books/parallel-and-high-performance-computing},
+    year={2021},
+    publisher={Manning}
 }
 
-@INPROCEEDINGS{paul2020_1,
+@inproceedings{understanding-io-behaviour,
     author={Paul, Arnab K. and Faaland, Olaf and Moody, Adam and Gonsiorowski, Elsa and Mohror, Kathryn and Butt, Ali R.},
     booktitle={2020 IEEE 27th International Conference on High Performance Computing, Data, and Analytics (HiPC)}, 
     title={Understanding HPC Application I/O Behavior Using System Level Statistics}, 
@@ -128,7 +123,7 @@ series = {PEARC '21}
     doi={10.1109/HiPC50609.2020.00034}
 }
 
-@INPROCEEDINGS{paul2020_2,
+@inproceedings{efficient-metadata-indexing,
     author={Paul, Arnab K. and Wang, Brian and Rutman, Nathan and Spitz, Cory and Butt, Ali R.},
     booktitle={2020 20th IEEE/ACM International Symposium on Cluster, Cloud and Internet Computing (CCGRID)},
     title={Efficient Metadata Indexing for HPC Storage Systems},

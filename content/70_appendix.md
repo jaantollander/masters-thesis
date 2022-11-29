@@ -44,7 +44,7 @@ System call | Explanation
 
 : \label{tab:systemcalls}
 This table lists the system calls for virtual file system.
-For in-depth documentation about system calls, we recommend the Linux Man Pages [@linuxmanpages, sec. 2].
+For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2].
 In Linux, we can use `man 2 <system-call>` command to read the manual page of specific system call.
 
 
