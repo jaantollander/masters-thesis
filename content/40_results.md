@@ -36,7 +36,6 @@ The second type of issue is that some entry identifiers were malformed.
 We cannot reliably parse Job ID, User ID, and Nodename information from these entry identifiers.
 This issue occured only in OSSs.
 We believe that this issue is related to lack of thread-safety in some of the functions that produce the entry identifier strings.
-[@jobid-atomic]
 
 As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
 As we cannot use these entries in the analysis, we have to discard them and we lose some data.

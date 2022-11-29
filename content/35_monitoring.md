@@ -29,7 +29,7 @@ This approach simplifies the monitoring system, and we can easily interpolate th
 We can also use a variable interval length if we need.
 
 As an author's note, my advisor was responsible for programming and installing these programs.
-We adapted the program code from a GPU monitoring program written in the Go language using InfluxDB as a database.
+We adapted the program code from a GPU monitoring program written in the Go language using InfluxDB [@influxdb] as a database.
 We take the precise design of programs as given and explain them only at a high level.
 
 
