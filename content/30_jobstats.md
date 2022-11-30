@@ -161,6 +161,8 @@ OST | **`quotactl`** | `quotactl` | `samples`
 
 : \label{tab:operations}
 All operations tracked by the Jobstats for each Lustre target.
+We mentioned system calls in Section \ref{linux-operating-system}.
+You can find explanation of relevant system calls in Appendix \ref{file-system-interface}.
 For the details about the **`punch`** operation, see the Appendix \ref{punch-operation}.
 The \textcolor{lightgray}{light gray} operation names indicates that the operation field is present in the output, but we did not include it our analysis.
 
