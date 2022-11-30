@@ -2,31 +2,33 @@
 
 # Introduction
 File storage is an essential part of any computing system for persistent data storage.
-Many large-scale computing systems, such as computer clusters, rely on a global, shared, parallel file system for large amounts of storage capacity and bandwidth.
+Many high-performance computer clusters rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 This file system is available for all users on the whole system, making it user-friendly but prone to problems from heavy use or misuse.
 Furthermore, these problems can noticeably slow down the whole system, harming all users, not just the users responsible for the problem.
-In this thesis, we investigate if file system monitoring can effectively identify the causes of these issues and the users responsible for them in the *Lustre* parallel file system.
-We give a general overview of high-performance computing, including computer clusters and the Lustre file system, in Section \ref{high-performance-computing}.
+In this thesis, we investigate if file system usage monitoring can help identify the causes of these issues and the users responsible for them.
 
-Previous work exists regarding issues and solutions for performing heavy file I/O on a Lustre file system.
+Previous work exists regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
+
 The authors of [@tacc-io-guideline] discuss common issues related to heavy file I/O on a parallel file system, various novel tools designed to solve problems caused by heavy file I/O, and provide general guidelines for avoiding problems.
 Problematic practices include using many small files instead of a few large files, too many files in a single directory, inappropriate striping, suboptimal file I/O patterns such as opening and closing the same file multiple times, performing unnecessary file I/O, and accessing the same file from multiple processes simultaneously.
 They provide solutions for the problematic practices drawn from practical experience in operating systems at the *Texas Advanced Computing Center (TACC)*.
 
-TODO: [@year-in-life-of-parallel-file-system], year of measurements, TOKIO framework
+The authors of [@year-in-life-of-parallel-file-system] present used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters at *National Energy Research Scientific Computing Center (NERCS)* and *Argonne Leadership Computing Facility (ALCF)*  for over a year.
+They applied statistical methods and time series analysis to identify variations in long and short-term performance trends from the data.
+Their work provides excellent insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them.
+They show that short transient issues differ from long persistent ones and that the baseline performance changes over time.
+They also mention that we can monitor on different levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system.
 
-Previous work in monitoring and analyzing file system statistics exists.
-The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing the data.
-
-The authors of [@understanding-io-behaviour] collected and analyzed usage statistics of file system usage from two clusters in *Lawrence Livermore National Laboratory (LLNL)* to obtain insights for improving storage design.
+The authors of [@understanding-io-behaviour] collected and analyzed statistics of file system usage from two clusters in *Lawrence Livermore National Laboratory (LLNL)* to obtain insights for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
 
-Other computing centers have also employed file system usage monitoring.
-For example, the *Oak Ridge Leadership Computing Facility (OLFC)* [@lustre-job-stats-metric-aggregation] and *National Computational Infrastructure (NCI)* [@fine-grained-file-system-monitoring] have used the Lustre job statistics monitoring.
-A discussion with the admins of the *Aalto Scientific Computing* revealed that they use a commercial product, the *View for ClusterStor* from *Cray Inc* [@view-for-clusterstor], for collecting Lustre job statistics.
-Another commercial product for monitoring Lustre job statistics is *DDN Insight* [@ddn-insight] from *DataDirect Networks (DDN)*.
+Other computing centers have also employed file system usage monitoring, such as the *Oak Ridge Leadership Computing Facility (OLFC)* [@lustre-job-stats-metric-aggregation] and *National Computational Infrastructure (NCI)* [@fine-grained-file-system-monitoring].
+A discussion with the admins of the *Aalto Scientific Computing* revealed that they use a commercial product, the *View for ClusterStor* from *Cray Inc* [@view-for-clusterstor], for monitoring.
+Another commercial product for monitoring is *DDN Insight* [@ddn-insight] from *DataDirect Networks (DDN)*.
 
 Regarding developing and improving the performance of parallel file systems, [@efficient-metadata-indexing] presents improvements for indexing and querying performance.
+
+We give a general overview of high-performance computing, including computer clusters and the Lustre file system, in Section \ref{high-performance-computing}.
 
 In practice, we monitor the file system usage on the *Puhti* cluster at *CSC*, whose configuration we cover in Section \ref{puhti-cluster-at-csc}.
 Currently, there's only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
