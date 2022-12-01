@@ -14,7 +14,7 @@ We regard the observed identifiers as a subset of *all identifiers* which is the
 
 
 ## Computing rates from counters
-![\ref{fig:counter-rate}](figures/counter-rate.svg)
+![\label{fig:counter-rate}](figures/counter-rate.svg)
 
 \textcolor{red}{
 TODO: add graphs visualizing the counter and calculated rate over time
