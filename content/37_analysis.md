@@ -14,11 +14,11 @@ We regard the observed identifiers as a subset of *all identifiers* which is the
 
 
 ## Computing rates from counters
-![\label{fig:counter-rate}](figures/counter-rate.svg)
-
-\textcolor{red}{
-TODO: add graphs visualizing the counter and calculated rate over time
-}
+![
+The upper graph shows a sampling $t_{1},t_{2},...,t_{9}$ of a counter value $v_{k}(t)$ seen in Equation \eqref{eq:counter-value} and the lower graph show the computed rate $r_{k}(t)$ seen in Equation \eqref{eq:rate-general}.
+The graphs also show the relationship between the observation interval, counter increment, individual rate and how to recover the counter increment with an integral.
+\label{fig:counter-rate}
+](figures/counter-rate.svg)
 
 \textcolor{red}{
 TODO: improve the way we describe the math
@@ -34,8 +34,8 @@ Formally, we have
 \begin{equation}
 v_{k}(t)=
 \begin{cases}
-c_k(t), & k\in K(t) \\
-0, & k\notin K(t) \\
+c_k(t), & \text{if } k\in K(t) \\
+0, & \text{if } k\notin K(t) \\
 \end{cases}.
 \label{eq:counter-value}
 \end{equation}
@@ -55,8 +55,8 @@ Combined, we can define the *counter increment* during the interval as
 \begin{equation}
 \delta_{k}(t^{\prime},t) = 
 \begin{cases}
-v_{k}(t) - v_{k}(t^{\prime}), & v_{k}(t) \ge v_{k}(t^{\prime}) \\
-v_{k}(t), & v_{k}(t) < v_{k}(t^{\prime})
+v_{k}(t) - v_{k}(t^{\prime}), & \text{if } v_{k}(t) \ge v_{k}(t^{\prime}) \\
+v_{k}(t), & \text{if } v_{k}(t) < v_{k}(t^{\prime})
 \end{cases}.
 \label{eq:counter-increment}
 \end{equation}
@@ -74,7 +74,7 @@ Generally, we can represent the rate of change as a step function over continuou
 
 \begin{equation}
 r_k(t)=\begin{cases}
-r_k(t_{i-1}, t_{i}), & t_{i-1} < t \le t_{i},\quad \forall i\in\{2,...,n\} \\
+r_k(t_{i-1}, t_{i}), & \text{if } t_{i-1} < t \le t_{i},\quad \forall i\in\{2,...,n\} \\
 0 & \text{otherwise}
 \end{cases}.
 \label{eq:rate-general}
@@ -123,7 +123,7 @@ We define a function which indicates if the logarithmic value of $x\in\mathbb{R}
 
 \begin{equation}
 \mathbf{1}_{b,y}(x)=\begin{cases}
-1, & b^y \le x < b^{y+1} \\
+1, & \text{if } b^y \le x < b^{y+1} \\
 0, & \text{otherwise} \\
 \end{cases}.
 \label{eq:indicator-function}
