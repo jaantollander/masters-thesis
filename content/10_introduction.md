@@ -38,15 +38,15 @@ Finally, we present our result in Section \ref{results}.
 Next, we have a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
 We start with a highly relevant paper [@tacc-io-guideline] from *Texas Advanced Computing Center (TACC)*.
 Its authors discuss common issues related to heavy file I/O on a parallel file system, various novel tools designed to solve or alleviate the problems, and provide general guidelines for avoiding them.
-In Table 2, they list problematic practices such as:
+In Table 2, they list problematic practices and solutions such as:
 
 * Using many small files instead of a few large files.
-* Having too many files in a single directory instead of using subdirectories.
-* Not striping large files.
-* Performing suboptimal file I/O patterns, such as repeatedly opening and closing the same file.
-* Performing high-frequency file I/O instead of using memory.
-* Accessing the same file from multiple processes simultaneously.
-* Overlooking I/O patterns workloads.
+* Having too many files in a single directory instead of using subdirectories or local temporary storage.
+* Not striping large files; we should stripe large files.
+* Performing suboptimal file I/O patterns, such as repeatedly opening and closing the same file, which we should avoid.
+* Performing high-frequency file I/O instead of keeping data in memory or limiting the I/O frequency.
+* Accessing the same file from multiple processes simultaneously instead of creating copies of the file or using parallel I/O libraries.
+* Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
 We have found similar problems in the Puhti cluster.
 
