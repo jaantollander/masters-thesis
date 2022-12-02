@@ -1,9 +1,14 @@
 \newpage
 
 # Results
+## Overview
 \textcolor{red}{
 TODO: add plots and explanation here
 }
+
+The sheer volume and complexity of data makes representation challenging.
+We attempt to pick visualization that best represent interesting features from the data.
+
 
 ## Issues with entry identifiers
 
@@ -43,15 +48,13 @@ The reliability of the counter data does not seem to be affected by this issue.
 
 Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we found.
 
-\textcolor{red}{
-TODO: add plot of counted job ids in respect to time
-}
+![OSS, user](figures/entry_ids.svg)
 
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
--|user|login|55077|24.19
 slurm|user|compute|145590|63.93
 -|user|compute|21037|9.24
+-|user|login|55077|24.19
 -|user|utility|6012|2.64
 ||||227716
 
@@ -60,9 +63,9 @@ MDS, user
 
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
--|system|login|6132|4.81
 slurm|system|compute|36909|28.98
 -|system|compute|84275|66.17
+-|system|login|6132|4.81
 -|system|utility|45|0.04
 ||||127361
 
@@ -71,9 +74,9 @@ MDS system
 
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
--|user|login|271561|16.85
 slurm|user|compute|1126289|69.88
 -|user|compute|187101|11.61
+-|user|login|271561|16.85
 -|user|utility|9674|0.60
 slurm|user|compute (q)|2655|0.16
 -|user|compute (q)|43|<0.01
@@ -88,9 +91,9 @@ OSS, user
 
 Job ID | User ID | Nodename | Count | Ratio
 :-:|:-:|:-:|-:|-:|-:|-:
--|system|login|10074|1.61
 slurm|system|compute|2003|0.32
 -|system|compute|610189|97.70
+-|system|login|10074|1.61
 -|system|utility|1519|0.24
 slurm|system|compute (q)|0|0
 -|system|compute (q)|237|0.04
@@ -109,4 +112,16 @@ In the tables, dash *-* indicates missing value, *system* is User ID reserved fo
 
 Apart from the broken identifiers, we see lot of entries for with system user ID.
 These entries increase data bloat and generally don't add that much useful information.
+
+
+## Measured rates from Lustre targets
+![](figures/total_compute_ost_read.svg)
+![](figures/total_compute_ost_write.svg)
+![](figures/total_compute_ost_punch.svg)
+
+1) TODO: total rate per operation
+2) TODO: total rates per target
+3) TODO: density of rates
+4) TODO: rate of an individual job
+
 

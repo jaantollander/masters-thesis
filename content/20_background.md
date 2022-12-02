@@ -119,7 +119,7 @@ The programs may instantiate an interactive or a batch process.
 A batch process is a computation that runs from start to finish without user interaction compared to an interactive processes such as an active terminal prompt or a text editor which respond to user input.
 We must specify the resources we request and limits for them.
 
-*Slurm* is a workload manager for Linux clusters [@docs-slurm].
+*Slurm* is a workload manager for Linux clusters [@slurm; @docs-slurm].
 Unlike Lustre, Slurm operates in the user-space, not in the kernel space.
 These computing resources include nodes, cores, memory, and time.
 The access to the resources may be exclusive or nonexclusive, depending on the configuration.
