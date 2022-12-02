@@ -15,8 +15,10 @@ We regard the observed identifiers as a subset of *all identifiers* which is the
 
 ## Computing rates from counters
 ![
-The upper graph shows a sampling $t_{1},t_{2},...,t_{9}$ of a counter value $v_{k}(t)$ seen in Equation \eqref{eq:counter-value} and the lower graph show the computed rate $r_{k}(t)$ seen in Equation \eqref{eq:rate-general}.
-The graphs also show the relationship between the observation interval, counter increment, individual rate and how to recover the counter increment with an integral.
+The upper graph shows a sampling of a counter values $v_{k}(t)$ from Equation \eqref{eq:counter-value} with timestamps $t_{1},t_{2},...,t_{9}.$
+The lower graph show the computed rate $r_{k}(t)$ as described in Equation \eqref{eq:rate-general}.
+The graphs also show the observation interval $\tau(t_4,t_5)$ from Equation \eqref{eq:observation-interval}, counter increment $\delta_{k}(t_4,t_5)$ from Equation \eqref{eq:counter-increment}, and individual rate $r_{k}(t_4,t_5)$ from Equation \eqref{eq:rate}
+The red box demonstrates the relationship $\delta(t_4,t_5)=r(t_4,t_5)\cdot\tau(t_4,t_5),$ which recovers the counter increment with a definitive integral, seen in Equation \eqref{eq:rate-integral}.
 \label{fig:counter-rate}
 ](figures/counter-rate.svg)
 
