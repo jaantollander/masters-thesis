@@ -36,7 +36,7 @@ Finally, we present our result in Section \ref{results}.
 
 <!-- related work -->
 Next, we have a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
-We start with a highly relevant paper [@tacc-io-guideline] from *Texas Advanced Computing Center (TACC)*.
+We start with a highly relevant paper [@tacc-io-guideline] from Texas Advanced Computing Center (TACC).
 Its authors discuss common issues related to heavy file I/O on a parallel file system, various novel tools designed to solve or alleviate the problems, and provide general guidelines for avoiding them.
 In Table 2, they list problematic practices and solutions such as:
 
@@ -50,18 +50,18 @@ In Table 2, they list problematic practices and solutions such as:
 
 We have found similar problems in the Puhti cluster.
 
-In another paper [@year-in-life-of-parallel-file-system], the authors used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters at *National Energy Research Scientific Computing Center (NERCS)* and *Argonne Leadership Computing Facility (ALCF)*  for over a year.
+In another paper [@year-in-life-of-parallel-file-system], the authors used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters at National Energy Research Scientific Computing Center (NERCS) and Argonne Leadership Computing Facility (ALCF)  for over a year.
 They applied statistical methods and time series analysis to identify variations in long and short-term performance trends from the data.
 Their work provides excellent insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them.
 They show that short transient issues differ from long persistent ones and that the baseline performance changes over time.
 They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system.
 
-In a study [@understanding-io-behaviour] conducted by *Lawrence Livermore National Laboratory (LLNL)*,  the authors collected and analyzed statistics of file system usage from two clusters to obtain insights for improving storage design.
+In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL),  the authors collected and analyzed statistics of file system usage from two clusters to obtain insights for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
-Other computing centers, such as the *Oak Ridge Leadership Computing Facility (OLFC)*  and *National Computational Infrastructure (NCI)*,
+Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC)  and National Computational Infrastructure (NCI),
 have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
-A discussion with the admins of the *Aalto Scientific Computing* revealed that they use a commercial product, the *View for ClusterStor* from *Cray Inc* [@view-for-clusterstor], for monitoring.
-Another commercial product for monitoring is *DDN Insight* [@ddn-insight] from *DataDirect Networks (DDN)*.
+A discussion with the admins of the Aalto Scientific Computing revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
+Another commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
 There is also a body of research into developing and improving the performance of parallel file systems.
 For example, the paper [@efficient-metadata-indexing] presents performance improvements for indexing and querying.

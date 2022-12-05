@@ -114,14 +114,24 @@ Apart from the broken identifiers, we see lot of entries for with system user ID
 These entries increase data bloat and generally don't add that much useful information.
 
 
-## Measured rates from Lustre targets
-![](figures/total_compute_ost_read.svg)
-![](figures/total_compute_ost_write.svg)
-![](figures/total_compute_ost_punch.svg)
+## Rate of an individual job
+TODO:
 
-1) TODO: total rate per operation
-2) TODO: total rates per target
-3) TODO: density of rates
-4) TODO: rate of an individual job
+## Total rates of all targets per operation
+![](figures/2022-10-27_mdt_compute_open.svg)
 
+![](figures/2022-10-27_mdt_compute_close.svg)
+
+![](figures/2022-10-27_ost_compute_read.svg)
+
+![](figures/2022-10-27_ost_compute_write.svg)
+
+![](figures/2022-10-27_ost_compute_punch.svg)
+
+## Total rate and densities of aggregates per target
+![](figures/2022-10-27_ost0001_compute_read.svg)
+
+![](figures/2022-10-27_ost0001_compute_write.svg)
+
+![](figures/2022-10-27_ost0001_compute_quotactl.svg)
 
