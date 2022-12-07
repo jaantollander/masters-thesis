@@ -7,6 +7,8 @@ This file system is available across the whole system, making it user-friendly b
 Furthermore, these problems can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of these issues and the users responsible for them.
 
+TODO: reorder, start with the big picture, I/O intensive work, where we are going, from general to specific, figure to introduction (monitoring, parallel file system)
+
 We experiment with the file system usage monitoring on the *Puhti* cluster at *CSC*.
 Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
 However, load monitoring only tells us if file system problems occur but do not identify their causes.
@@ -26,13 +28,6 @@ Real-time monitoring should provide valuable information for improving the usabi
 <!--
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
 -->
-
-<!-- outline -->
-In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and related software.
-Section \ref{puhti-cluster-at-csc} covers the configuration of the Puhti cluster.
-In Section \ref{collecting-usage-statistics-with-lustre-jobstats}, we explain how we collect file system usage statistics with Lustre Jobstats.
-We describe our monitoring system in Section \ref{monitoring-system} and how we analyze the statistics in Section \ref{analyzing-statistics}.
-Finally, we present our result in Section \ref{results}.
 
 <!-- related work -->
 Next, we have a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
@@ -61,9 +56,18 @@ Their methods included analyzing general I/O share and read versus write pattern
 Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC)  and National Computational Infrastructure (NCI),
 have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
 A discussion with the admins of the Aalto Scientific Computing revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
-Another commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
+Another example of a commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
 There is also a body of research into developing and improving the performance of parallel file systems.
 For example, the paper [@efficient-metadata-indexing] presents performance improvements for indexing and querying.
 
 TODO: add couple more references
+
+<!-- outline -->
+The thesis is structured as follows.
+In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and related software.
+Section \ref{puhti-cluster-at-csc} covers the configuration of the Puhti cluster.
+In Section \ref{collecting-usage-statistics-with-lustre-jobstats}, we explain how we collect file system usage statistics with Lustre Jobstats.
+We describe our monitoring system in Section \ref{monitoring-system} and how we analyze the statistics in Section \ref{analyzing-statistics}.
+Finally, we present our result in Section \ref{results}.
+

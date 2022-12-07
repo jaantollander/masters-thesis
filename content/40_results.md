@@ -114,8 +114,9 @@ Apart from the broken identifiers, we see lot of entries for with system user ID
 These entries increase data bloat and generally don't add that much useful information.
 
 
-## Rate of an individual job
+## Rates of a job
 TODO:
+
 
 ## Total rates of all targets per operation
 ![](figures/2022-10-27_mdt_compute_open.svg)
@@ -127,6 +128,7 @@ TODO:
 ![](figures/2022-10-27_ost_compute_write.svg)
 
 ![](figures/2022-10-27_ost_compute_punch.svg)
+
 
 ## Total rate and densities of aggregates per target
 ![](figures/2022-10-27_ost0001_compute_read.svg)

@@ -1,7 +1,9 @@
 \newpage
 
-# Collecting usage statistics with Lustre Jobstats
+# File system usage statistics
 ## Overview
+TODO: improve overview
+
 We described the architecture of the Lustre parallel file system in Section \ref{lustre-parallel-file-system}.
 Now, we focus on enabling the monitoring in Lustre with Jobstats, covering important settings for Jobstats, the kinds of statistics it tracks, how to query them, and the format of the query output.
 We also explain issues we encountered using the Jobstats, such as missing and broken identifiers.

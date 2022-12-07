@@ -85,6 +85,8 @@ Also, we could combine the metadata infromation with Slurm job information.
 
 
 ## Monitoring client
+TODO: parsing with Regex
+
 The monitoring client calls the appropriate command (`lctl get_param`) as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
 In the description that we present here, we used the the time at which the call was made as the timestamp and store the snapshot time as value similar to the statistics.
 In practise, our first version used the call time and second version used the snapshot time as timestamp.

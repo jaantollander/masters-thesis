@@ -4,8 +4,7 @@
 ## Overview
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
 Puhti is a Finnish noun that means having energy.
-*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-[@about-csc]
+*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland [@about-csc].
 
 
 ## Hardware configuration

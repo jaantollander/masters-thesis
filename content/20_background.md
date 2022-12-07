@@ -2,6 +2,8 @@
 
 # High-performance computing
 ## Overview
+TODO: computation centric vs I/O centric HPC
+
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
 For example, first applicable rule at a time or multiple rules at once.
@@ -34,12 +36,16 @@ Examples of commercial and research applications of HPC include:
 We can connect multiple computers together to form a computer network.
 We refer to the individual computers in the network as *nodes*.
 Most *HPC systems* are computer clusters.
-*Computer cluster* is a computer network that uses high-speed fiber optic cables between network switches to connect large amounts of homogenous nodes to form a more powerful system.
-It usually has a large amount of storage memory as well.
+*Computer cluster* is a computer network that uses high-speed network to connect large amounts of homogenous nodes to form a more powerful system.
+It usually has a large amount of storage as well.
 Computer clusters are usually centrally managed by an organization such as a company or university.
 They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services and maintain them.
 The organizations may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, and processors requested.
 A cluster may also be built for internal use in the organization.
+
+\textcolor{red}{
+TODO: add references TOP500 and I/O 500, maybe to introduction? what is I/O 500?
+}
 
 The performance of HPC system is traditionally measured in standard linear algebra operations per second and focused on processor and working memory.
 However, the storage is becoming increasingly important with data science and machine learning which require huge amounts of data that must be transported between storage and working memory.
@@ -79,6 +85,8 @@ The super user is used by *system administrators* for administrative tasks such 
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and a graphical user interface.
 
+
+## Client-server application
 A *client-server application* is an application that is broken into two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
 The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
@@ -103,7 +111,7 @@ Lustre file system separates file metadata and data operations and handles them 
 Each server is connected to one or more storage units called *Lustre targets*.
 
 *Metadata Servers (MDS)* provide access to file metadata and handle metadata operations for Lustre clients.
-The metadata, such as filenames, directories, permissions, and file layout, is stored on *Metadata Targets (MDT)*, which are storage units attached to an MDS.
+The metadata, such as filenames, permissions, and file layout, is stored on *Metadata Targets (MDT)*, which are storage units attached to an MDS.
 On the other hand, *Object Storage Servers (OSS)* provide access to and handle file data operations for Lustre clients.
 The file data is stored in one or more objects, each object on a separate *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
 Finally, the *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
