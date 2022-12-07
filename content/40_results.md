@@ -125,7 +125,11 @@ TODO:
 
 ![](figures/2022-10-27_ost_compute_read.svg)
 
+![](figures/2022-10-27_ost_compute_readbytes.svg)
+
 ![](figures/2022-10-27_ost_compute_write.svg)
+
+![](figures/2022-10-27_ost_compute_writebytes.svg)
 
 ![](figures/2022-10-27_ost_compute_punch.svg)
 
