@@ -47,9 +47,14 @@ A cluster may also be built for internal use in the organization.
 TODO: add references TOP500 and I/O 500, maybe to introduction? what is I/O 500?
 }
 
-The performance of HPC system is traditionally measured in standard linear algebra operations per second and focused on processor and working memory.
+The performance of HPC system is traditionally measured in standard linear algebra operations per second and focused on processor and working memory [@performance_linear_algebra; @linpack_benchmark].
+Ranking is maintained on the TOP500 list [@top_500].
+
 However, the storage is becoming increasingly important with data science and machine learning which require huge amounts of data that must be transported between storage and working memory.
 This is also an important reason for studying storage in HPC systems.
+[@io_500_benchmark]
+
+Ranking on IO500 list [@io_500].
 
 
 ## Linux operating system
