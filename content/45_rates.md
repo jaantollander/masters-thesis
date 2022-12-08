@@ -1,33 +1,32 @@
-## Rates of a job
-![](figures/2022-10-27_ost_job_write_1.svg)
+## Counters and rates of a job
+Counters and rates of an individual job from computes nodes to OSTs.
 
-![](figures/2022-10-27_ost_job_write_2.svg)
+![Steady rate with periodic counter resets. Saw-tooth pattern.](figures/2022-10-27_ost_job_write_1.svg)
 
-![](figures/2022-10-27_ost_job_write_3.svg)
+![Steady rate, monotonically increasing counter.](figures/2022-10-27_ost_job_write_2.svg)
 
-![](figures/2022-10-27_ost_job_write_4.svg)
+![Fluctuating rate.](figures/2022-10-27_ost_job_write_3.svg)
 
+
+\clearpage
 
 ## Total rates of all targets per operation
-![](figures/2022-10-27_mdt_compute_open.svg)
 
-![](figures/2022-10-27_mdt_compute_close.svg)
+![Total open and close rates from compute nodes to each MDT during 2022-10-27.](figures/2022-10-27_mdt_compute_open-close.svg)
 
-![](figures/2022-10-27_ost_compute_read.svg)
+![hello](figures/2022-10-27_ost_compute_read-write.svg)
 
-![](figures/2022-10-27_ost_compute_readbytes.svg)
+![hello](figures/2022-10-27_ost_compute_readbytes-writebytes.svg)
 
-![](figures/2022-10-27_ost_compute_write.svg)
+![hello](figures/2022-10-27_ost_compute_punch.svg)
 
-![](figures/2022-10-27_ost_compute_writebytes.svg)
 
-![](figures/2022-10-27_ost_compute_punch.svg)
-
+\clearpage
 
 ## Total rate and densities of aggregates per target
-![](figures/2022-10-27_ost0001_compute_read.svg)
+![hello](figures/2022-10-27_ost0001_compute_read.svg)
 
-![](figures/2022-10-27_ost0001_compute_write.svg)
+![hello](figures/2022-10-27_ost0001_compute_write.svg)
 
-![](figures/2022-10-27_ost0001_compute_quotactl.svg)
+![hello](figures/2022-10-27_ost0001_compute_quotactl.svg)
 
