@@ -171,7 +171,7 @@ MDT | **`unlink`** | `unlink` | `samples`
 MDT | **`mkdir`** | `mkdir` | `samples`
 MDT | **`rmdir`** | `rmdir` | `samples`
 MDT | **`rename`** | `rename` | `samples`
-MDT, OST | **`getattr`** | `stat` | `samples`
+MDT\textcolor{lightgray}{, OST} | **`getattr`** | `stat` | `samples`
 MDT, OST | **`setattr`** | `chmod`, `chown`, `utime` | `samples`
 MDT | **`getxattr`** | `getxattr` | `samples`
 MDT | **`setxattr`** | `setxattr` | `samples`
