@@ -28,18 +28,24 @@ The lower graph reveals a fluctuating rate.
 
 ## Total rates
 This section shows the total rates from all compute nodes to each target for each measured operation, listed in Table \ref{tab:operations}.
-Please note that we use a logarithmic scale due to large variations in the magnitude of the rates.
 We show the total rates during 24 hours of 2022-10-27 for MDTs in Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2} and \ref{fig:total-mdt-3}, and for OSTs in Figures \ref{fig:total-ost-1} and \ref{fig:total-ost-2}.
+The MDT figures show that only one or two of four MDTs are usually actively handling operations.
+On the contrary, all 24 OSTs handle operations.
+The interesting features in the figures are the variation of rates across time and between targets.
+For example, significant differences between the rates of two OSTs indicate that the load is not balanced.
+A problematic I/O pattern or insufficient file striping might cause the imbalance.
+File striping means Lustre segments the file data into multiple OSTs instead of storing all the data in a single OST.
+Please note that we use a logarithmic scale due to large variations in the magnitude of the rates.
 
-![\label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
+![Total rates of open, close, mknod, and unlink operations from all compute nodes to each MDT. \label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
 
-![\label{fig:total-mdt-2}](figures/2022-10-27_mdt_compute_2.svg)
+![Total rates of link, getattr, setattr, getxattr, and setxattr operations from all compute nodes to each MDT. \label{fig:total-mdt-2}](figures/2022-10-27_mdt_compute_2.svg)
 
-![\label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
+![Total rates of rename, mkdir, rmdir, sync, and statfs operations from all compute nodes to each MDT. \label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
 
-![\label{fig:total-ost-1}](figures/2022-10-27_ost_compute_1.svg)
+![Total rates of read, write, readbytes, writebytes, and punch operations from all compute nodes to each OST. \label{fig:total-ost-1}](figures/2022-10-27_ost_compute_1.svg)
 
-![\label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
+![Total rates of setinfo, getinfo, setattr, quotactl, and sync operations from all compute nodes to each OST. \label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
 
 
 \clearpage
