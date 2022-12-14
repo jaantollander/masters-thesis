@@ -37,12 +37,12 @@ The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
 Each login and compute node consists of two *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 In addition to CPUs, each GPU node has four *Nvidia Volta V100* GPUs and each GPU has 36 GiB of GPU memory.
 We give compute nodes types based on how much memory (RAM) and *fast local storage* they contain, and whether they contains GPUs.
-Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volative Memory Express (NVMe)* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
+Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volatile Memory Express (NVMe)* to perform I/O intensive processes instead of having to rely on the global storage from the Lustre file system.
 [@docs-csc]
 
-The global storage on Puhti consists of a Lustre file system, version 2.12.6 from *DataDirect Networks (DDN)*, that has 2 MDSs and 8 virtualized OSSs with ES18K controller.
-Each MDS has 2 MDTs on each server connected to 20 $\times$ 800 GB NVMe.
-Each OSS has 3 OSTs on each server connected to 704 $\times$ 10 TB SAS HDD.
+The global storage on Puhti consists of a Lustre file system that has 2 MDSs and 8 virtualized OSSs with SFA18KE controller.
+At the time of writing, Puthi has Lustre version 2.12.6 from *DataDirect Networks (DDN)*.
+Each MDS has 2 MDTs connected to 20 $\times$ 800 GB NVMe and each OSS has 3 OSTs connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
 The network configuration is presented on the Figure \ref{fig:puhti-network}.

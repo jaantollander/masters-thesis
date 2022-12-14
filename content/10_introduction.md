@@ -1,33 +1,13 @@
 \newpage
 
 # Introduction
+TODO: reorder, start with the big picture, I/O intensive work, where we are going, from general to specific, figure to introduction (monitoring, parallel file system)
+
 Persistent data storage is an essential part of a computing system.
 Many high-performance computer clusters rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 This file system is available across the whole system, making it user-friendly but prone to problems from heavy use or misuse.
 Furthermore, these problems can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of these issues and the users responsible for them.
-
-TODO: reorder, start with the big picture, I/O intensive work, where we are going, from general to specific, figure to introduction (monitoring, parallel file system)
-
-We experiment with the file system usage monitoring on the *Puhti* cluster at *CSC*.
-Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
-However, load monitoring only tells us if file system problems occur but do not identify their causes.
-Currently, administrators have to determine the causes manually.
-However, the problem often disappears before they have identified the actual cause.
-Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
-It should also reduce the amount of manual work involved.
-
-Puhti uses the Lustre parallel file system.
-We can collect fine-grained statistics on file system usage with Lustre Jobstats, such as how many file operation requests there are for each job and each user from each node to each Lustre target.
-We can query these statistics at regular intervals to obtain time series data, which we can process into file system metrics.
-Our objective is to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
-Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
-Our goal is to create active monitoring and near real-time warning systems to identify users whose programs cause problems in the file system.
-Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
-
-<!--
-Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
--->
 
 <!-- related work -->
 Next, we have a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
@@ -62,6 +42,26 @@ There is also a body of research into developing and improving the performance o
 For example, the paper [@efficient-metadata-indexing] presents performance improvements for indexing and querying.
 
 TODO: add couple more references
+
+We experiment with the file system usage monitoring on the *Puhti* cluster at *CSC*.
+Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
+However, load monitoring only tells us if file system problems occur but do not identify their causes.
+Currently, administrators have to determine the causes manually.
+However, the problem often disappears before they have identified the actual cause.
+Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
+It should also reduce the amount of manual work involved.
+
+Puhti uses the Lustre parallel file system.
+We can collect fine-grained statistics on file system usage with Lustre Jobstats, such as how many file operation requests there are for each job and each user from each node to each Lustre target.
+We can query these statistics at regular intervals to obtain time series data, which we can process into file system metrics.
+Our objective is to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
+Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
+Our goal is to create active monitoring and near real-time warning systems to identify users whose programs cause problems in the file system.
+Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
+
+<!--
+Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
+-->
 
 <!-- outline -->
 The thesis is structured as follows.
