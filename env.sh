@@ -87,7 +87,7 @@ thesis_pdf() {
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$OUT_DIR/index.pdf" \
+        --output "$OUT_DIR/sci_2022_tollander-de-balsch_jaan.pdf" \
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$METADATA_DIR/tex.yaml" \
