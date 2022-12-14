@@ -59,8 +59,7 @@ The middle subplot shows the total rate of each user.
 Apart from the individual spikes, it is difficult to obtain information from the graph as many time series overlap.
 The lower subplot shows the density of the total rates of each user.
 It shows us how many users perform different rates of read operations during each interval, although there is no information about individual time series anymore.
+For example, we can distinguish whether a small number of users perform a large magnitude of operations or a large number of users perform a small magnitude of operations.
+We can obtain information such as time intervals and value ranges to further filter the data.
+An important question is whether we could find them automatically.
 \label{fig:density}](figures/2022-10-27_ost0001_compute_read.svg)
-
-Density plot can show us whether changes in total rate consist of few time series with large magnitude or lots of time series with smaller magnitude.
-We can obtain information for improved queries to the data.
-Obtain filtering conditions for time interval and magnitude of rates, could we find these automatically?
