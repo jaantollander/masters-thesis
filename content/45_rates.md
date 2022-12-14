@@ -51,15 +51,19 @@ Please note that we use a logarithmic scale due to large variations in the magni
 \clearpage
 
 ## Density
-We can use the density of logarithmic values to visually extract meaningful information from large numbers of time series by plotting them as a heatmap.
-A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
-
-![The upper subplot shows the total rate of read operations on OST0001 during 24 hours of 2022-10-27.
-The middle subplot shows the total rate of each user.
-Apart from the individual spikes, it is difficult to obtain information from the graph as many time series overlap.
-The lower subplot shows the density of the total rates of each user.
-It shows us how many users perform different rates of read operations during each interval, although there is no information about individual time series anymore.
-For example, we can distinguish whether a small number of users perform a large magnitude of operations or a large number of users perform a small magnitude of operations.
-We can obtain information such as time intervals and value ranges to further filter the data.
-An important question is whether we could find them automatically.
+![This graph shows read operations on OST0001 during 24 hours of 2022-10-27.
+The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
+We can see that individual users cause spikes in the read rates.
+The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, which corresponds to daytime in Finland (10.00 to 20.00).
+We can perform a similar analysis based on job ID or node name.
 \label{fig:density}](figures/2022-10-27_ost0001_compute_read.svg)
+
+We can use a density plot to extract meaningful information from large numbers of time series visually.
+A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
+We also use a logarithmic scale for the density due to the large variations.
+As shown in Figure \ref{fig:density}, apart from the individual spikes, it is difficult to obtain information from a graph with many time series as they tend to overlap.
+The density is a statistical plot that shows how many time series have a value in a specific range at a particular time. 
+However, it omits information about individual time series.
+It lets us distinguish whether a small number of users perform a large magnitude of operations or a large number of users perform a small magnitude of operations.
+We can also use it to obtain information such as time intervals and value ranges to filter the data further.
+An important question is whether we could obtain such information automatically.
