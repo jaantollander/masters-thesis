@@ -50,8 +50,17 @@ Please note that we use a logarithmic scale due to large variations in the magni
 
 \clearpage
 
-## Total rates and densities
-![hello](figures/2022-10-27_ost0001_compute_read.svg)
+## Density
+We can use the density of logarithmic values to visually extract meaningful information from large numbers of time series by plotting them as a heatmap.
+A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
 
-![hello](figures/2022-10-27_ost0001_compute_write.svg)
+![The upper subplot shows the total rate of read operations on OST0001 during 24 hours of 2022-10-27.
+The middle subplot shows the total rate of each user.
+Apart from the individual spikes, it is difficult to obtain information from the graph as many time series overlap.
+The lower subplot shows the density of the total rates of each user.
+It shows us how many users perform different rates of read operations during each interval, although there is no information about individual time series anymore.
+\label{fig:density}](figures/2022-10-27_ost0001_compute_read.svg)
 
+Density plot can show us whether changes in total rate consist of few time series with large magnitude or lots of time series with smaller magnitude.
+We can obtain information for improved queries to the data.
+Obtain filtering conditions for time interval and magnitude of rates, could we find these automatically?

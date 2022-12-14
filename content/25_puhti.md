@@ -4,7 +4,7 @@
 ## Overview
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
 Puhti is a Finnish noun that means having energy.
-*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland [@about-csc].
+*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, computer networking, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland [@about-csc].
 
 
 ## Hardware configuration
@@ -15,7 +15,7 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Service* | *Login* | 2 | 384 | 2900
 *Service* | *Login-FMI* | 2 | 384 | 2900
 *Service* | *Lustre-MDS* | 2 |   |  
-*Service* | *Lustre-OSS* | 4 |   |  
+*Service* | *Lustre-OSS* | 8 |   |  
 *Compute* | *CPU*, *M* | 484 | 192 | -
 *Compute* | *CPU*, *M-IO* | 48 | 192 | 1490
 *Compute* | *CPU*, *M-FMI* | 240 | 192 | -
