@@ -108,6 +108,8 @@ Finally, the *Management Server (MGS)* stores configuration information for the 
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
 LNet supports many network types, including high-speed networks used in HPC clusters.
 
+TODO: briefly explain Lustre Jobstats
+
 
 ## Slurm workload manager
 Typically, the nodes on a cluster are separated to *frontend* and *backend*.

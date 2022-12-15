@@ -41,7 +41,7 @@ Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Vol
 [@docs-csc]
 
 The global storage on Puhti consists of a Lustre file system that has 2 MDSs and 8 virtualized OSSs with SFA18KE controller.
-At the time of writing, Puthi has Lustre version 2.12.6 from *DataDirect Networks (DDN)*.
+At the time of writing, Puhti has Lustre version 2.12.6 from *DataDirect Networks (DDN)*.
 Each MDS has 2 MDTs connected to 20 $\times$ 800 GB NVMe and each OSS has 3 OSTs connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 

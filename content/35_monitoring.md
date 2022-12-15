@@ -2,13 +2,15 @@
 
 # Monitoring system
 ## Overview
-![Overview of the monitoring system. Rounded rectangles indicate programs, arrows indicates data flow and diamond indicates many-to-one connection. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
+![High-level overview of the monitoring system. Rounded rectangles indicate programs, and arrows indicate data flow. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
 
+In this section, we describe how our monitoring system works in the context of the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.
+We explain how to enable tracking of file system statistics with Lustre Jobstats, cover the important settings, list which statistics it tracks, how to query them, and the format of the output.
 
 We built the monitoring system using the client-server architecture as seen in Figure \ref{fig:monitoring-system}.
-On each Lustre server, a monitoring client collects the usage statistics at regular intervals and sends them to the ingest server.
-The ingest server processes the data from the monitoring clients and inserts it into the time series database.
-Then, we can perform queries on the database or dump data from it and analyze it outside the database.
+On each Lustre server, a *monitoring client* collects the usage statistics from Lustre Jobstats at regular intervals and sends them to the *ingest server*.
+The ingest server processes the data from the monitoring clients and inserts it into the *time series database*.
+Then, we can perform queries on the database or dump a batch of data for analysis.
 Ideally, we would like to perform continuous analytics on the database as new data arrives, but we leave it for future development.
 
 We experienced some problems during the development.
@@ -17,31 +19,23 @@ Because we assumed that all nodenames would follow the short hostname format, we
 The mistake led us to identify two different time series as the same, resulting in wrong values when analyzing the statistics.
 We patch-fixed it by modifying our parser to disambiguate between the two formats.
 However, we lost a fair amount of time and data due to this problem.
+Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
 
 The next problem was related to how we computed rates from counter values, which we describe in Section \ref{analyzing-statistics}.
 Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
 This approach made database queries easier since we used a constant interval, so the differences are proportional to the rates.
-However, we discovered that if a message from the monitoring client to the ingest server is lost, we cannot interpolate the missing value, and the information is lost.
+However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
 Also, the program design is much more complicated if we compute the rates on the monitoring clients.
 
 To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
 This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
 We can also use a variable interval length if we need.
 
-As an author's note, my advisor was responsible for programming and installing these programs.
-We adapted the program code from a GPU monitoring program written in the Go language using InfluxDB [@influxdb] as a database.
+As a note from the author, the thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
+We adapted the program code from a GPU monitoring program written in the Go language, which used InfluxDB [@influxdb] as a database.
 We take the precise design of programs as given and explain them only at a high level.
 
----
-
-We described the architecture of the Lustre parallel file system in Section \ref{lustre-parallel-file-system}.
-Now, we focus on enabling the monitoring in Lustre with Jobstats, covering important settings for Jobstats, the kinds of statistics it tracks, how to query them, and the format of the query output.
-We also explain issues we encountered using the Jobstats, such as missing and broken identifiers.
-We explain these in the context of the Puhti cluster described in Section \ref{puhti-cluster-at-csc}.
-
-Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
-
-The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre.
+<!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
 
 
 ## Entry identifier format
@@ -75,6 +69,8 @@ For Lustre client on compute and utility nodes, the formatting includes *Slurm J
 
 We can use the Slurm job ID to retrieve Slurm job information such as project and partition.
 For example, the project could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
+
+We discuss the issues we had with the entry identifiers in Section \ref{issues-with-entry-identifiers}.
 
 
 ## Operations and statistics
@@ -269,8 +265,6 @@ Also, we could combine the metadata infromation with Slurm job information.
 
 
 ## Monitoring client
-TODO: parsing with Regex
-
 The monitoring client calls the appropriate command (`lctl get_param`) as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
 In the description that we present here, we used the the time at which the call was made as the timestamp and store the snapshot time as value similar to the statistics.
 In practise, our first version used the call time and second version used the snapshot time as timestamp.
@@ -280,7 +274,7 @@ The observation interval should be less than half of the cleanup interval for re
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and 10-minute cleanup interval.
 
-Monitoring client parses the target and all entries from the output.
+Monitoring client parses the target and all entries from the output using *Regular Expressions (Regex)*.
 For all entries, it creates a data structure with the timestamp, target, and parsed entry identifier, snapshot time and statistics listed on Table \ref{tab:operations}.
 An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
 
@@ -321,7 +315,7 @@ Due to the scaling problem, we switched to TimescaleDB and suggest using JSON fo
 ## Ingest server
 The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them and inserts the data to the database.
 
-In our implementation we did not use a time series identifier.
+In our implementation we did not use a time series identifier explicitly.
 Instead we identified different time series as distict tuples of target, nodename, job ID, and user ID.
 For login nodes, which do not have a job ID, we generated synthetic job ID using the executable name and user ID values.
 We also parsed the values on the monitoring clients, rather than in the ingest server.
