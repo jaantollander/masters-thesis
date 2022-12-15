@@ -11,12 +11,21 @@ TODO
 -->
 
 Persistent data storage is an essential part of a computing system.
-Many high-performance computer clusters rely on a global, shared, parallel file system for large storage capacity and bandwidth.
-This file system is available across the entire system, making it user-friendly but prone to problems from heavy use or misuse.
+Many high-performance computing (HPC) systems, typically a computer cluster, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
+This file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
 Furthermore, these problems can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of these issues and the users responsible for them.
 The literature and professionals often refer to file system usage as I/O, an abbreviation for Input/Output.
 Generally, I/O refers to communication between a computer and the outside world, but it is most often used to describe interactions with a storage device.
+
+<!-- moving from computation centric workloads ot I/O centric  workloads -->
+Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
+<!-- A ranking is maintained on the TOP500 list [@top_500]. -->
+However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
+The system must transport this data between memory and storage, making I/O performance essential and problems from heavy I/O more common.
+There are new benchmarks for I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
+<!-- Ranking on IO500 list [@io_500]. -->
+<!-- These are important reasons for studying storage and I/O performance in HPC systems. -->
 
 <!-- related work -->
 We begin with a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.

@@ -2,8 +2,6 @@
 
 # High-performance computing
 ## Overview
-TODO: computation centric vs I/O centric HPC
-
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
 For example, first applicable rule at a time or multiple rules at once.
@@ -42,19 +40,6 @@ Computer clusters are usually centrally managed by an organization such as a com
 They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services and maintain them.
 The organizations may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, and processors requested.
 A cluster may also be built for internal use in the organization.
-
-\textcolor{red}{
-TODO: add references TOP500 and I/O 500, maybe to introduction? what is I/O 500?
-}
-
-The performance of HPC system is traditionally measured in standard linear algebra operations per second and focused on processor and working memory [@performance_linear_algebra; @linpack_benchmark].
-Ranking is maintained on the TOP500 list [@top_500].
-
-However, the storage is becoming increasingly important with data science and machine learning which require huge amounts of data that must be transported between storage and working memory.
-This is also an important reason for studying storage in HPC systems.
-[@io_500_benchmark]
-
-Ranking on IO500 list [@io_500].
 
 
 ## Linux operating system
