@@ -8,13 +8,15 @@
 ## Documents
 Download links for documents from the `build` branch.
 
-- [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/index.pdf)
-- [**EPUB**](https://github.com/jaantollander/masters-thesis/blob/build/index.epub)
+- [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2022_tollander-de-balsch_jaan.pdf)
+- [**EPUB**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2022_tollander-de-balsch_jaan.epub)
 - [**HTML** (standalone)](https://github.com/jaantollander/masters-thesis/blob/build/index.html)
 
 
 ## Usage
-The `env.sh ` file contains script for using Pandoc to convert content into HTML or PDF. It depends on the `pandoc`, `texlive`, `texlive-lang-european` and `inotify-tools` Linux packages. We can use it by sourcing the `env.sh` script.
+The `env.sh ` file contains script for using Pandoc to convert content into HTML or PDF.
+It depends on the `pandoc`, `texlive`, `texlive-lang-european`, `inotify-tools` and `rsvg-convert` Linux packages.
+We can use it by sourcing the `env.sh` script.
 
 ```bash
 source env.sh
