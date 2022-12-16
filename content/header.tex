@@ -13,3 +13,12 @@
 \thesisabstract{TODO}
 \copyrighttext{This work is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) license.}
 {This work is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) license.}
+
+% customization
+\usepackage{subcaption}
+\DeclareCaptionFormat{custom}
+{%
+    \textbf{#1#2} \small{#3}
+}
+\captionsetup{format=custom}
+\captionsetup{width=0.8\textwidth,format=custom}

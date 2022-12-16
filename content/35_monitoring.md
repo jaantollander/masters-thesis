@@ -70,8 +70,6 @@ For Lustre client on compute and utility nodes, the formatting includes *Slurm J
 We can use the Slurm job ID to retrieve Slurm job information such as project and partition.
 For example, the project could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
 
-We discuss the issues we had with the entry identifiers in Section \ref{issues-with-entry-identifiers}.
-
 
 ## Operations and statistics
 Each Lustre server keeps counters for all of its targets.

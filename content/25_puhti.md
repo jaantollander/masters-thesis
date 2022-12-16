@@ -11,11 +11,11 @@ Puhti is a Finnish noun that means having energy.
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
+*Lustre* | *MDS* | 2 |   |  
+*Lustre* | *OSS* | 8 |   |  
 *Service* | *Utility* | 3 | 384 | 2900
 *Service* | *Login* | 2 | 384 | 2900
 *Service* | *Login-FMI* | 2 | 384 | 2900
-*Service* | *Lustre-MDS* | 2 |   |  
-*Service* | *Lustre-OSS* | 8 |   |  
 *Compute* | *CPU*, *M* | 484 | 192 | -
 *Compute* | *CPU*, *M-IO* | 48 | 192 | 1490
 *Compute* | *CPU*, *M-FMI* | 240 | 192 | -
@@ -45,13 +45,17 @@ At the time of writing, Puhti has Lustre version 2.12.6 from *DataDirect Network
 Each MDS has 2 MDTs connected to 20 $\times$ 800 GB NVMe and each OSS has 3 OSTs connected to 704 $\times$ 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
-The network configuration is presented on the Figure \ref{fig:puhti-network}.
+Nodes are connected via a network with a fat-tree topology.
+In the network, each node is connected to all L1 switches, and each L1 switch is connected to all L2 switches.
+The connections use *Mellanox HDR InfiniBand* (100 GB/s IB HDR100).
+The network has a total of 28 L1 switches and 12 L2 switches.
+The Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![
-High-level overview of the network connections in the Puhti cluster.
-Every node is connected to every L1 switch, and every L1 switch is connected to every L2 switch.
-The nodes are connected using *Mellanox HDR InfiniBand* (100 GB/s IB HDR100) to L1 switches which are connected to L2 switches in a *fat-tree* network topology.
-The network has a total of 28 L1 switches and 12 L2 switches.
+Rounded rectangles on the left illustrate compute, utility, and login nodes, whereas the dashed rectangles below are the optional attached local storage.
+Rounded rectangles on the right illustrate the Lustre nodes, where the rectangles below are the appropriate Lustre targets.
+The lines represent the network connections, and the circles represent the network switches.
+Three dots between nodes or switches indicate that there are many of them.
 \label{fig:puhti-network}
 ](figures/puhti-hardware.drawio.svg)
 
@@ -135,7 +139,7 @@ It has partitions with different resource limits as seen on Table \ref{tab:slurm
 When we submit a job to Slurm, we must specify in which partition it will run, the project which used for billing, and the resource we wish to reserve.
 Slurm schedules the job to run when sufficient resource are available using a fair share algorithm.
 It sets different job specific environment variables for each job such that programs can access and use the job information within the process.
-We can use the *Slurm job identifier* (`SLURM_JOB_ID` environment variable) as identifier to collect job specific file operations.
+We can use the *Slurm Job Identifier* (`SLURM_JOB_ID` environment variable) as identifier to collect job specific file operations.
 Slurm also performs accounting of other details about the submitted jobs.
 See examples of Slurm job scripts in the Appendix \ref{slurm-job-scripts}.
 

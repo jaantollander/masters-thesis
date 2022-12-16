@@ -68,7 +68,7 @@ thesis_epub() {
         --citeproc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
-        --output "$OUT_DIR/index.epub" \
+        --output "$OUT_DIR/sci_2022_tollander-de-balsch_jaan.epub" \
         --mathml \
         --metadata "date=$(date -I)" \
         --metadata-file "$METADATA_DIR/epub.yaml" \
@@ -106,7 +106,7 @@ thesis_tex() {
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$OUT_DIR/index.tex" \
+        --output "$OUT_DIR/sci_2022_tollander-de-balsch_jaan.tex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$METADATA_DIR/tex.yaml" \
         --bibliography "$CONTENT_DIR/bibliography.bib" \
@@ -145,6 +145,7 @@ thesis_serve() {
 }
 
 thesis_build() {
+    # NOTE: this method is not perfect, file ignored by .gitignore are deleted
     git stash -u && \
     git checkout  --orphan "build" && \
     thesis_pdf && thesis_epub && thesis_html && thesis_tex && mv "$OUT_DIR"/* . && \
