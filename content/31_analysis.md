@@ -1,7 +1,6 @@
 \newpage
 
 # Analyzing statistics
-## Overview
 In this section, we explain the theory of how to analyze the stream of counter values from Lustre Jobstats into a time series of average rates of change.
 Furthermore, we define operations such as computing sum and logarithmic density for analyzing multiple rates of change, and transforming timestamps for the rates of change.
 We will referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside of the observation intervals such as the initial counter.

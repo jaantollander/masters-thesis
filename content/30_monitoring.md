@@ -1,7 +1,6 @@
 \newpage
 
 # Monitoring system
-## Overview
 ![High-level overview of the monitoring system. Rounded rectangles indicate programs, and arrows indicate data flow. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
 
 In this section, we describe how our monitoring system works in the context of the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.

@@ -1,7 +1,6 @@
 \newpage
 
 # High-performance computing
-## Overview
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
 At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*. 
 For example, first applicable rule at a time or multiple rules at once.

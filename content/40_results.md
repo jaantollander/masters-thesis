@@ -1,7 +1,6 @@
 \newpage
 
 # Results
-## Overview
 TODO: add description and explanation here
 
 The sheer volume and complexity of data makes representation challenging.
@@ -12,68 +11,70 @@ We attempt to pick visualization that best represent interesting features from t
 
 ## Entries and issues
 
-Type | Entry identifier | Notes
--|-----|-----
-0 |`11317854:17627127:r01c01` | Correct format
-1|`:17627127:r01c01` | Job ID missing
-2|`11317854` | job ID field without separator
-2|`11317854:` | job ID field with separator
-2|`113178544` | job ID field with separator at the end is overwritten by a digit
-2|`11317854:17627127` | job ID and user ID fields
-2|`11317854:17627127:` | job ID and uid ID fields ending with a separator
-2|`11317854:17627127:r01c01.bullx` | fully-qualified hostname instead of a short hostname
-2|`:17627127:r01c01.bullx` | job ID field is missing and fully qualified hostname instead of a short hostname
-2|`:1317854:17627127:r01c01` | the first character in job ID overwritten by separator
-2|...| There were many more ways the identifier was broken.
+Format | Observed entry identifier
+-|-
+Correct | `wget.11317854`
+Correct | `11317854:17627127:r01c01`
+Missing job ID | `:17627127:r01c01`
+Malformed | `wget`
+Malformed | `wget.`
+Malformed | `11317854`
+Malformed | `11317854:`
+Malformed | `113178544`
+Malformed | `11317854:17627127`
+Malformed | `11317854:17627127:`
+Malformed | `11317854:17627127:r01c01.bullx`
+Malformed | `:17627127:r01c01.bullx`
+Malformed | `:1317854:17627127:r01c01`
 
 : \label{tab:jobid-examples}
-Examples of various observed entry identifiers on compute nodes.
-We refer to colon (`:`) as *separator*.
+Examples of various observed entry identifiers.
+The examples show correct entry identifiers, identifiers with missing job IDs, and various malformed identifiers.
 
 This section discusses the issues we found with the data quality from Lustre Jobstats on Puhti.
-We found out that some of the observed entry identifiers did not conform to the format on the settings described in Section \ref{entry-identifier-format}.
+We found that some of the observed entry identifiers did not conform to the format on the settings described in Section \ref{entry-identifier-format}.
+Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we observed.
 
-The first type of issue is missing Job ID values in some entries from normal user in compute nodes even thought the Slurm job identifier is set.
-It might be related to some issues in fetching the value of the environment variable.
-This issues occured in both MDSs and OSSs.
-
-The second type of issue is that some entry identifiers were malformed.
-We cannot reliably parse Job ID, User ID, and Nodename information from these entry identifiers.
-This issue occured only in OSSs.
-We believe that this issue is related to lack of thread-safety in some of the functions that produce the entry identifier strings.
-
+The first issue is missing Job ID values.
+A non-system user ID that runs a job on compute nodes has a Slurm Job ID set; thus, the identifier should include it.
+However, we found that there were entries where they were systematically missing.
 As a consequence of these issues, data from the same job might be scattered into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
-As we cannot use these entries in the analysis, we have to discard them and we lose some data.
-The reliability of the counter data does not seem to be affected by this issue.
+The issue might be related to some problems fetching the environment variable's value.
+This issue occurred in both MDSs and OSSs on Puhti.
 
-Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we found.
+The second issue is that there were malformed entry identifiers.
+We believe this issue is related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code base.
+Consequently, we cannot reliably parse information from these entry identifiers, and we had to discard them, which resulted in data loss.
+This issue occurred only in OSSs on Puhti.
+We obtained feasible values for correct entry identifiers, but we cannot be certain if the reliability of the counter values is affected by this issue.
 
 ![
-MDS, user
+Counts of entry identifiers on each MDT from non-system user IDs.
 \label{fig:entry-ids-mds-user}
 ](figures/entry_ids_mds_user.svg)
 
 ![
-MDS, system
+Counts of entry identifiers on each MDT from system user IDs.
 \label{fig:entry-ids-mds-system}
 ](figures/entry_ids_mds_system.svg)
 
 ![
-OSS, user
+Counts of entry identifiers on each OST from non-system or missing user IDs.
 \label{fig:entry-ids-oss-user}
 ](figures/entry_ids_oss_user.svg)
 
 ![
-OSS, system
+Counts of entry identifiers on each OST from system user IDs.
 \label{fig:entry-ids-oss-system}
 ](figures/entry_ids_oss_system.svg)
 
-The Figure \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of different entry identifiers in a sample of 113 consecutive 2-minute intervals from all MDSs and OSSs.
+The Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive 2-minute intervals separated by Lustre server, user ID category (system versus non-system) and entry identifier formatting.
 
-<!-- In the tables, dash *-* indicates missing value, *system* is User ID reserved for ssystem processes, *user* is User ID reverved for user processes, *slurm* is Slurm Job ID, *login* is login Nodename, *compute* is compute Nodename, *utility* is utility Nodename and *compute (q)* is fully-qualified hostname for compute node. -->
+Apart from the previously mentioned issues, we see a lot of entries with system user IDs.
+These entries add much valuable information and thus increase data bloat.
+We should either filter them or find ways to combine them into fewer entries.
 
-Apart from the broken identifiers, we see lot of entries for with system user ID.
-These entries increase data bloat and generally don't add that much useful information.
+
 \clearpage
 
 ## Counters and rates
