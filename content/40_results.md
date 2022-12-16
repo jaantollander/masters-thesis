@@ -43,7 +43,7 @@ The issue might be related to some problems fetching the environment variable's 
 This issue occurred in both MDSs and OSSs on Puhti.
 
 The second issue is that there were malformed entry identifiers.
-We believe this issue is related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code base.
+We think the issue is related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code base.
 Consequently, we cannot reliably parse information from these entry identifiers, and we had to discard them, which resulted in data loss.
 This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we cannot be certain if the reliability of the counter values is affected by this issue.
@@ -59,17 +59,22 @@ Counts of entry identifiers on each MDT from system user IDs.
 ](figures/entry_ids_mds_system.svg)
 
 ![
-Counts of entry identifiers on each OST from non-system or missing user IDs.
+Counts of entry identifiers on each OST from non-system and missing user IDs.
+We see a large spike of malformed identifiers from 12.06 to 12.26.
 \label{fig:entry-ids-oss-user}
 ](figures/entry_ids_oss_user.svg)
 
 ![
 Counts of entry identifiers on each OST from system user IDs.
+We see lots of missing job IDs on system user IDs, likely because the job ID is not set for its environment.
 \label{fig:entry-ids-oss-system}
 ](figures/entry_ids_oss_system.svg)
 
 The Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive 2-minute intervals separated by Lustre server, user ID category (system versus non-system) and entry identifier formatting.
 
+The number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
+We also observe that Jobstats systemically generates malformed identifiers on the OSSs
+In some conditions, it can create many of them.
 Apart from the previously mentioned issues, we see a lot of entries with system user IDs.
 These entries add much valuable information and thus increase data bloat.
 We should either filter them or find ways to combine them into fewer entries.
