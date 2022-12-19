@@ -1,35 +1,30 @@
 \newpage
 
 # Analyzing statistics
-In this section, we explain the theory of how to analyze the stream of counter values from Lustre Jobstats into a time series of average rates of change.
-Furthermore, we define operations such as computing sum and logarithmic density for analyzing multiple rates of change, and transforming timestamps for the rates of change.
-We will referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside of the observation intervals such as the initial counter.
-The observation time is called *timestamp*.
-Each time series of counter values is identified by an *unique identifier*.
+In this section, we explain the theory of how to analyze the stream of counter values, described in Section \ref{monitoring-system}, into a time series of average rates of change, referred to as rates.
+That is, how much the values change on average during each interval.
+Furthermore, we define operations such as transforming timestamps for rates and computing the sum and logarithmic density of multiple rates.
+We show concrete examples in Section \ref{results}.
+
+We referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside the observation intervals, such as the initial counter.
+The observation time is called a *timestamp*.
+We identify each time series of counter values by a unique *time series identifier*, which we refer to as *identifier*.
 We refer to the identifiers of the observed counters as *observed identifiers*.
-The size of the set of observed identifiers tells us how many individual time series Jobstats is tracking at given time.
-It has implications to how much data we accumulate at each observation.
-We regard the observed identifiers as a subset of *all identifiers* which is the set of all possible identifier, depending the chosen identifier scheme.
+The size of the set of observed identifiers tells us how many individual time series Jobstats is tracking at a given time.
+It has implications for how much data we accumulate at each observation.
+We regard the observed identifiers as a subset of *all identifiers*, which is the set of all possible identifiers, depending on the chosen identifier scheme.
+
+TODO: improve how we describe the math, explain why we want to compute these values, and what they tell us.
+
+TODO: add examples
 
 
 ## Computing rates from counters
-![
-The upper graph shows a sampling of a counter values $v_{k}(t)$ from Equation \eqref{eq:counter-value} with timestamps $t_{1},t_{2},...,t_{9}.$
-The lower graph show the computed rate $r_{k}(t)$ as described in Equation \eqref{eq:rate-general}.
-The graphs also show the observation interval $\tau(t_4,t_5)$ from Equation \eqref{eq:observation-interval}, counter increment $\delta_{k}(t_4,t_5)$ from Equation \eqref{eq:counter-increment}, and individual rate $r_{k}(t_4,t_5)$ from Equation \eqref{eq:rate}
-The red box demonstrates the relationship $\delta_k(t_4,t_5)=r_k(t_4,t_5)\cdot\tau(t_4,t_5),$ which recovers the counter increment with a definitive integral, seen in Equation \eqref{eq:rate-integral}.
-\label{fig:counter-rate}
-](figures/counter-rate.svg)
-
-\textcolor{red}{
-TODO: improve the way we describe the math
-}
-
 Let $\mathcal{K}$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
 Then, we define $K(t)\subseteq \mathcal{K}$ as the set of *observed identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *observed counter value* at time $t$ for observed identifier $k\in K(t).$
 
 We denote *counter value* as $v_k(t)$ for an arbitraty identifier $k\in \mathcal{K}$ at time $t.$
-Its value is the observed counter value if the identifier $k$ is observed and zero value if the identifier is not observed.
+Its value is the observed counter value if we observe the identifier $k$ and zero if we do not.
 Formally, we have
 
 \begin{equation}
@@ -49,8 +44,8 @@ Given previous timestamp $t^{\prime}$ and current timestamp $t$ in the stream su
 \label{eq:observation-interval}
 \end{equation}
 
-Given an identifier $k\in K(t^{\prime})\cup K(t),$ if the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\delta_{k}(t^{\prime},t)$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\delta_{k}(t^{\prime},t)$
-Otherwise, the counter value has reset and the previous counter value is implicitly zero, hence $v_{k}(t)=0+\delta_{k}(t^{\prime},t).$
+Given an identifier $k\in K(t^{\prime})\cup K(t),$ if the new counter value $v_{k}(t)$ is greater than or equal to the previous value $v_{k}(t^{\prime})$, the previous value was incremented by $\delta_{k}(t^{\prime},t)$ during the interval, that is, $v_{k}(t)=v_{k}(t^{\prime})+\delta_{k}(t^{\prime},t).$
+Otherwise, the counter value has reset, and the previous counter value is implicitly zero, hence $v_{k}(t)=0+\delta_{k}(t^{\prime},t).$
 Combined, we can define the *counter increment* during the interval as
 
 \begin{equation}
@@ -93,10 +88,17 @@ r_k(t_{i-1}, t_{i}) \cdot \tau(t_{i-1}, t_{i}),\quad \forall i\in\{2,...,n\}.
 \end{equation}
 
 
-## Transforming timestamps
-TODO: change prime to some other symbol
+![
+The upper graph shows a sampling of a counter values $v_{k}(t)$ from Equation \eqref{eq:counter-value} with timestamps $t_{1},t_{2},...,t_{9}.$
+The lower graph shows the computed rate $r_{k}(t)$ as described in Equation \eqref{eq:rate-general}.
+The graphs also show the observation interval $\tau(t_4,t_5)$ from Equation \eqref{eq:observation-interval}, counter increment $\delta_{k}(t_4,t_5)$ from Equation \eqref{eq:counter-increment}, and individual rate $r_{k}(t_4,t_5)$ from Equation \eqref{eq:rate}
+The red box demonstrates the relationship $\delta_k(t_4,t_5)=r_k(t_4,t_5)\cdot\tau(t_4,t_5),$ which recovers the counter increment with a definitive integral, seen in Equation \eqref{eq:rate-integral}.
+\label{fig:counter-rate}
+](figures/counter-rate.svg)
 
-Using the property \eqref{eq:rate-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting
+
+## Transforming timestamps
+Using the property \eqref{eq:rate-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting as
 
 \begin{equation}
 \delta_k^{\prime}(t_{i-1}^{\prime}, t_{i}^{\prime})
@@ -108,12 +110,12 @@ Using the property \eqref{eq:rate-integral}, we can transform a step function $r
 \end{equation}
 
 Then, by computing the rate of change using \eqref{eq:rate}.
-This transformation is useful if we have multiple step functions with steps as different timestamp and we need to convert the steps to happen at same timestamps.
-In practice, we can avoid the transformation by querying the counters at same times.
+This transformation is helpful if we have multiple step functions with steps as different timestamps, and we need to convert the steps to happen at identical timestamps.
+In practice, we can avoid the transformation by querying the counters simultaneously.
 
 
 ## Sum of rates
-Sum of rates of change over identifiers $K \subseteq \mathcal{K}$ is defined as
+We define the sum of rates of change over identifiers $K \subseteq \mathcal{K}$ as
 
 \begin{equation}
 r_{K}(t) = \sum_{k\in K} r_{k}(t).
@@ -122,7 +124,7 @@ r_{K}(t) = \sum_{k\in K} r_{k}(t).
 
 
 ## Logarithmic density of rates
-We define a function which indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
+We define a function that indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 \begin{equation}
 \mathbf{1}_{b,y}(x)=\begin{cases}
@@ -133,7 +135,7 @@ We define a function which indicates if the logarithmic value of $x\in\mathbb{R}
 \end{equation}
 
 Let $R$ be a set of step functions.
-Then, we define the density over time as a counting function
+Then, we define the density over time as a counting function as
 
 \begin{equation}
 z_{b,y}(t)=\sum_{r_k\in R} \mathbf{1}_{b,y}(r_k(t)).
@@ -142,5 +144,5 @@ z_{b,y}(t)=\sum_{r_k\in R} \mathbf{1}_{b,y}(r_k(t)).
 
 The base parameter determines the *resolution* of the bucketing.
 
-In pratice, we can use the logarithmic floor function to compute the bucket $y$ of a value $x>0,$ because of the relationship $\lfloor \log_{b}(x) \rfloor = y$ is logically equivalent to $b^y \le x < b^{y+1}.$
+In practice, we can use the logarithmic floor function to compute the bucket $y$ of a value $x>0,$ because the relationship $\lfloor \log_{b}(x) \rfloor = y$ is logically equivalent to $b^y \le x < b^{y+1}.$
 
