@@ -45,14 +45,16 @@ A cluster may also be built for internal use in the organization.
 An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
 At the time of writing, practically all high-performance computer clusters use the *Linux operating system* [@osfam].
 The *Linux kernel* [@linux-kernel-source] is the core of the Linux operating system and is written in the *C programming language*.
-It derives from the original *UNIX operating system* and closely follows the *POSIX standard*.
+It derives from the family of *UNIX operating systems* and closely follows the *POSIX standard*.
 For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
+
+<!-- TODO: explain Application binary interface (ABI) -->
 
 In this work, we will refer to the Linux kernel as the *kernel*.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
 It is responsible for tasks such as process scheduling, memory management, providing a file system, creating and termination of processes, access to devices, networking, and providing an application programming interface for system calls which makes the kernel services available to programs.
 *System calls* enable user processes to request the kernel to perform certain actions for the process, such as file I/O, and provide separation between kernel space and user space.
-Library functions, such as functions in the C standard library, implement caller friendly layer on top of system calls for performing system operations.
+Library functions, such as functions in the C standard library, implement a caller friendly layer on top of system calls for performing system operations.
 
 *Input/Output (I/O)* refers to the communication between a computer and the outside world, for example, a disk, display, or keyboard.
 Linux implements a universal file I/O model, which means that it represents everything from data stored on disk to devices and processes as files.
@@ -63,7 +65,7 @@ In this work, we focus on the storage file system I/O.
 
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *btrfs*, or *FAT*.
 This allows programs to use different file systems in a uniform way using the operations defined by the interface.
-The interface contains the file system-specific system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
+The interface contains the system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
 For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2]
 We have listed some of the common system calls for the file system interface in the Appendix \ref{file-system-interface} and programming examples in Appendix \ref{programming-with-system-calls}.
 
@@ -76,9 +78,9 @@ A *Linux distribution* comprises some version of the Linux kernel combined with 
 
 
 ## Client-server application
-A *client-server application* is an application that is broken into two processes, a client and a server.
+A *client-server application* is an application that consists of two processes, a client and a server.
 The *client* requests a server to perform some service by sending a message.
-The *server* examines the client's message, performs the appropriate actions, and sends a response message back to the client.
+The *server* listens for client's messages and examines them, then it performs the appropriate actions, and sends a response message back to the client.
 The client and server may reside in the same host computer or separate host computers connected by a network.
 They communicate with each other by some Interprocess Communication (IPC) mechanism.
 Usually, the client application interacts with a user, while the server application provides access to a shared resource.
@@ -102,7 +104,7 @@ Each server is connected to one or more storage units called *Lustre targets*.
 *Metadata Servers (MDS)* provide access to file metadata and handle metadata operations for Lustre clients.
 The metadata, such as filenames, permissions, and file layout, is stored on *Metadata Targets (MDT)*, which are storage units attached to an MDS.
 On the other hand, *Object Storage Servers (OSS)* provide access to and handle file data operations for Lustre clients.
-The file data is stored in one or more objects, each object on a separate *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
+The file data is stored in one or more objects, each object is stored on an *Object Storage Target (OST)*, which is a storage unit attached to an OSS.
 Finally, the *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
 LNet supports many network types, including high-speed networks used in HPC clusters.
@@ -128,4 +130,6 @@ Slurm provides a framework for starting, executing, and monitoring work on the a
 Slurm groups nodes into *partitions*, which may be overlapping.
 It also maintains a queue of jobs waiting for resources to become available for them to be started.
 Slurm can also perform accounting for resource usage.
+
+TODO: admins can set policies, such as the partitions, queuing policies, maximum resources allocations
 

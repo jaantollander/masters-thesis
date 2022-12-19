@@ -2,8 +2,9 @@
 
 # Puhti cluster at CSC
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
+It has over five hundred monthly users and a diverse user base, which makes it interesting for studying file system usage.
 Puhti is a Finnish noun that means having energy.
-*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, computer networking, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in Finland [@about-csc].
+*CSC -- The IT Center for Science* is an organization that provides ICT services, including high-performance computing, cloud computing, data storage, computer networking, training, and technical support for higher education institutions, research institutes, culture, public administration, and enterprises in state of Finland [@about-csc].
 
 
 ## Hardware configuration
@@ -82,18 +83,14 @@ File system is separated to *storage areas*.
 Each storage area has a dedicated directory.
 The global, Lustre file system is shared across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
-\textcolor{red}{
-TODO: mention file count quotas
-}
-
 - *Home* is intended for storing personal data and configuration files.
-In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB per user.
+In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB and 100 000 files per user.
 
 - *Projappl* is intended for storing project-specific application files such as compiled libraries.
-It resides at `/projappl/<project>` and has a default quota of 50 GB per project.
+It resides at `/projappl/<project>` and has a default quota of 50 GB and 100 000 files per project.
 
 - *Scratch* is intended for short-term storage of data used in the cluster.
-It resides at `/scratch/<project>` and has a default quota of 1 TB per project.
+It resides at `/scratch/<project>` and has a default quota of 1 TB and 1 000 000 files per project.
 Files that require long-term storage should be moved to a long-term data storage outside Puhti.
 
 Jobs should use the *scratch* area for storing data.
