@@ -7,18 +7,22 @@ TODO
 - move from general description to specific
 - explain I/O and I/O intensive work
 - where we are going
-- add a figure to introduction (monitoring, parallel file system)
+- add a figure to the introduction (monitoring, parallel file system)
 -->
 
 TODO: figure
 
 Persistent data storage is an essential part of a computing system.
-Many high-performance computing (HPC) systems, typically a computer cluster, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
+Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 This file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
-Furthermore, these problems can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
-In this thesis, we investigate if monitoring file system usage can help identify the causes of these issues and the users responsible for them.
-The literature and professionals often refer to file system usage as I/O, an abbreviation for Input/Output.
+Heavy use can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
+In this thesis, we investigate if monitoring file system usage can help identify the causes of slowdowns and the users responsible for them.
+
+The literature and professionals often refer to interaction with storage as I/O, an abbreviation for Input/Output.
 Generally, I/O refers to communication between a computer and the outside world, but it is most often used to describe interactions with a storage device.
+A file system is a typical storage architecture, but there are others, such as object storage.
+The term storage I/O is agnostic about the underlying architecture.
+<!-- In this thesis, we interchangeably refer to file system usage and I/O. -->
 
 <!-- moving from computation centric workloads ot I/O centric  workloads -->
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
@@ -29,11 +33,10 @@ There are new benchmarks for I/O performance, such as the ones discussed in the 
 <!-- Ranking on IO500 list [@io_500]. -->
 <!-- These are important reasons for studying storage and I/O performance in HPC systems. -->
 
-<!-- related work -->
 We begin with a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
-We start with a highly relevant paper [@tacc-io-guideline] from Texas Advanced Computing Center (TACC).
-The paper discusses common issues related to heavy file I/O on a parallel file system, various novel tools designed to solve or alleviate the problems, and general guidelines for avoiding them.
-Table 2 in the paper lists problematic practices and solutions such as:
+A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses common issues related to heavy file I/O on a parallel file system.
+They introduce novel tools designed to solve or alleviate these problems and general guidelines for avoiding them.
+They also list problematic practices and solutions for them, such as:
 
 * Using many small files instead of a few large files.
 * Having too many files in a single directory instead of using subdirectories or local temporary storage.
@@ -43,19 +46,21 @@ Table 2 in the paper lists problematic practices and solutions such as:
 * Accessing the same file from multiple processes simultaneously instead of creating copies of the file or using parallel I/O libraries.
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
-In another paper [@year-in-life-of-parallel-file-system], the authors used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF)  for over a year.
+Monitoring file system performance is also essential for identifying when and why problems occur.
+The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
 They applied statistical methods and time series analysis to identify variations in long and short-term performance trends.
 Their work provides excellent insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them.
 They show that short transient issues differ from long persistent ones and that the baseline performance changes over time.
-They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system.
+<!-- They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system. -->
 
-In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL),  the authors collected and analyzed statistics of file system usage from two clusters to obtain insights for improving storage design.
+To identify who is causing problems, we need more fine-grained file system usage monitoring and performance monitoring.
+In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL), the authors collected and analyzed statistics of file system usage from two clusters to obtain insights for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
 Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC)  and National Computational Infrastructure (NCI), have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
-A discussion with the admins of Aalto Scientific Computing (scicomp) revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
+A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
 Another example of a commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
-There is also a body of research into developing and improving the performance of parallel file systems.
+There is also active research into developing and improving the performance of parallel file systems.
 For example, the paper [@io_load_balancing] proposes algorithmic improvements for load balancing on a parallel file system, and [@efficient-metadata-indexing] presents performance improvements for indexing and querying on large-scale storage systems.
 
 <!-- puhti -->
