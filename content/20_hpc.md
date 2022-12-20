@@ -32,7 +32,7 @@ Examples of commercial and research applications of HPC include:
 We can connect multiple computers to form a computer network.
 We refer to the individual computers in the network as *nodes*.
 Most *HPC systems* are computer clusters.
-*Computer cluster* is a computer network that uses a high-speed network to connect large amounts of homogenous nodes to form a more powerful system.
+*Computer cluster* is a computer network that uses a high-speed network to connect large amounts of nodes to form a more powerful system.
 It usually has a large amount of storage as well.
 Computer clusters are usually centrally managed by organizations such as companies or universities.
 They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services, and maintain them.
@@ -71,7 +71,7 @@ We have listed some common system calls for the file system interface in Appendi
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
 Linux systems have one special user, called the *super user* or *root user*, which can access everything on the system.
-*System administrators* can use the super user for administrative tasks such as installing or removing software and system maintenance.
+*System administrators* can use the super user for administrative tasks and system maintenance.
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and, optionally, a graphical user interface.
 

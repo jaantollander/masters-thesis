@@ -29,6 +29,7 @@ Also, the program design is much more complicated if we compute the rates on the
 To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
 This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
 We can also use a variable interval length if we need.
+However, the queries and analysis become more computationally intensive.
 
 As a note from the author, the thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the program code from a GPU monitoring program written in the Go language, which used InfluxDB [@influxdb] as a database.
@@ -185,17 +186,6 @@ In this case, we will underestimate the counter increment when calculating the d
 
 
 ## Storing time series data
-Field | Type | Value
-----|----|----------
-`time_series_id` | ID type | Unique identifier for an individual time series.
-`timestamp` | Date-time with timezone | Timestamp with UTC timezone.
-`<metadata>` | Data type | One or more metadata values related to the time series identifier.
-`<data>` | Data type | One or more observed values.
-
-: \label{tab:schema-time-series}
-  A record in a time series database consists of a time series identifier, timestamp, metadata, and time series data.
-
-
 We can use a *time series database* to efficiently store and handle time series data from multiple distinct time series.
 *Time series data* has distinctive properties that allow optimizations for storing and querying them.
 TimescaleDB documentation [@docs-timescale] characterizes these properties as follows:
@@ -209,6 +199,18 @@ A key differentiation between time series databases is whether they can handle a
 We used *TimescaleDB* because it can handle data with a growing number of distinct time series.
 TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distinct time series without drastically declining performance.
 Initially, we used *InfluxDB* but found out that it did not scale well for our use case.
+
+
+Field | Type | Value
+----|----|----------
+`time_series_id` | ID type | Unique identifier for an individual time series.
+`timestamp` | Date-time with timezone | Timestamp with UTC timezone.
+`<metadata>` | Data type | One or more metadata values related to the time series identifier.
+`<data>` | Data type | One or more observed values.
+
+: \label{tab:schema-time-series}
+  A record in a time series database consists of a time series identifier, timestamp, metadata, and time series data.
+
 
 An instance of a time series database consists of *time series tables* with a schema as in Table \ref{tab:schema-time-series}.
 The *time series identifier* (`time_series_id`) is an ID type such as an integer type, and the *timestamp* (`timestamp`) is a date-time with *Coordinated Universal Time (UTC)* timezone.
@@ -224,7 +226,7 @@ We would also like to combine the metadata information with Slurm job informatio
 
 
 ## Monitoring client
-The monitoring client calls the appropriate command (`lctl get_param`), as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
+The monitoring client calls the appropriate command, as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
 In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics.
 In practice, our first version used the call time and the second version used the snapshot time as a timestamp.
 The downside of using snapshot time as a timestamp is that we lose some information about periods where the job does not perform any operations.

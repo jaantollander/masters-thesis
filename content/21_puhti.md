@@ -2,7 +2,7 @@
 
 # Puhti cluster at CSC
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
-It has over five hundred monthly users and a diverse user base, which makes it interesting to study file system usage.
+It has over five hundred unique monthly users and a diverse user base, which makes it interesting to study file system usage.
 Puhti is a Finnish noun that means having energy.
 *CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
@@ -12,8 +12,8 @@ The services include high-performance computing, cloud computing, data storage, 
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
-*Lustre* | *MDS* | 2 |   |  
-*Lustre* | *OSS* | 8 |   |  
+*Lustre* | *MDS* (v) | 2 |   |  
+*Lustre* | *OSS* (v) | 8 |   |  
 *Service* | *Utility* | 3 | 384 | 2900
 *Service* | *Login* | 2 | 384 | 2900
 *Service* | *Login-FMI* | 2 | 384 | 2900
@@ -31,6 +31,7 @@ This table shows all nodes on the Puhti cluster by category and type.
 For service nodes, the node type associates them with their function in the cluster.
 For compute nodes, the node types associate them with the number of computing resources they have.
 The node count tells us the number of nodes of the given node type.
+We denote virtual nodes as (v).
 
 The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen in Table \ref{tab:puhti-nodes}.
 The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to log in to the system, and MDS and OSS nodes for the Lustre file system.
@@ -41,7 +42,7 @@ We type nodes based on how much memory (RAM) and *fast local storage* they conta
 Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volatile Memory Express (NVMe)* to perform I/O intensive processes instead of relying on the global storage from the Lustre file system.
 [@docs-csc]
 
-The global storage on Puhti consists of a Lustre file system with two MDSs and eight virtualized OSSs with an SFA18KE controller.
+The global storage on Puhti consists of a Lustre file system with two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
 At the time of writing, Puhti has Lustre version 2.12.6 from *DataDirect Networks (DDN)*.
 Each MDS has two MDTs connected to 20 of 800 GB NVMe, and each OSS has three OSTs connected to 704 of 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
@@ -72,7 +73,7 @@ We can use node names to separate file system operations at a node-specific leve
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.
 We measure the usage of computational resources in *Billing Units (BU)*.
-Resources, such as reserved CPU cores, memory, local disk, and GPUs, use different rates of BUs.
+Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage use different rates of BUs.
 
 Puhti associates each user account with a *user* and each project with a *group*.
 We can use user IDs (UID) and group IDs (GID) as identifiers for measuring file system usage at the user or group level.
@@ -92,7 +93,7 @@ It resides at `/projappl/<project>` and has a default quota of 50 GB and 100 000
 It resides at `/scratch/<project>` and has a default quota of 1 TB and 1 000 000 files per project.
 Users should move files that require long-term storage to long-term data storage outside Puhti.
 
-Jobs should use the *scratch* area for storing data.
+As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
 
 Two local storage areas, *local scratch* and *tmp*, are intended for temporary file storage for I/O heavy operations.
