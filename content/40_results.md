@@ -8,6 +8,8 @@ As a consequence of the issues, the analysis is less deep and automated than was
 The volume and complexity of data make representation a challenge.
 We attempt to pick a visualization that best represents interesting features from the data.
 
+TODO: mention bug report about broken jobids [@jobid-atomic]
+
 
 \clearpage
 

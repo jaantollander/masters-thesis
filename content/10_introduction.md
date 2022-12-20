@@ -10,6 +10,8 @@ TODO
 - add a figure to introduction (monitoring, parallel file system)
 -->
 
+TODO: figure
+
 Persistent data storage is an essential part of a computing system.
 Many high-performance computing (HPC) systems, typically a computer cluster, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 This file system is available across the entire system, making it user-friendly but prone to problems from heavy use.

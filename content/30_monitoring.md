@@ -36,6 +36,8 @@ We take the precise design of programs as given and explain them only at a high 
 
 <!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
 
+TODO: better explain how we did the two methods
+
 
 ## Entry identifier format
 We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the *Lustre Manual* [@docs-lustre, sec. 12.2].
@@ -185,21 +187,13 @@ In this case, we will underestimate the counter increment when calculating the d
 ## Storing time series data
 Field | Type | Value
 ----|----|----------
-`time_series_id` | UUID | Identifier for an individual time series.
-`timestamp` | Datetime with timezone | Timestamp with UTC timezone.
-`<field>` | Data type | One or more observed values.
+`time_series_id` | ID type | Unique identifier for an individual time series.
+`timestamp` | Date-time with timezone | Timestamp with UTC timezone.
+`<metadata>` | Data type | One or more metadata values related to the time series identifier.
+`<data>` | Data type | One or more observed values.
 
 : \label{tab:schema-time-series}
-  Each *record of time series data* consists of a time series identifier and timestamp with one or more values of the observations.
-
-
-Field | Type | Value
-----|----|----------
-`time_series_id` | UUID | Identifier for an individual time series.
-`<field>` | Data type | One or more metadata values related to the time series identifier.
-
-: \label{tab:schema-metadata}
-  Each *record of metadata* consists of the times series identifier and one or more metadata values.
+  A record in a time series database consists of a time series identifier, timestamp, metadata, and time series data.
 
 
 We can use a *time series database* to efficiently store and handle time series data from multiple distinct time series.
@@ -211,27 +205,22 @@ TimescaleDB documentation [@docs-timescale] characterizes these properties as fo
 3) *recent* new data is typically about recent time intervals.
 
 There are different options for choosing time series databases.
-One key differentiation between time series databases is whether they can handle a growing number or a fixed number of distinct time series.
+A key differentiation between time series databases is whether they can handle a growing number or a fixed number of distinct time series.
 We used *TimescaleDB* because it can handle data with a growing number of distinct time series.
 TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distinct time series without drastically declining performance.
 Initially, we used *InfluxDB* but found out that it did not scale well for our use case.
 
-An instance of a time series database consists of one or more *time series tables* with a schema as in Table \ref{tab:schema-time-series} and optional *metadata table* with a schema as in Table \ref{tab:schema-metadata}.
-A separate metadata table reduces data bloat and makes it easier to alter its schema later.
-We can join the metadata table and time series table during queries.
+An instance of a time series database consists of *time series tables* with a schema as in Table \ref{tab:schema-time-series}.
+The *time series identifier* (`time_series_id`) is an ID type such as an integer type, and the *timestamp* (`timestamp`) is a date-time with *Coordinated Universal Time (UTC)* timezone.
+We recommend using UTC instead of local time zones to avoid problems with daylight saving time and date-time instead of Unix epoch because date-times are human-readable.
 
-For the *time series identifier* (`time_series_id`), we can use a *Universally Unique Identifier (UUID)*, which has the benefit of being standardized and has explicit support for namespaces.
+In our implementation, a time series table is a *TimescaleDB hyper table* with appropriate indices for efficient queries and chunks with a proper time interval for improved performance.
+We set a *compression policy* to compress data that is older than a specified time to reduce storage and a *retention policy* for dropping data that is older than a set time to limit data accumulation and for regulatory reasons.
+We stored all data on a single time series table.
 
-For the *timestamp* (`timestamp`), we use date-time with *Coordinated Universal Time (UTC)* timezone instead of local timezones to avoid problems with daylight saving time.
-We recommend date-time instead of Unix epoch because date-times are human-readable.
-
-The time series table is a *TimescaleDB hyper table* with *indices* for efficient queries and is *chunked* by a chosen time interval for improved performance.
-It has a *compression policy* to compress data that is older than the specified time to reduce storage and a *retention policy* for dropping data that is older than the specified time to limit data accumulation or for privacy and regulatory reasons.
-The metadata table is a regular PostgreSQL table.
-
-In our implementation, we stored everything on a single table.
-In future implementations, we should use a separate metadata table and time series tables for MDT and OST data since they mainly contain different fields.
-Also, we could combine the metadata information with Slurm job information.
+In the future, we may experiment with separate tables for MDT and OST data to improve performance since they mainly contain different fields.
+We would also like to combine the metadata information with Slurm job information.
+<!-- It is possible to separate time series data and metadata to reduce data bloat, but it makes queries more complex. -->
 
 
 ## Monitoring client
@@ -285,46 +274,17 @@ Due to the scaling problem, we use TimescaleDB and suggest using JSON for commun
 
 ## Ingest server
 The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them, and inserting the data into the database.
-
-In our implementation, we did not use a time series identifier explicitly.
-Instead, we identified different time series as distinct tuples of the target, node name, job ID, and user ID.
-For login nodes, which do not have a job ID, we generated a synthetic job ID using the executable name and user ID values.
-We also parsed the values on the monitoring clients rather than in the ingest server.
-However, a time series identifier is easier to use in database queries, reduces ambiguity about identifying an individual time series, and separates the metadata and time series data.
-
-For future implementations, we should use a time series identifier.
-We can generate the time series identifier as UUID from the concatenated string of target and entry identifier (`<target>:<entry_id>`) with a randomly generated UUID as *namespace* associated with the formatting of the target and entry identifier strings.
-If the formatting changes, we should change the namespace to avoid collision with time series identifiers.
-If we keep the namespace a secret, the UUID also anonymizes the metadata values associated with time series data.
-For example, we can generate a namespace as follows:
-
-```sh
-uuidgen --random
-```
-
-```
-2e79b8a1-c4fc-45ba-9023-d16fdce6e3fe
-```
-
-Then, we can generate the time series identifier using the namespace and concatenated string of the target and entry identifier.
-
-```sh
-uuidgen --sha1 \
-    --namespace="2e79b8a1-c4fc-45ba-9023-d16fdce6e3fe" \
-    --name="scratch-OST0001:11317854:17627127:r01c01"
-```
-
-```
-af854063-c381-585f-b551-ce0b6c4440a3
-```
-
-Now, we can separate the ingested data into *time series structure* and *metadata structure*.
-We should append the time series structure to the appropriate time series table.
+Following the previous example, we can parse the values into a structure as follows:
 
 ```json
 {
-  "time_series_id": "af854063-c381-585f-b551-ce0b6c4440a3",
+  "time_series_id": "scratch-OST0001:11317854:17627127:r01c01",
   "timestamp": "2022-11-21T06:02:00.000+00:00",
+  "target": "scratch-OST0001",
+  "job_id": 11317854,
+  "user_id": 17627127,
+  "node_name": "r01c01",
+  "executable_name": null,
   "snapshot_time": 1669010520,
   "read": 7754,
   "write": 4284,
@@ -332,20 +292,14 @@ We should append the time series structure to the appropriate time series table.
 }
 ```
 
-The metadata structure contains the parsed metadata fields or a null if the value is missing.
-We need to parse and update metadata only if it does not already exist in the metadata table.
+We mark missing values as null.
+Then, we can convert this structure into an insert statement and send it to a time series table in the database with similar column names.
+Optionally, we can use the concatenated string of target and entry identifier (`<target>:<entry_id>`) as the time series identifier.
+It is optional since we can identify individual time series from the metadata alone.
+However, it might reduce ambiguity about identifying an individual time series.
 
-```json
-{
-  "time_series_id": "af854063-c381-585f-b551-ce0b6c4440a3",
-  "target": "scratch-OST0001",
-  "entry_id": "11317854:17627127:r01c01",
-  "job_id": 11317854,
-  "user_id": 17627127,
-  "nodename": "r01c01",
-  "executable": null
-}
-```
-
-We can convert these structures into appropriate insert statements and send them to the database with columns named similarly as in the structures.
-
+In our implementation, we parsed the metadata on the monitoring clients rather than in the ingest server and did not explicitly set a time series identifier.
+Instead, we identified different time series as distinct tuples of the target, node name, job ID, and user ID.
+For login nodes, which do not have a job ID, we generated a synthetic job ID using the executable name and user ID values.
+Also, we created a synthetic job ID for other entries for which it was missing.
+We dropped entries that did not conform to the entry identifier format we had set, as described in Section \ref{entry-identifier-format}.
