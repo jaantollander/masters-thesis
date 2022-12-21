@@ -66,8 +66,8 @@ Three dots between nodes or switches indicate that there are many of them.
 Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
-The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for utility nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
-For example, `puhti-login12.bullx` or `r01c01.bullx`.
+The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
+For example, `puhti-login12` or `r01c01`.
 We can use node names to separate file system operations at a node-specific level.
 
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
@@ -95,16 +95,23 @@ Users should move files that require long-term storage to long-term data storage
 
 As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
+We focus in monitoring the usage of the shared Lustre file system.
 
-Two local storage areas, *local scratch* and *tmp*, are intended for temporary file storage for I/O heavy operations.
+Puhti also has two local storage areas, *local scratch* and *tmp*.
+They are intended for temporary file storage for I/O heavy operations to avoid burdening the Lustre file system.
 Users who want to keep data from local storage after a job completion should copy it to scratch since the system regularly cleans the local storage areas.
- 
+
 - *Local scratch*, mounted on a local SSD, is indented for batch jobs to perform I/O heavy operations.
 Its quota depends on how much the user requests for the job.
-It resides at `/run/nvme/job_<jobid>/data` available via the `$LOCAL_SCRATCH` variable.
+It resides at `/run/nvme/job_${SLURM_JOB_ID}/data` available via the `$LOCAL_SCRATCH` variable.
 
 - *Tmp*, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
 It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
+
+TODO: why we should also monitor local storage usage
+
+In this work, we do not measure the usage of the temporary storage areas.
+In the future, we should include them as well.
 
 
 ## Running workloads

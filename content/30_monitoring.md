@@ -12,9 +12,11 @@ The ingest server processes the data from the monitoring clients and inserts it 
 Then, we can perform queries on the database or dump a batch of data for analysis.
 Ideally, we would like to perform continuous analytics on the database as new data arrives, but we leave it for future development.
 
+TODO: 1. attempt
+
 We experienced some problems during the development.
 For example, we had a problem directly related to the issues with entry identifiers, covered in Section \ref{entries-and-issues}, 
-Because we assumed that all nodenames would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
+Because we assumed that all node names would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
 The mistake led us to identify two different time series as the same, resulting in wrong values when analyzing the statistics.
 We patch-fixed it by modifying our parser to disambiguate between the two formats.
 However, we lost a fair amount of time and data due to this problem.
@@ -26,6 +28,8 @@ This approach made database queries easier since we used a constant interval, so
 However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
 Also, the program design is much more complicated if we compute the rates on the monitoring clients.
 
+TODO: 2. attempt
+
 To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
 This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
 We can also use a variable interval length if we need.
@@ -35,9 +39,11 @@ As a note from the author, the thesis advisor and system administrators were res
 We adapted the program code from a GPU monitoring program written in the Go language, which used InfluxDB [@influxdb] as a database.
 We take the precise design of programs as given and explain them only at a high level.
 
-<!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
+TODO: thesis work focused on the analysis
 
-TODO: better explain how we did the two methods
+TODO: problems in the monitoring effected the analysis, changes into monitoring client and analysis method
+
+<!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
 
 
 ## Entry identifier format
@@ -308,4 +314,7 @@ We dropped entries that did not conform to the entry identifier format we had se
 
 
 ## Analyzing statistics
+TODO: describe analysis at high level, reference to Appendix
+
+Compute rates from counter values from Jobstats in as a stream.
 

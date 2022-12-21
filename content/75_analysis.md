@@ -1,10 +1,9 @@
 \clearpage
 
 # Analysis
-In this section, we explain the theory of how to analyze the stream of counter values, described in Section \ref{monitoring-system}, into a time series of average rates of change, referred to as rates.
+In this section, we explain the theory of how to analyze the stream of counter values into a time series of average rates of change, referred to as rates.
 That is, how much the values change on average during each interval.
 Furthermore, we define operations such as transforming timestamps for rates and computing the sum and logarithmic density of multiple rates.
-We show concrete examples in Section \ref{results}.
 
 We referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside the observation intervals, such as the initial counter.
 The observation time is called a *timestamp*.

@@ -8,7 +8,7 @@ Both the set of rules and the set of symbols must be discrete.
 The *memory* requirement of computation is the maximum string size during the computation.
 Some models of computation are only theoretical tools, while others we can implement in the real world using physical processes.
 
-Contemporary computers represent data in digital form, typically as binary digits called *bits*.
+Contemporary computers represent data in digital form as binary digits called *bits*.
 Multiple bits in a row form a *binary string*.
 Rules correspond to instructions to a computer processor that manipulates binary strings.
 Memory consists of multiple levels of volatile *main memory* and non-volatile *storage* organized hierarchically based on factors such as proximity to the processor, access speed, and cost.
@@ -29,10 +29,8 @@ Examples of commercial and research applications of HPC include:
 - Cosmological simulation for understanding galaxy creation
 - Biosciences such as next-generation sequencing for studying genomes
 
-We can connect multiple computers to form a computer network.
-We refer to the individual computers in the network as *nodes*.
 Most *HPC systems* are computer clusters.
-*Computer cluster* is a computer network that uses a high-speed network to connect large amounts of nodes to form a more powerful system.
+*Computer cluster* connects multiple computers, called *nodes*, via a high-speed network to form a more powerful system.
 It usually has a large amount of storage as well.
 Computer clusters are usually centrally managed by organizations such as companies or universities.
 They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services, and maintain them.
@@ -43,13 +41,12 @@ Organizations may also build clusters for internal use.
 ## Linux operating system
 An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
 At the time of writing, practically all high-performance computer clusters use the *Linux operating system* [@osfam].
-The *Linux kernel* [@linux-kernel-source] is the core of the Linux operating system, written in the *C programming language*.
+The Linux *kernel* [@linux-kernel-source] is the core of the Linux operating system, written in the *C programming language*.
 It derives from the family of *UNIX operating systems* and closely follows the *POSIX standard*.
 For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
 
 <!-- TODO: explain Application binary interface (ABI) -->
 
-This work will refer to the Linux kernel as the *kernel*.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
 It is responsible for tasks such as process scheduling, memory management, providing a file system, creating and terminating processes, access to devices, networking, and providing an application programming interface for system calls, making the kernel services available to programs.
 *System calls* enable user processes to request the kernel to perform certain actions for the process, such as file I/O, and provide separation between kernel space and user space.
@@ -60,13 +57,13 @@ Linux implements a universal file I/O model, which means that it represents ever
 It uses the same system calls for performing I/O on all types of files.
 Consequently, users can use the same file utilities to perform various tasks, such as reading and writing files or interacting with processes and devices.
 The kernel only provides one file type, a sequential stream of bytes.
-This work focuses on the storage file system I/O.
+This work focuses on file system I/O on a storage device.
 
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *Btrfs*, or *FAT*.
 VFS allows programs to use different file systems uniformly using the operations defined by the interface.
 The interface contains the system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
 For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2]
-We have listed some common system calls for the file system interface in Appendix \ref{file-system-interface} and programming examples in Appendix \ref{programming-with-system-calls}.
+We have listed system calls for the file system interface and present programming examples in Appendix \ref{file-system-interface}.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
@@ -95,7 +92,7 @@ The Lustre file system is a *kernel module* designed using the client-server arc
 A kernel module is software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 
-Nodes running the Lustre client software are known as *Lustre Clients*
+Nodes running the Lustre client software are known as *Lustre Clients*.
 The Lustre client software interfaces the Linux virtual file system and *Lustre servers*.
 For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
 Lustre file system separates file metadata and data operations and handles them using dedicated Lustre servers.
@@ -109,7 +106,8 @@ Finally, the *Management Server (MGS)* stores configuration information for the 
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
 LNet supports many network types, including high-speed networks used in HPC clusters.
 
-TODO: briefly explain Lustre Jobstats
+Lustre has a feature called *Lustre Jobstats* for collecting file system operations statistics from a Lustre file system.
+We discuss how we use Jobstats in Section \ref{monitoring-and-analysis}.
 
 
 ## Slurm workload manager
@@ -118,17 +116,12 @@ The front end consists of login and utility nodes, and the back end consists of 
 Clusters rely on a *workload manager* to allocate access to computing resources, schedule, and run programs on the back end.
 The programs may instantiate an interactive or batch process.
 A batch process is a computation that runs from start to finish without user interaction compared to interactive processes such as an active terminal prompt or a text editor which respond to user input.
-We must specify the resources we request and the limits for them.
 
 *Slurm* is a workload manager for Linux clusters [@slurm; @docs-slurm].
 Unlike Lustre, Slurm operates in the user space, not kernel space.
-These computing resources include nodes, cores, memory, and time.
+Slurm provides a framework for starting, executing, and monitoring work on the allocated nodes with requested computing resources such as nodes, cores, memory, and time.
 Resource access may be exclusive or nonexclusive, depending on the configuration.
-We refer to a resource allocation as a *job* in a job script.
-An individual job may contain multiple *job steps* that may execute sequentially or in parallel.
-Slurm provides a framework for starting, executing, and monitoring work on the allocated nodes.
-Slurm groups nodes into *partitions*, which may be overlapping.
-It also maintains a queue of jobs waiting for resources to become available.
-Slurm can also perform accounting for resource usage.
-
-TODO: admins can set policies, such as partitions, queuing policies, maximum resources allocations
+Slurm maintains a queue of jobs waiting for resources to become available and can perform accounting for resource usage.
+We refer to a resource allocation as a *job* and a job may contain multiple *job steps* that may execute sequentially or in parallel.
+Administrators can group nodes into Slurm *partitions*, which may overlap.
+They can also set policies such as queuing policies and maximum resource allocations.
