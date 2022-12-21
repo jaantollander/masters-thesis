@@ -137,10 +137,8 @@ Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload
 At the time of writing, the version was 21.08.7, but it is updated regularly.
 It has partitions with different resource limits, set by administrators, as seen in Table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify which partition it will run, the project used for billing, and the resource we wish to reserve.
+There are concrete examples of Slurm job scripts for Puhti in Appendix \ref{slurm-job-scripts}.
 Slurm schedules the job to run when sufficient resources are available using a fair share algorithm.
 It sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
 We can use the *Slurm Job Identifier* (`SLURM_JOB_ID` environment variable) as an identifier to collect job-specific file operations.
-We have set Slurm to perform accounting of other details about the submitted jobs to that we can combine them with file system usage data.
-See examples of Slurm job scripts in the Appendix \ref{slurm-job-scripts}.
-
-
+We have set Slurm to perform accounting of details about the submitted jobs to that we can combine them with file system usage data in the analysis.

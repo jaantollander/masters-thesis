@@ -3,10 +3,11 @@
 # Monitoring and analysis
 ![High-level overview of the monitoring system. Rounded rectangles indicate programs, and arrows indicate data flow. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
 
-In this section, we describe how our monitoring system works in the context of the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.
+In this section, we describe how our monitoring system works in the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.
 We explain how to enable tracking of file system statistics with Lustre Jobstats, cover the important settings, list which statistics it tracks, how to query them, and the format of the output.
 
-We built the monitoring system using the client-server architecture as seen in Figure \ref{fig:monitoring-system}.
+We described how client-server applications work in Section \ref{client-server-application}.
+We built the monitoring system as a client-server application, illustrated in Figure \ref{fig:monitoring-system}.
 On each Lustre server, a *monitoring client* collects the usage statistics from Lustre Jobstats at regular intervals and sends them to the *ingest server*.
 The ingest server processes the data from the monitoring clients and inserts it into the *time series database*.
 Then, we can perform queries on the database or dump a batch of data for analysis.
@@ -36,7 +37,7 @@ We can also use a variable interval length if we need.
 However, the queries and analysis become more computationally intensive.
 
 As a note from the author, the thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
-We adapted the program code from a GPU monitoring program written in the Go language, which used InfluxDB [@influxdb] as a database.
+We adapted the program code from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
 We take the precise design of programs as given and explain them only at a high level.
 
 TODO: thesis work focused on the analysis
