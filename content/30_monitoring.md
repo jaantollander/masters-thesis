@@ -1,6 +1,6 @@
 \newpage
 
-# Monitoring system
+# Monitoring and analysis
 ![High-level overview of the monitoring system. Rounded rectangles indicate programs, and arrows indicate data flow. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
 
 In this section, we describe how our monitoring system works in the context of the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.
@@ -305,3 +305,7 @@ Instead, we identified different time series as distinct tuples of the target, n
 For login nodes, which do not have a job ID, we generated a synthetic job ID using the executable name and user ID values.
 Also, we created a synthetic job ID for other entries for which it was missing.
 We dropped entries that did not conform to the entry identifier format we had set, as described in Section \ref{entry-identifier-format}.
+
+
+## Analyzing statistics
+
