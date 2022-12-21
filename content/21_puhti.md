@@ -2,18 +2,19 @@
 
 # Puhti cluster at CSC
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
-It has over five hundred unique monthly users and a diverse user base, which makes it interesting to study file system usage.
+It has over five hundred unique monthly users and a diverse user base, making it interesting for studying file system usage.
 Puhti is a Finnish noun that means having energy.
 *CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
+Regarding the units of memory, storage, and network bandwidth, check Appendix \ref{units}.
 
 
 ## Hardware configuration
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
 -|-|-|-|-
-*Lustre* | *MDS* (v) | 2 |   |  
-*Lustre* | *OSS* (v) | 8 |   |  
+*Lustre* | *MDS* (virtual) | 2 |   |  
+*Lustre* | *OSS* (virtual) | 8 |   |  
 *Service* | *Utility* | 3 | 384 | 2900
 *Service* | *Login* | 2 | 384 | 2900
 *Service* | *Login-FMI* | 2 | 384 | 2900
@@ -31,7 +32,6 @@ This table shows all nodes on the Puhti cluster by category and type.
 For service nodes, the node type associates them with their function in the cluster.
 For compute nodes, the node types associate them with the number of computing resources they have.
 The node count tells us the number of nodes of the given node type.
-We denote virtual nodes as (v).
 
 The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen in Table \ref{tab:puhti-nodes}.
 The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to log in to the system, and MDS and OSS nodes for the Lustre file system.
@@ -39,17 +39,17 @@ The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
 Each login and compute node consists of two *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
 In addition to CPUs, each GPU node has four *Nvidia Volta V100* GPUs, and each GPU has 36 GiB of GPU memory.
 We type nodes based on how much memory (RAM) and *fast local storage* they contain and whether they contain GPUs.
-Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volatile Memory Express (NVMe)* to perform I/O intensive processes instead of relying on the global storage from the Lustre file system.
+Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volatile Memory Express (NVMe)* for processes to perform I/O intensive work instead of relying on the global storage from the Lustre file system.
 [@docs-csc]
 
-The global storage on Puhti consists of a Lustre file system with two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
+The global storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}, with two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
 At the time of writing, Puhti has Lustre version 2.12.6 from *DataDirect Networks (DDN)*.
 Each MDS has two MDTs connected to 20 of 800 GB NVMe, and each OSS has three OSTs connected to 704 of 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
 The cluster connects nodes via a network with a fat-tree topology.
 In the network, each node connects to all L1 switches, and each L1 switch connects to all L2 switches.
-The connections use *Mellanox HDR InfiniBand* (100 GB/s IB HDR100).
+The connections use *Mellanox HDR InfiniBand* (100 Gb/s IB HDR100).
 The network has a total of 28 L1 switches and 12 L2 switches.
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
@@ -63,7 +63,8 @@ Three dots between nodes or switches indicate that there are many of them.
 
 
 ## System configuration
-Puhti uses the *RedHat Enterprise Linux Server* as its operating system.
+As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
+Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
 The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
@@ -73,7 +74,7 @@ We can use node names to separate file system operations at a node-specific leve
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.
 We measure the usage of computational resources in *Billing Units (BU)*.
-Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage use different rates of BUs.
+Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, use different rates of BUs.
 
 Puhti associates each user account with a *user* and each project with a *group*.
 We can use user IDs (UID) and group IDs (GID) as identifiers for measuring file system usage at the user or group level.
@@ -81,7 +82,7 @@ Puhti reserves UIDs from 0 to 999 for system processes, for example, 0 is the ro
 It is helpful to separate the file system operations performed by system UIDs from the other UIDs.
 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
-It shares a Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
+It shares a Lustre parallel file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
 - *Home* is intended for storing personal data and configuration files.
 In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB and 100 000 files per user.
@@ -95,7 +96,7 @@ Users should move files that require long-term storage to long-term data storage
 
 As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
-We focus in monitoring the usage of the shared Lustre file system.
+We focus on monitoring the usage of the shared Lustre file system.
 
 Puhti also has two local storage areas, *local scratch* and *tmp*.
 They are intended for temporary file storage for I/O heavy operations to avoid burdening the Lustre file system.
@@ -108,10 +109,8 @@ It resides at `/run/nvme/job_${SLURM_JOB_ID}/data` available via the `$LOCAL_SCR
 - *Tmp*, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
 It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
 
-TODO: why we should also monitor local storage usage
-
-In this work, we do not measure the usage of the temporary storage areas.
-In the future, we should include them as well.
+In this work, we do not monitor the usage of the local storage areas.
+In the future, we should include local storage in monitoring to understand how users use them and whether they use them as intended.
 
 
 ## Running workloads
@@ -134,14 +133,14 @@ Slurm partitions on Puhti.
 Each partition has a name associated with resource limits and a set of node types from Table \ref{tab:puhti-nodes}.
 Typically, memory and local storage limits are the same for the node type.
 
-Puhti uses Slurm as a workload manager.
+Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload-manager}.
 At the time of writing, the version was 21.08.7, but it is updated regularly.
-It has partitions with different resource limits, as seen in Table \ref{tab:slurm-partitions}.
+It has partitions with different resource limits, set by administrators, as seen in Table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify which partition it will run, the project used for billing, and the resource we wish to reserve.
 Slurm schedules the job to run when sufficient resources are available using a fair share algorithm.
 It sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
 We can use the *Slurm Job Identifier* (`SLURM_JOB_ID` environment variable) as an identifier to collect job-specific file operations.
-Slurm also performs accounting of other details about the submitted jobs.
+We have set Slurm to perform accounting of other details about the submitted jobs to that we can combine them with file system usage data.
 See examples of Slurm job scripts in the Appendix \ref{slurm-job-scripts}.
 
 

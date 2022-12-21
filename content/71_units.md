@@ -15,6 +15,6 @@ $1000^5$ | petabyte (PB) | $1024^5$ | pebibyte (PiB)
 TODO:
 
 - Storage sizes use metric units.
-- Network bandwidths often use bits per second.
 - Memory sizes use IEC units.
+- Network bandwidths use bits per second.
 
