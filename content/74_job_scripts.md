@@ -1,3 +1,5 @@
+\clearpage
+
 # Slurm job scripts
 We can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.

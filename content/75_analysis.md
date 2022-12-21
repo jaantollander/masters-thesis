@@ -1,3 +1,5 @@
+\clearpage
+
 # Analysis
 In this section, we explain the theory of how to analyze the stream of counter values, described in Section \ref{monitoring-system}, into a time series of average rates of change, referred to as rates.
 That is, how much the values change on average during each interval.
