@@ -34,7 +34,7 @@ We take the precise design of programs as given and explain them only at a high 
 
 The thesis work focused on the analysis and visualization parts.
 We explain how we analyzed batches of time series data in Section \ref{analyzing-statistics}.
-In the future, we would like to perform continuous analytics on the database as new data arrives.
+In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 
 <!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
 
@@ -242,7 +242,7 @@ We used a 2-minute observation interval and a 10-minute cleanup interval.
 Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
 Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
 However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
-Also, computing the differences in the monitoring clients makes the design more complex.
+Also, computing the differences in the monitoring clients makes the design more complex and error-prone.
 
 <!-- parsing the entry identifier -->
 We had a problem related to parsing metadata from malformed entry identifiers, which we will discuss in Section \ref{entries-and-issues}.
@@ -254,16 +254,15 @@ Due to the issues we found, we recommend experimenting with the settings, record
 
 TODO: recorded raw data so that we could identify and correct for the bad values
 
+TODO: we used snapshot time as the timestamp
+
 <!-- recording the raw counters -->
 To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
 This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
 We can also use a variable interval length if we need.
 However, the queries and analysis become more computationally intensive.
 
----
-
-In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics.
-
+<!-- In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
 The monitoring client parses the target and all entries from the output using *Regular Expressions (Regex)*.
 It creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
 An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
@@ -325,8 +324,8 @@ We dropped other entries that did not conform to the entry identifier format we 
 
 
 ## Analyzing statistics
-TODO: describe analysis at high level, reference to Appendix, explain timestamps, counter values, rates, counter reset, and streaming
+We implemented the analysis methods described in Appendix \ref{analysis}, using the Julia language [@julia_fresh_approach; @julia_language] and DataFrames.jl [@julia_dataframes] for manipulating the tabular data.
+We implemented visualization using Plots.jl [@julia_plots] with PlotlyJS backend.
 
 Compute rates from counter values from Jobstats in as a stream.
 
-[@julia_fresh_approach; @julia_language], [@julia_dataframes], [@julia_plots]
