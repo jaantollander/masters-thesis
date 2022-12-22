@@ -1,7 +1,12 @@
 \newpage
 
 # Monitoring and analysis
-![High-level overview of the monitoring system. Rounded rectangles indicate programs, and arrows indicate data flow. \label{fig:monitoring-system}](figures/lustre-monitor.drawio.svg)
+![
+High-level overview of the monitoring system.
+Rounded rectangles indicate programs, and arrows indicate data flow.
+Lustre Jobstats and time series database are third-party software, thesis advisor developed the monitoring client and ingest server, and the thesis author write the code for the analysis and visualization.
+\label{fig:monitoring-system}
+](figures/lustre-monitor.drawio.svg)
 
 In this section, we describe how our monitoring system works in the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.
 We explain how to enable tracking of file system statistics with Lustre Jobstats, cover the important settings, list which statistics it tracks, how to query them, and the format of the output.
@@ -13,36 +18,15 @@ The ingest server processes the data from the monitoring clients and inserts it 
 Then, we can perform queries on the database or dump a batch of data for analysis.
 Ideally, we would like to perform continuous analytics on the database as new data arrives, but we leave it for future development.
 
-TODO: 1. attempt
+TODO: we has two versions of the monitoring client, changed during the thesis due to issues discussed in Section \ref{entries-and-issues}
 
-We experienced some problems during the development.
-For example, we had a problem directly related to the issues with entry identifiers, covered in Section \ref{entries-and-issues}, 
-Because we assumed that all node names would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
-The mistake led us to identify two different time series as the same, resulting in wrong values when analyzing the statistics.
-We patch-fixed it by modifying our parser to disambiguate between the two formats.
-However, we lost a fair amount of time and data due to this problem.
-Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
-
-The next problem was related to how we computed rates from counter values, which we describe in Section \ref{analyzing-statistics}.
-Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
-This approach made database queries easier since we used a constant interval, so the differences are proportional to the rates.
-However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
-Also, the program design is much more complicated if we compute the rates on the monitoring clients.
-
-TODO: 2. attempt
-
-To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
-This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
-We can also use a variable interval length if we need.
-However, the queries and analysis become more computationally intensive.
-
-As a note from the author, the thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
+The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the program code from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
 We take the precise design of programs as given and explain them only at a high level.
 
-TODO: thesis work focused on the analysis
+The thesis work focused on the analysis.
 
-TODO: problems in the monitoring effected the analysis, changes into monitoring client and analysis method
+TODO: However, the problems in the monitoring effected the analysis and required changes into monitoring client and analysis method.
 
 <!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
 
@@ -281,6 +265,30 @@ Our implementation used the *InfluxDB line protocol* for communication because w
 Due to the scaling problem, we use TimescaleDB and suggest using JSON for communication instead.
 
 
+TODO: First version of monitoring client
+
+We experienced some problems during the development.
+For example, we had a problem directly related to the issues with entry identifiers, covered in Section \ref{entries-and-issues}, 
+Because we assumed that all node names would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
+The mistake led us to identify two different time series as the same, resulting in wrong values when analyzing the statistics.
+We patch-fixed it by modifying our parser to disambiguate between the two formats.
+However, we lost a fair amount of time and data due to this problem.
+Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
+
+The next problem was related to how we computed rates from counter values, which we describe in Section \ref{analyzing-statistics}.
+Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
+This approach made database queries easier since we used a constant interval, so the differences are proportional to the rates.
+However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
+Also, the program design is much more complicated if we compute the rates on the monitoring clients.
+
+TODO: 2. version of the monitoring client
+
+To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
+This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
+We can also use a variable interval length if we need.
+However, the queries and analysis become more computationally intensive.
+
+
 ## Ingest server
 The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them, and inserting the data into the database.
 Following the previous example, we can parse the values into a structure as follows:
@@ -315,7 +323,9 @@ We dropped entries that did not conform to the entry identifier format we had se
 
 
 ## Analyzing statistics
-TODO: describe analysis at high level, reference to Appendix
+TODO: describe analysis at high level, reference to Appendix, explain timestamps, counter values, rates, counter reset, and streaming
 
 Compute rates from counter values from Jobstats in as a stream.
+
+[@julia_fresh_approach; @julia_language], [@julia_dataframes], [@julia_plots]
 
