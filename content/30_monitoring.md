@@ -1,4 +1,4 @@
-\newpage
+1\newpage
 
 # Monitoring and analysis
 ![
@@ -12,7 +12,11 @@ This section describes how our monitoring system works in the Puhti cluster, des
 We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
 Section \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained usage statistics.
 In Section \ref{operations-and-statistics}, we explain the different operations and statistics we can track, how to query them, and the output format.
-Finally, we explain how the statistics reset in Section \ref{entry-resets}.
+We explain how the statistics reset in Section \ref{entry-resets}.
+
+Section \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
+We believe that high total file system usage rates can cause congestion in the file system.
+We can find the most significant contributors to the total rate with fined-grained statistics.
 
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
@@ -178,7 +182,7 @@ This method does not detect reset if the new counter value is larger than the ol
 In this case, we will underestimate the counter increment when calculating the difference between two counter values.
 
 
-## Computing rates from counters
+## Computing rates
 We can calculate a *rate* during an interval from two counter values by dividing the difference between the counter values by the interval length.
 We treat the previous counter value as zero if we detect a reset.
 
