@@ -1,4 +1,4 @@
-1\newpage
+\newpage
 
 # Monitoring and analysis
 ![
