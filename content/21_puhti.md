@@ -79,6 +79,8 @@ Three dots between nodes or switches indicate that there are many of them.
 \label{fig:puhti-network}
 ](figures/puhti-hardware.drawio.svg)
 
+TODO: illustrate that there are multiple MDTs per MDS and OSTs per OSS in the figure
+
 
 ## System configuration
 As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
