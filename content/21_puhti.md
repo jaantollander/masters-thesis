@@ -15,12 +15,12 @@ $1000^3$ | giga (G) | $1024^3$ | gibi (Gi)
 $1000^4$ | tera (T) | $1024^4$ | tebi (Ti)
 $1000^5$ | peta (P) | $1024^5$ | pebi (Pi)
 
-: \label{tab:units}
-  Units in base $10$ and base $2$.
+: \label{tab:prefixes}
+  Prefixes in base ten and base two.
 
-Table \ref{tab:units} is a reminder of the units and prefixes we use in this chapter.
+In this section, we use units of bytes and bits and base ten and base two prefixes, as shown in Table \ref{tab:prefixes}.
 One byte (B) is eight bits (b).
-Units of memory size use bytes with base 2 prefixes, such as gibibytes (GiB), storage uses bytes with base 10 prefixes, such as gigabytes (GB), and network bandwidth uses bit rates with base 10 prefixes, such as gigabits per second (Gb/s).
+Units of memory size use bytes with base two prefixes, such as gibibytes (GiB), storage size uses bytes with base ten prefixes, such as gigabytes (GB), and network bandwidth uses bit rates with base ten prefixes, such as gigabits per second (Gb/s).
 
 \clearpage
 
