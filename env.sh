@@ -147,16 +147,19 @@ thesis_serve() {
 }
 
 thesis_build() {
-    # TODO: we should copy repository into tmp instead of stashing
-    #       ignored file are deleted with this method
-    git stash -u && \
+    CUR=$PWD
+    TMP=$(mktemp -d) && \
+    cp -r . "$TMP" && \
+    cd "$TMP" && \
     git checkout  --orphan "build" && \
-    thesis_pdf && thesis_epub && thesis_html && thesis_tex && mv "$OUT_DIR"/* . && \
+    thesis_pdf && \
+    thesis_epub && \
+    thesis_html && \
+    thesis_tex && \
+    mv "$OUT_DIR"/* . && \
     git rm -rf . && \
     git add . && \
     git commit -m "build" && \
     git push "origin" "build" --force && \
-    git checkout "master" && \
-    git branch -D "build" && \
-    git stash pop
+    cd "$CUR"
 }
