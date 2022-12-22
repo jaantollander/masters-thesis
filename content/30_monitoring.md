@@ -2,31 +2,35 @@
 
 # Monitoring and analysis
 ![
-High-level overview of the monitoring system.
+This figure illustrates the high-level overview of the monitoring system and analysis.
 Rounded rectangles indicate programs, and arrows indicate data flow.
-Lustre Jobstats and time series database are third-party software, thesis advisor developed the monitoring client and ingest server, and the thesis author write the code for the analysis and visualization.
+Lustre Jobstats and Time series database are third-party software; the thesis advisor developed the Monitoring client and Ingest server, and the thesis author wrote the code for the analysis and visualization.
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
 
-In this section, we describe how our monitoring system works in the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}, and we expand the discussion of the *Lustre Jobstats* mentioned in Section \ref{lustre-parallel-file-system}.
-We explain how to enable tracking of file system statistics with Lustre Jobstats, cover the important settings, list which statistics it tracks, how to query them, and the format of the output.
+This section describes how our monitoring system works in the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}. 
+We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
+Section \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained usage statistics.
+In Section \ref{operations-and-statistics}, we explain the different operations and statistics we can track, how to query them, and the output format.
+Finally, we explain how the statistics reset in Section \ref{entry-resets}.
 
 We described how client-server applications work in Section \ref{client-server-application}.
-We built the monitoring system as a client-server application, illustrated in Figure \ref{fig:monitoring-system}.
-On each Lustre server, a *monitoring client* collects the usage statistics from Lustre Jobstats at regular intervals and sends them to the *ingest server*.
-The ingest server processes the data from the monitoring clients and inserts it into the *time series database*.
-Then, we can perform queries on the database or dump a batch of data for analysis.
-Ideally, we would like to perform continuous analytics on the database as new data arrives, but we leave it for future development.
-
-TODO: we has two versions of the monitoring client, changed during the thesis due to issues discussed in Section \ref{entries-and-issues}
+We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
+We explain how we store time series data in *time series database* in Section \ref{storing-time-series-data}.
+In Section \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server at regular intervals and sends them to the *ingest server*.
+Due to various issues, we had to modify the monitoring client during the thesis.
+These changes affected the analysis and required significant changes in the analysis code and methods.
+We explain the initial and modified versions of the monitoring client.
+Finally, section \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
-We adapted the program code from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
+We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
+We changed the database to TimescaleDB.
 We take the precise design of programs as given and explain them only at a high level.
 
-The thesis work focused on the analysis.
-
-TODO: However, the problems in the monitoring effected the analysis and required changes into monitoring client and analysis method.
+The thesis work focused on the analysis and visualization parts.
+We explain how we analyzed batches of time series data in Section \ref{analyzing-statistics}.
+In the future, we would like to perform continuous analytics on the database as new data arrives.
 
 <!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
 
@@ -104,8 +108,7 @@ The value of snapshot time is a timestamp as a Unix epoch when the statistics of
 *Unix epoch* is the standard way of representing time in Unix systems.
 It measures time as the number of seconds elapsed since 00:00:00 UTC on 1 January 1970, excluding leap seconds.
 
-Table \ref{tab:operations} list the operations counted by Jobstats for MDTs and OSTs with the corresponding system calls.
-We have omitted some rarely encountered operations from the tables.
+In Table \ref{tab:operations}, we list the MDT and OST operations for which Jobstats keeps statistics.
 Each operation (`<operation>`) contains a line of statistics (`<statistics>`), formatted as key-value pairs separated by commas and enclosed within curly brackets:
 
 ```text
@@ -152,10 +155,10 @@ OST | **`quotactl`** | `quotactl` | `samples`
 
 : \label{tab:operations}
 This table lists all operations tracked by the Jobstats for each Lustre target.
-We mentioned system calls in Section \ref{linux-operating-system}.
-You can find an explanation of relevant system calls in Appendix \ref{file-system-interface}.
+The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but the values were always zero. Thus, we did not include them in our analysis.
+The tables contain the corresponding system calls for each Lustre operation.
+You can find an explanation for each system call in Appendix \ref{file-system-interface}.
 For the details about the `punch` operation, see Appendix \ref{punch-operation}.
-The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but we did not include it in our analysis.
 
 
 We found that the counters may report more samples for `close` than `open` operations.
