@@ -6,12 +6,27 @@ It has over five hundred unique monthly users and a diverse user base, making it
 Puhti is a Finnish noun that means having energy.
 *CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
-Regarding the units of memory, storage, and network bandwidth, check Appendix \ref{units}.
 
+Value    | Prefix   | Value    | Prefix
+-        | -        | -        | -
+$1000^1$ | kilo (k) | $1024^1$ | kibi (Ki)
+$1000^2$ | mega (M) | $1024^2$ | mebi (Mi)
+$1000^3$ | giga (G) | $1024^3$ | gibi (Gi)
+$1000^4$ | tera (T) | $1024^4$ | tebi (Ti)
+$1000^5$ | peta (P) | $1024^5$ | pebi (Pi)
+
+: \label{tab:units}
+  Units in base $10$ and base $2$.
+
+Table \ref{tab:units} is a reminder of the units and prefixes we use in this chapter.
+One byte (B) is eight bits (b).
+Units of memory size use bytes with base 2 prefixes, such as gibibytes (GiB), storage uses bytes with base 10 prefixes, such as gigabytes (GB), and network bandwidth uses bit rates with base 10 prefixes, such as gigabits per second (Gb/s).
+
+\clearpage
 
 ## Hardware configuration
 
-Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GiB per node)
+Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GB per node)
 -|-|-|-|-
 *Lustre* | *MDS* (virtual) | 2 |   |  
 *Lustre* | *OSS* (virtual) | 8 |   |  
