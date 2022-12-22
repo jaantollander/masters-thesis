@@ -97,7 +97,8 @@ thesis_pdf() {
         --include-before-body "$CONTENT_DIR/body.tex" \
         --number-sections \
         --toc-depth 2 \
-        --strip-comments
+        --strip-comments \
+        --top-level-division="section"
 }
 
 thesis_tex() {
@@ -115,7 +116,8 @@ thesis_tex() {
         --include-before-body "$CONTENT_DIR/body.tex" \
         --number-sections \
         --toc-depth 2 \
-        --strip-comments
+        --strip-comments \
+        --top-level-division="section"
 }
 
 thesis_preview() {
@@ -145,7 +147,8 @@ thesis_serve() {
 }
 
 thesis_build() {
-    # NOTE: this method is not perfect, file ignored by .gitignore are deleted
+    # TODO: we should copy repository into tmp instead of stashing
+    #       ignored file are deleted with this method
     git stash -u && \
     git checkout  --orphan "build" && \
     thesis_pdf && thesis_epub && thesis_html && thesis_tex && mv "$OUT_DIR"/* . && \

@@ -187,8 +187,8 @@ We can calculate a *rate* during an interval from two counter values by dividing
 We treat the previous counter value as zero if we detect a reset.
 
 For jobstats, a rate during an interval tells us how many operations, on average, happen per time unit during an interval.
-For example, if the previous counter for write operations is $v_1=1000$ at time $t_1=0$ seconds, and the current value is $v_2=2000$ at time $t_2=120$ seconds, it performed $v_2-v_1=1000$ write operations during the interval of $t_2-t_1=120$ seconds.
-Therefore, on average, it performs $1000/120\approx 8.33$ write operations per second during the interval.
+For example, if the previous counter of write operations for a job is $v_1=1000$ at time $t_1=0$ seconds, and the current value is $v_2=2000$ at time $t_2=120$ seconds, it performed $v_2-v_1=1000$ write operations during the interval of $t_2-t_1=120$ seconds.
+Therefore, on average, the job performed $1000/120\approx 8.33$ write operations per second during the interval.
 We cover the theory in Appendix \ref{analysis}.
 
 
@@ -234,13 +234,35 @@ We would also like to combine the metadata information with Slurm job informatio
 
 ## Monitoring client
 The monitoring client calls the appropriate command, as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
-In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics.
-In practice, our first version used the call time and the second version used the snapshot time as a timestamp.
-The downside of using snapshot time as a timestamp is that we lose some information about periods where the job does not perform any operations.
-
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and a 10-minute cleanup interval.
+
+<!-- computing differences on the fly -->
+Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
+Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
+However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
+Also, computing the differences in the monitoring clients makes the design more complex.
+
+<!-- parsing the entry identifier -->
+We had a problem related to parsing metadata from malformed entry identifiers, which we will discuss in Section \ref{entries-and-issues}.
+Because we assumed that all node names would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
+The mistake led us to identify two different time series as the same, resulting in wrong values when computing rates.
+We patch-fixed it by modifying our parser to disambiguate between the two formats.
+However, we lost a fair amount of time and data due to this problem.
+Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
+
+TODO: recorded raw data so that we could identify and correct for the bad values
+
+<!-- recording the raw counters -->
+To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
+This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
+We can also use a variable interval length if we need.
+However, the queries and analysis become more computationally intensive.
+
+---
+
+In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics.
 
 The monitoring client parses the target and all entries from the output using *Regular Expressions (Regex)*.
 It creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
@@ -248,9 +270,13 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 
 ```json
 {
-  "target": "scratch-OST0001",
-  "entry_id": "11317854:17627127:r01c01",
   "timestamp": "2022-11-21T06:02:00.000+00:00",
+  "entry_id": "11317854:17627127:r01c01",
+  "target": "scratch-OST0001",
+  "job_id": 11317854,
+  "user_id": 17627127,
+  "node_name": "r01c01",
+  "executable_name": null,
   "snapshot_time": 1669010520,
   "read": 7754,
   "write": 4284,
@@ -266,9 +292,13 @@ For example, if the previous data structure is the first observation, we have th
 
 ```json
 {
+  "timestamp": "2022-11-21T06:00:00.000+00:00",
   "target": "scratch-OST0001",
   "entry_id": "11317854:17627127:r01c01",
-  "timestamp": "2022-11-21T06:00:00.000+00:00",
+  "job_id": 11317854,
+  "user_id": 17627127,
+  "node_name": "r01c01",
+  "executable_name": null,
   "snapshot_time": null,
   "read": 0,
   "write": 0,
@@ -281,61 +311,17 @@ Our implementation used the *InfluxDB line protocol* for communication because w
 Due to the scaling problem, we use TimescaleDB and suggest using JSON for communication instead.
 
 
-TODO: First version of monitoring client
-
-We experienced some problems during the development.
-For example, we had a problem directly related to the issues with entry identifiers, covered in Section \ref{entries-and-issues}, 
-Because we assumed that all node names would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
-The mistake led us to identify two different time series as the same, resulting in wrong values when analyzing the statistics.
-We patch-fixed it by modifying our parser to disambiguate between the two formats.
-However, we lost a fair amount of time and data due to this problem.
-Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
-
-The next problem was related to how we computed rates from counter values, which we describe in Section \ref{analyzing-statistics}.
-Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
-This approach made database queries easier since we used a constant interval, so the differences are proportional to the rates.
-However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
-Also, the program design is much more complicated if we compute the rates on the monitoring clients.
-
-TODO: 2. version of the monitoring client
-
-To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
-This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
-We can also use a variable interval length if we need.
-However, the queries and analysis become more computationally intensive.
-
-
 ## Ingest server
-The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them, and inserting the data into the database.
-Following the previous example, we can parse the values into a structure as follows:
-
-```json
-{
-  "time_series_id": "scratch-OST0001:11317854:17627127:r01c01",
-  "timestamp": "2022-11-21T06:02:00.000+00:00",
-  "target": "scratch-OST0001",
-  "job_id": 11317854,
-  "user_id": 17627127,
-  "node_name": "r01c01",
-  "executable_name": null,
-  "snapshot_time": 1669010520,
-  "read": 7754,
-  "write": 4284,
-  "...": "..."
-}
-```
-
-We mark missing values as null.
-Then, we can convert this structure into an insert statement and send it to a time series table in the database with similar column names.
+The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them, and inserting the data into the time series database.
 Optionally, we can use the concatenated string of target and entry identifier (`<target>:<entry_id>`) as the time series identifier.
 It is optional since we can identify individual time series from the metadata alone.
 However, it might reduce ambiguity about identifying an individual time series.
 
-In our implementation, we parsed the metadata on the monitoring clients rather than in the ingest server and did not explicitly set a time series identifier.
+We did not explicitly set a time series identifier.
 Instead, we identified different time series as distinct tuples of the target, node name, job ID, and user ID.
 For login nodes, which do not have a job ID, we generated a synthetic job ID using the executable name and user ID values.
 Also, we created a synthetic job ID for other entries for which it was missing.
-We dropped entries that did not conform to the entry identifier format we had set, as described in Section \ref{entry-identifier-format}.
+We dropped other entries that did not conform to the entry identifier format we had set, as described in Section \ref{entry-identifier-format}.
 
 
 ## Analyzing statistics
@@ -344,4 +330,3 @@ TODO: describe analysis at high level, reference to Appendix, explain timestamps
 Compute rates from counter values from Jobstats in as a stream.
 
 [@julia_fresh_approach; @julia_language], [@julia_dataframes], [@julia_plots]
-
