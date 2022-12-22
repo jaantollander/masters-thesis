@@ -2,6 +2,7 @@
 
 # Puhti cluster at CSC
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
+Petascale refers to the peak performance of $10^{15}$ floating point operations per second.
 It has over five hundred unique monthly users and a diverse user base, making it interesting for studying file system usage.
 Puhti is a Finnish noun that means having energy.
 *CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
