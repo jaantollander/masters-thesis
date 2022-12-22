@@ -168,15 +168,24 @@ For example, if `open` is called multiple times with the same arguments Lustre c
 
 
 ## Entry resets
-If Jobstats has not updated the statistics of an entry within the *cleanup interval*, it removes the entry.
+If Jobstats has not updated the statistics of an entry within the *cleanup interval*, it removes the entry, referred to as *reset*.
 That is, if the snapshot time is older than the cleanup interval.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
 
-The removal of an entry *resets* the entry.
-If a job subsequently performs more operations, we can detect the reset by looking if any of the counter values have decreased.
+We *detect the resets* by observing if any counter-values have decreased.
 This method does not detect reset if the new counter value is larger than the old one, but it is uncommon because counter values typically grow large.
 In this case, we will underestimate the counter increment when calculating the difference between two counter values.
+
+
+## Computing rates from counters
+We can calculate a *rate* during an interval from two counter values by dividing the difference between the counter values by the interval length.
+We treat the previous counter value as zero if we detect a reset.
+
+For jobstats, a rate during an interval tells us how many operations, on average, happen per time unit during an interval.
+For example, if the previous counter for write operations is $v_1=1000$ at time $t_1=0$ seconds, and the current value is $v_2=2000$ at time $t_2=120$ seconds, it performed $v_2-v_1=1000$ write operations during the interval of $t_2-t_1=120$ seconds.
+Therefore, on average, it performs $1000/120\approx 8.33$ write operations per second during the interval.
+We cover the theory in Appendix \ref{analysis}.
 
 
 ## Storing time series data
