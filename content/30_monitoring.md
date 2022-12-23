@@ -10,22 +10,24 @@ Lustre Jobstats and Time series database are third-party software; the thesis ad
 
 This section describes how our monitoring system works in the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}. 
 We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
-Section \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained usage statistics.
+Section \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
 In Section \ref{operations-and-statistics}, we explain the different operations and statistics we can track, how to query them, and the output format.
 We explain how the statistics reset in Section \ref{entry-resets}.
 
 Section \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
-We believe that high total file system usage rates can cause congestion in the file system.
-We can find the most significant contributors to the total rate with fined-grained statistics.
+We suspect that high total file system usage rates can cause congestion in the file system.
+Fine-grained statistics allow us to break down the total rate into its components.
+Then, we can analyze the components and identify the components with the highest rates.
 
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
+The statistics we collect from Jobstats form multiple time series.
 We explain how we store time series data in *time series database* in Section \ref{storing-time-series-data}.
-In Section \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server at regular intervals and sends them to the *ingest server*.
+In Section \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
 Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
 We explain the initial and modified versions of the monitoring client.
-Finally, section \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
+Section \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
@@ -162,7 +164,6 @@ This table lists all operations tracked by the Jobstats for each Lustre target.
 The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but the values were always zero. Thus, we did not include them in our analysis.
 The tables contain the corresponding system calls for each Lustre operation.
 You can find an explanation for each system call in Appendix \ref{file-system-interface}.
-For the details about the `punch` operation, see Appendix \ref{punch-operation}.
 
 
 We found that the counters may report more samples for `close` than `open` operations.
@@ -239,30 +240,31 @@ Smaller observation interval increases the resolution but also increase the rate
 We used a 2-minute observation interval and a 10-minute cleanup interval.
 
 <!-- computing differences on the fly -->
-Initially, we computed the difference between two counters online in the monitoring clients and stored them in the database.
+Initially, we computed the difference between the two counters on the monitoring clients and stored them in the database.
 Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
 However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
 Also, computing the differences in the monitoring clients makes the design more complex and error-prone.
 
 <!-- parsing the entry identifier -->
-We had a problem related to parsing metadata from malformed entry identifiers, which we will discuss in Section \ref{entries-and-issues}.
-Because we assumed that all node names would follow the short hostname format, we accidentally parsed the entry identifiers with a short hostname and a fully-qualified hostname as the same.
-The mistake led us to identify two different time series as the same, resulting in wrong values when computing rates.
-We patch-fixed it by modifying our parser to disambiguate between the two formats.
+Also, we had a problem with malformed entry identifiers, discussed later in Section \ref{entries-and-issues}.
+Due to the bug, some node names were in the fully-qualified format instead of the short hostname format.
+Because we assumed that all node names would follow the short hostname format, we parsed the metadata from the entry identifiers with a short hostname and a fully-qualified hostname as the same.
+The mistake made us identify two different time series as the same, resulting in wrong values when computing rates.
+We fixed it by modifying our parser to disambiguate between the two formats.
 However, we lost a fair amount of time and data due to this problem.
 Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
 
-TODO: recorded raw data so that we could identify and correct for the bad values
-
-TODO: we used snapshot time as the timestamp
-
 <!-- recording the raw counters -->
-To solve these problems, we switched to collecting the raw values in the database and computing the rates after we inserted the data.
+To solve and identify these problems, we switched to collecting the counter values in the database and computing the rates afterward.
 This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
-We can also use a variable interval length if we need.
-However, the queries and analysis become more computationally intensive.
+It also supports variable interval lengths.
+However, the approach makes queries and analysis more computationally intensive.
 
-<!-- In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
+Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
+Due to the scaling problem, we use TimescaleDB and suggest using JSON for communication instead.
+Next, we describe the monitoring client and the message structure using JSON.
+
+<!-- In the description, we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
 The monitoring client parses the target and all entries from the output using *Regular Expressions (Regex)*.
 It creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
 An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
@@ -306,15 +308,11 @@ For example, if the previous data structure is the first observation, we have th
 ```
 
 Finally, the monitoring client composes a message of the data by listing the individual data structures in a JSON array and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
-Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
-Due to the scaling problem, we use TimescaleDB and suggest using JSON for communication instead.
 
 
 ## Ingest server
-The ingest server is responsible for maintaining a connection to the database and listening to the messages from the monitoring clients, parsing them, and inserting the data into the time series database.
-Optionally, we can use the concatenated string of target and entry identifier (`<target>:<entry_id>`) as the time series identifier.
-It is optional since we can identify individual time series from the metadata alone.
-However, it might reduce ambiguity about identifying an individual time series.
+The ingest server is responsible for maintaining a connection to the database, listening to the monitoring clients' messages, and parsing them.
+The server creates an insert statement for every message and sends it into the time series database to add the data.
 
 We did not explicitly set a time series identifier.
 Instead, we identified different time series as distinct tuples of the target, node name, job ID, and user ID.
@@ -322,10 +320,18 @@ For login nodes, which do not have a job ID, we generated a synthetic job ID usi
 Also, we created a synthetic job ID for other entries for which it was missing.
 We dropped other entries that did not conform to the entry identifier format we had set, as described in Section \ref{entry-identifier-format}.
 
+We could use the concatenated target and entry identifier string as the time series identifier (`<target>:<entry_id>`).
+It is optional since we can identify individual time series from the metadata alone.
+However, it might reduce ambiguity about identifying an individual time series.
+
 
 ## Analyzing statistics
-We implemented the analysis methods described in Appendix \ref{analysis}, using the Julia language [@julia_fresh_approach; @julia_language] and DataFrames.jl [@julia_dataframes] for manipulating the tabular data.
-We implemented visualization using Plots.jl [@julia_plots] with PlotlyJS backend.
+We analyzed batches of the raw counter data using the Julia language [@julia_fresh_approach; @julia_language].
+We dumped data from the database into Parquet files, such that each file contained data from one day, which limited the file size to manageable on a local computer.
+We used Parquet.jl package to parse the data, which we converted into a data frame using DataFrames.jl [@julia_dataframes].
+We computed rates from the counter values for each time series and performed explorative data analysis on the rates, such as computing sums over different subsets and computing densities.
+We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
+We show many of the visualizations in Section \ref{results}.
+We describe the theory of the analysis methods described in Appendix \ref{analysis}.
 
-Compute rates from counter values from Jobstats in as a stream.
-
+<!-- TODO: we used snapshot time as the timestamp, inferred the beginning of the time series -->
