@@ -8,13 +8,14 @@ Lustre Jobstats and Time series database are third-party software; the thesis ad
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
 
-This section describes how our monitoring system works in the Puhti cluster, described in Section \ref{puhti-cluster-at-csc}. 
+<!-- The Section \ref{puhti-cluster-at-csc} described the Puhti cluster. -->
+In this section, we explain how our monitoring system works in the Puhti cluster and how we analyze the data.
 We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
-Section \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
-In Section \ref{operations-and-statistics}, we explain the different operations and statistics we can track, how to query them, and the output format.
-We explain how the statistics reset in Section \ref{entry-resets}.
+Subsection \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
+In Subsection \ref{operations-and-statistics}, we explain the different operations and statistics we can track, how to query them, and the output format.
+We explain how the statistics reset in Subsection \ref{entry-resets}.
 
-Section \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
+Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
 We suspect that high total file system usage rates can cause congestion in the file system.
 Fine-grained statistics allow us to break down the total rate into its components.
 Then, we can analyze the components and identify the components with the highest rates.
@@ -22,12 +23,12 @@ Then, we can analyze the components and identify the components with the highest
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
 The statistics we collect from Jobstats form multiple time series.
-We explain how we store time series data in *time series database* in Section \ref{storing-time-series-data}.
-In Section \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
+We explain how we store time series data in *time series database* in Subsection \ref{storing-time-series-data}.
+In Subsection \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
 Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
 We explain the initial and modified versions of the monitoring client.
-Section \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
+Subsection \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
@@ -35,7 +36,7 @@ We changed the database to TimescaleDB.
 We take the precise design of programs as given and explain them only at a high level.
 
 The thesis work focused on the analysis and visualization parts.
-We explain how we analyzed batches of time series data in Section \ref{analyzing-statistics}.
+We explain how we analyzed batches of time series data in Subsection \ref{analyzing-statistics}.
 In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 
 <!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->

@@ -1,16 +1,15 @@
 \clearpage
 
 # Results
-The results section discusses the issues we found with the data quality from Lustre Jobstats on Puhti.
+The results section presents the results from analyzing the file system usage statistics from Puhti.
+In Subsection \ref{entries-and-issues}, we discuss the issues we found with the data quality from Lustre Jobstats on Puhti.
 Then, we show observations from the data that we believe to be reliable.
 As a consequence of the issues, the analysis is less deep and automated than was the initial goal.
 
 The volume and complexity of data make representation a challenge.
 We attempt to pick a visualization that best represents interesting features from the data.
 
-TODO: outline, Section ...
-
-TODO: mention bug report about broken jobids [@jobid-atomic]
+TODO: outline, Subsection \ref{counters-and-rates}, \ref{total-rates}, \ref{components-of-total-rates}
 
 
 \clearpage
@@ -49,6 +48,7 @@ This issue occurred in both MDSs and OSSs on Puhti.
 
 The second issue is that there were malformed entry identifiers.
 The issue is likely related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code base.
+A recent bug report mentioned broken job ID fields [@jobid-atomic], which looked similar to our problems.
 Consequently, we cannot reliably parse information from these entry identifiers, and we had to discard them, which resulted in data loss.
 This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we are still determining if the reliability of the counter values is affected by this issue.
@@ -139,7 +139,7 @@ Please note that we use a logarithmic scale due to large variations in the magni
 
 \clearpage
 
-## Density of multiple rates
+## Components of total rates
 ![This graph shows read operations on OST0001 during 24 hours of 2022-10-27.
 The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
 We can see that individual users cause spikes in the read rates.
