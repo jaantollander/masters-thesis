@@ -1,14 +1,16 @@
 \clearpage
 
 # Puhti cluster at CSC
-This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
+This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland, from a storage perspective.
 Petascale refers to the peak performance of $10^{15}$ floating point operations per second.
 It has over five hundred unique monthly users and a diverse user base, making it interesting for studying file system usage.
 Puhti is a Finnish noun that means having energy.
 *CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 
-TODO: outline, in Section \ref{hardware-configuration}, \ref{system-configuration}, \ref{running-workloads} ...
+In Section \ref{hardware-configuration}, we explain the hardware configuration of Puhti, including the nodes, processors, memory, storage, and network.
+Section \ref{system-configuration} covers the system configuration, such as the operating system, specific names and identifiers, and storage areas.
+Finally, Section \ref{running-workloads} discusses how to workloads on Puhti via Slurm, Slurm partitions, and Slurm's relevance for collecting file system usage statistics.
 
 Value    | Prefix   | Value    | Prefix
 -        | -        | -        | -
