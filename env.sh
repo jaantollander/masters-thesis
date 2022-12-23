@@ -3,18 +3,15 @@
 #    source env.sh
 #    thesis_pdf
 
-CONTENT_DIR=$PWD/content
-FIGURES_DIR=$CONTENT_DIR/figures
-OUT_DIR=$PWD/build
-ASSETS_DIR=$PWD/assets
-METADATA_DIR=$PWD/metadata
 CONTAINER_PANDOC="pandoc/latex:2.19-alpine"
 
-export TEXINPUTS="::$ASSETS_DIR"
+dir_content() { echo "$PWD/content"; }
+dir_figures() { echo "$PWD/content/figures"; }
+dir_assets() { echo "$PWD/assets"; }
+dir_metadata() { echo "$PWD/metadata"; }
+dir_out() { echo "$PWD/build"; }
 
-__mdfiles() {
-    find "$CONTENT_DIR" -name '*.md' | sort
-}
+files_md() { find "$(dir_content)" -name '*.md' | sort ;}
 
 thesis_pandoc_docker_pull() {
     sudo docker pull "$CONTAINER_PANDOC"
@@ -25,36 +22,39 @@ thesis_pandoc_docker_alias() {
 }
 
 thesis_download_aaltostyle() {
-    curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" --output "$ASSETS_DIR/aaltothesis.cls"
+    curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" \
+        --output "$(dir_assets)/aaltothesis.cls"
     TMP="$(mktemp -d)"
-    curl --location "https://wiki.aalto.fi/download/attachments/49383512/aaltologo.zip" --output "$TMP/aaltologo.zip"
+    curl --location "https://wiki.aalto.fi/download/attachments/49383512/aaltologo.zip" \
+        --output "$TMP/aaltologo.zip"
     unzip "$TMP/aaltologo.zip" -d "$TMP"
-    mv "$TMP/aaltologo.sty" "$ASSETS_DIR"
+    mv "$TMP/aaltologo.sty" "$(dir_assets)"
 }
 
 thesis_download_citationstyle() {
-    curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/vancouver-brackets.csl" --output "$ASSETS_DIR/citationstyle.csl"
+    curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/vancouver-brackets.csl" \
+        --output "$(dir_assets)/citationstyle.csl"
 }
 
 thesis_copy_figures() {
-    cp -r "$FIGURES_DIR" "$OUT_DIR"
+    cp -r "$(dir_figures)" "$(dir_out)"
 }
 
 thesis_html() {
-    mkdir -p "$OUT_DIR"
+    mkdir -p "$(dir_out)"
     thesis_copy_figures
-    pandoc $(__mdfiles) \
-        --resource-path="$CONTENT_DIR" \
+    pandoc $(files_md) \
+        --resource-path="$(dir_content)" \
         --citeproc \
         --standalone \
         --from "markdown+tex_math_dollars" \
         --to "html" \
-        --output "$OUT_DIR/index.html" \
+        --output "$(dir_out)/index.html" \
         --mathjax \
         --metadata "date=$(date -I)" \
-        --metadata-file "$METADATA_DIR/html.yaml" \
-        --bibliography "$CONTENT_DIR/bibliography.bib" \
-        --csl "$ASSETS_DIR/citationstyle.csl" \
+        --metadata-file "$(dir_metadata)/html.yaml" \
+        --bibliography "$(dir_content)/bibliography.bib" \
+        --csl "$(dir_assets)/citationstyle.csl" \
         --toc \
         --number-sections \
         --toc-depth 2 \
@@ -62,18 +62,18 @@ thesis_html() {
 }
 
 thesis_epub() {
-    mkdir -p "$OUT_DIR"
-    pandoc $(__mdfiles) \
-        --resource-path="$CONTENT_DIR" \
+    mkdir -p "$(dir_out)"
+    pandoc $(files_md) \
+        --resource-path="$(dir_content)" \
         --citeproc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
-        --output "$OUT_DIR/sci_2022_tollander-de-balsch_jaan.epub" \
+        --output "$(dir_out)/sci_2022_tollander-de-balsch_jaan.epub" \
         --mathml \
         --metadata "date=$(date -I)" \
-        --metadata-file "$METADATA_DIR/epub.yaml" \
-        --bibliography "$CONTENT_DIR/bibliography.bib" \
-        --csl "$ASSETS_DIR/citationstyle.csl" \
+        --metadata-file "$(dir_metadata)/epub.yaml" \
+        --bibliography "$(dir_content)/bibliography.bib" \
+        --csl "$(dir_assets)/citationstyle.csl" \
         --toc \
         --number-sections \
         --toc-depth 2 \
@@ -81,20 +81,22 @@ thesis_epub() {
 }
 
 thesis_pdf() {
-    mkdir -p "$OUT_DIR"
-    pandoc $(__mdfiles) \
-        --resource-path="$CONTENT_DIR" \
+    TEXINPUTS="::$(dir_assets)"
+    export TEXINPUTS
+    mkdir -p "$(dir_out)"
+    pandoc $(files_md) \
+        --resource-path="$(dir_content)" \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$OUT_DIR/sci_2022_tollander-de-balsch_jaan.pdf" \
+        --output "$(dir_out)/sci_2022_tollander-de-balsch_jaan.pdf" \
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
-        --metadata-file "$METADATA_DIR/tex.yaml" \
-        --bibliography "$CONTENT_DIR/bibliography.bib" \
-        --csl "$ASSETS_DIR/citationstyle.csl" \
-        --include-in-header "$CONTENT_DIR/header.tex" \
-        --include-before-body "$CONTENT_DIR/body.tex" \
+        --metadata-file "$(dir_metadata)/tex.yaml" \
+        --bibliography "$(dir_content)/bibliography.bib" \
+        --csl "$(dir_assets)/citationstyle.csl" \
+        --include-in-header "$(dir_content)/header.tex" \
+        --include-before-body "$(dir_content)/body.tex" \
         --number-sections \
         --toc-depth 2 \
         --strip-comments \
@@ -102,18 +104,18 @@ thesis_pdf() {
 }
 
 thesis_tex() {
-    mkdir -p "$OUT_DIR"
-    pandoc $(__mdfiles) \
+    mkdir -p "$(dir_out)"
+    pandoc $(files_md) \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$OUT_DIR/sci_2022_tollander-de-balsch_jaan.tex" \
+        --output "$(dir_out)/sci_2022_tollander-de-balsch_jaan.tex" \
         --metadata "date=$(date -I)" \
-        --metadata-file "$METADATA_DIR/tex.yaml" \
-        --bibliography "$CONTENT_DIR/bibliography.bib" \
-        --csl "$ASSETS_DIR/citationstyle.csl" \
-        --include-in-header "$CONTENT_DIR/header.tex" \
-        --include-before-body "$CONTENT_DIR/body.tex" \
+        --metadata-file "$(dir_metadata)/tex.yaml" \
+        --bibliography "$(dir_content)/bibliography.bib" \
+        --csl "$(dir_assets)/citationstyle.csl" \
+        --include-in-header "$(dir_content)/header.tex" \
+        --include-before-body "$(dir_content)/body.tex" \
         --number-sections \
         --toc-depth 2 \
         --strip-comments \
@@ -132,7 +134,7 @@ thesis_preview() {
 
     # Run "THESIS_PREVIEW_CMD" if files in target directories change.
     # https://superuser.com/questions/181517/how-to-execute-a-command-whenever-a-file-changes
-    inotifywait -e close_write,moved_to,create -m "$CONTENT_DIR" -m "$METADATA_DIR" |
+    inotifywait -e close_write,moved_to,create -m "$(dir_content)" -m "$(dir_metadata)" |
     while read -r directory events filename; do
         case $filename in 
             *.md|*.bib|*.tex|*.yaml) $THESIS_PREVIEW_CMD ;;
@@ -143,13 +145,14 @@ thesis_preview() {
 }
 
 thesis_serve() {
-    julia serve.jl "$OUT_DIR"
+    julia serve.jl "$(dir_out)"
 }
 
 thesis_build() {
     # Run in subshell
     (
         TMP=$(mktemp -d) && \
+        echo "$TMP" && \
         cp -r . "$TMP" && \
         cd "$TMP" && \
         git checkout  --orphan "build" && \
@@ -157,7 +160,7 @@ thesis_build() {
         thesis_epub && \
         thesis_html && \
         thesis_tex && \
-        mv "$OUT_DIR"/* . && \
+        mv "$(dir_out)"/* . && \
         git rm -rf . && \
         git add . && \
         git commit -m "build" && \
