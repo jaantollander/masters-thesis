@@ -1,4 +1,4 @@
-\newpage
+\clearpage
 
 # High-performance computing
 Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.

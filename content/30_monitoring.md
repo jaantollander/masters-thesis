@@ -1,4 +1,4 @@
-\newpage
+\clearpage
 
 # Monitoring and analysis
 ![

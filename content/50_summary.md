@@ -1,4 +1,4 @@
-\newpage
+\clearpage
 
 # Summary
 TODO: what we accomplished

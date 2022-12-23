@@ -1,4 +1,4 @@
-\newpage
+\clearpage
 
 # Results
 The results section discusses the issues we found with the data quality from Lustre Jobstats on Puhti.

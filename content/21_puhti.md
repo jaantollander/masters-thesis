@@ -1,4 +1,4 @@
-\newpage
+\clearpage
 
 # Puhti cluster at CSC
 This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland.
