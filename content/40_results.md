@@ -3,13 +3,18 @@
 # Results
 The results section presents the results from analyzing the file system usage statistics from Puhti.
 In Subsection \ref{entries-and-issues}, we discuss the issues we found with the data quality from Lustre Jobstats on Puhti.
-Then, we show observations from the data that we believe to be reliable.
 As a consequence of the issues, the analysis is less deep and automated than was the initial goal.
 
+Despite the issues, we obtained data that we believe to be reliable.
+We present different aspects of data from compute nodes on 24-hour period of 2022-10-27.
+Subsection \ref{counters-and-rates} shows raw counter values and computed rates of a few hand-picked jobs to illustrate different I/O patterns.
+Next, Subsection \ref{total-rates} shows total rates of each operation for each Lustre target to visualize larger scale I/O patterns across the whole data set.
+Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on specific Lustre target to demonstrate the effects of the different components.
+
+<!--
 The volume and complexity of data make representation a challenge.
 We attempt to pick a visualization that best represents interesting features from the data.
-
-TODO: outline, Subsection \ref{counters-and-rates}, \ref{total-rates}, \ref{components-of-total-rates}
+-->
 
 
 \clearpage
