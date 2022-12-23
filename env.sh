@@ -5,14 +5,6 @@
 
 CONTAINER_PANDOC="pandoc/latex:2.19-alpine"
 
-dir_content() { echo "$PWD/content"; }
-dir_figures() { echo "$PWD/content/figures"; }
-dir_assets() { echo "$PWD/assets"; }
-dir_metadata() { echo "$PWD/metadata"; }
-dir_out() { echo "$PWD/build"; }
-
-files_md() { find "$(dir_content)" -name '*.md' | sort ;}
-
 thesis_pandoc_docker_pull() {
     sudo docker pull "$CONTAINER_PANDOC"
 }
@@ -20,6 +12,15 @@ thesis_pandoc_docker_pull() {
 thesis_pandoc_docker_alias() {
     alias pandoc='sudo docker run --rm --volume "$(pwd):$(pwd)" --user $(id -u):$(id -g) "$CONTAINER_PANDOC"'
 }
+
+
+dir_content() { echo "$PWD/content"; }
+dir_figures() { echo "$PWD/content/figures"; }
+dir_assets() { echo "$PWD/assets"; }
+dir_metadata() { echo "$PWD/metadata"; }
+dir_out() { echo "$PWD/build"; }
+
+files_md() { find "$(dir_content)" -name '*.md' | sort ;}
 
 thesis_download_aaltostyle() {
     curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" \
