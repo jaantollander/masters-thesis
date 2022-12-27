@@ -1,15 +1,18 @@
 \clearpage
 
 # Results
-The results section presents the results from analyzing the file system usage statistics from Puhti.
-In Subsection \ref{entries-and-issues}, we discuss the issues we found with the data quality from Lustre Jobstats on Puhti.
-As a consequence of the issues, the analysis is less deep and automated than was the initial goal.
+The results section presents the results from analyzing the file system usage statistics obtained from monitoring on Puhti, as discussed in section \ref{monitoring-and-analysis}.
+
+We begin by discussing the issues we found with the data quality from Lustre Jobstats on Puhti in Subsection \ref{entries-and-issues}.
+These issues greatly impacted the thesis work because they led to data and time loss.
+As a consequence, we were not able to develop automated tools for analyzing the monitoring data.
 
 Despite the issues, we obtained data that we believe to be reliable.
-We present different aspects of data from compute nodes on 24-hour period of 2022-10-27.
+We present different aspects of data from compute nodes on 24 hours of 2022-10-27.
+We omitted data from login and utility nodes in this analysis due to a lack of time to verify that it did not contain any issues.
 Subsection \ref{counters-and-rates} shows raw counter values and computed rates of a few hand-picked jobs to illustrate different I/O patterns.
-Next, Subsection \ref{total-rates} shows total rates of each operation for each Lustre target to visualize larger scale I/O patterns across the whole data set.
-Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on specific Lustre target to demonstrate the effects of the different components.
+In Subsection \ref{total-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
+Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on a specific Lustre target to demonstrate the effects of the different components.
 
 <!--
 The volume and complexity of data make representation a challenge.
@@ -44,14 +47,14 @@ The examples show correct entry identifiers, identifiers with missing job IDs, a
 We found that some of the observed entry identifiers did not conform to the format on the settings described in Section \ref{entry-identifier-format}.
 Table \ref{tab:jobid-examples} demonstrates some of the entry identifiers we observed.
 
-The first issue is missing Job ID values.
-A non-system user ID that runs a job on compute nodes has a Slurm Job ID set; thus, the identifier should include it.
-However, we found that there were entries where they were systematically missing.
+The first issue is missing job ID values.
+Slurm sets a Slurm job ID for all non-system users (user ID greater than 999) running jobs on compute nodes via Slurm, and the identifier should include it.
+However, we found many entries from non-system user IDs on compute nodes without a job ID.
 Due to these issues, data from the same job might scatter into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific identifiers.
 The issue might be related to problems fetching the environment variable's value.
 This issue occurred in both MDSs and OSSs on Puhti.
 
-The second issue is that there were malformed entry identifiers.
+The second, more serious issue is that there were malformed entry identifiers.
 The issue is likely related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code base.
 A recent bug report mentioned broken job ID fields [@jobid-atomic], which looked similar to our problems.
 Consequently, we cannot reliably parse information from these entry identifiers, and we had to discard them, which resulted in data loss.
@@ -80,14 +83,15 @@ We see many missing job IDs on system user IDs, likely because it does not have 
 \label{fig:entry-ids-oss-system}
 ](figures/entry_ids_oss_system.svg)
 
-The Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive 2-minute intervals separated by Lustre server, user ID category (system versus non-system) and entry identifier formatting.
+The Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive Jobstats outputs taken every 2-minutes.
+We separated the figures by Lustre server, system versus non-system user ID, and entry identifier formatting.
 
 The number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
 In some conditions, it can create many of them.
 Apart from the previously mentioned issues, we see a lot of entries with system user IDs.
-These entries add much valuable information and thus increase data bloat.
-We should either filter them or find ways to combine them into fewer entries.
+These entries do not add much valuable information and thus increase data bloat.
+We should either discard them or find ways to combine them into fewer entries.
 
 
 \clearpage
@@ -148,14 +152,15 @@ Please note that we use a logarithmic scale due to large variations in the magni
 ![This graph shows read operations on OST0001 during 24 hours of 2022-10-27.
 The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
 We can see that individual users cause spikes in the read rates.
-The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
-We can perform a similar analysis based on job ID or node name.
+A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
 \label{fig:density}](figures/2022-10-27_ost0001_compute_read.svg)
 
 We can use a density plot to extract meaningful information from large numbers of time series visually.
-A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
 We also use a logarithmic scale for the density due to the large variations.
 As shown in Figure \ref{fig:density}, apart from the individual spikes, obtaining information from a graph with many time series is challenging as they tend to overlap.
+The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
+We can perform a similar analysis based on job ID or node name.
+
 The density is a statistical plot that shows how many time series have a value in a specific range at a particular time. 
 However, it omits information about individual time series.
 It lets us distinguish whether a small number of users perform a large magnitude of operations or a large number of users perform a small magnitude of operations.

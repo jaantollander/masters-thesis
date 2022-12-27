@@ -23,7 +23,7 @@ $1000^5$ | peta (P) | $1024^5$ | pebi (Pi)
 : \label{tab:prefixes}
   Prefixes in base ten and base two.
 
-In this section, we use units of bytes and bits and base ten and base two prefixes, as shown in Table \ref{tab:prefixes}.
+We use units of bytes and bits and base ten and base two prefixes, as shown in Table \ref{tab:prefixes}.
 One byte (B) is eight bits (b).
 Units of memory size use bytes with base two prefixes, such as gibibytes (GiB), storage size uses bytes with base ten prefixes, such as gigabytes (GB), and network bandwidth uses bit rates with base ten prefixes, such as gigabits per second (Gb/s).
 
@@ -99,9 +99,9 @@ We measure the usage of computational resources in *Billing Units (BU)*.
 Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, use different rates of BUs.
 
 Puhti associates each user account with a *user* and each project with a *group*.
-We can use user IDs (UID) and group IDs (GID) as identifiers for measuring file system usage at the user or group level.
-Puhti reserves UIDs from 0 to 999 for system processes, for example, 0 is the root, and 666 is job control.
-It is helpful to separate the file system operations performed by system UIDs from the other UIDs.
+We can use user IDs and group IDs as identifiers for measuring file system usage at the user or group level.
+Puhti reserves user IDs from 0 to 999 for system processes, for example, 0 is the root, and 666 is job control.
+It is helpful to separate the file system operations performed by system user IDs from the other user IDs.
 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
 It shares a Lustre parallel file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.

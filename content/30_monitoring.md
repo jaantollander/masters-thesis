@@ -50,22 +50,22 @@ We can use the following format codes.
 - `%e` for *executable name*.
 - `%h` for *fully-qualified hostname*.
 - `%H` for *short hostname* or *node name*, which removes everything from the fully-qualified hostname after the first dot, including the dot.
-- `%j` for *Job ID* from environment variable specified by `jobid_var` setting.
-- `%u` for *User ID* number.
-- `%g` for *Group ID* number.
-- `%p` for *Process ID* number.
+- `%j` for *job ID* from environment variable specified by `jobid_var` setting.
+- `%u` for *user ID* number.
+- `%g` for *group ID* number.
+- `%p` for *process ID* number.
 
 The formatting affects the resolution of the statistics.
 Using more formatting codes results in higher resolution and leads to a higher rate of data accumulation.
 
-The formatting for Lustre clients on login nodes includes the *Executable name* and User ID.
+The formatting for Lustre clients on login nodes includes the executable name and user ID.
 
 ```
     jobid_name="%e.%u"
 ```
 
-The formatting for Lustre clients on compute and utility nodes includes Job ID, User ID, and node name.
-We set the Job ID to Slurm Job ID.
+The formatting for Lustre clients on compute and utility nodes includes job ID, user ID, and node name.
+We set the job ID to Slurm job ID.
 
 ```
     jobid_name="%j:%u:%H"
