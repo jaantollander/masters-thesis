@@ -3,22 +3,17 @@
 #    source env.sh
 #    thesis_pdf
 
-CONTAINER_PANDOC="pandoc/latex:2.19-alpine"
-
-thesis_pandoc_docker_pull() {
-    sudo docker pull "$CONTAINER_PANDOC"
-}
-
-thesis_pandoc_docker_alias() {
-    alias pandoc='sudo docker run --rm --volume "$(pwd):$(pwd)" --user $(id -u):$(id -g) "$CONTAINER_PANDOC"'
-}
-
-
 dir_content() { echo "$PWD/content"; }
 dir_figures() { echo "$PWD/content/figures"; }
 dir_assets() { echo "$PWD/assets"; }
 dir_metadata() { echo "$PWD/metadata"; }
-dir_out() { echo "$PWD/build"; }
+
+dir_out() {
+    DIR_OUT=$1
+    : "${DIR_OUT:="$PWD/build"}"
+    mkdir -p "$DIR_OUT"
+    echo "$DIR_OUT"
+}
 
 files_md() { find "$(dir_content)" -name '*.md' | sort ;}
 
@@ -37,20 +32,16 @@ thesis_download_citationstyle() {
         --output "$(dir_assets)/citationstyle.csl"
 }
 
-thesis_copy_figures() {
-    cp -r "$(dir_figures)" "$(dir_out)"
-}
-
 thesis_html() {
-    mkdir -p "$(dir_out)"
-    thesis_copy_figures
+    DIR_OUT=$(dir_out "$1")
+    cp -r "$(dir_figures)" "$DIR_OUT"
     pandoc $(files_md) \
         --resource-path="$(dir_content)" \
         --citeproc \
         --standalone \
         --from "markdown+tex_math_dollars" \
         --to "html" \
-        --output "$(dir_out)/index.html" \
+        --output "$DIR_OUT/index.html" \
         --mathjax \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/html.yaml" \
@@ -63,13 +54,13 @@ thesis_html() {
 }
 
 thesis_epub() {
-    mkdir -p "$(dir_out)"
+    DIR_OUT=$(dir_out "$1")
     pandoc $(files_md) \
         --resource-path="$(dir_content)" \
         --citeproc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
-        --output "$(dir_out)/sci_2022_tollander-de-balsch_jaan.epub" \
+        --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.epub" \
         --mathml \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/epub.yaml" \
@@ -84,13 +75,13 @@ thesis_epub() {
 thesis_pdf() {
     TEXINPUTS="::$(dir_assets)"
     export TEXINPUTS
-    mkdir -p "$(dir_out)"
+    DIR_OUT=$(dir_out "$1")
     pandoc $(files_md) \
         --resource-path="$(dir_content)" \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$(dir_out)/sci_2022_tollander-de-balsch_jaan.pdf" \
+        --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.pdf" \
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
@@ -105,12 +96,12 @@ thesis_pdf() {
 }
 
 thesis_tex() {
-    mkdir -p "$(dir_out)"
+    DIR_OUT=$(dir_out "$1")
     pandoc $(files_md) \
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$(dir_out)/sci_2022_tollander-de-balsch_jaan.tex" \
+        --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.tex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
         --bibliography "$(dir_content)/bibliography.bib" \
@@ -150,19 +141,23 @@ thesis_serve() {
 }
 
 thesis_build() {
-    # Run in subshell
+    TMP=$(mktemp -d)
+    echo "$TMP"
+    cp -r .git "$TMP"
+
     (
-        TMP=$(mktemp -d) && \
-        echo "$TMP" && \
-        cp -r . "$TMP" && \
         cd "$TMP" && \
         git checkout  --orphan "build" && \
-        thesis_pdf && \
-        thesis_epub && \
-        thesis_html && \
-        thesis_tex && \
-        mv "$(dir_out)"/* . && \
-        git rm -rf . && \
+        git rm -rf .
+    )
+
+    thesis_pdf "$TMP"
+    thesis_epub "$TMP"
+    thesis_html "$TMP"
+    thesis_tex "$TMP"
+
+    (
+        cd "$TMP" && \
         git add . && \
         git commit -m "build" && \
         git push "origin" "build" --force
