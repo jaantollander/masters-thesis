@@ -90,5 +90,5 @@ The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and related software.
 Section \ref{puhti-cluster-at-csc} covers the configuration of the Puhti cluster.
 We describe the monitoring system such as how we collect data, what data we collect, how we store it and how we analyze the data in Section \ref{monitoring-and-analysis}.
-Finally, we present our result in Section \ref{results}.
+We present our result in Section \ref{results}.
 

@@ -90,29 +90,27 @@ Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server* as its 
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 
 Each node in Puhti is a Lustre client of the shared Lustre file system.
-We can identify nodes based on their *hostname* in the form `<nodename>.bullx`.
-Table \ref{tab:node-names} lists the *node names* of service and compute nodes.
+We can identify nodes based on their *node name*, which is the part of hostname before the first dot, for example, `<nodename>.bullx`.
+Table \ref{tab:node-names} lists the names of compute nodes.
+The names of service nodes match the regular expression `puhti-[[:alnum:]_-]+` such as `puhti-login12`.
 <!-- The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes. -->
 We can use node names to separate file system operations at a node-specific level.
 
-Node category|Node name|Example
--|-|-
-service|`puhti-{*}`|`puhti-login12`
-compute|`r{01-04}c{01-48}`|`r01c01`
-compute|`r{01-04}g{01-08}`
-compute|`r{05-07}c{01-64}`
-compute|`r08m{01-06}`|`r08m06`
-compute|`r{09-10}c{01-48}`
-compute|`r{11-12}c{01-72}`
-compute|`r{13-18}c{01-48}`
-compute|`r{13-18}g{01-08}`|`r18g04`
+Set of node names|Example of an element
+-|-
+`r{01-04}c{01-48}`|`r01c01`
+`r{01-04}g{01-08}`|`r01g06`
+`r{05-07}c{01-64}`|`r07c64`
+`r08m{01-06}`|`r08m06`
+`r{09-10}c{01-48}`|`r10c02`
+`r{11-12}c{01-72}`|`r12c72`
+`r{13-18}c{01-48}`|`r18c04`
+`r{13-18}g{01-08}`|`r18g04`
 
 : \label{tab:node-names}
-A table of all node names in Puhti.
-The range `{01-04}` expands to `{01,02,03,04}`.
-Notation `r{a,b}` expands to `{ra,rb}`.
-The product `{a,b}{c,d}` expands to `{ab,ad,bc,bd}`.
-The star `{*}` refers to set of all strings.
+A table of node names of compute nodes in Puhti.
+Curly braces denote a set, ranges such as `{01-04}` expand to `{01,02,03,04}` and products suc as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
+We can add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` which we can expand as a product.
 
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.

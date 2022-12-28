@@ -9,8 +9,7 @@ The *memory* requirement of computation is the maximum string size during the co
 Some models of computation are only theoretical tools, while others we can implement in the real world using physical processes.
 
 Contemporary computers represent data in digital form as binary digits called *bits*.
-Multiple bits in a row form a *binary string*.
-Rules correspond to instructions to a computer processor that manipulates binary strings.
+Rules correspond to instructions to a computer processor that manipulates string of bits in memory.
 Memory consists of multiple levels of volatile *main memory* and non-volatile *storage* organized hierarchically based on factors such as proximity to the processor, access speed, and cost.
 Models of computation include serial and parallel computing.
 *Serial computing* refers to performing one operation at a time.
