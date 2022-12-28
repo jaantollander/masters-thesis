@@ -88,6 +88,9 @@ TODO: illustrate that there are multiple MDTs per MDS and OSTs per OSS in the fi
 As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
 Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
+
+TODO: add tables lustre server, targets, and clients (node names)
+
 Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
 The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
 For example, `puhti-login12` or `r01c01`.
