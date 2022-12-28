@@ -12,12 +12,17 @@ The results demonstrate different I/O patterns, all the monitored file system op
 We also demonstrate that an individual user can cause the majority of file system operations at a given time.
 
 In the future, we hope that the vendor fixes these issues so that we can gather reliable data over a longer period to perform a more extensive analysis.
-We want to compare the file system usage data with file system performance metrics to identify what kind of usage causes lag in slow-down in the cluster.
-It would be interesting to combine Slurm accounting data and use it in the analysis.
+With reliable data and correct job IDs, we should be able to offer job-specific statistics to users and combine Slurm accounting data for the analysis.
+Also, we want to compare the file system usage data with file system performance metrics to identify what kind of usage causes lag in slow-down in the cluster and who is responsible for it.
 
-- apply causal impulse response filter on total rate per target, compare individual rates against the filtered rate?
-- finite or infinite time window, experiment with different time windows
-- try using moving aggregates (average, median) with multiple time windows to analyze time series data
-- find time intervals from the intersections of the moving aggregates
-- measure deviation from the moving aggregate to find outliers
-- identify periods of high-load (that correlate with lag), identify who causes the majority of the load during the period
+We should experiment with different analysis methods.
+
+- Multiple time series for each file system operation
+- Combine rates of different operations into one (for example, as a linear combination)
+- For example, we can try different ways to aggregate multiple time series into one (for example, sum by user and average over each timestamp), 
+- Then apply causal impulse response filter on the aggregate time series (for example, moving average).
+- Compare multiple filtered time series with varying time windows (find intervals from the intersections).
+- Compare aggregate time series against the filtered time series (for example, measure deviation to find outliers).
+
+The ultimate goal is to provide a real-time monitoring, visualization and reporting deployed on live system that administrators can use to identify if slow-down is caused by file system usage and who is causing it.
+

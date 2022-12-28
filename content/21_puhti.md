@@ -89,12 +89,30 @@ As mentioned in Section \ref{linux-operating-system}, most high-performance clus
 Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 
-TODO: add tables lustre server, targets, and clients (node names)
-
-Each node in Puhti has a *hostname* in the form `<nodename>.bullx`.
-The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes.
-For example, `puhti-login12` or `r01c01`.
+Each node in Puhti is a Lustre client of the shared Lustre file system.
+We can identify nodes based on their *hostname* in the form `<nodename>.bullx`.
+Table \ref{tab:node-names} lists the *node names* of service and compute nodes.
+<!-- The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes. -->
 We can use node names to separate file system operations at a node-specific level.
+
+Node category|Node name|Example
+-|-|-
+service|`puhti-{*}`|`puhti-login12`
+compute|`r{01-04}c{01-48}`|`r01c01`
+compute|`r{01-04}g{01-08}`
+compute|`r{05-07}c{01-64}`
+compute|`r08m{01-06}`|`r08m06`
+compute|`r{09-10}c{01-48}`
+compute|`r{11-12}c{01-72}`
+compute|`r{13-18}c{01-48}`
+compute|`r{13-18}g{01-08}`|`r18g04`
+
+: \label{tab:node-names}
+A table of all node names in Puhti.
+The range `{01-04}` expands to `{01,02,03,04}`.
+Notation `r{a,b}` expands to `{ra,rb}`.
+The product `{a,b}{c,d}` expands to `{ab,ad,bc,bd}`.
+The star `{*}` refers to set of all strings.
 
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.
@@ -107,7 +125,7 @@ Puhti reserves user IDs from 0 to 999 for system processes, for example, 0 is th
 It is helpful to separate the file system operations performed by system user IDs from the other user IDs.
 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
-It shares a Lustre parallel file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
+It shares the same Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
 - *Home* is intended for storing personal data and configuration files.
 In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB and 100 000 files per user.

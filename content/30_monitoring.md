@@ -12,7 +12,7 @@ Lustre Jobstats and Time series database are third-party software; the thesis ad
 In this section, we explain how our monitoring system works in the Puhti cluster and how we analyze the data.
 We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
 Subsection \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
-In Subsection \ref{operations-and-statistics}, we explain the different operations and statistics we can track, how to query them, and the output format.
+In Subsection \ref{file-system-statistics}, we explain the different file system operations and statistics for them that we can track, how to query them, and the output format.
 We explain how the statistics reset in Subsection \ref{entry-resets}.
 
 Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
@@ -76,7 +76,7 @@ We can use the Slurm job ID to retrieve Slurm job information such as project an
 For example, the project could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
 
 
-## Operations and statistics
+## File system statistics
 Each Lustre server keeps counters for all of its targets.
 We can fetch the counters and print them in a text format by running the `lctl get_param` command with an argument that points to the desired jobstats.
 We can query jobstats from the Lustre server as follows:
@@ -104,10 +104,39 @@ The text output is formatted as follows.
 
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
 The *target* (`<target>`) contains the mount point and name of the Lustre target of the query.
+Tables \ref{tab:mdt-mds} and \ref{tab:ost-oss} list the metadata and object storage target names on each Lustre server in Puhti.
+<!--
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>`, and eight OSSs with three OSTs each, named `scratch-OST<index>`.
 The `<index>` is a four-digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
 Indexing starts from zero.
-For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0023`.
+For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0017`.
+-->
+
+MDT|MDS|MDT|MDS
+-|-|-|-
+`scratch-MDT0000`|1|`scratch-MDT0002`|2
+`scratch-MDT0001`|1|`scratch-MDT0003`|2
+
+: \label{tab:mdt-mds}
+Metadata servers and target
+
+OST|OSS|OST|OSS
+-|-|-|-
+`scratch-OST0000`|1|`scratch-OST000c`|5
+`scratch-OST0001`|1|`scratch-OST000d`|5
+`scratch-OST0002`|1|`scratch-OST000e`|5
+`scratch-OST0003`|2|`scratch-OST000f`|6
+`scratch-OST0004`|2|`scratch-OST0010`|6
+`scratch-OST0005`|2|`scratch-OST0011`|6
+`scratch-OST0006`|3|`scratch-OST0012`|7
+`scratch-OST0007`|3|`scratch-OST0013`|7
+`scratch-OST0008`|3|`scratch-OST0014`|7
+`scratch-OST0009`|4|`scratch-OST0015`|8
+`scratch-OST000a`|4|`scratch-OST0016`|8
+`scratch-OST000b`|4|`scratch-OST0017`|8
+
+: \label{tab:ost-oss}
+Object storage servers and targets
 
 After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
 The output denotes each *entry* by dash `-` and contains the entry identifier (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
@@ -130,7 +159,7 @@ Units (`<unit>`) are either requests (`reqs`), bytes (`bytes`), or microseconds 
 Statistics of an entry that has not performed any operations are implicitly zero.
 
 
-Targets | Operation | System call | Parsed statistics
+Targets | File system operation | System call | Parsed statistics
 -|-|-|-
 MDT | **`open`** | `open` | `samples`
 MDT | **`close`** | `close` | `samples`
@@ -235,7 +264,7 @@ We would also like to combine the metadata information with Slurm job informatio
 
 
 ## Monitoring client
-The monitoring client calls the appropriate command, as explained in Section \ref{operations-and-statistics}, at regular observation intervals to collect statistics.
+The monitoring client calls the appropriate command, as explained in Section \ref{file-system-statistics}, at regular observation intervals to collect statistics.
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and a 10-minute cleanup interval.
