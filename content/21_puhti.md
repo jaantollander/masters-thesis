@@ -96,7 +96,7 @@ The names of service nodes match the regular expression `puhti-[[:alnum:]_-]+` s
 <!-- The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes. -->
 We can use node names to separate file system operations at a node-specific level.
 
-Set of node names|Example of an element
+Set of node names|Example node name
 -|-
 `r{01-04}c{01-48}`|`r01c01`
 `r{01-04}g{01-08}`|`r01g06`
@@ -109,8 +109,9 @@ Set of node names|Example of an element
 
 : \label{tab:node-names}
 A table of node names of compute nodes in Puhti.
-Curly braces denote a set, ranges such as `{01-04}` expand to `{01,02,03,04}` and products suc as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
-We can add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` which we can expand as a product.
+Curly braces denote a set.
+Ranges such as `{01-04}` expand to `{01,02,03,04}`, products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
+We add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
 
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.

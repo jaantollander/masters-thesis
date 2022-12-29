@@ -268,6 +268,7 @@ The monitoring client calls the appropriate command, as explained in Section \re
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and a 10-minute cleanup interval.
+In the future, we could expriment with reducing the observation interval to 1-minute.
 
 <!-- computing differences on the fly -->
 Initially, we computed the difference between the two counters on the monitoring clients and stored them in the database.
@@ -362,6 +363,10 @@ We used Parquet.jl package to parse the data, which we converted into a data fra
 We computed rates from the counter values for each time series and performed explorative data analysis on the rates, such as computing sums over different subsets and computing densities.
 We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
 We show many of the visualizations in Section \ref{results}.
+
 We describe the theory of the analysis methods described in Appendix \ref{analysis}.
 
+TODO: briefly explain the methods of the Appendix
+
 <!-- TODO: we used snapshot time as the timestamp, inferred the beginning of the time series -->
+

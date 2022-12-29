@@ -21,7 +21,7 @@ Also, we want to compare the file system usage data with file system performance
 As a recap, the monitoring data of each file system operation consists of multiple time series.
 Each time series consists of timestamps and associated values.
 Each value tells us the average rate of operations from the previous timestamp to the current timestamp.
-Here are some ideas for more sophisticated analysis methods to try.
+Here are some ideas of analysis methods to try.
 
 - *Combining operations*:
   We analyzed operations independently.
@@ -35,8 +35,8 @@ Here are some ideas for more sophisticated analysis methods to try.
   We can also try summing by the user and computing the average over the sums.
 
 - *Analyzing trends*:
-  We can apply a causal, finite impulse response filter on a time series to analyze trends over time.
-  For example, we can use a (weighted) moving average to a time series.
+  We can apply a causal, impulse response filter on a time series to analyze trends over time.
+  For example, we can use a moving average on a time series.
 
 - *Identify changes in trends at different timescales*:
   We can identify periods where trends change by comparing multiple applying the same filter at various time windows to a time series.
@@ -47,6 +47,8 @@ Here are some ideas for more sophisticated analysis methods to try.
   We can assign groups for multiple time series with similar values using one-dimensional clustering at each timestamp.
   We can analyze how the cluster for each time series evolves in time.
   We can use Kernel Density Estimation (KDE), such as Average Shifted Histograms to perform one-dimensional clustering fast.
+
+We can also combine and mix previously mentioned methods.
 
 The ultimate goal is to provide real-time monitoring, visualization, and reporting deployed on a live system that administrators can use to identify if a slowdown is caused by file system usage and who is causing it.
 
