@@ -35,8 +35,8 @@ These reasons make studying storage and I/O performance in HPC systems necessary
 
 As mentioned, heavy usage of a parallel file system can cause various problems.
 A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses guidelines for performing heavy file I/O on high-performance clusters.
-They discuss how to avoid overburdening the parallel file system with bad practices and how to move the heavy load to local temporary storage away from the parallel file system.
-They list various problematic practices and solutions for them, including the following:
+The guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the parallel file system.
+They list many problematic practices and solutions for them, including the following:
 
 * Using many small files instead of a few large files.
   Accessing the same amount of data from many small files than fewer large files requires more file system operations.
@@ -55,15 +55,8 @@ They list various problematic practices and solutions for them, including the fo
 
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
-They also discuss tools that can help users to avoid these problems.
-
-* Tool for aiding users to collect and distribute files to the local storage.
-
-* Tool for caching Python-related files on local storage.
-
-* Tool for throttling I/O workloads by limiting the rate of file system operations.
-
-* Tool for aiding users to stripe large files with proper stripe count.
+They also introduce tools to help users to implement these solutions, such as a program for collecting and distributing files to the local storage,  a program for striping large files with proper stripe count, and a program for caching Python-related files on local storage.
+Also, they discuss a tool for throttling the I/O rate of workloads.
 
 Monitoring file system performance is also essential for identifying when and why problems occur.
 The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
