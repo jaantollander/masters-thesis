@@ -3,12 +3,10 @@
 # Introduction
 <!--
 TODO
-- add figure
+- add a figure to the introduction (monitoring, parallel file system)
 - start with the big picture
 - move from general description to specific
-- explain I/O and I/O intensive work
 - where we are going
-- add a figure to the introduction (monitoring, parallel file system)
 -->
 
 Persistent data storage is an essential part of a computing system.
@@ -32,10 +30,10 @@ The system must transport this data between main memory and storage, making I/O 
 There are new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
 These reasons make studying storage and I/O performance in HPC systems necessary.
-Researchers, developers, and operators actively try to find ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions for HPC [@object_centric_data].
+Researchers, developers, and operators actively try to find ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions for HPC [@daos_and_friends; @object_centric_data].
 <!-- For example, [@io_load_balancing] proposes algorithmic improvements for load balancing on a parallel file system, and [@efficient-metadata-indexing] presents performance improvements for indexing and querying on large-scale storage systems. -->
 
-Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them is crucial.
+Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
 A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses guidelines for performing heavy file I/O on high-performance clusters.
 The guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the parallel file system.
 They list many problematic practices and solutions for them, including the following:
@@ -63,19 +61,18 @@ Also, they discuss a tool for throttling the I/O rate of jobs performing heavy I
 Monitoring file system performance is also essential for identifying when and why problems occur.
 The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
 They applied statistical methods and time series analysis to identify variations in long and short-term performance trends.
-Their work provides excellent insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them.
-They show that short transient issues differ from long persistent ones and that the baseline performance changes over time.
+For example, short transient issues differ from long persistent ones, and the baseline performance can change over time.
+Their work provides insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them.
 <!-- They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system. -->
 
-To identify who is causing problems, we need more fine-grained file system usage monitoring and performance monitoring.
+However, performance monitoring is not enough to identify who is causing problems; we need fine-grained file system usage monitoring.
 In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL), the authors collected and analyzed statistics of file system usage from two clusters to obtain insights for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
 Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC)  and National Computational Infrastructure (NCI), have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
 A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
 Another example of a commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
-<!-- puhti -->
-We experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
+In this work, we experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
 Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
 However, load monitoring only tells us if file system problems occur but do not identify their causes.
 Currently, administrators have to determine the causes manually.
@@ -100,7 +97,7 @@ Additionally, we aim to provide information that can guide future procurements a
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and related software.
 Section \ref{puhti-cluster-at-csc} covers the configuration of the Puhti cluster.
-We describe the monitoring system such as how we collect data, what data we collect, how we store it and how we analyze the data in Section \ref{monitoring-and-analysis}.
+We describe the monitoring system, such as how we collect data, what data we collect, how we store it, and how we analyze the data in Section \ref{monitoring-and-analysis}.
 We present our result in Section \ref{results}.
-We conclude by discussing what we accomplished in this work and potential future expriments in Section \ref{conclusion}.
+We conclude by discussing what we accomplished in this work and ideas for future work in Section \ref{conclusion}.
 
