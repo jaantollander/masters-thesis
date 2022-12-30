@@ -1,21 +1,15 @@
 \clearpage
 
-# Analysis
-In this section, we explain the theory of how to analyze the stream of counter values into a time series of average rates of change, referred to as rates.
-That is, how much the values change on average during each interval.
-Furthermore, we define operations such as transforming timestamps for rates and computing the sum and logarithmic density of multiple rates.
-
+# Rates
+We can compute rates from counter values.
+A rate tells us how much the value changes on average during an interval.
 We referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside the observation intervals, such as the initial counter.
 The observation time is called a *timestamp*.
-We identify each time series of counter values by a unique *time series identifier*, which we refer to as *identifier*.
+We identify each time series of counter values by a unique *identifier*.
 We refer to the identifiers of the observed counters as *observed identifiers*.
 The size of the set of observed identifiers tells us how many individual time series Jobstats is tracking at a given time.
-It has implications for how much data we accumulate at each observation.
+It is proportional to how much data we accumulate at each observation.
 We regard the observed identifiers as a subset of *all identifiers*, which is the set of all possible identifiers, depending on the chosen identifier scheme.
-
-TODO: improve how we describe the math, explain why we want to compute these values, and what they tell us.
-
-TODO: add examples
 
 
 ## Computing rates from counters
@@ -113,7 +107,7 @@ This transformation is helpful if we have multiple step functions with steps as 
 In practice, we can avoid the transformation by querying the counters simultaneously.
 
 
-## Sum of rates
+## Sum
 We define the sum of rates of change over identifiers $K \subseteq \mathcal{K}$ as
 
 \begin{equation}
@@ -122,7 +116,7 @@ r_{K}(t) = \sum_{k\in K} r_{k}(t).
 \end{equation}
 
 
-## Logarithmic density of rates
+## Density
 We define a function that indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 \begin{equation}

@@ -220,7 +220,7 @@ We treat the previous counter value as zero if we detect a reset.
 For jobstats, a rate during an interval tells us how many operations, on average, happen per time unit during an interval.
 For example, if the previous counter of write operations for a job is $v_1=1000$ at time $t_1=0$ seconds, and the current value is $v_2=2000$ at time $t_2=120$ seconds, it performed $v_2-v_1=1000$ write operations during the interval of $t_2-t_1=120$ seconds.
 Therefore, on average, the job performed $1000/120\approx 8.33$ write operations per second during the interval.
-We cover the theory in Appendix \ref{analysis}.
+We cover the theory in Appendix \ref{rates}.
 
 
 ## Storing time series data
@@ -364,7 +364,7 @@ We computed rates from the counter values for each time series and performed exp
 We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
 We show many of the visualizations in Section \ref{results}.
 
-We describe the theory of the analysis methods described in Appendix \ref{analysis}.
+We describe the theory of the analysis methods described in Appendix \ref{rates}.
 
 TODO: briefly explain the methods of the Appendix
 
