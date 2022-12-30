@@ -3,6 +3,7 @@
 # Introduction
 <!--
 TODO
+- add figure
 - start with the big picture
 - move from general description to specific
 - explain I/O and I/O intensive work
@@ -10,41 +11,59 @@ TODO
 - add a figure to the introduction (monitoring, parallel file system)
 -->
 
-TODO: figure
-
 Persistent data storage is an essential part of a computing system.
 Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 This file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
+Heavy use may be intentional, such as data intensive computing, or unintentional, such as software design that relies on the file system for interprocess communication.
 Heavy use can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of slowdowns and the users responsible for them.
 
 The literature and professionals often refer to interaction with storage as I/O, an abbreviation for Input/Output.
-Generally, I/O refers to communication between a computer and the outside world, but it is most often used to describe interactions with a storage device.
-A file system is a typical storage architecture, but there are others, such as object storage.
-The term storage I/O is agnostic about the underlying architecture.
-<!-- In this thesis, we interchangeably refer to file system usage and I/O. -->
+Generally, I/O refers to communication between a computer and the outside world, but we often use it to describe interactions with a storage device.
+A file system is a commonly used abstraction layer between the physical storage device and the user, but there are others, such as object storage.
+The term storage I/O is agnostic about the underlying abstraction layer.
+In this work, the I/O refers to storage I/O.
 
-<!-- moving from computation centric workloads ot I/O centric  workloads -->
+HPC is moving from computation-centric workloads to I/O-centric workloads.
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
 <!-- A ranking is maintained on the TOP500 list [@top_500]. -->
 However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
-The system must transport this data between memory and storage, making I/O performance essential and problems from heavy I/O more common.
-There are new benchmarks for I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
+The system must transport this data between main memory and storage, making I/O performance essential and problems from heavy I/O more common.
+There are new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
-<!-- These are important reasons for studying storage and I/O performance in HPC systems. -->
+These reasons make studying storage and I/O performance in HPC systems necessary.
 
-We begin with a brief overview of the previous work regarding issues and solutions for performing heavy file I/O, monitoring and analyzing file system performance and usage statistics, and general work for improving parallel file systems.
-A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses common issues related to heavy file I/O on a parallel file system.
-They introduce novel tools designed to solve or alleviate these problems and general guidelines for avoiding them.
-They also list problematic practices and solutions for them, such as:
+As mentioned, heavy usage of a parallel file system can cause various problems.
+A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses guidelines for performing heavy file I/O on high-performance clusters.
+They discuss how to avoid overburdening the parallel file system with bad practices and how to move the heavy load to local temporary storage away from the parallel file system.
+They list various problematic practices and solutions for them, including the following:
 
 * Using many small files instead of a few large files.
+  Accessing the same amount of data from many small files than fewer large files requires more file system operations.
+
 * Having too many files in a single directory instead of using subdirectories or local temporary storage.
+
 * Not striping large files; we should stripe large files.
-* Performing suboptimal file I/O patterns, such as repeatedly opening and closing the same file, which we should avoid.
+  Striping a file refers to storing consecutive segments of a large file into multiple storage devices for improved performance.
+
+* Performing suboptimal file I/O patterns.
+  For example, patterns that create large amounts of unnecessary file system operations, such as repeatedly opening and closing the same file.
+
 * Performing high-frequency file I/O instead of keeping data in memory or limiting the I/O frequency.
+
 * Accessing the same file from multiple processes simultaneously instead of creating copies of the file or using parallel I/O libraries.
+
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
+
+They also discuss tools that can help users to avoid these problems.
+
+* Tool for aiding users to collect and distribute files to the local storage.
+
+* Tool for caching Python-related files on local storage.
+
+* Tool for throttling I/O workloads by limiting the rate of file system operations.
+
+* Tool for aiding users to stripe large files with proper stripe count.
 
 Monitoring file system performance is also essential for identifying when and why problems occur.
 The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
