@@ -14,7 +14,7 @@ TODO
 Persistent data storage is an essential part of a computing system.
 Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 This file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
-Heavy use may be intentional, such as data intensive computing, or unintentional, such as software design that relies on the file system for interprocess communication.
+Heavy use may be intentional, such as data-intensive computing, or unintentional, such as running a program that creates many temporary files.
 Heavy use can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of slowdowns and the users responsible for them.
 
@@ -32,8 +32,10 @@ The system must transport this data between main memory and storage, making I/O 
 There are new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
 These reasons make studying storage and I/O performance in HPC systems necessary.
+Researchers, developers, and operators actively try to find ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions for HPC [@object_centric_data].
+<!-- For example, [@io_load_balancing] proposes algorithmic improvements for load balancing on a parallel file system, and [@efficient-metadata-indexing] presents performance improvements for indexing and querying on large-scale storage systems. -->
 
-As mentioned, heavy usage of a parallel file system can cause various problems.
+Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them is crucial.
 A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses guidelines for performing heavy file I/O on high-performance clusters.
 The guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the parallel file system.
 They list many problematic practices and solutions for them, including the following:
@@ -56,7 +58,7 @@ They list many problematic practices and solutions for them, including the follo
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
 They also introduce tools to help users to implement these solutions, such as a program for collecting and distributing files to the local storage,  a program for striping large files with proper stripe count, and a program for caching Python-related files on local storage.
-Also, they discuss a tool for throttling the I/O rate of workloads.
+Also, they discuss a tool for throttling the I/O rate of jobs performing heavy I/O.
 
 Monitoring file system performance is also essential for identifying when and why problems occur.
 The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
@@ -71,9 +73,6 @@ Their methods included analyzing general I/O share and read versus write pattern
 Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC)  and National Computational Infrastructure (NCI), have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
 A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
 Another example of a commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
-
-There is also active research into developing and improving the performance of parallel file systems.
-For example, the paper [@io_load_balancing] proposes algorithmic improvements for load balancing on a parallel file system, and [@efficient-metadata-indexing] presents performance improvements for indexing and querying on large-scale storage systems.
 
 <!-- puhti -->
 We experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
