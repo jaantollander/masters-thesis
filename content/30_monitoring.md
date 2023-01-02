@@ -30,16 +30,14 @@ These changes affected the analysis and required significant changes in the anal
 We explain the initial and modified versions of the monitoring client.
 Subsection \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
 
-The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
-We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
-We changed the database to TimescaleDB.
-We take the precise design of programs as given and explain them only at a high level.
-
 The thesis work focused on the analysis and visualization parts.
 We explain how we analyzed batches of time series data in Subsection \ref{analyzing-statistics}.
 In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 
-<!-- The Lustre monitoring and statistics guide [@lustre-monitoring-guide] presents a general framework and software tools for gathering, processing, storing, and visualizing file system statistics from Lustre. -->
+The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
+We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
+We changed the database to TimescaleDB.
+We take the precise design of programs as given and explain them only at a high level.
 
 
 ## Entry identifier format
