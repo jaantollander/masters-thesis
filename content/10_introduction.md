@@ -31,12 +31,12 @@ There are new benchmarks to measure I/O performance, such as the ones discussed 
 <!-- Ranking on IO500 list [@io_500]. -->
 These reasons make studying storage and I/O performance in HPC systems necessary.
 Researchers, developers, and operators actively try to find ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions for HPC [@daos_and_friends; @object_centric_data].
-<!-- For example, [@io_load_balancing] proposes algorithmic improvements for load balancing on a parallel file system, and [@efficient-metadata-indexing] presents performance improvements for indexing and querying on large-scale storage systems. -->
 
 Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
-A study from Texas Advanced Computing Center (TACC) [@tacc-io-guideline] discusses guidelines for performing heavy file I/O on high-performance clusters.
-The guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the parallel file system.
-They list many problematic practices and solutions for them, including the following:
+Many HPC facilities have guidelines for performing file I/O on high-performance clusters.
+Texas Advanced Computing Center (TACC) has collected many of these guidelines and tools to help implement them into the paper [@tacc-io-guideline].
+Guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the shared file system.
+Problematic practices and solutions for them include the following:
 
 * Using many small files instead of a few large files.
   Accessing the same amount of data from many small files than fewer large files requires more file system operations.
@@ -45,6 +45,7 @@ They list many problematic practices and solutions for them, including the follo
 
 * Not striping large files; we should stripe large files.
   Striping a file refers to storing consecutive segments of a large file into multiple storage devices for improved performance.
+  Automatic striping or tools to help users to stripe files with the correct stripe count may alleviate this problem.
 
 * Performing suboptimal file I/O patterns.
   For example, patterns that create large amounts of unnecessary file system operations, such as repeatedly opening and closing the same file.
@@ -55,8 +56,7 @@ They list many problematic practices and solutions for them, including the follo
 
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
-They also introduce tools to help users to implement these solutions, such as a program for collecting and distributing files to the local storage,  a program for striping large files with proper stripe count, and a program for caching Python-related files on local storage.
-Also, they discuss a tool for throttling the I/O rate of jobs performing heavy I/O.
+As a solution, we can also use tools for throttling the I/O rate of jobs performing heavy I/O [@ooops].
 
 Monitoring file system performance is also essential for identifying when and why problems occur.
 The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
@@ -82,7 +82,7 @@ It should also reduce the amount of manual work involved.
 
 Puhti uses the Lustre parallel file system.
 We can collect fine-grained statistics of file system usage with Lustre Jobstats.
-In practice, it means various file operations statistics with job ID, user ID, Lustre client (node name), and Lustre target information.
+In practice, it means various file operations statistics with job, user, Lustre client, and Lustre target information.
 We can query these statistics at regular intervals to obtain time series data, which we can process into file system metrics.
 Our objective is to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
 Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
