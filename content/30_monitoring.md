@@ -364,7 +364,7 @@ We show many of the visualizations in Section \ref{results}.
 
 We describe the theory of the analysis methods described in Appendix \ref{rates}.
 
-TODO: briefly explain the methods of the Appendix
+<!-- TODO: briefly explain the methods of the Appendix -->
 
 <!-- TODO: we used snapshot time as the timestamp, inferred the beginning of the time series -->
 

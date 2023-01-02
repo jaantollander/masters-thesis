@@ -1,13 +1,7 @@
 \clearpage
 
 # Introduction
-<!--
-TODO
-- add a figure to the introduction (monitoring, parallel file system)
-- start with the big picture
-- move from general description to specific
-- where we are going
--->
+<!-- TODO: add a figure to the introduction (monitoring, parallel file system) -->
 
 Persistent data storage is an essential part of a computing system.
 Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.

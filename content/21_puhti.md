@@ -81,7 +81,7 @@ Three dots between nodes or switches indicate that there are many of them.
 \label{fig:puhti-network}
 ](figures/puhti-hardware.drawio.svg)
 
-TODO: illustrate that there are multiple MDTs per MDS and OSTs per OSS in the figure
+<!-- TODO: illustrate that there are two MDTs per MDS and three OSTs per OSS in the figure -->
 
 
 ## System configuration
