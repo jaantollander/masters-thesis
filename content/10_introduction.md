@@ -66,17 +66,15 @@ They applied statistical methods and time series analysis to identify variations
 They showed that short transient issues differ from long persistent ones, and the baseline performance can change over time.
 <!-- Their work provides insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them. -->
 <!-- They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system. -->
+
 However, we need more than performance monitoring to identify who is causing problems; we need fine-grained file system usage monitoring to obtain specific information on how much each user, job, or node contributes to the total load.
+Due to higher resolution, fined-grained monitoring produces more data than simpler aggregates and requires a time series database to store and query efficiently.
+Regarding collecting fine-grained file system statistics, the Lustre parallel file system [@lustre-storage-architecture] has a feature called Lustre Jobstats [@lustre-monitoring-guide].
+Earliest users of Lustre Jobstats include computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC) [@lustre-job-stats-metric-aggregation] and National Computational Infrastructure (NCI) [@fine-grained-file-system-monitoring].
+More recent studies have used Lustre Jobstats to collect long-term job-level I/O patterns to obtain insight for improving storage design [@understanding-io-behaviour].
+There are also commercial products for monitoring that work with Lustre Jobstast, such as *View for ClusterStor* [@view-for-clusterstor] from Cray and *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
-Fined-grained monitoring is much more resource intensive and less studied in clusters.
-The Lustre parallel file system [@lustre-storage-architecture] has a feature called Lustre Jobstats for collecting fine-grained file system statistics.
-
-In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL), the authors collected and analyzed job-level statistics of file system usage from two clusters to obtain insights for improving storage design.
-Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
-
-Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC) and National Computational Infrastructure (NCI), have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
-A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray [@view-for-clusterstor], for monitoring.
-Another example of a commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
+<!-- A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray [@view-for-clusterstor] -->
 
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
 Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
