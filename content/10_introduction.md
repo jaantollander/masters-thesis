@@ -34,7 +34,7 @@ Researchers, developers, and operators actively try to find ways to improve para
 
 Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
 Many HPC facilities have guidelines for performing file I/O on high-performance clusters.
-Texas Advanced Computing Center (TACC) has collected many of these guidelines and tools to help implement them into the paper [@tacc-io-guideline].
+Texas Advanced Computing Center (TACC) has collected many of these guidelines into the paper [@tacc-io-guideline].
 Guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the shared file system.
 Problematic practices and solutions for them include the following:
 
@@ -57,19 +57,25 @@ Problematic practices and solutions for them include the following:
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
 As a solution, we can also use tools for throttling the I/O rate of jobs performing heavy I/O [@ooops].
+Users can proactively throttle their workloads, or administrators can throttle jobs with heavy I/O without and avoid suspending these jobs.
 
-Monitoring file system performance is also essential for identifying when and why problems occur.
-The authors in [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year at the National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF).
+Monitoring file system performance is also essential for identifying when problems occur.
+By measuring and analyzing long-term I/O performance, we can detect variations in the trends at different timescales.
+For example, a joint study by National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF) [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year.
 They applied statistical methods and time series analysis to identify variations in long and short-term performance trends.
-For example, short transient issues differ from long persistent ones, and the baseline performance can change over time.
-Their work provides insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them.
+They showed that short transient issues differ from long persistent ones, and the baseline performance can change over time.
+<!-- Their work provides insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them. -->
 <!-- They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system. -->
+However, we need more than performance monitoring to identify who is causing problems; we need fine-grained file system usage monitoring to obtain specific information on how much each user, job, or node contributes to the total load.
 
-However, performance monitoring is not enough to identify who is causing problems; we need fine-grained file system usage monitoring.
-In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL), the authors collected and analyzed statistics of file system usage from two clusters to obtain insights for improving storage design.
+Fined-grained monitoring is much more resource intensive and less studied in clusters.
+The Lustre parallel file system [@lustre-storage-architecture] has a feature called Lustre Jobstats for collecting fine-grained file system statistics.
+
+In a study [@understanding-io-behaviour] conducted by Lawrence Livermore National Laboratory (LLNL), the authors collected and analyzed job-level statistics of file system usage from two clusters to obtain insights for improving storage design.
 Their methods included analyzing general I/O share and read versus write patterns of a large number of jobs over a one-year duration.
-Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC)  and National Computational Infrastructure (NCI), have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
-A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray Inc [@view-for-clusterstor], for monitoring.
+
+Other computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC) and National Computational Infrastructure (NCI), have also employed file system usage monitoring [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring]
+A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray [@view-for-clusterstor], for monitoring.
 Another example of a commercial product for monitoring is *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
@@ -80,11 +86,12 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-Puhti uses the Lustre parallel file system.
-We can collect fine-grained statistics of file system usage with Lustre Jobstats.
-In practice, it means various file operations statistics with job, user, Lustre client, and Lustre target information.
-We can query these statistics at regular intervals to obtain time series data, which we can process into file system metrics.
-Our objective is to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
+Puhti relies on the Lustre parallel file system.
+Therefore, we use Lustre Jobstats to collect fine-grained statistics of file system usage.
+Fine-grained refers to collecting specific file operations statistics with the job, user, Lustre client, and Lustre target information.
+Querying the statistics at regular intervals and computing rates produces a time series we can analyze.
+Rates provide us with the average rate of change during an interval.
+We aim to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
 Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
 Our goal is to create active monitoring and near real-time warning systems to identify users whose programs cause problems in the file system.
 Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
@@ -95,9 +102,11 @@ Additionally, we aim to provide information that can guide future procurements a
 
 <!-- outline -->
 The thesis is structured as follows.
-In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and related software.
-Section \ref{puhti-cluster-at-csc} covers the configuration of the Puhti cluster.
-We describe the monitoring system, such as how we collect data, what data we collect, how we store it, and how we analyze the data in Section \ref{monitoring-and-analysis}.
-We present our result in Section \ref{results}.
-We conclude by discussing what we accomplished in this work and ideas for future work in Section \ref{conclusion}.
+In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
+In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective to understand the system we are monitoring.
+Section \ref{monitoring-and-analysis} describes the monitoring system and analysis.
+We explain how we collect data, what data we collect, how we store it, and how we analyze it.
+Section \ref{results} presents the results from collecting and analyzing the monitoring data.
+We explain issues we had with data quality and visualizations of the data we obtained.
+Finally, Section \ref{conclusion} concludes the thesis by discussing what we accomplished in this work and ideas for future work.
 
