@@ -1,6 +1,6 @@
 \clearpage
 
-# Rates
+# Computing and aggregating rates
 We compute rates from counter values.
 A rate tells us how much the value changes on average during an interval.
 We referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside the observation intervals, such as the initial counter.
@@ -117,10 +117,10 @@ r_{K}(t) = \sum_{k\in K} r_{k}(t).
 \label{eq:rate-sum}
 \end{equation}
 
-If all step function $r_k$ where $k\in K$ have the steps at the identical timestamp the summation is easy.
-We just sum all the values at each timestamp.
-Otherwise, we have to resort to more complex algorithm whose description is out of the scope of this thesis.
-In practice, we transform the timestamps of all rates to the identical timestamps using \eqref{eq:counter-increment-new} before summation if necessary.
+If all step function $r_k$ where $k\in K$ have the steps at the identical timestamp, the summation is easy.
+We sum all the values at each timestamp.
+Otherwise, we have to resort to a more complex algorithm whose description is out of the scope of this thesis.
+In practice, we transform the timestamps of all rates to identical timestamps using \eqref{eq:counter-increment-new} before summation if necessary.
 
 
 ## Density
