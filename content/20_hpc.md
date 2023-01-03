@@ -38,18 +38,18 @@ Organizations may also build clusters for internal use.
 
 
 ## Linux operating system
-An *operating system (OS)* is software that manages computer resources and provides common services for application programs via an *application programming interface (API)*.
-At the time of writing, practically all high-performance computer clusters use the *Linux operating system* [@osfam].
-The Linux *kernel* [@linux-kernel-source] is the core of the Linux operating system, written in the *C programming language*.
-It derives from the family of *UNIX operating systems* and closely follows the *POSIX standard*.
-For a comprehensive overview of the features of the Linux kernel, we recommend and refer to *The Linux Programming Interface* book by Michael Kerrisk [@tlpi].
+An operating system (OS) is software that manages computer resources and provides standard services for application programs via an application programming interface (API).
+At the time of writing, practically all high-performance computer clusters use the *Linux* operating system [@osfam].
+Linux derives from the family of UNIX operating systems and closely follows the POSIX standard.
 
 <!-- TODO: explain Application binary interface (ABI) -->
 
+The *Linux kernel* [@linux-kernel-source] is the core of the Linux operating system, written in the C programming language.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
-It is responsible for tasks such as process scheduling, memory management, providing a file system, creating and terminating processes, access to devices, networking, and providing an application programming interface for system calls, making the kernel services available to programs.
-*System calls* enable user processes to request the kernel to perform certain actions for the process, such as file I/O, and provide separation between kernel space and user space.
-Library functions, such as functions in the C standard library, implement a caller-friendly layer on top of system calls for performing system operations.
+Its responsibilities include process scheduling, memory management, providing a file system, creating and terminating processes, access to devices, networking, and providing an application programming interface for system calls, making the kernel services available to programs.
+*System calls* enable user processes to request the kernel to perform specific actions for the process, such as manipulating files.
+They also provide separation between kernel space and user space.
+Library functions, such as functions in the C standard library, implement a caller-friendly layer on top of system calls for performing system operations. [@tlpi]
 
 *Input/Output (I/O)* refers to the communication between a computer and the outside world, for example, a disk, display, or keyboard.
 Linux implements a universal file I/O model, which means that it represents everything from data stored on disk to devices and processes as files.
@@ -58,15 +58,15 @@ Consequently, users can use the same file utilities to perform various tasks, su
 The kernel only provides one file type, a sequential stream of bytes.
 This work focuses on file system I/O on a storage device.
 
-The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as *ext4*, *Btrfs*, or *FAT*.
+The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as ext4, Btrfs, or FAT.
 VFS allows programs to use different file systems uniformly using the operations defined by the interface.
 The interface contains the system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
-For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2]
+For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2].
 We have listed system calls for the file system interface and present programming examples in Appendix \ref{file-system-interface}.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
-Linux systems have one special user, called the *super user* or *root user*, which can access everything on the system.
+Linux systems have one special user, called the *super user* or *root*, which can access everything on the system.
 *System administrators* can use the super user for administrative tasks and system maintenance.
 
 A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and, optionally, a graphical user interface.
