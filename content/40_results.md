@@ -1,22 +1,25 @@
 \clearpage
 
 # Results
-The results section presents the results from analyzing the file system usage statistics obtained from monitoring on Puhti, as discussed in section \ref{monitoring-and-analysis}.
-
 <!--
-TODO: answer the research questions
-TODO: we did not reach all the goals. which, why? due to the issues with data quality
-TODO: what results did we obtain? subset of data that we believe to be reliable, insights into the data
-TODO: (to conclusions) what did we accomplish? better understanding and description of the monitoring system, insight into the data, challenges
+TODO: (to conclusions) what did we accomplish?
+- better understanding and description of the monitoring system
+- challenges with monitoring
 -->
 
-We begin by discussing the issues we found with the data quality from Lustre Jobstats on Puhti in Subsection \ref{entries-and-issues}.
-These issues greatly impacted the thesis work because they led to data and time loss.
-As a consequence, we were not able to develop automated tools for analyzing the monitoring data.
+This section presents the results from analyzing the data obtained from monitoring file system usage on the Puhti cluster.
+Unfortunately, due to issues with data quality from Lustre Jobstats on Puhti, we did not reach all the thesis goals set in Section \ref{introduction}.
+These issues greatly impacted the thesis work, and we lost valuable data and time.
+Consequently, we could not develop automated analysis and visualization of the real-time monitoring data.
+Also, we do not have a complete view of the file system usage because we had to discard the bad data.
+We discuss these issues in Subsection \ref{entries-and-issues}.
 
-Despite the issues, we obtained data that we believe to be reliable.
-We present different aspects of data from compute nodes on 24 hours of 2022-10-27.
-We omitted data from login and utility nodes in this analysis due to a lack of time to verify that it did not contain any issues.
+Despite the issues, we believe that a subset of the obtained data is reliable.
+We can derive insights from this data for future work.
+Regarding the research questions from Section \ref{introduction}, the data indicates that we can identify users who perform heavy I/O on the cluster.
+However, the data quality issues reduce the reliability of the identification.
+As a demonstration, we present different aspects of data from compute nodes for 24 hours of 2022-10-27.
+We omitted data from login and utility nodes in this analysis due to a lack of time to verify the quality of the data.
 Subsection \ref{counters-and-rates} shows raw counter values and computed rates of a few hand-picked jobs to illustrate different I/O patterns.
 In Subsection \ref{total-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
 Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on a specific Lustre target to demonstrate the effects of the different components.
