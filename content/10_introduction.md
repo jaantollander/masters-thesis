@@ -73,20 +73,22 @@ There are also commercial products for monitoring that work with Lustre Jobstast
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
 Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
 However, load monitoring only tells us if file system problems occur but do not identify their causes.
-Currently, administrators have to determine the causes manually.
+Currently, system administrators have to determine the causes manually.
 However, the problem often disappears before they have identified the actual cause.
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
 Puhti relies on the Lustre parallel file system.
 Therefore, we use Lustre Jobstats to collect fine-grained statistics of file system usage.
-Fine-grained refers to collecting specific file operations statistics with the job, user, Lustre client, and Lustre target information.
+Fine-grained refers to collecting specific file operation statistics with the job, user, Lustre client, and Lustre target information.
 Querying the statistics at regular intervals and computing rates produces a time series we can analyze.
 Rates provide us with the average rate of change during an interval.
 We aim to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
 Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
 Our goal is to create active monitoring and near real-time warning systems to identify users whose programs cause problems in the file system.
 Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
+The scope of the thesis is to describe the monitoring system, the cluster we monitor, and the collected data on which we build the analysis and visualization from scratch.
+The thesis advisor and system administrators were responsible for developing and deploying the monitoring system.
 
 <!--
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
@@ -99,6 +101,6 @@ In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puht
 Section \ref{monitoring-and-analysis} describes the monitoring system and analysis.
 We explain how we collect data, what data we collect, how we store it, and how we analyze it.
 Section \ref{results} presents the results from collecting and analyzing the monitoring data.
-We explain issues we had with data quality and visualizations of the data we obtained.
+We explain issues with data quality and visualizations of the data we obtained.
 Finally, Section \ref{conclusion} concludes the thesis by discussing what we accomplished in this work and ideas for future work.
 

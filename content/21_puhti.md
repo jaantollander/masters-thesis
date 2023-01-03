@@ -91,13 +91,17 @@ The version transitioned from 7.9 to 8.6 during the thesis writing.
 
 Each node in Puhti is a Lustre client of the shared Lustre file system.
 We can identify nodes based on their *node name*, which is the part of hostname before the first dot, for example, `<nodename>.bullx`.
-Table \ref{tab:node-names} lists the names of compute nodes.
-The names of service nodes match the regular expression `puhti-[[:alnum:]_-]+` such as `puhti-login12`.
+Table \ref{tab:node-names} lists the names of service and compute nodes.
+<!-- The names of service nodes match the regular expression `puhti-[[:alnum:]_-]+` such as `puhti-login12`. -->
 <!-- The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes. -->
 We can use node names to separate file system operations at a node-specific level.
 
 Set of node names|Example node name
 -|-
+`puhti-login{3,11-16}` | `puhti-login11`
+`puhti-fmi{11-12}` | `puhti-fmi12`
+`puhti-ood1-{staging,production}` | `puhti-ood1-production`
+`puhti-ood2-{sandbox,testing,production}` | `puhti-ood2-testing`
 `r{01-04}c{01-48}`|`r01c01`
 `r{01-04}g{01-08}`|`r01g06`
 `r{05-07}c{01-64}`|`r07c64`
@@ -108,7 +112,8 @@ Set of node names|Example node name
 `r{13-18}g{01-08}`|`r18g04`
 
 : \label{tab:node-names}
-A table of node names of compute nodes in Puhti.
+A table of node names of service and compute nodes in Puhti.
+Service nodes start with `puhti-` prefix, other nodes are compute nodes.
 Curly braces denote a set.
 Ranges such as `{01-04}` expand to `{01,02,03,04}`, products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
 We add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.

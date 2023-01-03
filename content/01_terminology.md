@@ -26,31 +26,31 @@ Linux kernel
 : A multiuser operating system, commonly used in HPC.
 
 File system
-: ...
+: TODO
 
 Lustre
 : parallel file system
 
 Lustre client
-: ...
+: TODO
 
 Lustre target
-: ...
+: TODO
 
 Lustre server
-: ...
+: TODO
 
 Slurm
 : workload manager
 
 User
-: ...
+: TODO
 
 Job
-: ...
+: TODO
 
 System administrator
-: ...
+: TODO
 
 CSC
 : An organization that provides ICT services for higher education institutions, research institutions, culture, public adminstation, and enterprises in Finland.

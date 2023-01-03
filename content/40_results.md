@@ -3,6 +3,13 @@
 # Results
 The results section presents the results from analyzing the file system usage statistics obtained from monitoring on Puhti, as discussed in section \ref{monitoring-and-analysis}.
 
+<!--
+TODO: answer the research questions
+TODO: we did not reach all the goals. which, why? due to the issues with data quality
+TODO: what results did we obtain? subset of data that we believe to be reliable, insights into the data
+TODO: (to conclusions) what did we accomplish? better understanding and description of the monitoring system, insight into the data, challenges
+-->
+
 We begin by discussing the issues we found with the data quality from Lustre Jobstats on Puhti in Subsection \ref{entries-and-issues}.
 These issues greatly impacted the thesis work because they led to data and time loss.
 As a consequence, we were not able to develop automated tools for analyzing the monitoring data.
