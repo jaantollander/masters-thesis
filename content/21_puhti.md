@@ -1,13 +1,10 @@
 \clearpage
 
 # Puhti cluster at CSC
-This section presents the configuration of the *Puhti* cluster, a Petascale system operated by CSC in Finland, from a storage perspective.
-Petascale refers to the peak performance of $10^{15}$ floating point operations per second.
+This section presents the configuration of the CSC's *Puhti* cluster from a storage perspective.
+Puhti is a Petascale system, refering to the peak performance above $10^{15}$ floating point operations per second.
 It has over five hundred unique monthly users and a diverse user base, making it interesting for studying file system usage.
 Puhti is a Finnish noun that means having energy.
-<!-- TODO: move to introduction -->
-*CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 
 In Subsection \ref{hardware-configuration}, we explain the hardware configuration of Puhti, including the nodes, processors, memory, storage, and network.
 Subsection \ref{system-configuration} covers the system configuration, such as the operating system, specific names and identifiers, and storage areas.
@@ -49,7 +46,7 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Compute* | *GPU* | 80 | 384 | 3600
 
 : \label{tab:puhti-nodes}
-This table shows all nodes on the Puhti cluster by category and type.
+List of all nodes on the Puhti cluster by category and type.
 For service nodes, the node type associates them with their function in the cluster.
 For compute nodes, the node types associate them with the amount of allocatable resources they have.
 The node count tells us the number of nodes of the given node type.
@@ -75,7 +72,7 @@ The network has a total of 28 L1 switches and 12 L2 switches.
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![
-TODO: Puhti topology from storage perspective.
+Puhti topology from storage perspective.
 Rounded rectangles on the left illustrate compute, utility, and login nodes, whereas the dashed rectangles below are the optional attached local storage.
 Rounded rectangles on the right illustrate the Lustre nodes, where the rectangles below are the appropriate Lustre targets.
 The lines represent the network connections, and the circles represent the network switches.
@@ -127,8 +124,8 @@ Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, us
 
 Puhti associates each user account with a *user* and each project with a *group*.
 We can use user IDs and group IDs as identifiers for measuring file system usage at the user or group level.
-<!-- TODO: modern Linux distributions reserve user IDs (0-999) for system usage, not Puhti, check -->
-Puhti reserves user IDs from 0 to 999 for system processes, for example, 0 is the root, and 666 is job control.
+Modern Linux distributions reserve user IDs from 0 to 999 for system processes.
+In Puhti, user ID 0 is the root and user ID 666 is job control.
 It is helpful to separate the file system operations performed by system user IDs from the other user IDs.
 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.

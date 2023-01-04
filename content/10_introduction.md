@@ -73,8 +73,10 @@ There are also commercial products for monitoring that work with Lustre Jobstast
 
 <!-- A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray [@view-for-clusterstor] -->
 
-<!-- TODO: introduce CSC -->
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
+*CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
+The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
+
 Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
 However, load monitoring only tells us if file system problems occur but do not identify their causes.
 Currently, system administrators have to determine the causes manually.
