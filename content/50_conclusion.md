@@ -1,6 +1,15 @@
 \clearpage
 
 # Conclusion
+The challenges in this thesis work were primarily practical engineering rather than deep theoretical ones.
+For example, we collected, stored, and analyzed large amounts of monitoring data, had to make installations to a live system requiring system admins' intervention, and had issues with software from a third-party vendor.
+The software issues caused problems with the data quality, and we lost valuable data that would have been useful in our analysis.
+The problem also wasted valuable time because we had to change our monitoring and analysis workflows to correct the issues to the extent that it was possible.
+For these reasons, we did not meet the original goals set for the thesis.
+Fortunately, we still obtained results and helpful insights for future parallel file system usage monitoring when the vendors hopefully fix these issues.
+
+---
+
 In this work, we explored monitoring and analyzing the usage of a parallel file system and whether it could help us to identify slowdowns and their causes.
 We explained the basic building blocks of a high-performance computing system.
 We covered the configuration of the Puhti cluster at CSC from a storage perspective.
