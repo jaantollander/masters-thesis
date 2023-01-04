@@ -102,7 +102,7 @@ The text output is formatted as follows.
 
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
 The *target* (`<target>`) contains the mount point and name of the Lustre target of the query.
-Tables \ref{tab:mdt-mds} and \ref{tab:ost-oss} list the metadata and object storage target names on each Lustre server in Puhti.
+Table \ref{tab:mdt-mds} list the metadata and object storage target names on each Lustre server in Puhti.
 <!--
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>`, and eight OSSs with three OSTs each, named `scratch-OST<index>`.
 The `<index>` is a four-digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
@@ -110,31 +110,21 @@ Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0017`.
 -->
 
-MDT|MDS|MDT|MDS
--|-|-|-
-`scratch-MDT0000`|1|`scratch-MDT0002`|2
-`scratch-MDT0001`|1|`scratch-MDT0003`|2
+Server|Targets
+-|-
+`MDS 1`|`scratch-MDT{0000,0001}`
+`MDS 2`|`scratch-MDT{0002,0003}`
+`OSS 1`|`scratch-OST{0000,0001,0002}`
+`OSS 2`|`scratch-OST{0003,0004,0005}`
+`OSS 3`|`scratch-OST{0006,0007,0008}`
+`OSS 4`|`scratch-OST{0009,000a,000b}`
+`OSS 5`|`scratch-OST{000c,000d,000e}`
+`OSS 6`|`scratch-OST{000f,0010,0011}`
+`OSS 7`|`scratch-OST{0012,0013,0014}`
+`OSS 8`|`scratch-OST{0015,0016,0017}`
 
 : \label{tab:mdt-mds}
-Metadata servers and target
-
-OST|OSS|OST|OSS
--|-|-|-
-`scratch-OST0000`|1|`scratch-OST000c`|5
-`scratch-OST0001`|1|`scratch-OST000d`|5
-`scratch-OST0002`|1|`scratch-OST000e`|5
-`scratch-OST0003`|2|`scratch-OST000f`|6
-`scratch-OST0004`|2|`scratch-OST0010`|6
-`scratch-OST0005`|2|`scratch-OST0011`|6
-`scratch-OST0006`|3|`scratch-OST0012`|7
-`scratch-OST0007`|3|`scratch-OST0013`|7
-`scratch-OST0008`|3|`scratch-OST0014`|7
-`scratch-OST0009`|4|`scratch-OST0015`|8
-`scratch-OST000a`|4|`scratch-OST0016`|8
-`scratch-OST000b`|4|`scratch-OST0017`|8
-
-: \label{tab:ost-oss}
-Object storage servers and targets
+List of Lustre servers and Lustre targets in Puhti.
 
 After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
 The output denotes each *entry* by dash `-` and contains the entry identifier (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
