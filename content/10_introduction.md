@@ -5,9 +5,9 @@
 
 Persistent data storage is an essential part of a computing system.
 Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
-This file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
-Heavy use may be intentional, such as data-intensive computing, or unintentional, such as running a program that creates many temporary files.
-Heavy use can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
+A shared file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
+Heavy use may lead to congestion in a parallel file system, which can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
+Heavy use may be intentional, such as data-intensive computing, or unintentional, such as unknowingly running a program that creates many temporary files.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of slowdowns and the users responsible for them.
 
 The literature and professionals often refer to interaction with storage as I/O, an abbreviation for Input/Output.

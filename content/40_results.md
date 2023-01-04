@@ -89,7 +89,7 @@ We see many missing job IDs on system user IDs, likely because it does not have 
 \label{fig:entry-ids-oss-system}
 ](figures/entry_ids_oss_system.svg)
 
-The Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive Jobstats outputs taken every 2-minutes.
+Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive Jobstats outputs taken every 2-minutes from 2022-03-04.
 We separated the figures by Lustre server, system versus non-system user ID, and entry identifier formatting.
 
 The number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
