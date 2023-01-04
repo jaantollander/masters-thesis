@@ -91,7 +91,7 @@ Counts of entry identifiers on each MDT from system user IDs.
 
 ![
 Counts of entry identifiers on each OST from non-system and missing user IDs.
-We see a large spike of malformed identifiers from 12.06 to 12.26.
+We see a large burst of malformed identifiers from 12.06 to 12.26.
 \label{fig:entry-ids-oss-user}
 ](figures/entry_ids_oss_user.svg)
 
@@ -111,9 +111,12 @@ Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} sho
 Each line displays the values for a connection from a compute node to an OST for the same job.
 The x-axis displays time, and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
 
+TODO: refer to counter resets, explain counter and rate
+
 ![
 The upper graph shows a typical saw-tooth pattern for near-linearly increasing counter values that resets periodically.
 The lower graph shows steady rates of writes during the active periods.
+TODO: define the active periods
 \label{fig:job-rate-1}
 ](figures/2022-10-27_ost_job_write_1.svg)
 
@@ -141,7 +144,7 @@ The interesting features in the figures are the variation of rates across time a
 For example, significant differences between the rates of two OSTs indicate an unbalanced load.
 A problematic I/O pattern or insufficient file striping might cause the imbalance.
 File striping means Lustre segments the file data into multiple OSTs instead of storing all the data in a single OST.
-Please note that we use a logarithmic scale due to large variations in the magnitude of the rates.
+We use a logarithmic scale due to large variations in the magnitude of the rates.
 
 ![Total rates of open, close, mknod, and unlink operations from all compute nodes to each MDT. \label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
 

@@ -13,7 +13,7 @@ Rules correspond to instructions to a computer processor that manipulates a stri
 Memory consists of multiple levels of volatile *main memory* and non-volatile *storage* organized hierarchically based on factors such as proximity to the processor, access speed, and cost.
 Models of computation include serial and parallel computing.
 *Serial computing* refers to performing one operation at a time.
-In contrast, *parallel computing* is about performing multiple independent operations simultaneously, intending to reduce run time, performing larger calculations, and decreasing energy consumption.
+In contrast, *parallel computing* is about performing multiple independent operations simultaneously, intending to reduce run time, and performing larger calculations.
 
 *High-performance computing (HPC)* relies on parallel computing to provide large computing resources for solving computationally demanding and data-intensive problems.
 These problems include simulating complex systems, solving large computational models, data science, and training machine learning models.
@@ -51,6 +51,7 @@ Its responsibilities include process scheduling, memory management, providing a 
 They also provide separation between kernel space and user space.
 Library functions, such as functions in the C standard library, implement a caller-friendly layer on top of system calls for performing system operations. [@tlpi]
 
+<!-- TODO: sync with introduction -->
 *Input/Output (I/O)* refers to the communication between a computer and the outside world, for example, a disk, display, or keyboard.
 Linux implements a universal file I/O model, which means that it represents everything from data stored on disk to devices and processes as files.
 It uses the same system calls for performing I/O on all types of files.
@@ -87,7 +88,7 @@ A parallel file system is a file system designed for clusters.
 It stores data on multiple networked servers to facilitate high-performance access.
 It makes the data available via a global namespace such that users do not need to know the physical location of the data blocks to access a file.
 *Lustre* is a parallel file system that provides a POSIX standard-compliant file system interface for Linux clusters.
-The Lustre file system is a *kernel module* designed using the client-server architecture.
+The Lustre file system is implemented as a set of *kernel modules* designed using the client-server architecture.
 A kernel module is a software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 

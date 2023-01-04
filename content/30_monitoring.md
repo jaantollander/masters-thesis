@@ -2,7 +2,7 @@
 
 # Monitoring and analysis
 ![
-This figure illustrates the high-level overview of the monitoring system and analysis.
+High-level overview of the monitoring system and analysis.
 Rounded rectangles indicate programs, and arrows indicate data flow.
 Lustre Jobstats and Time series database are third-party software; the thesis advisor developed the Monitoring client and Ingest server, and the thesis author wrote the code for the analysis and visualization.
 \label{fig:monitoring-system}
@@ -260,7 +260,6 @@ In the future, we could reduce the observation interval to 1-minute.
 <!-- computing differences on the fly -->
 Initially, we computed the difference between the two counters on the monitoring clients and stored them in the database.
 Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
-However, we discovered that if we lose a value, we cannot interpolate it, and the information is lost.
 Also, computing the differences in the monitoring clients makes the design more complex and error-prone.
 
 <!-- parsing the entry identifier -->
@@ -279,7 +278,7 @@ It also supports variable interval lengths.
 However, the approach makes queries and analysis more computationally intensive.
 
 Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
-Due to the scaling problem, we use TimescaleDB and suggest using JSON for communication instead.
+Due to the scaling problem, we use TimescaleDB and suggest using more efficient line protocol for communication instead.
 Next, we describe the monitoring client and the message structure using JSON.
 
 <!-- In the description, we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
@@ -303,6 +302,11 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 }
 ```
 
+Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
+
+---
+
+<!-- TODO: first version had to keep track -->
 The monitoring client must also keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
 We must mark the beginning of a time series when we encounter an identifier not present in the previous observation interval.
 We mark it by creating a new instance of a data structure with the new target and entry identifier, the previous timestamp, the missing value for snapshot time, and zeros for statistics.
@@ -324,8 +328,6 @@ For example, if the previous data structure is the first observation, we have th
   "...": "..."
 }
 ```
-
-Finally, the monitoring client composes a message of the data by listing the individual data structures in a JSON array and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
 
 
 ## Ingest server
