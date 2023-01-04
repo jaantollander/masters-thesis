@@ -9,8 +9,8 @@ TODO: (to conclusions) what did we accomplish?
 
 This section presents the results from analyzing the data obtained from monitoring file system usage on the Puhti cluster.
 Unfortunately, due to issues with data quality from Lustre Jobstats on Puhti, we did not reach all the thesis goals set in Section \ref{introduction}.
-We couldn't perform reliable analysis on earlier monitoring data and had to discard it.
-Furthermore, we couldn't develop automated analysis and visualization of the real-time monitoring data or reliably correlate file system usage with slowdowns.
+We could not perform reliable analysis on earlier monitoring data and had to discard it.
+Furthermore, we could not develop automated analysis and visualization of the real-time monitoring data or reliably correlate file system usage with slowdowns.
 In Subsection \ref{entries-and-issues}, we discuss these issues and investigate the entries of raw Jobstats data from 2022-03-04.
 
 Later, we obtained new data that we could analyze more reliably.
@@ -53,7 +53,7 @@ Table \ref{tab:jobid-examples} demonstrates correct entry identifiers, an entry 
 
 The first issue is missing job ID values.
 Slurm sets a Slurm job ID for all non-system users, that is, user IDs greater than 999, running jobs on compute nodes, and the identifier should include it.
-Entries from system users, such as the root or job control, usually didn't have a job ID as their processes do not run via Slurm, although sometimes they do have a job ID.
+Entries from system users, such as the root or job control, usually did not have a job ID as their processes do not run via Slurm, although sometimes they do have a job ID.
 However, we found many entries from non-system users on compute nodes without a job ID.
 Due to these issues, data from the same job might scatter into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific jobs.
 The issue might be related to problems fetching the environment variable's value.
@@ -68,13 +68,15 @@ We obtained feasible values for correct entry identifiers, but we are still dete
 
 Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the counts of various observed entry identifiers in a sample of 113 consecutive Jobstats outputs taken every 2-minutes from 2022-03-04.
 We separated the figures by Lustre server, system versus non-system user, and entry identifier formatting.
-
-The number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
+We see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
 In some conditions, it can create many of them.
-Apart from the previously mentioned issues, we see a lot of entries with system users.
-These entries do not add much valuable information and thus increase data bloat.
-We should either discard them or find ways to combine them into fewer entries.
+
+Regarding data accumulation, each entry corresponds to one row in the database.
+Therefore, reducing the number of entries reduces storage size and speeds up queries and the analysis.
+In the figures, we can see many entries for system users.
+We found that they usually contain little valuable information; for example, many have a single `statfs` operation.
+We should discard or aggregate statistics of system users to reduce the accumulation of unnecessary data.
 
 
 ![
