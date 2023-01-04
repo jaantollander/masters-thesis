@@ -131,15 +131,15 @@ It is helpful to separate the file system operations performed by system user ID
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
 It shares the same Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
-- *Home* is intended for storing personal data and configuration files.
-In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB and 100 000 files per user.
+- *Home* is intended for storing personal data and configuration files with a default quota of 10 GB and 100 000 files per user.
+<!-- In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB and 100 000 files per user. -->
 
-- *Projappl* is intended for storing project-specific application files such as compiled libraries.
-It resides at `/projappl/<project>` and has a default quota of 50 GB and 100 000 files per project.
+- *Projappl* is intended for storing project-specific application files such as compiled libraries with a default quota of 50 GB and 100 000 files per project.
+<!-- It resides at `/projappl/<project>` and has a default quota of 50 GB and 100 000 files per project. -->
 
-- *Scratch* is intended for short-term data storage in the cluster.
-It resides at `/scratch/<project>` and has a default quota of 1 TB and 1 000 000 files per project.
-Users should move files that require long-term storage to long-term data storage outside Puhti.
+- *Scratch* is intended for short-term data storage in the cluster with a default quota of 1 TB and 1 000 000 files per project.
+<!-- It resides at `/scratch/<project>` and has a default quota of 1 TB and 1 000 000 files per project. -->
+<!-- Users should move files that require long-term storage to long-term data storage outside Puhti. -->
 
 As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
@@ -151,10 +151,10 @@ Users who want to keep data from local storage after a job completion should cop
 
 - *Local scratch*, mounted on a local SSD, is indented for batch jobs to perform I/O heavy operations.
 Its quota depends on how much the user requests for the job.
-It resides at `/run/nvme/job_${SLURM_JOB_ID}/data` available via the `$LOCAL_SCRATCH` variable.
+<!-- It resides at `/run/nvme/job_${SLURM_JOB_ID}/data` available via the `$LOCAL_SCRATCH` variable. -->
 
 - *Tmp*, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
-It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable.
+<!-- It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable. -->
 
 In this work, we do not monitor the usage of the local storage areas.
 In the future, we should include local storage in monitoring to understand how users use them and whether they use them as intended.
