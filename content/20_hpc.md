@@ -9,7 +9,7 @@ The *memory* requirement of computation is the maximum string size during the co
 Some models of computation are only theoretical tools, while others we can implement in the real world using physical processes.
 
 Contemporary computers represent data in digital form as binary digits called *bits*.
-Rules correspond to instructions to a computer processor that manipulates string of bits in memory.
+Rules correspond to instructions to a computer processor that manipulates a string of bits in memory.
 Memory consists of multiple levels of volatile *main memory* and non-volatile *storage* organized hierarchically based on factors such as proximity to the processor, access speed, and cost.
 Models of computation include serial and parallel computing.
 *Serial computing* refers to performing one operation at a time.
@@ -88,7 +88,7 @@ It stores data on multiple networked servers to facilitate high-performance acce
 It makes the data available via a global namespace such that users do not need to know the physical location of the data blocks to access a file.
 *Lustre* is a parallel file system that provides a POSIX standard-compliant file system interface for Linux clusters.
 The Lustre file system is a *kernel module* designed using the client-server architecture.
-A kernel module is software that extends the kernel, in this case, to provide a new file system.
+A kernel module is a software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 
 Nodes running the Lustre client software are known as *Lustre Clients*.

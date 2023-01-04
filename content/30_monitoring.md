@@ -9,7 +9,7 @@ Lustre Jobstats and Time series database are third-party software; the thesis ad
 ](figures/lustre-monitor.drawio.svg)
 
 <!-- The Section \ref{puhti-cluster-at-csc} described the Puhti cluster. -->
-In this section, we explain how our monitoring system works in the Puhti cluster and how we analyze the data.
+This section explains how our monitoring system works in the Puhti cluster and how we analyze the data.
 We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
 Subsection \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
 In Subsection \ref{file-system-statistics}, we explain the different file system operations and statistics for them that we can track, how to query them, and the output format.
@@ -23,7 +23,7 @@ Then, we can analyze the components and identify the components with the highest
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
 The statistics we collect from Jobstats form multiple time series.
-We explain how we store time series data in *time series database* in Subsection \ref{storing-time-series-data}.
+We explain how we store time series data in the *time series database* in Subsection \ref{storing-time-series-data}.
 In Subsection \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
 Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
@@ -102,7 +102,7 @@ The text output is formatted as follows.
 
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
 The *target* (`<target>`) contains the mount point and name of the Lustre target of the query.
-Table \ref{tab:mdt-mds} list the metadata and object storage target names on each Lustre server in Puhti.
+Table \ref{tab:mdt-mds} lists the metadata and object storage target names on each Lustre server in Puhti.
 <!--
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>`, and eight OSSs with three OSTs each, named `scratch-OST<index>`.
 The `<index>` is a four-digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
@@ -181,7 +181,7 @@ OST | **`quotactl`** | `quotactl` | `samples`
 This table lists all operations tracked by the Jobstats for each Lustre target.
 The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but the values were always zero. Thus, we did not include them in our analysis.
 The tables contain the corresponding system calls for each Lustre operation.
-You can find an explanation for each system call in Appendix \ref{file-system-interface}.
+We explain each system call in Appendix \ref{file-system-interface}.
 
 
 We found that the counters may report more samples for `close` than `open` operations.
@@ -192,13 +192,13 @@ For example, if `open` is called multiple times with the same arguments Lustre c
 
 ## Entry resets
 If Jobstats has not updated the statistics of an entry within the *cleanup interval*, it removes the entry, referred to as *reset*.
-That is, if the snapshot time is older than the cleanup interval.
+That is if the snapshot time is older than the cleanup interval.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
 
 We *detect the resets* by observing if any counter-values have decreased.
 This method does not detect reset if the new counter value is larger than the old one, but it is uncommon because counter values typically grow large.
-In this case, we will underestimate the counter increment when calculating the difference between two counter values.
+We will underestimate the counter increment in this case when calculating the difference between two counter values.
 
 
 ## Computing rates
@@ -207,7 +207,7 @@ We treat the previous counter value as zero if we detect a reset.
 For Jobstats, a rate during an interval tells us how many operations, on average, happen per time unit during an interval.
 For example, if the previous counter of write operations for a job is $v_1=1000$ at time $t_1=0$ seconds, and the current value is $v_2=2000$ at time $t_2=120$ seconds, it performed $v_2-v_1=1000$ write operations during the interval of $t_2-t_1=120$ seconds.
 Therefore, on average, the job performed $1000/120\approx 8.33$ write operations per second during the interval.
-We explain theorical details about computing rates in Appendix \ref{computing-and-aggregating-rates}.
+We explain theoretical details about computing rates in Appendix \ref{computing-and-aggregating-rates}.
 
 
 ## Storing time series data
@@ -255,7 +255,7 @@ The monitoring client calls the appropriate command, as explained in Section \re
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and a 10-minute cleanup interval.
-In the future, we could expriment with reducing the observation interval to 1-minute.
+In the future, we could reduce the observation interval to 1-minute.
 
 <!-- computing differences on the fly -->
 Initially, we computed the difference between the two counters on the monitoring clients and stored them in the database.
@@ -350,8 +350,8 @@ We used Parquet.jl package to parse the data, which we converted into a data fra
 We computed rates from the counter values for each time series and performed explorative data analysis on the rates, such as computing sums over different subsets and computing densities.
 We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
 We show many of the visualizations in Section \ref{results}.
-We describe the theorical aspects of computing rates from counters, manipulating rates and aggregating them in the Appendix \ref{computing-and-aggregating-rates}.
+We describe the theoretical aspects of computing rates from counters, manipulating rates, and aggregating them in Appendix \ref{computing-and-aggregating-rates}.
 The aggregation methods include computing a sum and density.
 
-<!-- TODO: we used snapshot time as the timestamp, inferred the beginning of the time series -->
+<!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
 
