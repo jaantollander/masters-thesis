@@ -9,25 +9,21 @@ TODO: (to conclusions) what did we accomplish?
 
 This section presents the results from analyzing the data obtained from monitoring file system usage on the Puhti cluster.
 Unfortunately, due to issues with data quality from Lustre Jobstats on Puhti, we did not reach all the thesis goals set in Section \ref{introduction}.
-These issues greatly impacted the thesis work, and we lost valuable data and time.
-Consequently, we could not develop automated analysis and visualization of the real-time monitoring data.
-Also, we do not have a complete view of the file system usage because we had to discard the bad data.
-We discuss these issues in Subsection \ref{entries-and-issues}.
+We couldn't perform reliable analysis on earlier monitoring data and had to discard it.
+Furthermore, we couldn't develop automated analysis and visualization of the real-time monitoring data or reliably correlate file system usage with slowdowns.
+In Subsection \ref{entries-and-issues}, we discuss these issues and investigate the entries of raw Jobstats data from 2022-03-04.
 
-Despite the issues, we believe that a subset of the obtained data is reliable.
-We can derive insights from this data for future work.
-Regarding the research questions from Section \ref{introduction}, the data indicates that we can identify users who perform heavy I/O on the cluster.
+Later, we obtained new data that we could analyze more reliably.
+However, due to the nature of the issue, we had to discard some of the obtained data.
+The remaining data seems reliable, but there is no way to ensure its integrity.
+We use this data to derive insights for future work.
+Regarding the research questions from Section \ref{introduction}, the data indicates that we can identify users who perform more file system operations than others on the cluster, often orders of magnitude more.
 However, the data quality issues reduce the reliability of the identification.
 As a demonstration, we present different aspects of data from compute nodes for 24 hours of 2022-10-27.
 We omitted data from login and utility nodes in this analysis due to a lack of time to verify the quality of the data.
-Subsection \ref{counters-and-rates} shows raw counter values and computed rates of a few hand-picked jobs to illustrate different I/O patterns.
+Subsection \ref{counters-and-rates} shows raw counter values and computed rates of a few selected jobs to illustrate different I/O patterns.
 In Subsection \ref{total-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
 Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on a specific Lustre target to demonstrate the effects of the different components.
-
-<!--
-The volume and complexity of data make representation a challenge.
-We attempt to pick a visualization that best represents interesting features from the data.
--->
 
 
 \clearpage
