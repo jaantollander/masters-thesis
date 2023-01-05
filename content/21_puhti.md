@@ -2,7 +2,7 @@
 
 # Puhti cluster at CSC
 This section presents the configuration of the CSC's *Puhti* cluster from a storage perspective.
-Puhti is a Petascale system, refering to the peak performance above $10^{15}$ floating point operations per second.
+Puhti is a Petascale system, referring to the peak performance above $10^{15}$ floating point operations per second.
 It has over five hundred unique monthly users and a diverse user base, making it interesting for studying file system usage.
 Puhti is a Finnish noun that means having energy.
 
@@ -46,7 +46,7 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Compute* | *GPU* | 80 | 384 | 3600
 
 : \label{tab:puhti-nodes}
-List of all nodes on the Puhti cluster by category and type.
+Nodes on the Puhti cluster by category and type.
 For service nodes, the node type associates them with their function in the cluster.
 For compute nodes, the node types associate them with the amount of allocatable resources they have.
 The node count tells us the number of nodes of the given node type.
@@ -72,7 +72,7 @@ The network has a total of 28 L1 switches and 12 L2 switches.
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![
-Puhti topology from storage perspective.
+Puhti topology from a storage perspective.
 Rounded rectangles on the left illustrate compute, utility, and login nodes, whereas the dashed rectangles below are the optional attached local storage.
 Rounded rectangles on the right illustrate the Lustre nodes, where the rectangles below are the appropriate Lustre targets.
 The lines represent the network connections, and the circles represent the network switches.
@@ -112,34 +112,19 @@ Set of node names|Example node name
 
 : \label{tab:node-names}
 A table of node names of service and compute nodes in Puhti.
-Service nodes start with the `puhti-` prefix; other nodes are compute nodes.
+Service nodes start with the `puhti-` prefix; the rest are compute nodes.
 Curly braces denote a set.
 Ranges such as `{01-04}` expand to `{01,02,03,04}`, and products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
 We add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
-
-In CSC systems, users have a *user account* which can belong to one or more *projects*.
-We use projects for setting quotas and accounting for computational resources and storage.
-We measure the usage of computational resources in *Billing Units (BU)*.
-Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, use different rates of BUs.
-
-Puhti associates each user account with a *user* and each project with a *group*.
-We can use user IDs and group IDs as identifiers for measuring file system usage at the user or group level.
-Modern Linux distributions reserve user IDs from 0 to 999 for system processes.
-In Puhti, user ID 0 is the root and user ID 666 is job control.
-It is helpful to separate the file system operations performed by system user IDs from the other user IDs.
 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
 It shares the same Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
 - *Home* is intended for storing personal data and configuration files with a default quota of 10 GB and 100 000 files per user.
-<!-- In the file system, it resides at `/users/<user>` available via the `$HOME` variable and has a default quota of 10 GB and 100 000 files per user. -->
 
 - *Projappl* is intended for storing project-specific application files such as compiled libraries with a default quota of 50 GB and 100 000 files per project.
-<!-- It resides at `/projappl/<project>` and has a default quota of 50 GB and 100 000 files per project. -->
 
 - *Scratch* is intended for short-term data storage in the cluster with a default quota of 1 TB and 1 000 000 files per project.
-<!-- It resides at `/scratch/<project>` and has a default quota of 1 TB and 1 000 000 files per project. -->
-<!-- Users should move files that require long-term storage to long-term data storage outside Puhti. -->
 
 As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
@@ -151,15 +136,26 @@ Users who want to keep data from local storage after a job completion should cop
 
 - *Local scratch*, mounted on a local SSD, is indented for batch jobs to perform I/O heavy operations.
 Its quota depends on how much the user requests for the job.
-<!-- It resides at `/run/nvme/job_${SLURM_JOB_ID}/data` available via the `$LOCAL_SCRATCH` variable. -->
 
 - *Tmp*, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
-<!-- It resides at `/local_scratch/<user>` available via the `$TMPDIR` variable. -->
 
 In this work, we do not monitor the usage of the local storage areas.
-<!-- TODO: we can see reservations from Slurm accounting, profiling usage is more difficult, we can't use Lustre Jobstats -->
-In the future, we should include local storage in monitoring to understand how users use them and whether they use them as intended.
+Monitoring their usage is complicated; obviously, we cannot use Lustre Jobstats.
+In the future, a more practical option is to monitor the reservations for local storage.
 
+In CSC systems, users have a *user account* which can belong to one or more *projects*.
+We use projects for setting quotas and accounting for computational resources and storage.
+We measure the usage of computational resources in *Billing Units (BU)*.
+Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, use different rates of BUs.
+
+Puhti associates each user account with a *user* and each project with a *group*.
+We can use user and group IDs as identifiers for measuring file system usage at the user or group level.
+<!-- group from the workload manager -->
+Modern Linux distributions reserve user IDs from 0 to 999 for system processes.
+In Puhti, user ID 0 is the root, and user ID 666 is job control.
+It is helpful to separate the file system operations performed by system user IDs from the other user IDs.
+
+<!--  TODO: login vs compute -->
 
 ## Running workloads
 Partition name | Time limit | Task limit | Node limit | Node type
@@ -178,9 +174,9 @@ Partition name | Time limit | Task limit | Node limit | Node type
 
 : \label{tab:slurm-partitions}
 Slurm partitions on Puhti.
-Each partition has a name associated with resource limits and a set of node types from Table \ref{tab:puhti-nodes}.
+Each partition has a name and resource limits such as time, task and node limit that a job can request on the partition.
+Node types, listed in Table \ref{tab:puhti-nodes}, dictates the set of nodes where job may run.
 Typically, memory and local storage limits are the same for the node type.
-TODO: explain node types, refer to previous table
 
 Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload-manager}.
 At the time of writing, the version was 21.08.7, but it is updated regularly.
