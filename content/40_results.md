@@ -10,8 +10,9 @@ TODO: (to conclusions) what did we accomplish?
 This section presents the results from analyzing the data obtained from monitoring file system usage on the Puhti cluster.
 Unfortunately, due to issues with data quality from Lustre Jobstats on Puhti, we did not reach all the thesis goals set in Section \ref{introduction}.
 We could not perform reliable analysis on the monitoring data from the initial monitoring client and had to discard it.
-Furthermore, we could not develop automated analysis and visualization of the real-time monitoring data or reliably correlate file system usage with slowdowns.
-In Subsection \ref{entries-and-issues}, we discuss these issues and investigate the entries of raw Jobstats data from 2022-03-04.
+Furthermore, the data quality issue prevented us from developing a reliable, automated analysis and visualization of the real-time monitoring data.
+Also, we could not correlate file system usage with slowdowns because were not able to gather enough reliable data after having to dicard the initial data.
+In Subsection \ref{entries-and-issues}, we discuss these issues and investigate the entries of raw Jobstats data from a two-hour sample.
 
 Later, we obtained new data from the modified monitoring client that we could analyze more reliably.
 However, due to the nature of the issue, we had to discard some of the obtained data.
@@ -19,11 +20,12 @@ The remaining data seems reliable, but there is no way to ensure its integrity.
 We use this data to derive insights for future work.
 Regarding the research questions from Section \ref{introduction}, the data indicates that we can identify users who perform more file system operations than others on the cluster, often orders of magnitude more.
 However, the data quality issues reduce the reliability of the identification.
+
 As a demonstration, we present different aspects of data from compute nodes for 24 hours of 2022-10-27.
-We omitted data from login and utility nodes in this analysis due to a lack of time to verify the quality of the data.
-Subsection \ref{counters-and-rates} shows raw counter values and computed rates of a few selected jobs to illustrate different I/O patterns.
+We omitted data from login and utility nodes in this analysis due to a lack of time to verify the correctness of the data.
+Subsection \ref{counters-and-rates} shows raw counter values and computed rates of three jobs to illustrate different I/O patterns.
 In Subsection \ref{total-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
-Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on a specific Lustre target to demonstrate the effects of the different components.
+Finally, Subsection \ref{components-of-total-rates} shows the components of a single total rate on a specific Lustre target to demonstrate how single user can perform the majority of the total load of given file system operation.
 
 
 ## Entries and issues
@@ -52,12 +54,14 @@ We found that some of the observed entry identifiers did not conform to the form
 Table \ref{tab:jobid-examples} demonstrates correct entry identifiers, an entry identifier with missing job ID, and different malformed entry identifiers we observed.
 
 The first issue is missing job ID values.
-Slurm sets a Slurm job ID for all non-system users, that is, user IDs greater than 999, running jobs on compute nodes, and the identifier should include it.
-Entries from system users, such as the root or job control, usually did not have a job ID as their processes do not run via Slurm, although sometimes they do have a job ID.
+Slurm sets a Slurm job ID for all non-system users running jobs on compute nodes, and the identifier should include it.
 However, we found many entries from non-system users on compute nodes without a job ID.
 Due to these issues, data from the same job might scatter into multiple time series without reliable indicators making it impossible to provide reliable statistics for specific jobs.
 The issue might be related to problems fetching the environment variable's value.
 This issue occurred in both MDSs and OSSs on Puhti.
+
+<!-- TODO: entries from system users, issue? -->
+Entries from system users usually did not have a job ID as their processes do not run via Slurm, although sometimes they do have a job ID.
 
 The second, more serious issue is that there were malformed entry identifiers.
 The issue is likely related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code.
@@ -77,27 +81,27 @@ Therefore, reducing the number of entries reduces storage size and speeds up que
 In the figures, we can see many entries for system users.
 We found that they usually contain little valuable information; for example, many have a single `statfs` operation.
 We should discard or aggregate statistics of system users to reduce the accumulation of unnecessary data.
+<!-- TODO: fixing the entry identifier in general will reduce data accumulation -->
 
 
 ![
-Counts of entry identifiers on each MDT from non-system user IDs.
+The number of entry identifiers on each of the four MDTs from non-system users during the 113 samples.
 \label{fig:entry-ids-mds-user}
 ](figures/entry_ids_mds_user.svg)
 
 ![
-Counts of entry identifiers on each MDT from system user IDs.
+The number of entry identifiers on each of the four MDTs from system users during the 113 samples.
 \label{fig:entry-ids-mds-system}
 ](figures/entry_ids_mds_system.svg)
 
 ![
-Counts of entry identifiers on each OST from non-system and missing user IDs.
+The number of entry identifiers on each of the 24 OSTs from non-system users and missing users during the 113 samples.
 We see a large burst of malformed identifiers from 12.06 to 12.26.
 \label{fig:entry-ids-oss-user}
 ](figures/entry_ids_oss_user.svg)
 
 ![
-Counts of entry identifiers on each OST from system user IDs.
-We see many missing job IDs on system user IDs, likely because it does not have the job ID set in its environment.
+The number of entry identifiers on each of the 24 OSTs from system users during the 113 samples.
 \label{fig:entry-ids-oss-system}
 ](figures/entry_ids_oss_system.svg)
 
