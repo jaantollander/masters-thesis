@@ -149,7 +149,7 @@ Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, us
 Puhti associates each user account with a *user* and each project with a *group*.
 We can use user and group IDs as identifiers for measuring file system usage at the user or group level.
 <!-- TODO: we should obtain group/project from the workload manager -->
-Modern Linux distributions, such as RHEL, reserve user IDs from 0 to 999 for system processes.
+RHEL 7 and 8 reserve user IDs from 0 to 999 for system processes.
 We refer to the users with IDs from 0 to 999 as *system users* and other users as *non-system users*.
 It is helpful to separate the file system operations performed by system users from the non-system users.
 
