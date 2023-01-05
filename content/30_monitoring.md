@@ -268,13 +268,11 @@ Due to the bug, some node names were in the fully-qualified format instead of th
 Because we assumed that all node names would follow the short hostname format, we parsed the metadata from the entry identifiers with a short hostname and a fully-qualified hostname as the same.
 The mistake made us identify two different time series as the same, resulting in wrong values when computing rates.
 We fixed it by modifying our parser to disambiguate between the two formats.
-However, we lost a fair amount of time and data due to this problem.
 Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
 
 <!-- recording the raw counters -->
 To solve and identify these problems, we switched to collecting the counter values in the database and computing the rates afterward.
-This approach simplifies the monitoring system, and we can easily interpolate the values for missing intervals.
-It also supports variable interval lengths.
+This approach simplifies the monitoring system and supports variable interval lengths.
 However, the approach makes queries and analysis more computationally intensive.
 
 Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
@@ -304,13 +302,12 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 
 Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
 
----
 
+## Backfilling initial zeros
 <!-- TODO: first version had to keep track -->
-The monitoring client must also keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
-We must mark the beginning of a time series when we encounter an identifier not present in the previous observation interval.
-We mark it by creating a new instance of a data structure with the new target and entry identifier, the previous timestamp, the missing value for snapshot time, and zeros for statistics.
-It will be *backfilled* into the database.
+In the future, we should also backfill the initial zeros, that is, the beginning of a time series, to the database to not lose data from the first observation interval.
+For that, the monitoring client must keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
+When the client encounters an identifier not present in the previous observation interval, it creates a new instance of a data structure with the new target and entry identifier, the previous timestamp, the missing value for snapshot time, and zeros for statistics.
 For example, if the previous data structure is the first observation, we have the following:
 
 ```json
@@ -328,6 +325,8 @@ For example, if the previous data structure is the first observation, we have th
   "...": "..."
 }
 ```
+
+The monitoring client sends this to the ingest server as explained in the Section \ref{monitoring-client}.
 
 
 ## Ingest server

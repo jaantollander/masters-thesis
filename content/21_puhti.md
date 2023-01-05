@@ -72,9 +72,9 @@ The network has a total of 28 L1 switches and 12 L2 switches.
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![
-Puhti topology from a storage perspective.
+Puhti's configuration from a storage perspective.
 Rounded rectangles on the left illustrate compute, utility, and login nodes, whereas the dashed rectangles below are the optional attached local storage.
-Rounded rectangles on the right illustrate the Lustre nodes, where the rectangles below are the appropriate Lustre targets.
+Rounded rectangles on the right illustrate the Lustre servers, where the rectangles below are the appropriate Lustre targets.
 The lines represent the network connections, and the circles represent the network switches.
 Three dots between nodes or switches indicate that there are many of them.
 \label{fig:puhti-network}

@@ -9,11 +9,11 @@ TODO: (to conclusions) what did we accomplish?
 
 This section presents the results from analyzing the data obtained from monitoring file system usage on the Puhti cluster.
 Unfortunately, due to issues with data quality from Lustre Jobstats on Puhti, we did not reach all the thesis goals set in Section \ref{introduction}.
-We could not perform reliable analysis on earlier monitoring data and had to discard it.
+We could not perform reliable analysis on the monitoring data from the initial monitoring client and had to discard it.
 Furthermore, we could not develop automated analysis and visualization of the real-time monitoring data or reliably correlate file system usage with slowdowns.
 In Subsection \ref{entries-and-issues}, we discuss these issues and investigate the entries of raw Jobstats data from 2022-03-04.
 
-Later, we obtained new data that we could analyze more reliably.
+Later, we obtained new data from the modified monitoring client that we could analyze more reliably.
 However, due to the nature of the issue, we had to discard some of the obtained data.
 The remaining data seems reliable, but there is no way to ensure its integrity.
 We use this data to derive insights for future work.
