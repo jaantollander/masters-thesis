@@ -85,14 +85,12 @@ Three dots between nodes or switches indicate that there are many of them.
 
 ## System configuration
 As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
-Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server* as its operating system.
+Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server (RHEL)* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 
 Each node in Puhti is a Lustre client of the shared Lustre file system.
 We can identify nodes based on their *node name*, which is the part of the hostname before the first dot, for example, `<nodename>.bullx`.
 Table \ref{tab:node-names} lists the names of service and compute nodes.
-<!-- The names of service nodes match the regular expression `puhti-[[:alnum:]_-]+` such as `puhti-login12`. -->
-<!-- The format of the *node name* string using Perl compatible regular expression syntax is **`puhti-[[:alnum:]_-]+`** for service nodes and **`r[0-9]{2}[c,m,g][0-9]{2}`** for compute nodes. -->
 We can use node names to separate file system operations at a node-specific level.
 
 Set of node names|Example node name
@@ -150,12 +148,13 @@ Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, us
 
 Puhti associates each user account with a *user* and each project with a *group*.
 We can use user and group IDs as identifiers for measuring file system usage at the user or group level.
-<!-- group from the workload manager -->
-Modern Linux distributions reserve user IDs from 0 to 999 for system processes.
-In Puhti, user ID 0 is the root, and user ID 666 is job control.
-It is helpful to separate the file system operations performed by system user IDs from the other user IDs.
+<!-- TODO: we should obtain group/project from the workload manager -->
+Modern Linux distributions, such as RHEL, reserve user IDs from 0 to 999 for system processes.
+We refer to the users with IDs from 0 to 999 as *system users* and other users as *non-system users*.
+It is helpful to separate the file system operations performed by system users from the non-system users.
 
 <!--  TODO: login vs compute -->
+
 
 ## Running workloads
 Partition name | Time limit | Task limit | Node limit | Node type
