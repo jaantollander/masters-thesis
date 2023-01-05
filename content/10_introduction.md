@@ -74,6 +74,7 @@ Earliest users of Lustre Jobstats include computing centers, such as the Oak Rid
 More recent studies have used Lustre Jobstats to collect long-term job-level I/O patterns to obtain insight for improving storage design [@understanding-io-behaviour].
 There are also commercial products for monitoring that work with Lustre Jobstast, such as *View for ClusterStor* [@view-for-clusterstor] from Cray and *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
+<!-- TODO: improve the structure -->
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster operated by CSC.
 *CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
@@ -88,6 +89,7 @@ It should also reduce the amount of manual work involved.
 Puhti relies on the Lustre parallel file system; thus, a natural choice for us is to use Lustre Jobstats to collect fine-grained statistics of file system usage.
 Querying the statistics at regular intervals and computing rates produces a time series we can analyze.
 Rates provide us with the average rate of change during an interval.
+
 We aim to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
 Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
 
