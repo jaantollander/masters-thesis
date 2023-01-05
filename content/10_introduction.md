@@ -10,7 +10,7 @@ Such use may lead to congestion in a parallel file system, which can slow down o
 Heavy use may be intentional, such as data-intensive computing, or unintentional, such as unknowingly running a program that creates many temporary files.
 In this thesis, we investigate if monitoring file system usage can help identify the causes of slowdowns and the users responsible for them.
 
-The literature and professionals often refer to interaction with storage as I/O, an abbreviation for Input/Output.
+The literature and professionals often refer to interaction with storage as *I/O*, an abbreviation for *Input/Output*.
 Generally, I/O refers to communication between a computer and the outside world, but we often use it to describe interactions with a storage device.
 A file system is a commonly used abstraction layer between the physical storage device and the user, but there are others, such as object storage.
 The term storage I/O is agnostic about the underlying abstraction layer.

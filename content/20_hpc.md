@@ -51,13 +51,10 @@ Its responsibilities include process scheduling, memory management, providing a 
 They also provide separation between kernel space and user space.
 Library functions, such as functions in the C standard library, implement a caller-friendly layer on top of system calls for performing system operations. [@tlpi]
 
-<!-- TODO: sync with introduction -->
-*Input/Output (I/O)* refers to the communication between a computer and the outside world, for example, a disk, display, or keyboard.
 Linux implements a universal file I/O model, which means that it represents everything from data stored on disk to devices and processes as files.
 It uses the same system calls for performing I/O on all types of files.
 Consequently, users can use the same file utilities to perform various tasks, such as reading and writing files or interacting with processes and devices.
 The kernel only provides one file type, a sequential stream of bytes.
-This work focuses on file system I/O on a storage device.
 
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as ext4, Btrfs, or FAT.
 VFS allows programs to use different file systems uniformly using the operations defined by the interface.
