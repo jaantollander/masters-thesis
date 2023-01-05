@@ -35,7 +35,7 @@ Lustre client
 : TODO
 
 Lustre target
-: TODO
+: TODO, storage unit
 
 Lustre server
 : TODO

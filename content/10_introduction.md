@@ -16,7 +16,7 @@ A file system is a commonly used abstraction layer between the physical storage 
 The term storage I/O is agnostic about the underlying abstraction layer.
 In this work, the I/O refers to storage I/O.
 
-<!-- TODO: add reference, we have seen in practice -->
+<!-- TODO: add a reference, we have seen in practice -->
 HPC is moving from computation-centric workloads to I/O-centric workloads.
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
 <!-- A ranking is maintained on the TOP500 list [@top_500]. -->
@@ -61,20 +61,21 @@ By measuring and analyzing long-term I/O performance, we can detect variations i
 For example, a joint study by National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF) [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year.
 They applied statistical methods and time series analysis to identify variations in long and short-term performance trends.
 They showed that short transient issues differ from long persistent ones, and the baseline performance can change over time.
-<!-- Their work provides insight into understanding the behavior of parallel file systems, monitoring and analysis techniques of parallel file systems, and how to improve them. -->
 <!-- They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system. -->
 
-However, we need more than performance monitoring to identify who is causing problems; we need fine-grained file system usage monitoring to obtain specific information on how much each user, job, or node contributes to the total load.
-Due to higher resolution, fine-grained monitoring produces more data than simpler aggregates and requires a time series database to store and query efficiently.
+However, we need more than performance monitoring to identify more precisely who or what is causing problems; we need fine-grained file system usage monitoring.
+*Fine-grained* refers to collecting statistics of each file system operation to identify who performs it, from which node, and to which storage unit.
+Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
+
+<!-- Fine-grained monitoring produces higher-resolution data, which means more data than simpler aggregates and requires a time series database to store and query efficiently. -->
+
 Regarding collecting fine-grained file system statistics, the Lustre parallel file system [@lustre-storage-architecture] has a feature called Lustre Jobstats [@lustre-monitoring-guide].
 Earliest users of Lustre Jobstats include computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC) [@lustre-job-stats-metric-aggregation] and National Computational Infrastructure (NCI) [@fine-grained-file-system-monitoring].
 More recent studies have used Lustre Jobstats to collect long-term job-level I/O patterns to obtain insight for improving storage design [@understanding-io-behaviour].
 There are also commercial products for monitoring that work with Lustre Jobstast, such as *View for ClusterStor* [@view-for-clusterstor] from Cray and *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
 
-<!-- A discussion with the admins of Aalto Scientific Computing (SciComp) revealed that they use a commercial product, the *View for ClusterStor* from Cray [@view-for-clusterstor] -->
-
-In this work, we experiment with the file system usage monitoring on the *Puhti* cluster at CSC.
-*CSC -- The IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
+In this work, we experiment with the file system usage monitoring on the *Puhti* cluster operated by CSC.
+*CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 
 Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
@@ -84,10 +85,7 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-Puhti relies on the Lustre parallel file system.
-Therefore, we use Lustre Jobstats to collect fine-grained statistics of file system usage.
-<!-- TODO: explain fine-grained in more general manner, remove or replace Lustre client and target, who did, from where to where -->
-Fine-grained refers to collecting specific file operation statistics with the job, user, node, and Lustre target information.
+Puhti relies on the Lustre parallel file system; thus, a natural choice for us is to use Lustre Jobstats to collect fine-grained statistics of file system usage.
 Querying the statistics at regular intervals and computing rates produces a time series we can analyze.
 Rates provide us with the average rate of change during an interval.
 We aim to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
