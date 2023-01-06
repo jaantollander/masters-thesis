@@ -153,8 +153,8 @@ thesis_build() {
 
     thesis_pdf "$TMP"
     thesis_epub "$TMP"
-    thesis_html "$TMP"
-    thesis_tex "$TMP"
+    #thesis_html "$TMP"
+    #thesis_tex "$TMP"
 
     (
         cd "$TMP" && \
