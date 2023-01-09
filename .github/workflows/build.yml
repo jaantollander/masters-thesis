@@ -19,29 +19,14 @@ jobs:
           TMP="$(mktemp -d)"
           curl --location https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-amd64.deb --output "$TMP/pandoc.deb"
           sudo apt-get install "$TMP/pandoc.deb"
-          rm -r "$TMP"
 
-      - name: "Build document"
-        run: |
-          . ./env.sh
-          thesis_pdf
-          thesis_html
-          thesis_epub
-          mv ./build/* .
-          ls --almost-all --recursive --ignore=.git
-
-      - name: "Create and push new orphan branch"
+      - name: "Build"
         env:
           NAME: "jaantollander"
           EMAIL: "jaantollander@users.noreply.github.com"
-          BRANCH: "build"
         # https://stackoverflow.com/a/58393457
         run: |
           git config --local user.name "$NAME"
           git config --local user.email "$EMAIL"
-          git checkout --orphan "$BRANCH"
-          git rm -rf .
-          git add .
-          git commit -m "gh-actions"
-          git push origin "$BRANCH" -f
-          ls --almost-all --recursive --ignore=.git
+          source env.sh
+          thesis_build

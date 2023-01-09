@@ -118,8 +118,7 @@ Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} sho
 They demonstrate the values of the counter collected from the statistics, rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
 The x-axis displays time, and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
 Each line displays a *connection* from one Lustre client to one Lustre Target.
-All figures display a single node job; thus, each connection shows a different OST.
-<!-- TODO: how many OSTs per plot -->
+All figures display a single node job; thus, each connection shows write operations from the same to a different OST.
 We say that a connection is *active* during a period that performs any file system operations, and otherwise, it is *inactive*.
 
 ![
@@ -134,7 +133,7 @@ The lines follow a similar pattern indicating that the job performs a similar wr
 The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
 The counter values increase almost linearly, indicating that the job performs writes consistently during the whole period.
 The rate over the whole period is almost constant with some small fluctuations.
-We can see that the job performs almost 74\% of the operations to one OST, almost 25\% to another OST, and almost none to the others.
+We can see that the job performs almost 75\% of the operations to one OST, almost 25\% to another OST, and almost none to the others.
 \label{fig:job-rate-2}
 ](figures/2022-10-27_ost_job_write_2.svg)
 
@@ -150,26 +149,34 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 \clearpage
 
 ## Total rates for MDTs
-This section shows the total rates from all compute nodes to each target for each measured operation, listed in Table \ref{tab:operations}.
-We show the total rates during 24 hours of 2022-10-27 for MDTs in Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2} and \ref{fig:total-mdt-3}, and for OSTs in Figures \ref{fig:total-ost-1} and \ref{fig:total-ost-2}.
-The MDT figures show that only one or two of four MDTs are usually actively handling operations.
-On the contrary, all 24 OSTs handle operations.
-The interesting features in the figures are the variation of rates across time and between targets.
-For example, significant differences between the rates of two OSTs indicate an unbalanced load.
-A problematic I/O pattern or insufficient file striping might cause the imbalance.
-File striping means Lustre segments the file data into multiple OSTs instead of storing all the data in a single OST.
+Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2} and \ref{fig:total-mdt-3} show the total rates of all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
+<!-- The MDT figures show that only one or two of four MDTs are usually actively handling operations. -->
 
-![Total rates of open, close, mknod, and unlink operations from all compute nodes to each MDT. \label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
+![
+Total rates of open, close, mknod, and unlink operations from all compute nodes to each MDT.
+We can see that two MDTs handle open and close operations, but only one MDT handles mknod and unlink operations.
+\label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
 
-![Total rates of link, getattr, setattr, getxattr, and setxattr operations from all compute nodes to each MDT. \label{fig:total-mdt-2}](figures/2022-10-27_mdt_compute_2.svg)
+![
+Total rates of link, getattr, setattr, getxattr, and setxattr operations from all compute nodes to each MDT.
+\label{fig:total-mdt-2}](figures/2022-10-27_mdt_compute_2.svg)
 
-![Total rates of rename, mkdir, rmdir, sync, and statfs operations from all compute nodes to each MDT. \label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
+![
+Total rates of rename, mkdir, rmdir, sync, and statfs operations from all compute nodes to each MDT.
+\label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
 
 
 \clearpage
 
 ## Total rates for OSTs
+Figures \ref{fig:total-ost-1} and \ref{fig:total-ost-2} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
+We use a logarithmic scale due to large variations in the magnitude of the rates.
+The interesting features in the figures are the variation of rates across time and between targets.
+For example, significant differences between the rates of two OSTs indicate an unbalanced load.
+A problematic I/O pattern or insufficient file striping might cause the imbalance.
+File striping means Lustre segments the file data into multiple OSTs instead of storing all the data in a single OST.
+
 ![Total rates of read, write, readbytes, writebytes, and punch operations from all compute nodes to each OST. \label{fig:total-ost-1}](figures/2022-10-27_ost_compute_1.svg)
 
 ![Total rates of setinfo, getinfo, setattr, quotactl, and sync operations from all compute nodes to each OST. \label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
