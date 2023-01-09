@@ -3,9 +3,9 @@
 # Results
 This section presents the results from analyzing the data obtained from monitoring file system usage on the Puhti cluster.
 Unfortunately, due to issues with data quality from Lustre Jobstats on Puhti, we did not reach all the thesis goals set in Section \ref{introduction}.
-We could not perform reliable analysis on the monitoring data from the initial monitoring client and had to discard it.
+We could not perform a reliable analysis of the monitoring data from the initial monitoring client and had to discard it.
 Furthermore, the data quality issue prevented us from developing a reliable, automated analysis and visualization of the real-time monitoring data.
-Also, we could not correlate file system usage with slowdowns because were not able to gather enough reliable data after having to dicard the initial data.
+Also, we could not correlate file system usage with slowdowns because we were not able to gather enough reliable data after having to discard the initial data.
 In Subsection \ref{entries-and-issues}, we discuss issues related to entry identifiers and investigate the entry identifiers from a large sample of consecutive Jobstats outputs.
 
 Later, we obtained new data from the modified monitoring client.
@@ -15,12 +15,12 @@ We use this data to derive insights for future work.
 Regarding the research questions from Section \ref{introduction}, the data indicates that we can identify users who perform more file system operations than others on the cluster, often orders of magnitude more.
 However, the data quality issues reduce the reliability of the identification.
 
-As a demonstration, we present different aspects of data from compute nodes taken at 2-minute intervals for 24 hours of 2022-10-27.
+As a demonstration, we present different aspects of data from compute nodes taken at 2-minute intervals for 24 hours on 2022-10-27.
 We omitted data from login and utility nodes in this analysis due to a lack of time to verify the correctness of the data.
 Subsection \ref{counters-and-rates} shows raw counter values and computed rates of three jobs to illustrate different I/O patterns.
 In Subsections \ref{total-rates-for-mdts} and \ref{total-rates-for-osts}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
-Finally, Subsection \ref{components-of-total-rates} shows how fine-grained measurements allow us to break total rate down into its components.
-Then we demonstrate how single user can perform the majority of the total load of given file system operation.
+Finally, Subsection \ref{components-of-total-rates} shows how fine-grained measurements allow us to break the total rate down into its components.
+Then we demonstrate how a single user can perform the majority of a total load of a given file system operation.
 
 
 ## Entries and issues
@@ -70,22 +70,22 @@ In some conditions, it can create many of them.
 
 Regarding data accumulation, each entry corresponds to one row in the database.
 Therefore, reducing the number of entries reduces storage size and speeds up queries and the analysis.
-The figures show many entries for system users which may also be a bug in Jobstats.
+The figures show many entries for system users, which may also be a bug in Jobstats.
 Entries from system users usually did not have a job ID as their processes do not run via Slurm, although sometimes they do have a job ID.
 We found that they usually contain little valuable information; for example, many have a single `statfs` operation.
 We should discard or aggregate statistics of system users to reduce the accumulation of unnecessary data.
 
-<!-- TODO: fixing the entry identifier in general will reduce data accumulation -->
+<!-- TODO: fixing the entry identifier, in general, will reduce data accumulation -->
 <!-- TODO: OST load is balanced. -->
-<!-- TODO: why MDT load are not balanced? -->
+<!-- TODO: why MDT loads are not balanced? -->
 
 ![
 The number of entries on each of the four MDTs from non-system users during the 113 samples with 2-minute intervals.
-First subplot shows the number of correct entries for login and utility nodes, and the second subplot show them for compute nodes.
-Third, subplot shows the number of missing job IDs on compute nodes, which is substancial compared to the correct identifiers in the second subplot.
+The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
+The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
 There are no malformed entries on MDTs.
 We can see that only two of the four MDTs handle almost all of the metadata operations.
-Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seems to correlate.
+Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
 \label{fig:entry-ids-mds-user}
 ](figures/entry_ids_mds_user.svg)
 
@@ -96,17 +96,17 @@ The number of entries on each of the four MDTs from system users during the 113 
 
 ![
 The number of entries on each of the 24 OSTs from non-system users and missing users during the 113 samples with 2-minute intervals.
-First subplot shows the number of correct entries for login and utility nodes, and the second subplot show them for compute nodes.
-Third, subplot shows the number of missing job IDs on compute nodes, which is substancial compared to the correct identifiers in the second subplot.
-Fourth subplot, shows the number of malformed identifiers for all nodes.
-We can see that Jobstats on Puhti systematically produces missing job IDs and malformed identifiers.
-Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, which indicates in some conditions, Jobstats produces huge amount of malformed identifiers.
-It might be due to heavy load on the OSS.
+The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
+The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
+The fourth subplot shows the number of malformed identifiers for all nodes.
+We can see that Jobstats on Puhti systematically produce missing job IDs and malformed identifiers.
+Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, which indicates in some conditions, Jobstats produces a huge amount of malformed identifiers.
+It might be due to a heavy load on the OSS.
 \label{fig:entry-ids-oss-user}
 ](figures/entry_ids_oss_user.svg)
 
 ![
-The number of entries on each of the 24 OSTs from system users during the 113 samples with 2-minute intervals..
+The number of entries on each of the 24 OSTs from system users during the 113 samples with 2-minute intervals.
 \label{fig:entry-ids-oss-system}
 ](figures/entry_ids_oss_system.svg)
 
@@ -114,35 +114,35 @@ The number of entries on each of the 24 OSTs from system users during the 113 sa
 \clearpage
 
 ## Counters and rates
-Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for write operations for a different jobs during a 24 hour-period of 2022-10-27.
-They demonstrate the counters values collected from the statistics, rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
+Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for write operations for different jobs during a 24-hour period of 2022-10-27.
+They demonstrate the values of the counter collected from the statistics, rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
 The x-axis displays time, and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
 Each line displays a *connection* from one Lustre client to one Lustre Target.
-All figures display a single node job, thus each connection shows a different OST.
+All figures display a single node job; thus, each connection shows a different OST.
 <!-- TODO: how many OSTs per plot -->
-We say that a connection is *active* during a period  performs any file system operations, and otherwise it is *inactive*.
+We say that a connection is *active* during a period that performs any file system operations, and otherwise, it is *inactive*.
 
 ![
-The first subplot shows the counter values and second subplot shows the rates computed from the counter values in the first plot.
-The counter values follow a typical saw-tooth pattern for almost-linearly increasing counter values that reset periodically due to inactivity.
-In the active periods, we see higher write amount of writes in the beginning then quite near constant write rate until the job becomes inactive.
-The lines follow similar pattern indicating that the job performs similar write pattern for each OST except for the ones whose rate is near zero.
+The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
+The counter values follow a typical saw-tooth pattern for almost linearly increasing counter values that reset periodically due to inactivity.
+In the active periods, we see a higher write amount of writes in the beginning, then quite near constant write rate until the job becomes inactive.
+The lines follow a similar pattern indicating that the job performs a similar write pattern for each OST except for the ones whose rate is near zero.
 \label{fig:job-rate-1}
 ](figures/2022-10-27_ost_job_write_1.svg)
 
 ![
-The first subplot shows the counter values and second subplot shows the rates computed from the counter values in the first plot.
-The counter values follow increase almost linearly indicating that the job performs writes consistently during the whole period.
+The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
+The counter values increase almost linearly, indicating that the job performs writes consistently during the whole period.
 The rate over the whole period is almost constant with some small fluctuations.
-We can see that the job perform the almost 74\% of the operations to one OST, almost 25\% to another OST and almost none to the others.
+We can see that the job performs almost 74\% of the operations to one OST, almost 25\% to another OST, and almost none to the others.
 \label{fig:job-rate-2}
 ](figures/2022-10-27_ost_job_write_2.svg)
 
 ![
-The first subplot shows the counter values and second subplot shows the rates computed from the counter values in the first plot.
-One of the counter values increases in a wave-like pattern that reset periodically, the other counter seem to increase in a burst like manner for short periods of time before reseting.
+The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
+One of the counter values increases in a wave-like pattern that resets periodically; the other counter seems to increase in a burst-like manner for short periods of time before resetting.
 By looking at the rates, we can see that the rates fluctuate for all OSTs.
-Furthermore, that most of the time, the job performs writes to one OST, and sometimes to multiple OSTs in burst.
+Furthermore, most of the time, the job performs writes to one OST and sometimes to multiple OSTs in a burst.
 \label{fig:job-rate-3}
 ](figures/2022-10-27_ost_job_write_3.svg)
 
