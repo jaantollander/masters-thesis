@@ -89,9 +89,9 @@ Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server (RHEL)* 
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 
 <!-- TODO: expand discussion -->
-Each Lustre server and target has a name in the Lustre file system.
+Each Lustre server and Lustre target has a name in the Lustre file system.
 We record file system usage statistics for each target.
-Table \ref{tab:mdt-mds} lists the names of Lustre targets for corresponding Lustre server in Puhti.
+Table \ref{tab:mdt-mds} lists the names of Lustre targets for the corresponding Lustre server in Puhti.
 
 Server|Targets
 -|-
@@ -210,7 +210,7 @@ It also performs accounting of details about the submitted jobs.
 
 Slurm sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
 One of them is the *Slurm Job ID* (`SLURM_JOB_ID` environment variable) which we use as an identifier to collect job-specific file operations.
-In the future, we could also combine the data from Slurm's accounting with the file system usage by using the job ID.
-For example, we could use the information about the project, partition and local storage reservation of a job.
-Project information could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
+In the future, we could combine the data from Slurm's accounting with the file system usage using the job ID.
+For example, we could use the information about the project, partition, and local storage reservation of a job.
+Project information could also help identify if members of a particular project perform problematic file I/O patterns.
 

@@ -2,7 +2,7 @@
 
 # Monitoring and analysis
 ![
-High-level overview of the monitoring system and analysis.
+A high-level overview of the monitoring system and analysis.
 Rounded rectangles indicate programs, and arrows indicate data flow.
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
@@ -259,10 +259,10 @@ This approach simplifies the monitoring system and supports variable interval le
 However, the approach makes queries and analysis more computationally intensive.
 
 Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
-Due to the scaling problem, we use TimescaleDB and suggest using more efficient line protocol for communication instead.
+Due to the scaling problem, we use TimescaleDB and suggest using a more efficient line protocol for communication instead.
 Next, we describe the monitoring client and the message structure using JSON.
 
-<!-- In the description, we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
+<!-- In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
 The monitoring client parses the target and all entries from the output using *Regular Expressions (Regex)*.
 It creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
 An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
@@ -288,10 +288,10 @@ Finally, the monitoring client composes a message of the data by listing the ind
 
 ## Backfilling the initial entry
 <!-- TODO: first version had to keep track -->
-We must manually add an initial entry filled with zeros, when a new entry appears or old entry resets in Jobstats.
+We must manually add an initial entry filled with zeros when a new entry appears, or old entry resets in Jobstats.
 Otherwise, we lose data from the first observation interval.
 During this thesis, we backfilled the initial entries during the analysis.
-In the future, we should backfill them to the database to keep the analysis simpler.
+In the future, we should backfill them into the database to keep the analysis simpler.
 
 To detect initial entries, the monitoring client must keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
 When the client encounters an identifier not present in the previous observation interval, it creates a new instance of a data structure with the new target and entry identifier, the previous timestamp, the missing value for snapshot time, and zeros for statistics.
@@ -313,7 +313,7 @@ For example, if the previous data structure is the first observation, we have th
 }
 ```
 
-The monitoring client sends this to the ingest server as explained in the Section \ref{monitoring-client}.
+The monitoring client sends this to the ingest server as explained in Section \ref{monitoring-client}.
 
 
 ## Ingest server
