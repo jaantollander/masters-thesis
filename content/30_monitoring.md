@@ -4,7 +4,6 @@
 ![
 High-level overview of the monitoring system and analysis.
 Rounded rectangles indicate programs, and arrows indicate data flow.
-Lustre Jobstats and Time series database are third-party software; the thesis advisor developed the Monitoring client and Ingest server, and the thesis author wrote the code for the analysis and visualization.
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
 
@@ -70,8 +69,7 @@ We set the job ID to Slurm job ID.
     jobid_var=SLURM_JOB_ID
 ```
 
-We can use the Slurm job ID to retrieve Slurm job information such as project and partition.
-For example, the project could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
+For Puhti, we listed the node names in Table \ref{tab:node-names}.
 
 
 ## File system statistics
@@ -101,8 +99,8 @@ The text output is formatted as follows.
 ```
 
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
-The *target* (`<target>`) contains the mount point and name of the Lustre target of the query.
-Table \ref{tab:mdt-mds} lists the metadata and object storage target names on each Lustre server in Puhti.
+The *target* (`<target>`) contains the name of the Lustre target of the query.
+For Puhti, we listed them in Table \ref{tab:mdt-mds}.
 <!--
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>`, and eight OSSs with three OSTs each, named `scratch-OST<index>`.
 The `<index>` is a four-digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
@@ -110,21 +108,6 @@ Indexing starts from zero.
 For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0017`.
 -->
 
-Server|Targets
--|-
-`MDS 1`|`scratch-MDT{0000,0001}`
-`MDS 2`|`scratch-MDT{0002,0003}`
-`OSS 1`|`scratch-OST{0000,0001,0002}`
-`OSS 2`|`scratch-OST{0003,0004,0005}`
-`OSS 3`|`scratch-OST{0006,0007,0008}`
-`OSS 4`|`scratch-OST{0009,000a,000b}`
-`OSS 5`|`scratch-OST{000c,000d,000e}`
-`OSS 6`|`scratch-OST{000f,0010,0011}`
-`OSS 7`|`scratch-OST{0012,0013,0014}`
-`OSS 8`|`scratch-OST{0015,0016,0017}`
-
-: \label{tab:mdt-mds}
-List of Lustre servers and Lustre targets in Puhti.
 
 After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
 The output denotes each *entry* by dash `-` and contains the entry identifier (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
@@ -303,10 +286,14 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
 
 
-## Backfilling initial zeros
+## Backfilling the initial entry
 <!-- TODO: first version had to keep track -->
-In the future, we should also backfill the initial zeros, that is, the beginning of a time series, to the database to not lose data from the first observation interval.
-For that, the monitoring client must keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
+We must manually add an initial entry filled with zeros, when a new entry appears or old entry resets in Jobstats.
+Otherwise, we lose data from the first observation interval.
+During this thesis, we backfilled the initial entries during the analysis.
+In the future, we should backfill them to the database to keep the analysis simpler.
+
+To detect initial entries, the monitoring client must keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
 When the client encounters an identifier not present in the previous observation interval, it creates a new instance of a data structure with the new target and entry identifier, the previous timestamp, the missing value for snapshot time, and zeros for statistics.
 For example, if the previous data structure is the first observation, we have the following:
 

@@ -88,6 +88,27 @@ As mentioned in Section \ref{linux-operating-system}, most high-performance clus
 Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server (RHEL)* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 
+<!-- TODO: expand discussion -->
+Each Lustre server and target has a name in the Lustre file system.
+We record file system usage statistics for each target.
+Table \ref{tab:mdt-mds} lists the names of Lustre targets for corresponding Lustre server in Puhti.
+
+Server|Targets
+-|-
+`MDS 1`|`scratch-MDT{0000,0001}`
+`MDS 2`|`scratch-MDT{0002,0003}`
+`OSS 1`|`scratch-OST{0000,0001,0002}`
+`OSS 2`|`scratch-OST{0003,0004,0005}`
+`OSS 3`|`scratch-OST{0006,0007,0008}`
+`OSS 4`|`scratch-OST{0009,000a,000b}`
+`OSS 5`|`scratch-OST{000c,000d,000e}`
+`OSS 6`|`scratch-OST{000f,0010,0011}`
+`OSS 7`|`scratch-OST{0012,0013,0014}`
+`OSS 8`|`scratch-OST{0015,0016,0017}`
+
+: \label{tab:mdt-mds}
+List of Lustre servers and Lustre targets in Puhti.
+
 Each node in Puhti is a Lustre client of the shared Lustre file system.
 We can identify nodes based on their *node name*, which is the part of the hostname before the first dot, for example, `<nodename>.bullx`.
 Table \ref{tab:node-names} lists the names of service and compute nodes.
@@ -143,15 +164,17 @@ In the future, a more practical option is to monitor the reservations for local 
 
 In CSC systems, users have a *user account* which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.
+<!--
 We measure the usage of computational resources in *Billing Units (BU)*.
 Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, use different rates of BUs.
-
+-->
 Puhti associates each user account with a *user* and each project with a *group*.
-We can use user and group IDs as identifiers for measuring file system usage at the user or group level.
-<!-- TODO: we should obtain group/project from the workload manager -->
+We can use user IDs as identifiers for measuring file system usage at the user level.
+However, we should retrieve the group ID from the workload manager's accounting as a project ID.
 RHEL 7 and 8 reserve user IDs from 0 to 999 for system processes.
 We refer to the users with IDs from 0 to 999 as *system users* and other users as *non-system users*.
 It is helpful to separate the file system operations performed by system users from the non-system users.
+In this work, we care more about measuring the file system usage from non-system users.
 
 <!--  TODO: login vs compute -->
 
@@ -181,8 +204,13 @@ Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload
 At the time of writing, the version was 21.08.7, but it is updated regularly.
 It has partitions with different resource limits, set by administrators, as seen in Table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify which partition it will run, the project used for billing, and the resource we wish to reserve.
-There are concrete examples of Slurm job scripts for Puhti in Appendix \ref{slurm-job-scripts}.
+We present concrete examples of Slurm job scripts for Puhti in Appendix \ref{slurm-job-scripts}.
 Slurm schedules the job to run when sufficient resources are available using a fair share algorithm.
-It sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
-We can use the *Slurm Job Identifier* (`SLURM_JOB_ID` environment variable) as an identifier to collect job-specific file operations.
-We have set Slurm to perform accounting of details about the submitted jobs to that we can combine them with file system usage data in the analysis.
+It also performs accounting of details about the submitted jobs.
+
+Slurm sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
+One of them is the *Slurm Job ID* (`SLURM_JOB_ID` environment variable) which we use as an identifier to collect job-specific file operations.
+In the future, we could also combine the data from Slurm's accounting with the file system usage by using the job ID.
+For example, we could use the information about the project, partition and local storage reservation of a job.
+Project information could also be useful for identifying if members of a particular project perform problematic file I/O patterns.
+
