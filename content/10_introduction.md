@@ -56,19 +56,16 @@ Users can proactively throttle their workloads, or administrators can throttle j
 Even if users follow guidelines, problems will eventually occur.
 To identify when they occur, we must actively monitor file system performance.
 Furthermore, by measuring I/O performance and using statistical time-series analysis, we can identify variations in performance trends, such as *short-transient* or *long-persistent* ones, and changes in baseline performance over time [@year-in-life-of-parallel-file-system].
-<!-- TODO: to identify long-persistent problems, we can use file system health and capacity monitoring and tracking changes to the system -->
 However, we need more than performance monitoring to identify who or what is causing problems in a parallel file system.
-<!-- TODO: focus of the thesis -->
-We need fine-grained file system usage monitoring, especially for identifying the causes of short-transient problems.
-<!-- TODO: additionally monitoring the resource manager -->
+To identify causes, we can monitor file system health, capacity, and usage, track system changes, and use data from the resource manager.
+This thesis focuses on fine-grained file system usage monitoring to identify the causes of short-transient problems.
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs it, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
-As a concrete parallel file system to monitor, we focus on *Lustre* [@lustre-storage-architecture], which has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting fine-grained file system statistics.
-Some early experimental use of Jobstats in computing centers include [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring].
-More recent studies have used Lustre Jobstats to collect long-term job-level I/O patterns to obtain insight for improving storage design [@understanding-io-behaviour].
+As a concrete parallel file system to monitor, we focus on *Lustre* [@lustre-storage-architecture], which has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics.
+Some computing centers have used it experimentally [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring], and others have used it to collect long-term, job-level I/O patterns for improving storage design [@understanding-io-behaviour].
 There are also commercial products for monitoring that work with Lustre Jobstast, such as *View for ClusterStor* [@view-for-clusterstor] from Cray and *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
-However, these tools and studies do not truly fine-grained monitoring that we attempt in this thesis.
+<!-- TODO: However, we want to collect more fine-grained usage statistics than in these studies; the commercial tools are not fine-grained enough -->
 
 <!-- TODO: improve the structure -->
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster operated by CSC.
