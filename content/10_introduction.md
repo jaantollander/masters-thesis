@@ -53,7 +53,7 @@ Furthermore, they list common bad practices and solutions for them, such as the 
 Another solution is to use tools for throttling the I/O rate of jobs performing heavy I/O [@ooops].
 Users can proactively throttle their workloads, or administrators can throttle jobs with heavy I/O without and avoid suspending these jobs.
 
-Even if users follow guidelines, problems will eventually occur.
+Even if users follow the guidelines, problems eventually occur.
 To identify when they occur, we must actively monitor file system performance.
 Furthermore, by measuring I/O performance and using statistical time-series analysis, we can identify variations in performance trends, such as *short-transient* or *long-persistent* ones, and changes in baseline performance over time [@year-in-life-of-parallel-file-system].
 However, we need more than performance monitoring to identify who or what is causing problems in a parallel file system.
@@ -67,41 +67,34 @@ Some computing centers have used it experimentally [@lustre-job-stats-metric-agg
 Some commercial monitoring products also work with Lustre Jobstats, such as View for ClusterStor [@view-for-clusterstor] and DDN Insight [@ddn-insight].
 <!-- TODO: However, we want to collect more fine-grained usage statistics than in these studies; the commercial tools are not fine-grained enough -->
 
-<!-- TODO: improve the structure -->
-In this work, we monitor and analyze the file system usage of the *Puhti* cluster operated by CSC.
+In this work, we monitor and analyze the usage of the Lustre file system in the *Puhti* cluster operated by CSC.
 *CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 
-Currently, Puhti has system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
-However, load monitoring only tells us if file system problems occur but do not identify their causes.
-Currently, system administrators have to determine the causes manually.
+Our goal is to create active monitoring and near real-time warning systems to identify who and what causes problems in the file system.
+Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
+Currently, Puhti has system-level load monitoring from processor usage, file system capacity monitoring, and job information from the workload manager, which cannot identify the causes of the problems.
+When problems occur, system administrators have to determine the causes manually.
 However, the problem often disappears before they have identified the actual cause.
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-Puhti relies on the Lustre parallel file system; thus, a natural choice for us is to use Lustre Jobstats to collect fine-grained statistics of file system usage.
-Querying the statistics at regular intervals and computing rates produces a time series we can analyze.
-Rates provide us with the average rate of change during an interval.
-
-We aim to obtain insights and understand the causes of issues from these metrics using time series analysis and visualization techniques.
-Furthermore, we aim to develop tools for monitoring and analyzing the cluster's file system usage.
-
-Our goal is to create active monitoring and near real-time warning systems to identify users whose programs cause problems in the file system.
-Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
-The scope of the thesis is to describe the monitoring system, the cluster we monitor, and the collected data on which we build the analysis and visualization from scratch.
+The scope of the thesis is to describe the monitoring system, the cluster we monitor, and the collected data and build the analysis and visualization from scratch.
 The thesis advisor and system administrators were responsible for developing and deploying the monitoring system.
 
 <!--
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
 -->
 
-<!-- TODO: discuss more about results -->
+<!-- TODO: improve text -->
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
-In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective to understand the system we are monitoring.
+In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective.
+We also explain the necessary system identifiers needed for fine-grained data.
 Section \ref{monitoring-and-analysis} describes the monitoring system and analysis.
 We explain how we collect data, what data we collect, how we store it, and how we analyze it.
 Section \ref{results} presents the results from collecting and analyzing the monitoring data.
-We explain issues with data quality and visualizations of the data we obtained.
-Finally, Section \ref{conclusion} concludes the thesis by discussing what we accomplished in this work and ideas for future work.
+We explain data quality issues and provide visualizations and explanations of insights from the measured data.
+Finally, Section \ref{conclusion} concludes the thesis by discussing what we accomplished in this work.
+Furthermore, we present ideas for future work and analysis methods.
 
