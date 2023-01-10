@@ -1,0 +1,2 @@
+jobid_var=SLURM_JOB_ID
+jobid_name=%j:%u:%H
