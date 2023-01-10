@@ -62,22 +62,24 @@ Consequently, we cannot reliably parse information from these entry identifiers,
 This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we are still determining if the integrity of the counter values is affected by this issue.
 
-Figures \ref{fig:entry-ids-mds-user}, \ref{fig:entry-ids-mds-system}, \ref{fig:entry-ids-oss-user}, and \ref{fig:entry-ids-oss-system} show the number of entries in Jobstats output per Lustre target in a sample of 113 consecutive Jobstats outputs taken every 2-minutes from 2022-03-04.
-We separated the figures by Lustre server, system versus non-system user, and entry identifier formatting.
+Next, we look at figures of the number of entries per Lustre target and identifier format in a sample of 113 Jobstats outputs taken every 2-minutes from 2022-03-04.
+Figures \ref{fig:entry-ids-mds-user} and \ref{fig:entry-ids-oss-user} show the values for non-system users, which are the ones we care most in this work.
 We see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
 In some conditions, it can create many of them.
 
-Regarding data accumulation, each entry corresponds to one row in the database.
-Therefore, reducing the number of entries reduces storage size and speeds up queries and the analysis.
-The figures show many entries for system users, which may also be a bug in Jobstats.
+Figures \ref{fig:entry-ids-mds-system} and \ref{fig:entry-ids-oss-system} show many values for only two system users, root and job control.
 Entries from system users usually did not have a job ID as their processes do not run via Slurm, although sometimes they do have a job ID.
 We found that they usually contain little valuable information; for example, many have a single `statfs` operation.
+Regarding data accumulation, each entry corresponds to one row in the database.
+Therefore, reducing the number of entries reduces storage size and speeds up queries and the analysis.
 We should discard or aggregate statistics of system users to reduce the accumulation of unnecessary data.
 
 <!-- TODO: fixing the entry identifier, in general, will reduce data accumulation -->
 <!-- TODO: OST load is balanced. -->
 <!-- TODO: why MDT loads are not balanced? -->
+
+\newpage
 
 ![
 The number of entries on each of the four MDTs from non-system users during the 113 samples with 2-minute intervals.
@@ -89,10 +91,7 @@ Of the two active MDTs, the first one seems to handle more operations than the s
 \label{fig:entry-ids-mds-user}
 ](figures/entry_ids_mds_user.svg)
 
-![
-The number of entries on each of the four MDTs from system users during the 113 samples with 2-minute intervals.
-\label{fig:entry-ids-mds-system}
-](figures/entry_ids_mds_system.svg)
+\newpage
 
 ![
 The number of entries on each of the 24 OSTs from non-system users and missing users during the 113 samples with 2-minute intervals.
@@ -104,6 +103,15 @@ Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26
 It might be due to a heavy load on the OSS.
 \label{fig:entry-ids-oss-user}
 ](figures/entry_ids_oss_user.svg)
+
+\newpage
+
+![
+The number of entries on each of the four MDTs from system users during the 113 samples with 2-minute intervals.
+\label{fig:entry-ids-mds-system}
+](figures/entry_ids_mds_system.svg)
+
+\newpage
 
 ![
 The number of entries on each of the 24 OSTs from system users during the 113 samples with 2-minute intervals.

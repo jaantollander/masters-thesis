@@ -16,24 +16,21 @@ A file system is a commonly used abstraction layer between the physical storage 
 The term storage I/O is agnostic about the underlying abstraction layer.
 In this work, the I/O refers to storage I/O.
 
-<!-- TODO: add a reference, we have seen in practice -->
+<!-- TODO: Add a reference. Also, we have seen this in practice. -->
 HPC is moving from computation-centric workloads to I/O-centric workloads.
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
 <!-- A ranking is maintained on the TOP500 list [@top_500]. -->
 However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
 The system must transport this data between main memory and storage, making I/O performance essential and problems from heavy I/O more common.
-<!-- TODO: edit, which reasons -->
-These reasons make studying storage and I/O performance in HPC systems necessary.
-There are new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
+The increasing demand for better I/O performance in HPC systems makes studying it necessary.
+The community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
-Researchers, developers, and operators actively try to find ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions for HPC [@daos_and_friends; @object_centric_data].
+To improve I/O performance in HPC, researchers, developers, and operators are actively finding ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and developing alternative storage solutions [@daos_and_friends; @object_centric_data].
 
 Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
 Many HPC facilities have guidelines for performing file I/O on high-performance clusters.
-<!-- TODO: guidelines explained below in bullets -->
-Texas Advanced Computing Center (TACC) has collected many of these guidelines into the paper [@tacc-io-guideline].
-Guidelines focus on avoiding overburdening the parallel file system with bad practices and moving the heavy load to local temporary storage away from the shared file system.
-Problematic practices and solutions for them include the following:
+For example, Texas Advanced Computing Center (TACC)'s guidelines [@tacc-io-guideline] advise how to avoid overburdening the parallel file system with bad practices and move the heavy load to local temporary storage away from the shared file system.
+Furthermore, they list common bad practices and solutions for them, such as the following:
 
 * Using many small files instead of a few large files.
   Accessing the same amount of data from many small files than fewer large files requires more file system operations.
@@ -53,26 +50,25 @@ Problematic practices and solutions for them include the following:
 
 * Overlooking I/O patterns workloads; we should use I/O profiling tools.
 
-As a solution, we can also use tools for throttling the I/O rate of jobs performing heavy I/O [@ooops].
+Another solution is to use tools for throttling the I/O rate of jobs performing heavy I/O [@ooops].
 Users can proactively throttle their workloads, or administrators can throttle jobs with heavy I/O without and avoid suspending these jobs.
 
-Monitoring file system performance is also essential for identifying when problems occur.
-By measuring and analyzing long-term I/O performance, we can detect variations in the trends at different timescales.
-For example, a joint study by National Energy Research Scientific Computing Center (NERSC) and Argonne Leadership Computing Facility (ALCF) [@year-in-life-of-parallel-file-system] used multiple I/O performance probes to measure the performance of a parallel file system of multiple computer clusters for over a year.
-They applied statistical methods and time series analysis to identify variations in long and short-term performance trends.
-They showed that short transient issues differ from long persistent ones, and the baseline performance can change over time.
-<!-- They also mentioned different monitoring levels, such as application-level monitoring, file system workload monitoring, file system capacity and health monitoring, resource manager monitoring, and tracking changes and updates to the system. -->
-
-However, we need more than performance monitoring to identify more precisely who or what is causing problems; we need fine-grained file system usage monitoring.
+Even if users follow guidelines, problems will eventually occur.
+To identify when they occur, we must actively monitor file system performance.
+Furthermore, by measuring I/O performance and using statistical time-series analysis, we can identify variations in performance trends, such as *short-transient* or *long-persistent* ones, and changes in baseline performance over time [@year-in-life-of-parallel-file-system].
+<!-- TODO: to identify long-persistent problems, we can use file system health and capacity monitoring and tracking changes to the system -->
+However, we need more than performance monitoring to identify who or what is causing problems in a parallel file system.
+<!-- TODO: focus of the thesis -->
+We need fine-grained file system usage monitoring, especially for identifying the causes of short-transient problems.
+<!-- TODO: additionally monitoring the resource manager -->
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs it, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
-<!-- Fine-grained monitoring produces higher-resolution data, which means more data than simpler aggregates and requires a time series database to store and query efficiently. -->
-
-Regarding collecting fine-grained file system statistics, the Lustre parallel file system [@lustre-storage-architecture] has a feature called Lustre Jobstats [@lustre-monitoring-guide].
-Earliest users of Lustre Jobstats include computing centers, such as the Oak Ridge Leadership Computing Facility (OLFC) [@lustre-job-stats-metric-aggregation] and National Computational Infrastructure (NCI) [@fine-grained-file-system-monitoring].
+As a concrete parallel file system to monitor, we focus on *Lustre* [@lustre-storage-architecture], which has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting fine-grained file system statistics.
+Some early experimental use of Jobstats in computing centers include [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring].
 More recent studies have used Lustre Jobstats to collect long-term job-level I/O patterns to obtain insight for improving storage design [@understanding-io-behaviour].
 There are also commercial products for monitoring that work with Lustre Jobstast, such as *View for ClusterStor* [@view-for-clusterstor] from Cray and *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
+However, these tools and studies do not truly fine-grained monitoring that we attempt in this thesis.
 
 <!-- TODO: improve the structure -->
 In this work, we experiment with the file system usage monitoring on the *Puhti* cluster operated by CSC.
