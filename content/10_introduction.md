@@ -68,11 +68,11 @@ Some commercial monitoring products also work with Lustre Jobstats, such as View
 <!-- TODO: However, we want to collect more fine-grained usage statistics than in these studies; the commercial tools are not fine-grained enough -->
 
 <!-- TODO: improve the structure -->
-In this work, we experiment with the file system usage monitoring on the *Puhti* cluster operated by CSC.
+In this work, we monitor and analyze the file system usage of the *Puhti* cluster operated by CSC.
 *CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-The services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
+These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 
-Currently, we have only system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
+Currently, Puhti has system-level load monitoring from processor usage and job information from the workload manager without any metrics from the file system usage.
 However, load monitoring only tells us if file system problems occur but do not identify their causes.
 Currently, system administrators have to determine the causes manually.
 However, the problem often disappears before they have identified the actual cause.
