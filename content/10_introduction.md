@@ -64,7 +64,7 @@ Fine-grained monitoring shows us detailed file system behavior instead of a sing
 
 As a concrete parallel file system to monitor, we focus on *Lustre* [@lustre-storage-architecture], which has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics.
 Some computing centers have used it experimentally [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring], and others have used it to collect long-term, job-level I/O patterns for improving storage design [@understanding-io-behaviour].
-There are also commercial products for monitoring that work with Lustre Jobstast, such as *View for ClusterStor* [@view-for-clusterstor] from Cray and *DDN Insight* [@ddn-insight] from DataDirect Networks (DDN).
+Some commercial monitoring products also work with Lustre Jobstats, such as View for ClusterStor [@view-for-clusterstor] and DDN Insight [@ddn-insight].
 <!-- TODO: However, we want to collect more fine-grained usage statistics than in these studies; the commercial tools are not fine-grained enough -->
 
 <!-- TODO: improve the structure -->
