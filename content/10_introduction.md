@@ -59,19 +59,20 @@ Furthermore, by measuring I/O performance and using statistical time-series anal
 However, we need more than performance monitoring to identify who or what is causing problems in a parallel file system.
 To identify causes, we can monitor file system health, capacity, and usage, track system changes, and use data from the resource manager.
 This thesis focuses on fine-grained file system usage monitoring to identify the causes of short-transient problems.
-*Fine-grained* refers to collecting statistics of each file system operation to identify who performs it, from which node, and to which storage unit.
+*Fine-grained* refers to collecting statistics of each file system operation to identify who performs the operations, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
-As a concrete parallel file system to monitor, we focus on *Lustre* [@lustre-storage-architecture], which has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics.
-Some computing centers have used it experimentally [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring], and others have used it to collect long-term, job-level I/O patterns for improving storage design [@understanding-io-behaviour].
-Some commercial monitoring products also work with Lustre Jobstats, such as View for ClusterStor [@view-for-clusterstor] and DDN Insight [@ddn-insight].
-<!-- TODO: However, we want to collect more fine-grained usage statistics than in these studies; the commercial tools are not fine-grained enough -->
+As a concrete parallel file system to monitor, we focus on *Lustre* [@lustre-storage-architecture], which has a feature *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics.
+Newer versions of Jobstats can collect fine-grained statistics.
+A few computing centers have used Jobstats experimentally [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring], and others have used it to collect long-term, job-level I/O patterns for improving storage design [@understanding-io-behaviour].
+Furthermore, commercial monitoring products that work with Lustre Jobstats exist, such as View for ClusterStor [@view-for-clusterstor] and DDN Insight [@ddn-insight].
+Unfortunately, these products did not meet our monitoring needs, which led us to build a custom solution and to work presented in this thesis.
 
 In this work, we monitor and analyze the usage of the Lustre file system in the *Puhti* cluster operated by CSC.
 *CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 
-Our goal is to create active monitoring and near real-time warning systems to identify who and what causes problems in the file system.
+Our goal is to build active monitoring and near real-time warning systems to identify who and what causes problems in the file system.
 Real-time monitoring should provide valuable information for improving the usability and throughput of the system.
 Currently, Puhti has system-level load monitoring from processor usage, file system capacity monitoring, and job information from the workload manager, which cannot identify the causes of the problems.
 When problems occur, system administrators have to determine the causes manually.
@@ -79,14 +80,10 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-The scope of the thesis is to describe the monitoring system, the cluster we monitor, and the collected data and build the analysis and visualization from scratch.
-The thesis advisor and system administrators were responsible for developing and deploying the monitoring system.
+The scope of the thesis is to describe the Puhti cluster, our monitoring system, and the collected data in detail.
+Furthermore, the scope includes presenting the data analysis and visualizations the author built from scratch.
+The thesis advisor and system administrators were responsible for developing, deploying, and maintaining the monitoring system on Puhti.
 
-<!--
-Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
--->
-
-<!-- TODO: improve text -->
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
 In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective.
