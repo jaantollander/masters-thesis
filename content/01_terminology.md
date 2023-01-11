@@ -1,60 +1,42 @@
 \clearpage
 
 # Terminology {.unnumbered}
-High-performance computing (HPC)
+**High-performance computing (HPC)** is a multidisciplinary field that uses large amounts of computational resources for problem solving.
 
-: Multidisciplinary field that uses large amounts of computational resources for problem solving.
+**Computer** refers to the combination of a processor and memory.
+It can perform computation.
 
-Computer
+**Storage** refers to a medium of persistent data storage.
 
-: A combination of a processor and memory.
-  Can perform computation.
+**Input/Output (I/O)** refers to the communication between a computer and the outside world, such as a storage device.
 
-Storage
-: A medium of persistent data storage.
+**Computer cluster** is a system consisting of multiple computers connected with a high-speed network.
 
-Input/Output (I/O)
-: Communication between a computer and the outside world, such as a storage device.
+**Node** is an individual computer in a computer cluster.
 
-Computer cluster
-: Computer system consisting of multiple computers connected with a high-speed network.
+**Linux** is a multiuser operating system.
 
-Node
-: An individual computer in a computer cluster.
+**User** is an entity that interacts with an operating system limited by its access control rights.
 
-Linux kernel
-: A multiuser operating system, commonly used in HPC.
+TODO: **System administrator**
 
-File system
-: TODO
+**File system** is a hierarchical abstraction layer between user and storage.
 
-Lustre
-: parallel file system
+TODO: **Parallel file system**
 
-Lustre client
-: TODO
+TODO: **Lustre** is a parallel file system for Linux clusters.
 
-Lustre target
-: TODO, storage unit
+TODO: **Lustre client**
 
-Lustre server
-: TODO
+TODO: **Lustre server**
 
-Slurm
-: workload manager
+TODO: **Lustre target** is a storage unit attached to a Lustre server.
 
-User
-: TODO
+**Slurm** is a resource manager for Linux clusters.
 
-Job
-: TODO
+TODO: **Job**
 
-System administrator
-: TODO
+**CSC** is an organization that provides ICT services for higher education institutions, research institutions, culture, public adminstation, and enterprises in Finland.
 
-CSC
-: An organization that provides ICT services for higher education institutions, research institutions, culture, public adminstation, and enterprises in Finland.
-
-Puhti
-: A petascale high-performance computer cluster operated by CSC.
+**Puhti** is a high-performance computer cluster operated by CSC.
 
