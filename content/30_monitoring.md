@@ -19,6 +19,8 @@ We suspect that high total file system usage rates can cause congestion in the f
 Fine-grained statistics allow us to break down the total rate into its components.
 Then, we can analyze the components and identify the components with the highest rates.
 
+TODO: explain Subsection \ref{backfilling-initial-entries}
+
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
 The statistics we collect from Jobstats form multiple time series.
@@ -286,7 +288,7 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
 
 
-## Backfilling the initial entry
+## Backfilling initial entries
 <!-- TODO: first version had to keep track -->
 We must manually add an initial entry filled with zeros when a new entry appears, or old entry resets in Jobstats.
 Otherwise, we lose data from the first observation interval.

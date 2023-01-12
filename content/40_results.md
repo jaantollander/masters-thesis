@@ -62,8 +62,11 @@ Consequently, we cannot reliably parse information from these entry identifiers,
 This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we are still determining if the integrity of the counter values is affected by this issue.
 
-Next, we look at figures of the number of entries per Lustre target and identifier format in a sample of 113 Jobstats outputs taken every 2-minutes from 2022-03-04.
-Figures \ref{fig:entry-ids-mds-user} and \ref{fig:entry-ids-oss-user} show the values for non-system users, which are the ones we care most in this work.
+TODO: edit
+<!-- TODO: lines that don't show are zero -->
+
+Next, we look at Figures \ref{fig:entry-ids-mds} and \ref{fig:entry-ids-oss} which show the number of entries per Lustre target and identifier format in a sample of 113 Jobstats outputs taken every 2-minutes from 2022-03-04.
+Figures \ref{fig:entry-ids-mds} and \ref{fig:entry-ids-oss} show the values for non-system users, which are the ones we care most in this work.
 We see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
 In some conditions, it can create many of them.
@@ -78,6 +81,7 @@ We should discard or aggregate statistics of system users to reduce the accumula
 <!-- TODO: fixing the entry identifier, in general, will reduce data accumulation -->
 <!-- TODO: OST load is balanced. -->
 <!-- TODO: why MDT loads are not balanced? -->
+<!-- TODO: illustration of large number of missing job ids -->
 
 \newpage
 
@@ -88,8 +92,8 @@ The third subplot shows the number of missing job IDs on compute nodes, which is
 There are no malformed entries on MDTs.
 We can see that only two of the four MDTs handle almost all of the metadata operations.
 Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
-\label{fig:entry-ids-mds-user}
-](figures/entry_ids_mds_user.svg)
+\label{fig:entry-ids-mds}
+](figures/entry_ids_mds.svg)
 
 \newpage
 
@@ -101,27 +105,14 @@ The fourth subplot shows the number of malformed identifiers for all nodes.
 We can see that Jobstats on Puhti systematically produce missing job IDs and malformed identifiers.
 Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, which indicates in some conditions, Jobstats produces a huge amount of malformed identifiers.
 It might be due to a heavy load on the OSS.
-\label{fig:entry-ids-oss-user}
-](figures/entry_ids_oss_user.svg)
-
-\newpage
-
-![
-The number of entries on each of the four MDTs from system users during the 113 samples with 2-minute intervals.
-\label{fig:entry-ids-mds-system}
-](figures/entry_ids_mds_system.svg)
-
-\newpage
-
-![
-The number of entries on each of the 24 OSTs from system users during the 113 samples with 2-minute intervals.
-\label{fig:entry-ids-oss-system}
-](figures/entry_ids_oss_system.svg)
+\label{fig:entry-ids-oss}
+](figures/entry_ids_oss.svg)
 
 
 \clearpage
 
 ## Counters and rates
+<!-- TODO: demonstrates the fine-grained nature of data -->
 Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for write operations for different jobs during a 24-hour period of 2022-10-27.
 They demonstrate the values of the counter collected from the statistics, rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
 The x-axis displays time, and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
