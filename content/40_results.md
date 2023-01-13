@@ -84,6 +84,7 @@ In general, correct entry identifiers would reduce unnecessary data accumulation
 \newpage
 
 ![
+*We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, and an unbalanced load between MDTs.*
 The number of entries for each of the four MDTs during a sample of 113 Jobstats outputs taken every 2 minutes from 2022-03-04.
 Each subplot shows a different identifier format; line color indicates \textcolor{non-system-user}{non-system users} and \textcolor{system-user}{system users}; and each line shows a different MDT for a given user type.
 The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
@@ -94,13 +95,12 @@ Of the two active MDTs, the first one seems to handle more operations than the s
 \label{fig:entry-ids-mds}
 ](figures/entry_ids_mds.svg)
 
-TODO: illustrates a large number of missing job ids compared to intact ones
-
-TODO: why MDT loads seem unbalanced?
+TODO: why do MDT loads seem unbalanced?
 
 \newpage
 
 ![
+*We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, systematic generation of malformed entry identifiers, and a balanced load between OSTs.*
 The number of entries for each of the 24 OSTs during a sample of 113 Jobstats outputs taken every 2 minutes from 2022-03-04.
 Each subplot shows a different identifier format; line color indicates \textcolor{non-system-user}{non-system users} and \textcolor{system-user}{system users}; and each line shows a different OST for a given user type.
 The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
@@ -111,10 +111,6 @@ Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26
 It might be due to a heavy load on the OSS.
 \label{fig:entry-ids-oss}
 ](figures/entry_ids_oss.svg)
-
-TODO: illustrates a large number of missing job ids compared to intact ones and the systematic generation of malformed entry identifiers
-
-TODO: OST load seems balanced.
 
 \clearpage
 
