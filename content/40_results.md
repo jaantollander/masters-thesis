@@ -63,8 +63,8 @@ This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we are still determining if the integrity of the counter values is affected by this issue.
 
 <!-- TODO: lines that do not show are zero -->
-
-Next, we look at Figures \ref{fig:entry-ids-mds} and \ref{fig:entry-ids-oss}, which show the number of entries per Lustre target and identifier format for system and non-system users in a sample of 113 Jobstats outputs taken every 2-minutes from 2022-03-04.
+,
+Next, we look at Figures \ref{fig:entry-ids-mds} and \ref{fig:entry-ids-oss}, which show the number of entries per Lustre target and identifier format for system and non-system users in a sample of 74 Jobstats outputs taken every 2-minutes from 2022-03-04.
 For non-system users, we see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
 In some conditions, it can create many of them.
@@ -85,23 +85,23 @@ In general, correct entry identifiers would reduce unnecessary data accumulation
 
 ![
 *We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, and an unbalanced load between MDTs.*
-The number of entries for each of the four MDTs during a sample of 113 Jobstats outputs taken every 2 minutes from 2022-03-04.
+The number of entries for each of the four MDTs during a sample of Jobstats outputs taken every 2 minutes from 2022-03-04.
 Each subplot shows a different identifier format; line color indicates \textcolor{non-system-user}{non-system users} and \textcolor{system-user}{system users}; and each line shows a different MDT for a given user type.
 The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
 The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
 There are no malformed entries on MDTs.
 We can see that only two of the four MDTs handle almost all of the metadata operations.
 Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
+The load across MDTs is unbalanced because MDTs are assigned based on top-level directory, that is, to different storage areas, such as Home, Projappl, Scratch, and the usage of these storage areas varies.
+We explained storage areas in Section \ref{system-configuration}.
 \label{fig:entry-ids-mds}
 ](figures/entry_ids_mds.svg)
-
-TODO: why do MDT loads seem unbalanced?
 
 \newpage
 
 ![
 *We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, systematic generation of malformed entry identifiers, and a balanced load between OSTs.*
-The number of entries for each of the 24 OSTs during a sample of 113 Jobstats outputs taken every 2 minutes from 2022-03-04.
+The number of entries for each of the 24 OSTs during a sample of Jobstats outputs taken every 2 minutes from 2022-03-04.
 Each subplot shows a different identifier format; line color indicates \textcolor{non-system-user}{non-system users} and \textcolor{system-user}{system users}; and each line shows a different OST for a given user type.
 The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
 The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
@@ -109,6 +109,7 @@ The fourth subplot shows the number of malformed identifiers for all nodes.
 We can see that Jobstats on Puhti systematically produce missing job IDs and malformed identifiers.
 Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, which indicates in some conditions, Jobstats produces a huge amount of malformed identifiers.
 It might be due to a heavy load on the OSS.
+The load across OSTs is balanced because the files are assigned OSTs equally with round-robin unless the user explicitly overwrites this policy.
 \label{fig:entry-ids-oss}
 ](figures/entry_ids_oss.svg)
 
