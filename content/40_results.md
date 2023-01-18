@@ -64,7 +64,7 @@ We obtained feasible values for correct entry identifiers, but we are still dete
 
 <!-- TODO: lines that do not show are zero -->
 ,
-Next, we look at Figures \ref{fig:entry-ids-mds} and \ref{fig:entry-ids-oss}, which show the number of entries per Lustre target and identifier format for system and non-system users in a sample of 74 Jobstats outputs taken every 2-minutes from 2022-03-04.
+Next, we look at Figures \ref{fig:entry-ids-mdt} and \ref{fig:entry-ids-ost}, which show the number of entries per Lustre target and identifier format for system and non-system users in a sample of 74 Jobstats outputs taken every 2-minutes from 2022-03-04.
 For non-system users, we see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
 In some conditions, it can create many of them.
@@ -94,8 +94,8 @@ We can see that only two of the four MDTs handle almost all of the metadata oper
 Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
 The load across MDTs is unbalanced because MDTs are assigned based on top-level directory, that is, to different storage areas, such as Home, Projappl, Scratch, and the usage of these storage areas varies.
 We explained storage areas in Section \ref{system-configuration}.
-\label{fig:entry-ids-mds}
-](figures/entry_ids_mds.svg)
+\label{fig:entry-ids-mdt}
+](figures/entry_ids_mdt.svg)
 
 \newpage
 
@@ -110,8 +110,8 @@ We can see that Jobstats on Puhti systematically produce missing job IDs and mal
 Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, which indicates in some conditions, Jobstats produces a huge amount of malformed identifiers.
 It might be due to a heavy load on the OSS.
 The load across OSTs is balanced because the files are assigned OSTs equally with round-robin unless the user explicitly overwrites this policy.
-\label{fig:entry-ids-oss}
-](figures/entry_ids_oss.svg)
+\label{fig:entry-ids-ost}
+](figures/entry_ids_ost.svg)
 
 \clearpage
 
@@ -170,6 +170,10 @@ Total rates of rename, mkdir, rmdir, sync, and statfs operations from all comput
 \label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
 
 
+![
+Total rates of ??? operations from all compute nodes to each MDT.
+\label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_4.svg)
+
 \clearpage
 
 ## Total rates for OSTs
@@ -184,6 +188,7 @@ File striping means Lustre segments the file data into multiple OSTs instead of 
 
 ![Total rates of setinfo, getinfo, setattr, quotactl, and sync operations from all compute nodes to each OST. \label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
 
+![Total rates of ??? operations from all compute nodes to each OST. \label{fig:total-ost-3}](figures/2022-10-27_ost_compute_3.svg)
 
 \clearpage
 
