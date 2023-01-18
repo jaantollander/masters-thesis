@@ -1,5 +1,5 @@
 # Master's Thesis
-*Monitoring parallel file system usage in a high-performance computer*
+*Monitoring parallel file system usage in a high-performance computer cluster*
 
 ## Documents
 Download links for documents from the `build` branch.
