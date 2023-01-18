@@ -152,43 +152,57 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 \clearpage
 
 ## Total rates for MDTs
-Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2} and \ref{fig:total-mdt-3} show the total rates of all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
+Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates of all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 <!-- The MDT figures show that only one or two of four MDTs are usually actively handling operations. -->
 
 ![
-Total rates of open, close, mknod, and unlink operations from all compute nodes to each MDT.
-We can see that two MDTs handle open and close operations, but only one MDT handles mknod and unlink operations.
+Total rates of open and close operations from all compute nodes to each MDT.
 \label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
 
 ![
-Total rates of link, getattr, setattr, getxattr, and setxattr operations from all compute nodes to each MDT.
+Total rates of mknod and unlink operations from all compute nodes to each MDT.
 \label{fig:total-mdt-2}](figures/2022-10-27_mdt_compute_2.svg)
 
 ![
-Total rates of rename, mkdir, rmdir, sync, and statfs operations from all compute nodes to each MDT.
+Total rates of getattr and setattr operations from all compute nodes to each MDT.
 \label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
 
+![
+Total rates of getxattr and setxattr operations from all compute nodes to each MDT.
+\label{fig:total-mdt-4}](figures/2022-10-27_mdt_compute_4.svg)
 
 ![
-Total rates of ??? operations from all compute nodes to each MDT.
-\label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_4.svg)
+Total rates of mkdir and rmdir operations from all compute nodes to each MDT.
+\label{fig:total-mdt-5}](figures/2022-10-27_mdt_compute_5.svg)
+
+![
+Total rates of rename and sync operations from all compute nodes to each MDT.
+\label{fig:total-mdt-6}](figures/2022-10-27_mdt_compute_6.svg)
+
+![
+Total rates of link and statfs operations from all compute nodes to each MDT.
+\label{fig:total-mdt-7}](figures/2022-10-27_mdt_compute_7.svg)
 
 \clearpage
 
 ## Total rates for OSTs
-Figures \ref{fig:total-ost-1} and \ref{fig:total-ost-2} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
+Figures \ref{fig:total-ost-1}, \ref{fig:total-ost-2}, \ref{fig:total-ost-3}, \ref{fig:total-ost-4}, and \ref{fig:total-ost-5} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 The interesting features in the figures are the variation of rates across time and between targets.
 For example, significant differences between the rates of two OSTs indicate an unbalanced load.
 A problematic I/O pattern or insufficient file striping might cause the imbalance.
 File striping means Lustre segments the file data into multiple OSTs instead of storing all the data in a single OST.
 
-![Total rates of read, write, readbytes, writebytes, and punch operations from all compute nodes to each OST. \label{fig:total-ost-1}](figures/2022-10-27_ost_compute_1.svg)
+![Total rates of read and write operations from all compute nodes to each OST. \label{fig:total-ost-1}](figures/2022-10-27_ost_compute_1.svg)
 
-![Total rates of setinfo, getinfo, setattr, quotactl, and sync operations from all compute nodes to each OST. \label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
+![Total rates of readbytes and writebytes operations from all compute nodes to each OST. \label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
 
-![Total rates of ??? operations from all compute nodes to each OST. \label{fig:total-ost-3}](figures/2022-10-27_ost_compute_3.svg)
+![Total rates of punch and setattr operations from all compute nodes to each OST. \label{fig:total-ost-3}](figures/2022-10-27_ost_compute_3.svg)
+
+![Total rates of quotactl and sync operations from all compute nodes to each OST. \label{fig:total-ost-4}](figures/2022-10-27_ost_compute_4.svg)
+
+![Total rates of getinfo and setinfo operations from all compute nodes to each OST. \label{fig:total-ost-5}](figures/2022-10-27_ost_compute_5.svg)
 
 \clearpage
 
