@@ -168,7 +168,7 @@ All plots share the same x-axis, making them easier to compare.
 
 ![
 Total rates of `open` and `close` operations from compute nodes to each MDT.
-We can see that the open rate is quite steady, close has large drop around 12.00.
+We can see that the open rate is quite consistent, close has large drop around 12.00.
 Large changes in rates are usually caused when single job performing heavy I/O stops.
 We can also see that the rate of close is greater than the rate of open.
 It is not possible to perform more close and open operations, because we always need to open a file before we can close it.
@@ -188,7 +188,7 @@ Elevated rates both in file creation and removal may indicate creation of tempor
 
 ![
 Total rates of `getattr` and `setattr` operations from compute nodes to each MDT.
-We can see that the getattr rate is steady, but the setattr has large spikes.
+We can see that the getattr rate is consistent, but the setattr has large spikes.
 These rates indicate the frequency of querying and modifying file attributes, such as file ownership, access rights and timestamps.
 There rates may be elevated rates for example due to creation of temporary files.
 \label{fig:total-mdt-3}
@@ -224,7 +224,8 @@ We use a logarithmic scale due to large variations in the magnitude of the rates
 All plots share the same x-axis, making them easier to compare.
 
 The interesting features in the figures are the variation of rates across time and between OSTs.
-For example, significant differences between the rates of different OSTs mean that the load is unbalanced, which is undesirable and may lead to congestion.
+For example, significant differences between the rates of different OSTs mean that the load is unbalanced.
+Unbalanced load may lead to congestion when others try access the same OST.
 
 ![
 Total rates of `read` and `write` operations from compute nodes to each OST.
@@ -233,7 +234,9 @@ Total rates of `read` and `write` operations from compute nodes to each OST.
 
 ![
 Total rates of `readbytes` and `writebytes` operations from compute nodes to each OST.
-An unbalanced load indicate that a large file is not properly striped over multiple OSTs.
+We can see that the readbytes rate is mostly balanced over OSTs and consistent over the period, expect few spikes and one long, heavy load from 9.00 to 14.00 to a single OST.
+Heavy load on single OST indicates that a large file is not properly striped over multiple OSTs.
+The readbytes rate is balanced over OSTs and consistent over the period with only few spikes.
 \label{fig:total-ost-2}
 ](figures/2022-10-27_ost_compute_2.svg)
 
@@ -256,14 +259,6 @@ Total rates of `getinfo` and `setinfo` operations from compute nodes to each OST
 
 
 ## Components of total rates
-![
-This graph shows read operations on OST0001 during 24 hours of 2022-10-27.
-The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
-We can see that individual users cause spikes in the read rates.
-A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
-\label{fig:density}
-](figures/2022-10-27_ost0001_compute_read.svg)
-
 We can use a density plot to visually extract meaningful information from large numbers of time series.
 We also use a logarithmic scale for the density due to the large variations.
 As shown in Figure \ref{fig:density}, obtaining information from a graph with many time series is challenging as they tend to overlap apart from the individual spikes.
@@ -276,5 +271,21 @@ It lets us distinguish whether a small number of users perform a large magnitude
 We can also use it to obtain information such as time intervals and value ranges to filter the data further.
 An important question is whether we could obtain such information automatically.
 
-<!-- TODO: add a second plot -->
+![
+TODO:
+\label{fig:density-3}
+](figures/2022-10-27_mdt0000_compute_setattr.svg)
+
+![
+Decomposition of a total read rate from compute nodes to scratch-OST0001 during 24 hours of 2022-10-27.
+The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
+We can see that individual users cause spikes in the read rates.
+A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
+\label{fig:density}
+](figures/2022-10-27_ost0001_compute_read.svg)
+
+![
+TODO:
+\label{fig:density-2}
+](figures/2022-10-27_ost0004_compute_readbytes.svg)
 
