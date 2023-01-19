@@ -132,7 +132,7 @@ Units (`<unit>`) are either requests (`reqs`), bytes (`bytes`), or microseconds 
 Statistics of an entry that has not performed any operations are implicitly zero.
 
 
-Targets | File system operation | System call | Parsed statistics
+Targets | Lustre file system operation | Linux system call | Parsed statistics
 -|-|-|-
 MDT | **`open`** | `open` | `samples`
 MDT | **`close`** | `close` | `samples`
@@ -168,11 +168,7 @@ The \textcolor{lightgray}{light gray} operation names indicate that the operatio
 The tables contain the corresponding system calls for each Lustre operation.
 We explain each system call in Appendix \ref{file-system-interface}.
 
-
-We found that the counters may report more samples for `close` than `open` operations.
-It should not be possible to do more `close` than `open` system calls because a file descriptor returned by open can be closed only once.
-We suspect that the Lustre clients cache certain file operations, and Jobstast does not count requests to these operations.
-For example, if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS; thus request is not recorded.
+<!-- TODO: move explanations of each Lustre file system operation from Appendix to the table -->
 
 
 ## Entry resets

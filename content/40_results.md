@@ -84,9 +84,9 @@ In general, correct entry identifiers would reduce unnecessary data accumulation
 \newpage
 
 ![
-*We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, and an unbalanced load between MDTs.*
-The number of entries for each of the four MDTs during a sample of Jobstats outputs taken every 2 minutes from 2022-03-04.
+The number of entries for each of the four MDTs during a sample of Jobstats outputs taken every 2 minutes during an interval on 2022-03-04.
 Each subplot shows a different identifier format; line color indicates \textcolor{non-system-user}{non-system users} and \textcolor{system-user}{system users}; and each line shows a different MDT for a given user type.
+We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, and an unbalanced load between MDTs.
 The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
 The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
 There are no malformed entries on MDTs.
@@ -100,9 +100,9 @@ We explained storage areas in Section \ref{system-configuration}.
 \newpage
 
 ![
-*We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, systematic generation of malformed entry identifiers, and a balanced load between OSTs.*
-The number of entries for each of the 24 OSTs during a sample of Jobstats outputs taken every 2 minutes from 2022-03-04.
+The number of entries for each of the 24 OSTs during a sample of Jobstats outputs taken every 2 minutes during an interval on 2022-03-04.
 Each subplot shows a different identifier format; line color indicates \textcolor{non-system-user}{non-system users} and \textcolor{system-user}{system users}; and each line shows a different OST for a given user type.
+We can see many missing job IDs compared to intact ones for non-system users, many entries for system users, systematic generation of malformed entry identifiers, and a balanced load between OSTs.
 The first subplot shows the number of correct entries for login and utility nodes, and the second subplot shows them for compute nodes.
 The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
 The fourth subplot shows the number of malformed identifiers for all nodes.
@@ -124,8 +124,13 @@ Each line displays a *connection* from one Lustre client to one Lustre Target.
 All figures display a single node job; thus, each connection shows write operations from the same to a different OST.
 We say that a connection is *active* during a period that performs any file system operations, and otherwise, it is *inactive*.
 
+<!-- TODO: first to top, second to bottom, explain plots in first paragraph, same x-axis for all subplots -->
+<!-- TODO: indicate how many compute nodes and OSTs in the plot title -->
+
 ![
-The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
+The counter and rate of write operations from one job on a single compute node.
+The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
+The subplots share the same x-axis.
 The counter values follow a typical saw-tooth pattern for almost linearly increasing counter values that reset periodically due to inactivity.
 In the active periods, we see a higher write amount of writes in the beginning, then quite near constant write rate until the job becomes inactive.
 The lines follow a similar pattern indicating that the job performs a similar write pattern for each OST except for the ones whose rate is near zero.
@@ -133,15 +138,19 @@ The lines follow a similar pattern indicating that the job performs a similar wr
 ](figures/2022-10-27_ost_job_write_1.svg)
 
 ![
-The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
+The counter and rate of write operations from one job on a single compute node.
+The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
+The subplots share the same x-axis.
 The counter values increase almost linearly, indicating that the job performs writes consistently during the whole period.
 The rate over the whole period is almost constant with some small fluctuations.
-We can see that the job performs almost 75\% of the operations to one OST, almost 25\% to another OST, and almost none to the others.
+We can see that the job performs almost 75\% of the operations to one OST, almost 25\% to two other OSTs, and almost none to the others.
 \label{fig:job-rate-2}
 ](figures/2022-10-27_ost_job_write_2.svg)
 
 ![
-The first subplot shows the counter values, and the second subplot shows the rates computed from the counter values in the first plot.
+The counter and rate of write operations from one job on a single compute node.
+The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
+The subplots share the same x-axis.
 One of the counter values increases in a wave-like pattern that resets periodically; the other counter seems to increase in a burst-like manner for short periods of time before resetting.
 By looking at the rates, we can see that the rates fluctuate for all OSTs.
 Furthermore, most of the time, the job performs writes to one OST and sometimes to multiple OSTs in a burst.
@@ -152,66 +161,108 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 \clearpage
 
 ## Total rates for MDTs
-Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates of all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
+Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
+All plots share the same x-axis, making them easier to compare.
 <!-- The MDT figures show that only one or two of four MDTs are usually actively handling operations. -->
 
 ![
-Total rates of open and close operations from all compute nodes to each MDT.
-\label{fig:total-mdt-1}](figures/2022-10-27_mdt_compute_1.svg)
+Total rates of `open` and `close` operations from compute nodes to each MDT.
+We can see that the open rate is quite steady, close has large drop around 12.00.
+Large changes in rates are usually caused when single job performing heavy I/O stops.
+We can also see that the rate of close is greater than the rate of open.
+It is not possible to perform more close and open operations, because we always need to open a file before we can close it.
+We suspect that Lustre clients cache open operations, but not close operations and Jobstats does not count cached operations.
+Therefore, the close rate may look higher than open rate from the statistics.
+For example, if open is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS; thus request is not recorded.
+\label{fig:total-mdt-1}
+](figures/2022-10-27_mdt_compute_1.svg)
 
 ![
-Total rates of mknod and unlink operations from all compute nodes to each MDT.
-\label{fig:total-mdt-2}](figures/2022-10-27_mdt_compute_2.svg)
+Total rates of `mknod` and `unlink` operations from compute nodes to each MDT.
+We can see the file creation rate by looking at the rate of mknod operations and file removal rate by looking at the rate of unlink operations.
+The values in these plots do not show large variations.
+Elevated rates both in file creation and removal may indicate creation of temporary file on the Lustre file system, which is undesirable.
+\label{fig:total-mdt-2}
+](figures/2022-10-27_mdt_compute_2.svg)
 
 ![
-Total rates of getattr and setattr operations from all compute nodes to each MDT.
-\label{fig:total-mdt-3}](figures/2022-10-27_mdt_compute_3.svg)
+Total rates of `getattr` and `setattr` operations from compute nodes to each MDT.
+We can see that the getattr rate is steady, but the setattr has large spikes.
+These rates indicate the frequency of querying and modifying file attributes, such as file ownership, access rights and timestamps.
+There rates may be elevated rates for example due to creation of temporary files.
+\label{fig:total-mdt-3}
+](figures/2022-10-27_mdt_compute_3.svg)
 
 ![
-Total rates of getxattr and setxattr operations from all compute nodes to each MDT.
-\label{fig:total-mdt-4}](figures/2022-10-27_mdt_compute_4.svg)
+Total rates of `getxattr` and `setxattr` operations from compute nodes to each MDT.
+\label{fig:total-mdt-4}
+](figures/2022-10-27_mdt_compute_4.svg)
 
 ![
-Total rates of mkdir and rmdir operations from all compute nodes to each MDT.
-\label{fig:total-mdt-5}](figures/2022-10-27_mdt_compute_5.svg)
+Total rates of `mkdir` and `rmdir` operations from compute nodes to each MDT.
+\label{fig:total-mdt-5}
+](figures/2022-10-27_mdt_compute_5.svg)
 
 ![
-Total rates of rename and sync operations from all compute nodes to each MDT.
-\label{fig:total-mdt-6}](figures/2022-10-27_mdt_compute_6.svg)
+Total rates of `rename` and `sync` operations from compute nodes to each MDT.
+\label{fig:total-mdt-6}
+](figures/2022-10-27_mdt_compute_6.svg)
+
+<!-- TODO: add samedir and crossdir renames to the rename plot? -->
 
 ![
-Total rates of link and statfs operations from all compute nodes to each MDT.
-\label{fig:total-mdt-7}](figures/2022-10-27_mdt_compute_7.svg)
+Total rates of `link` and `statfs` operations from compute nodes to each MDT.
+\label{fig:total-mdt-7}
+](figures/2022-10-27_mdt_compute_7.svg)
 
 \clearpage
 
 ## Total rates for OSTs
 Figures \ref{fig:total-ost-1}, \ref{fig:total-ost-2}, \ref{fig:total-ost-3}, \ref{fig:total-ost-4}, and \ref{fig:total-ost-5} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
-The interesting features in the figures are the variation of rates across time and between targets.
-For example, significant differences between the rates of two OSTs indicate an unbalanced load.
-A problematic I/O pattern or insufficient file striping might cause the imbalance.
-File striping means Lustre segments the file data into multiple OSTs instead of storing all the data in a single OST.
+All plots share the same x-axis, making them easier to compare.
 
-![Total rates of read and write operations from all compute nodes to each OST. \label{fig:total-ost-1}](figures/2022-10-27_ost_compute_1.svg)
+The interesting features in the figures are the variation of rates across time and between OSTs.
+For example, significant differences between the rates of different OSTs mean that the load is unbalanced, which is undesirable and may lead to congestion.
 
-![Total rates of readbytes and writebytes operations from all compute nodes to each OST. \label{fig:total-ost-2}](figures/2022-10-27_ost_compute_2.svg)
+![
+Total rates of `read` and `write` operations from compute nodes to each OST.
+\label{fig:total-ost-1}
+](figures/2022-10-27_ost_compute_1.svg)
 
-![Total rates of punch and setattr operations from all compute nodes to each OST. \label{fig:total-ost-3}](figures/2022-10-27_ost_compute_3.svg)
+![
+Total rates of `readbytes` and `writebytes` operations from compute nodes to each OST.
+An unbalanced load indicate that a large file is not properly striped over multiple OSTs.
+\label{fig:total-ost-2}
+](figures/2022-10-27_ost_compute_2.svg)
 
-![Total rates of quotactl and sync operations from all compute nodes to each OST. \label{fig:total-ost-4}](figures/2022-10-27_ost_compute_4.svg)
+![
+Total rates of `punch` and `setattr` operations from compute nodes to each OST.
+\label{fig:total-ost-3}
+](figures/2022-10-27_ost_compute_3.svg)
 
-![Total rates of getinfo and setinfo operations from all compute nodes to each OST. \label{fig:total-ost-5}](figures/2022-10-27_ost_compute_5.svg)
+![
+Total rates of `quotactl` and `sync` operations from compute nodes to each OST.
+\label{fig:total-ost-4}
+](figures/2022-10-27_ost_compute_4.svg)
+
+![
+Total rates of `getinfo` and `setinfo` operations from compute nodes to each OST.
+\label{fig:total-ost-5}
+](figures/2022-10-27_ost_compute_5.svg)
 
 \clearpage
 
+
 ## Components of total rates
-![This graph shows read operations on OST0001 during 24 hours of 2022-10-27.
+![
+This graph shows read operations on OST0001 during 24 hours of 2022-10-27.
 The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
 We can see that individual users cause spikes in the read rates.
 A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
-\label{fig:density}](figures/2022-10-27_ost0001_compute_read.svg)
+\label{fig:density}
+](figures/2022-10-27_ost0001_compute_read.svg)
 
 We can use a density plot to visually extract meaningful information from large numbers of time series.
 We also use a logarithmic scale for the density due to the large variations.
@@ -224,4 +275,6 @@ However, it omits information about individual time series.
 It lets us distinguish whether a small number of users perform a large magnitude of operations or a large number of users perform a small magnitude of operations.
 We can also use it to obtain information such as time intervals and value ranges to filter the data further.
 An important question is whether we could obtain such information automatically.
+
+<!-- TODO: add a second plot -->
 

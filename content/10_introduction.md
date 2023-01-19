@@ -26,6 +26,7 @@ The system must transport this data between main memory and storage, making I/O 
 The increasing demand for better I/O performance in HPC systems makes studying it necessary.
 The community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
+<!-- TODO: expand abbreviations -->
 Research from various institutions and companies such as ORNL, LBNL, Virginia Tech, Cray, and Seagate is actively finding ways to improve I/O performance in HPC.
 For example, they research methods to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions [@daos_and_friends; @object_centric_data].
 
@@ -59,10 +60,11 @@ This thesis focuses on fine-grained file system usage monitoring to identify the
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
 <!-- TODO: why do we care about the problem at CSC -->
-At CSC, we experience similar problems concerning parallel file system usage and want to develop a monitoring system to alleviate them.
 *CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
 At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-europian LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
+<!-- TODO: move -->
+At CSC, we experience similar problems concerning parallel file system usage and want to develop a monitoring system to alleviate them.
 
 Lustre has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics at a fine-grained level.
 Early experimental monitoring with Jobstats includes [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring].
@@ -81,8 +83,10 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
+<!-- TODO: separate scope and contributions -->
 The scope of the thesis is to describe the Puhti cluster, our monitoring system, and the collected data in detail.
 Furthermore, the scope includes presenting the data analysis and visualizations the author built from scratch.
+<!-- TODO: improtant, why -->
 The thesis advisor and system administrators were responsible for developing, deploying, and maintaining the monitoring system on Puhti.
 
 The thesis is structured as follows.
