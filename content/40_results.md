@@ -128,7 +128,7 @@ We say that a connection is *active* during a period that performs any file syst
 <!-- TODO: indicate how many compute nodes and OSTs in the plot title -->
 
 ![
-The counter and rate of write operations from one job on a single compute node.
+The counter and rate of `write` operations from one job on a single compute node.
 The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
 The subplots share the same x-axis.
 The counter values follow a typical saw-tooth pattern for almost linearly increasing counter values that reset periodically due to inactivity.
@@ -138,7 +138,7 @@ The lines follow a similar pattern indicating that the job performs a similar wr
 ](figures/2022-10-27_ost_job_write_1.svg)
 
 ![
-The counter and rate of write operations from one job on a single compute node.
+The counter and rate of `write` operations from one job on a single compute node.
 The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
 The subplots share the same x-axis.
 The counter values increase almost linearly, indicating that the job performs writes consistently during the whole period.
@@ -148,7 +148,7 @@ We can see that the job performs almost 75\% of the operations to one OST, almos
 ](figures/2022-10-27_ost_job_write_2.svg)
 
 ![
-The counter and rate of write operations from one job on a single compute node.
+The counter and rate of `write` operations from one job on a single compute node.
 The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
 The subplots share the same x-axis.
 One of the counter values increases in a wave-like pattern that resets periodically; the other counter seems to increase in a burst-like manner for short periods of time before resetting.
@@ -162,9 +162,9 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 
 ## Total rates for MDTs
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
+Comparing loads between MDTs is not interesting because Lustre assigned each storage area to one MDT.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 All plots share the same x-axis, making them easier to compare.
-<!-- The MDT figures show that only one or two of four MDTs are usually actively handling operations. -->
 
 ![
 Total rates of `open` and `close` operations from compute nodes to each MDT.
@@ -220,15 +220,21 @@ Total rates of `link` and `statfs` operations from compute nodes to each MDT.
 
 ## Total rates for OSTs
 Figures \ref{fig:total-ost-1}, \ref{fig:total-ost-2}, \ref{fig:total-ost-3}, \ref{fig:total-ost-4}, and \ref{fig:total-ost-5} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
+Since there are 24 OSTs, we can compare the variation of rate between OSTs and across time.
+By default, Lustre aims to balance the load between OSTs by assigning files to them equally.
+Significant differences between the rates of different OSTs mean that the load is unbalanced.
+Unbalanced load may lead to congestion when others try access the same OST.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 All plots share the same x-axis, making them easier to compare.
 
-The interesting features in the figures are the variation of rates across time and between OSTs.
-For example, significant differences between the rates of different OSTs mean that the load is unbalanced.
-Unbalanced load may lead to congestion when others try access the same OST.
+<!-- TODO: use single color for all targets and use alpha, highlight one OST that we inspect in the next section, add references to those figures (also for MDTs) -->
+<!-- TODO: reference to the figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} for write -->
 
 ![
 Total rates of `read` and `write` operations from compute nodes to each OST.
+Each line is an OST, and there are 24 lines.
+In the top subplot, we can see that the rate of read operations, which does not vary across OSTs during 00:00 to 07:00, but after 07:00 the variance increases.
+The bottom subplot shows us the rate of write operations
 \label{fig:total-ost-1}
 ](figures/2022-10-27_ost_compute_1.svg)
 
@@ -259,21 +265,27 @@ Total rates of `getinfo` and `setinfo` operations from compute nodes to each OST
 
 
 ## Components of total rates
-We can use a density plot to visually extract meaningful information from large numbers of time series.
-We also use a logarithmic scale for the density due to the large variations.
-As shown in Figure \ref{fig:density}, obtaining information from a graph with many time series is challenging as they tend to overlap apart from the individual spikes.
-The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
-We can perform a similar analysis based on job ID or node name.
-
+We can see from the middle subplots of Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} that obtaining information from a graphs with many time series is challenging because they tend to overlap.
+To obtain meaningful information from them, we can use a density plot.
 The density is a statistical plot that shows how many time series has a value in a specific range at a particular time. 
 However, it omits information about individual time series.
 It lets us distinguish whether a small number of users perform a large magnitude of operations or a large number of users perform a small magnitude of operations.
 We can also use it to obtain information such as time intervals and value ranges to filter the data further.
 An important question is whether we could obtain such information automatically.
 
+We use a logarithmic scale for the density due to the large variations.
+
+TODO: technique, aggregate and compute density
+
+<!--
+The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
+We can perform a similar analysis based on job ID or node name.
+-->
+
+
 ![
 TODO:
-\label{fig:density-3}
+\label{fig:density-1}
 ](figures/2022-10-27_mdt0000_compute_setattr.svg)
 
 ![
@@ -281,11 +293,11 @@ Decomposition of a total read rate from compute nodes to scratch-OST0001 during 
 The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
 We can see that individual users cause spikes in the read rates.
 A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
-\label{fig:density}
+\label{fig:density-2}
 ](figures/2022-10-27_ost0001_compute_read.svg)
 
 ![
 TODO:
-\label{fig:density-2}
+\label{fig:density-3}
 ](figures/2022-10-27_ost0004_compute_readbytes.svg)
 

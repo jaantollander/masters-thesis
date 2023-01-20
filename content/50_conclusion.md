@@ -1,14 +1,14 @@
 \clearpage
 
 # Conclusion
+TODO: edit this section
+
 The challenges in this thesis work were primarily practical engineering rather than deep theoretical ones.
 For example, we collected, stored, and analyzed large amounts of monitoring data, had to make installations to a live system requiring system admins' intervention, and had issues with software from a third-party vendor.
 The software issues caused problems with the data quality, and we lost valuable data that would have been useful in our analysis.
 The problem also wasted valuable time because we had to change our monitoring and analysis workflows to correct the issues to the extent that it was possible.
 For these reasons, we did not meet the original goals set for the thesis.
 Fortunately, we still obtained results and helpful insights for future parallel file system usage monitoring when the vendors hopefully fix these issues.
-
----
 
 In this work, we explored monitoring and analyzing the usage of a parallel file system and whether it could help us to identify slowdowns and their causes.
 We explained the basic building blocks of a high-performance computing system.
@@ -58,6 +58,8 @@ Here are some ideas of analysis methods to try.
   We can use Kernel Density Estimation (KDE), such as Average Shifted Histograms to perform one-dimensional clustering fast.
 
 We can also combine and mix previously mentioned methods.
+
+<!-- TODO: looking monitoring data as a stream (not batch) -->
 
 The ultimate goal is to provide real-time monitoring, visualization, and reporting deployed on a live system that administrators can use to identify if a slowdown is caused by file system usage and who is causing it.
 
