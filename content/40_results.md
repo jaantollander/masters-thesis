@@ -63,7 +63,7 @@ This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we are still determining if the integrity of the counter values is affected by this issue.
 
 <!-- TODO: lines that do not show are zero -->
-,
+
 Next, we look at Figures \ref{fig:entry-ids-mdt} and \ref{fig:entry-ids-ost}, which show the number of entries per Lustre target and identifier format for system and non-system users in a sample of 74 Jobstats outputs taken every 2-minutes from 2022-03-04.
 For non-system users, we see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers.
 We also observe that Jobstats systemically generates malformed identifiers on the OSSs.
@@ -118,7 +118,7 @@ The load across OSTs is balanced because the files are assigned OSTs equally wit
 ## Counters and rates
 <!-- TODO: demonstrates the fine-grained nature of data -->
 Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for write operations for different jobs during a 24-hour period of 2022-10-27.
-They demonstrate the values of the counter collected from the statistics, rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
+They demonstrate the collected fine-grained statistics in the form of counters and rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
 The x-axis displays time, and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
 Each line displays a *connection* from one Lustre client to one Lustre Target.
 All figures display a single node job; thus, each connection shows write operations from the same to a different OST.
@@ -164,6 +164,7 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 Comparing loads between MDTs is not interesting because Lustre assigned each storage area to one MDT.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
+Because some rates in the plots are zero, but logarithmic axis does contain zero these values do not show in the plot.
 All plots share the same x-axis, making them easier to compare.
 
 ![
@@ -191,21 +192,27 @@ Total rates of `getattr` and `setattr` operations from compute nodes to each MDT
 We can see that the getattr rate is consistent, but the setattr has large spikes.
 These rates indicate the frequency of querying and modifying file attributes, such as file ownership, access rights and timestamps.
 There rates may be elevated rates for example due to creation of temporary files.
+In Figure \ref{fig:density-1}, we inspect the contribution of different users to the setattr rate on MDT show in the bottom subplot.
 \label{fig:total-mdt-3}
 ](figures/2022-10-27_mdt_compute_3.svg)
 
 ![
 Total rates of `getxattr` and `setxattr` operations from compute nodes to each MDT.
+We can see that getxattr rates are consistent through the period.
+The magnitude of setxattr rate is small, only a couple operations per second, from 00.00 to 18.00.
+After 18.00 the rate falls to near zero.
 \label{fig:total-mdt-4}
 ](figures/2022-10-27_mdt_compute_4.svg)
 
 ![
 Total rates of `mkdir` and `rmdir` operations from compute nodes to each MDT.
+Both rates are consistent through the period and the magnitude relatively small, for example, compared to file creation and removal in Figure \ref{fig:total-mdt-1}.
 \label{fig:total-mdt-5}
 ](figures/2022-10-27_mdt_compute_5.svg)
 
 ![
 Total rates of `rename` and `sync` operations from compute nodes to each MDT.
+Both rates are consistent through the period and the magnitude relatively small.
 \label{fig:total-mdt-6}
 ](figures/2022-10-27_mdt_compute_6.svg)
 
@@ -213,8 +220,11 @@ Total rates of `rename` and `sync` operations from compute nodes to each MDT.
 
 ![
 Total rates of `link` and `statfs` operations from compute nodes to each MDT.
+We can see that there are almost no link operations, hence the line is very sparse.
+On the contrary, statfs operations seem to be consistent and appear on all MDTs.
 \label{fig:total-mdt-7}
 ](figures/2022-10-27_mdt_compute_7.svg)
+
 
 \clearpage
 
@@ -228,19 +238,21 @@ We use a logarithmic scale due to large variations in the magnitude of the rates
 All plots share the same x-axis, making them easier to compare.
 
 <!-- TODO: use single color for all targets and use alpha, highlight one OST that we inspect in the next section, add references to those figures (also for MDTs) -->
-<!-- TODO: reference to the figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} for write -->
 
 ![
 Total rates of `read` and `write` operations from compute nodes to each OST.
 Each line is an OST, and there are 24 lines.
 In the top subplot, we can see that the rate of read operations, which does not vary across OSTs during 00:00 to 07:00, but after 07:00 the variance increases.
-The bottom subplot shows us the rate of write operations
+We inspect the total read rate on OST0001 in Figure \ref{fig:density-2}.
+The bottom subplot shows us the rate of write operations which is smaller in magnitude.
+The base rate, the rate to most OSTs, is has little variance but individual OSTs deviate from the base load by an order of magnitude.
+The total write rate is macroscopic view compared to the individual write rates, seen in Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3}, which show a microscopic view.
 \label{fig:total-ost-1}
 ](figures/2022-10-27_ost_compute_1.svg)
 
 ![
 Total rates of `readbytes` and `writebytes` operations from compute nodes to each OST.
-We can see that the readbytes rate is mostly balanced over OSTs and consistent over the period, expect few spikes and one long, heavy load from 9.00 to 14.00 to a single OST.
+We can see that the readbytes rate is mostly balanced over OSTs and consistent over the period, expect few spikes and one long, heavy load from 9.00 to 14.00 to a single OST, which we inpect in more deatail in the Figure \ref{fig:density-3}.
 Heavy load on single OST indicates that a large file is not properly striped over multiple OSTs.
 The readbytes rate is balanced over OSTs and consistent over the period with only few spikes.
 \label{fig:total-ost-2}
@@ -248,16 +260,21 @@ The readbytes rate is balanced over OSTs and consistent over the period with onl
 
 ![
 Total rates of `punch` and `setattr` operations from compute nodes to each OST.
+We can see that the `punch` rate spikes periodically at the same time for all OSTs.
+The `setattr` rate is very low and does not exhibit interesting patterns.
 \label{fig:total-ost-3}
 ](figures/2022-10-27_ost_compute_3.svg)
 
 ![
 Total rates of `quotactl` and `sync` operations from compute nodes to each OST.
+We can see that the `quotactl` rate looks well balances between OSTs, compared to read and write rates in Figure \ref{fig:total-ost-1}, likely because it does not operate on specific files, but rather fetches the disk quota information.
+The `sync` rate is very low and does not exhibit interesting patterns.
 \label{fig:total-ost-4}
 ](figures/2022-10-27_ost_compute_4.svg)
 
 ![
 Total rates of `getinfo` and `setinfo` operations from compute nodes to each OST.
+Both rates are very low and do not exhibit interesting patterns.
 \label{fig:total-ost-5}
 ](figures/2022-10-27_ost_compute_5.svg)
 
@@ -277,27 +294,36 @@ We use a logarithmic scale for the density due to the large variations.
 
 TODO: technique, aggregate and compute density
 
+- total rate is sum many time series
+- fine-grained data allows us to decompose the total rate into its component time series
+- then we can analyze those components
+- for visualization, we compute density
+
 <!--
 The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
 We can perform a similar analysis based on job ID or node name.
 -->
 
+<!-- TODO: highlight individual line from the middle graph? -->
 
 ![
-TODO:
+Decomposition of a total setattr rate from compute nodes to scratch-MDT0000 during 24 hours of 2022-10-27.
+We can see two distinct patterns compared to the average behaviour; many, short spikes of high rates and three longer burst of less intense rates.
 \label{fig:density-1}
 ](figures/2022-10-27_mdt0000_compute_setattr.svg)
 
 ![
 Decomposition of a total read rate from compute nodes to scratch-OST0001 during 24 hours of 2022-10-27.
 The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
-We can see that individual users cause spikes in the read rates.
+We can see that individual users cause bursts in the read rates.
 A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
 \label{fig:density-2}
 ](figures/2022-10-27_ost0001_compute_read.svg)
 
 ![
+Decomposition of a total readbytes rate from compute nodes to scratch-OST0004 during 24 hours of 2022-10-27.
 TODO:
+We can crearly see that there a single user reads lot of bytes during 9:00 and 14:00.
 \label{fig:density-3}
 ](figures/2022-10-27_ost0004_compute_readbytes.svg)
 
