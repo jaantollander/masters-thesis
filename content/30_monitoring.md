@@ -132,35 +132,35 @@ Units (`<unit>`) are either requests (`reqs`), bytes (`bytes`), or microseconds 
 Statistics of an entry that has not performed any operations are implicitly zero.
 
 
-Targets | Lustre file system operation | Linux system call | Parsed statistics
--|-|-|-
-MDT | **`open`** | `open` | `samples`
-MDT | **`close`** | `close` | `samples`
-MDT | **`mknod`** | `mknod` | `samples`
-MDT | **`link`** | `link` | `samples`
-MDT | **`unlink`** | `unlink` | `samples`
-MDT | **`mkdir`** | `mkdir` | `samples`
-MDT | **`rmdir`** | `rmdir` | `samples`
-MDT | **`rename`** | `rename` | `samples`
-MDT\textcolor{lightgray}{, OST} | **`getattr`** | `stat` | `samples`
-MDT, OST | **`setattr`** | `chmod`, `chown`, `utime` | `samples`
-MDT | **`getxattr`** | `getxattr` | `samples`
-MDT | **`setxattr`** | `setxattr` | `samples`
-MDT\textcolor{lightgray}{, OST} | **`statfs`** | `statfs` | `samples`
-MDT, OST | **`sync`** | `sync` | `samples`
-MDT | **`samedir_rename`** | `rename` | `samples`
-MDT | **`crossdir_rename`** | `rename` | `samples`
-OST | **`read`** | `read` | `samples`
-OST | **`write`** | `write` | `samples`
-\textcolor{lightgray}{MDT,} OST | **`punch`** | `fallocate` | `samples` 
-OST | **`get_info`** | | `samples`
-OST | **`set_info`** | | `samples`
-OST | **`quotactl`** | `quotactl` | `samples`
-\textcolor{lightgray}{MDT,} OST | **`read_bytes`** | `read` | `sum`
-\textcolor{lightgray}{MDT,} OST | **`write_bytes`** | `write` | `sum`
-\textcolor{lightgray}{OST} | **`create`** | 
-\textcolor{lightgray}{OST} | **`destroy`** | 
-\textcolor{lightgray}{OST} | **`prealloc`** | 
+MDT | OST | Lustre file system operation | Linux system call | Parsed statistics
+-|-|---|-|-
+MDT | - | **`open`** |  `open` | `samples`
+MDT | - | **`close`** | `close` | `samples`
+MDT | - | **`mknod`** | `mknod` | `samples`
+MDT | - | **`link`** | `link` | `samples`
+MDT | - | **`unlink`** | `unlink` | `samples`
+MDT | - | **`mkdir`** | `mkdir` | `samples`
+MDT | - | **`rmdir`** | `rmdir` | `samples`
+MDT | - | **`rename`** | `rename` | `samples`
+MDT | \textcolor{lightgray}{OST} | **`getattr`** | `stat` | `samples`
+MDT | OST | **`setattr`** | `chmod`, `chown`, `utime` | `samples`
+MDT | - | **`getxattr`** | `getxattr` | `samples`
+MDT | - | **`setxattr`** | `setxattr` | `samples`
+MDT | \textcolor{lightgray}{OST} | **`statfs`** | `statfs` | `samples`
+MDT | OST | **`sync`** | `sync` | `samples`
+MDT | - | **`samedir_rename`** | `rename` | `samples`
+MDT | - | **`crossdir_rename`** | `rename` | `samples`
+- | OST | **`read`** | `read` | `samples`
+- | OST | **`write`** | `write` | `samples`
+\textcolor{lightgray}{MDT} | OST | **`punch`** | `fallocate` | `samples` 
+- | OST | **`get_info`** | | `samples`
+- | OST | **`set_info`** | | `samples`
+- | OST | **`quotactl`** | `quotactl` | `samples`
+\textcolor{lightgray}{MDT} | OST | **`read_bytes`** | `read` | `sum`
+\textcolor{lightgray}{MDT} | OST | **`write_bytes`** | `write` | `sum`
+- | \textcolor{lightgray}{OST} | **`create`** | 
+- | \textcolor{lightgray}{OST} | **`destroy`** | 
+- | \textcolor{lightgray}{OST} | **`prealloc`** | 
 
 : \label{tab:operations}
 This table lists all operations tracked by the Jobstats for each Lustre target.

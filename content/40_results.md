@@ -290,30 +290,28 @@ We can also use the information from a density plot to obtain time intervals and
 <!-- TODO: An important question is whether we could obtain such information automatically. -->
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
 
+The general technique for identifying outliers a batch of fine-grained time series data consist of three steps.
+We analyze the data by progressively increasing the resolution.
+
+1) Filtering the data by a condition.
+It is not necessary to filter data initially.
+
+2) Computing the sum aggregate with chosen categorical value.
+Categorical values include the Lustre target, Lustre client, user, and job identifiers.
+In the future, we could also use categorical values from the Slurm job data such project and partition identifiers.
+We can stop when there is only few aggregate time series left.
+
+3) Computing the density with chosen resolution.
+We can use it to obtain new filtering condition, such as time and value range, and repeat the process.
+
+<!-- TODO: plots show one iteration of the above process -->
 Each of the Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} show three subplots of data of a selected operation from compute nodes to a selected Lustre target.
 The top subplot shows the total rate, the middle subplot shows the total rates of each user, and the bottom subplot shows the density plot of the total rates of each user.
 We use a logarithmic scale for the density due to the large variations and we omit zeros from the plot.
 
----
-
-The general technique for identifying outliers a batch of fine-grained time series data consist of three steps.
-
-1) Filter the data by a condition.
-It is not necessary to filter data initially.
-
-2) Computing the sum aggregate by chosen categorical value such as Lustre target, Lustre client, user, and job identifiers.
-In the future, we could also use categorical values from the Slurm job data such project and partition identifiers.
-
-3) Computing the density with chosen resolution.
-And using it to obtain new filtering condition and repeat the process.
-We can stop when there is only few aggregate time series left.
-Time and value range.
-
-TODO: batch analysis, in the future streaming analysis
-
+<!--
 Total rate is sum many time series, fine-grained data allows us to decompose the total rate into its component time series, then we can analyze those components
 
-<!--
 The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
 We can perform a similar analysis based on job ID or node name.
 -->
