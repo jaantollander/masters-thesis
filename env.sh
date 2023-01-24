@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# USAGE:
-#    source env.sh
-#    thesis_pdf
-
 dir_content() { echo "$PWD/content"; }
 dir_figures() { echo "$PWD/content/figures"; }
 dir_assets() { echo "$PWD/assets"; }

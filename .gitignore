@@ -1,4 +1,5 @@
 build/
+comments/
 *.bkp
 *.dtmp
-comments
+dev
