@@ -1,5 +1,6 @@
 build/
 comments/
+scripts/
+
 *.bkp
 *.dtmp
-dev

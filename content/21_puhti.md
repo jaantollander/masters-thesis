@@ -19,7 +19,7 @@ $1000^4$ | tera (T) | $1024^4$ | tebi (Ti)
 $1000^5$ | peta (P) | $1024^5$ | pebi (Pi)
 
 : \label{tab:prefixes}
-  Prefixes in base ten and base two.
+  Prefixes of units in base ten and base two.
 
 We use units of bytes and bits and base ten and base two prefixes, as shown in Table \ref{tab:prefixes}.
 One byte (B) is eight bits (b).
@@ -46,10 +46,12 @@ Node category | Node type | Node count | Memory \newline (GiB per node) | Local 
 *Compute* | *GPU* | 80 | 384 | 3600
 
 : \label{tab:puhti-nodes}
-Nodes on the Puhti cluster by category and type.
-For service nodes, the node type associates them with their function in the cluster.
-For compute nodes, the node types associate them with the amount of allocatable resources they have.
-The node count tells us the number of nodes of the given node type.
+Nodes on the Puhti cluster.
+Puhti has different node categories based on their function in the cluster.
+Lustre nodes serve the Lustre file system, service nodes form the front end and serve utility functions, and compute nodes form the back end of the cluster.
+Each node category contains different nodes types and each node of given type has identical resouces, such as processor, memory, and local storage.
+The node count describes how many nodes of given type Puhti contains.
+
 
 The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen in Table \ref{tab:puhti-nodes}.
 The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to log in to the system, and MDS and OSS nodes for the Lustre file system.
