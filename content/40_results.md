@@ -276,15 +276,14 @@ Both rates are very low and do not exhibit interesting patterns.
 
 
 ## Components of total rates
-Obtaining meaningful information visually from a graphs with many time series is challenging because they tend to overlap.
-To improve this situtation, we can use a density plot.
-A density plot is a statistical plot that shows how many time series has a value in a specific range, called bucket, at a particular time, but omits information about individual time series.
-We can use the density plot to distinguish differences such as whether an increase in total rate is due to a small number of users performing a high rate of operations or a large number of users perform a small rate of operations.
+Obtaining meaningful information visually from graphs with many time series is challenging because they tend to overlap.
+To remedy this situation, we can use a density plot.
+A density plot is a statistical plot that shows how many time series has a value in a specific range, called a bucket, at a particular time, but omits information about individual time series.
+We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate of operations or a large number of users performing a low rate of operations.
 We can also use the information from a density plot to obtain time intervals and value ranges to filter original data.
-<!-- TODO: An important question is whether we could obtain such information automatically. -->
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
 
-The general technique for identifying outliers a batch of fine-grained time series data consist of three steps.
+The general technique for identifying outliers in a batch of fine-grained time series data consists of three steps.
 We analyze the data by progressively increasing the resolution.
 
 1) Filtering the data by a condition.
@@ -292,17 +291,17 @@ It is not necessary to filter data initially.
 
 2) Computing the sum aggregate with chosen categorical value.
 Categorical values include the Lustre target, Lustre client, user, and job identifiers.
-In the future, we could also use categorical values from the Slurm job data such project and partition identifiers.
-We can stop when there is only few aggregate time series left.
+In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers.
+We can stop when there are only a few aggregate time series left.
 
 <!-- TODO: density is easy to compute -->
 3) Computing the density with chosen resolution.
-We can use it to obtain new filtering condition, such as time and value range, and repeat the process.
+We can use it to obtain new filtering conditions, such as time and value range, and repeat the process.
 
 <!-- TODO: plots show one iteration of the above process -->
 Each of the Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} show three subplots of data of a selected operation from compute nodes to a selected Lustre target.
 The top subplot shows the total rate, the middle subplot shows the total rates of each user, and the bottom subplot shows the density plot of the total rates of each user.
-We use a logarithmic scale for the density due to the large variations and we omit zeros from the plot.
+We use a logarithmic scale for the density due to the large variations, and we omit zeros from the plot.
 
 <!--
 Total rate is sum many time series, fine-grained data allows us to decompose the total rate into its component time series, then we can analyze those components
