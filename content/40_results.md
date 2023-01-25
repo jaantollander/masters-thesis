@@ -92,7 +92,7 @@ The third subplot shows the number of missing job IDs on compute nodes, which is
 There are no malformed entries on MDTs.
 We can see that only two of the four MDTs handle almost all of the metadata operations.
 Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
-The load across MDTs is unbalanced because MDTs are assigned based on top-level directory, that is, to different storage areas, such as Home, Projappl, Scratch, and the usage of these storage areas varies.
+The load across MDTs is unbalanced because MDTs are assigned based on the top-level directory, that is, to different storage areas, such as Home, Projappl, Scratch, and the usage of these storage areas varies.
 We explained storage areas in Section \ref{system-configuration}.
 \label{fig:entry-ids-mdt}
 ](figures/entry_ids_mdt.svg)
@@ -116,16 +116,12 @@ The load across OSTs is balanced because the files are assigned OSTs equally wit
 \clearpage
 
 ## Counters and rates
-<!-- TODO: demonstrates the fine-grained nature of data -->
-Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for write operations for different jobs during a 24-hour period of 2022-10-27.
-They demonstrate the collected fine-grained statistics in the form of counters and rates computed from the counters, and entry resets, discussed in Section \ref{monitoring-and-analysis}.
-The x-axis displays time, and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
-Each line displays a *connection* from one Lustre client to one Lustre Target.
-All figures display a single node job; thus, each connection shows write operations from the same to a different OST.
-We say that a connection is *active* during a period that performs any file system operations, and otherwise, it is *inactive*.
-
-<!-- TODO: first to top, second to bottom, explain plots in first paragraph, same x-axis for all subplots -->
-<!-- TODO: indicate how many compute nodes and OSTs in the plot title -->
+Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for `write` operations for different jobs during a 24-hour period of 2022-10-27.
+The figures demonstrate the fine-grained nature of the monitoring data and entry resets discussed in Section \ref{monitoring-and-analysis}.
+The x-axis displays time, and the y-axis display the accumulated amount of operations for counters and the operations per second for the rate.
+Each line displays operations from one Lustre client to one Lustre Target.
+The figures in this subsection display a single node job; thus, each line shows `write` operations from the same compute node to a different OST.
+We say that a job is *active* during a period that performs any file system operations, and otherwise, it is *inactive*.
 
 ![
 The counter and rate of `write` operations from one job on a single compute node.
@@ -164,55 +160,54 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 Comparing loads between MDTs is not interesting because Lustre assigned each storage area to one MDT.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
-Because some rates in the plots are zero, but logarithmic axis does contain zero these values do not show in the plot.
-All plots share the same x-axis, making them easier to compare.
+Because some rates in the plots are zero, but the logarithmic axis does contain zero, we omit zeros from the plot.
+The plots share the same x-axis, making them easier to compare.
 
 ![
 Total rates of `open` and `close` operations from compute nodes to each MDT.
-We can see that the open rate is quite consistent, close has large drop around 12.00.
-Large changes in rates are usually caused when single job performing heavy I/O stops.
-We can also see that the rate of close is greater than the rate of open.
-It is not possible to perform more close and open operations, because we always need to open a file before we can close it.
-We suspect that Lustre clients cache open operations, but not close operations and Jobstats does not count cached operations.
-Therefore, the close rate may look higher than open rate from the statistics.
-For example, if open is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS; thus request is not recorded.
+We can see that the `open` rate is quite consistent, and `close` has a large drop around 12.00.
+Large changes in rates are usually caused when a single job that performs heavy I/O stops.
+We can also see that the rate of `close` is greater than the rate of `open`.
+It is not possible to perform more `close` and `open` operations because we always need to open a file before we can close it.
+We suspect that Lustre clients cache `open` operations but not `close` operations, and Jobstats does not count cached operations.
+Therefore, the close rate may look higher than the `open` rate from the statistics.
+For example, if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS; thus request is not recorded.
 \label{fig:total-mdt-1}
 ](figures/2022-10-27_mdt_compute_1.svg)
 
 ![
 Total rates of `mknod` and `unlink` operations from compute nodes to each MDT.
-We can see the file creation rate by looking at the rate of mknod operations and file removal rate by looking at the rate of unlink operations.
+We can see the file creation rate by looking at the rate of `mknod` operations and the file removal rate by looking at the rate of `unlink` operations.
 The values in these plots do not show large variations.
-Elevated rates both in file creation and removal may indicate creation of temporary file on the Lustre file system, which is undesirable.
+Elevated rates both in file creation and removal may indicate the creation of temporary files on the Lustre file system, which is undesirable.
 \label{fig:total-mdt-2}
 ](figures/2022-10-27_mdt_compute_2.svg)
 
 ![
 Total rates of `getattr` and `setattr` operations from compute nodes to each MDT.
-We can see that the getattr rate is consistent, but the setattr has large spikes.
-These rates indicate the frequency of querying and modifying file attributes, such as file ownership, access rights and timestamps.
-There rates may be elevated rates for example due to creation of temporary files.
-In Figure \ref{fig:density-1}, we inspect the contribution of different users to the setattr rate on MDT show in the bottom subplot.
+We can see that the `getattr` rate is consistent, but the `setattr` has large spikes.
+These rates indicate the frequency of querying and modifying file attributes, such as file ownership, access rights, and timestamps.
+These rates may be elevated rates for example, due to the creation of temporary files.
+In Figure \ref{fig:density-1}, we inspect the contribution of different users to the `setattr` rate on MDT.
 \label{fig:total-mdt-3}
 ](figures/2022-10-27_mdt_compute_3.svg)
 
 ![
 Total rates of `getxattr` and `setxattr` operations from compute nodes to each MDT.
-We can see that getxattr rates are consistent through the period.
-The magnitude of setxattr rate is small, only a couple operations per second, from 00.00 to 18.00.
-After 18.00 the rate falls to near zero.
+We can see that `getxattr` rates are consistent throughout the period.
+The magnitude of the `setxattr` rate is small, only a couple of operations per second, from 00.00 to 18.00, after which the rate falls to near zero.
 \label{fig:total-mdt-4}
 ](figures/2022-10-27_mdt_compute_4.svg)
 
 ![
 Total rates of `mkdir` and `rmdir` operations from compute nodes to each MDT.
-Both rates are consistent through the period and the magnitude relatively small, for example, compared to file creation and removal in Figure \ref{fig:total-mdt-1}.
+Both rates are consistent throughout the period, and the magnitude is relatively small, for example, compared to file creation and removal in Figure \ref{fig:total-mdt-1}.
 \label{fig:total-mdt-5}
 ](figures/2022-10-27_mdt_compute_5.svg)
 
 ![
 Total rates of `rename` and `sync` operations from compute nodes to each MDT.
-Both rates are consistent through the period and the magnitude relatively small.
+Both rates are consistent throughout the period, and the magnitude is relatively small.
 \label{fig:total-mdt-6}
 ](figures/2022-10-27_mdt_compute_6.svg)
 
@@ -220,8 +215,8 @@ Both rates are consistent through the period and the magnitude relatively small.
 
 ![
 Total rates of `link` and `statfs` operations from compute nodes to each MDT.
-We can see that there are almost no link operations, hence the line is very sparse.
-On the contrary, statfs operations seem to be consistent and appear on all MDTs.
+We can see that there are almost no `link` operations; hence the line is very sparse.
+On the contrary, `statfs` operations seem to be consistent and appear on all MDTs.
 \label{fig:total-mdt-7}
 ](figures/2022-10-27_mdt_compute_7.svg)
 
@@ -233,28 +228,27 @@ Figures \ref{fig:total-ost-1}, \ref{fig:total-ost-2}, \ref{fig:total-ost-3}, \re
 Since there are 24 OSTs, we can compare the variation of rate between OSTs and across time.
 By default, Lustre aims to balance the load between OSTs by assigning files to them equally.
 Significant differences between the rates of different OSTs mean that the load is unbalanced.
-Unbalanced load may lead to congestion when others try access the same OST.
+An unbalanced load may lead to congestion when others try to access the same OST.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 All plots share the same x-axis, making them easier to compare.
 
-<!-- TODO: use single color for all targets and use alpha, highlight one OST that we inspect in the next section, add references to those figures (also for MDTs) -->
+<!-- TODO: use single color for all targets and use alpha, highlight one OST that we inspect in the next section, add references to those figures (also for MDTs), Each line is an OST, and there are 24 lines. -->
 
 ![
 Total rates of `read` and `write` operations from compute nodes to each OST.
-Each line is an OST, and there are 24 lines.
-In the top subplot, we can see that the rate of read operations, which does not vary across OSTs during 00:00 to 07:00, but after 07:00 the variance increases.
-We inspect the total read rate on OST0001 in Figure \ref{fig:density-2}.
-The bottom subplot shows us the rate of write operations which is smaller in magnitude.
-The base rate, the rate to most OSTs, is has little variance but individual OSTs deviate from the base load by an order of magnitude.
-The total write rate is macroscopic view compared to the individual write rates, seen in Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3}, which show a microscopic view.
+In the top subplot, we can see that the rate of `read` operations does not vary across OSTs from 00:00 to 07:00, but after 07:00, the variance increases.
+Later in Figure \ref{fig:density-2}, in the next section, we explore the components of the total read rate on OST0001.
+The bottom subplot shows us the rate of `write` operations which is smaller in magnitude.
+The rate of most OSTs does not vary much, but individual OSTs deviate from the base load by order of magnitude.
+The total write rate consists of individual `write` rates from many users' jobs, some of which are similar to the ones we saw in Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3}.
 \label{fig:total-ost-1}
 ](figures/2022-10-27_ost_compute_1.svg)
 
 ![
 Total rates of `readbytes` and `writebytes` operations from compute nodes to each OST.
-We can see that the readbytes rate is mostly balanced over OSTs and consistent over the period, expect few spikes and one long, heavy load from 9.00 to 14.00 to a single OST, which we inpect in more deatail in the Figure \ref{fig:density-3}.
-Heavy load on single OST indicates that a large file is not properly striped over multiple OSTs.
-The readbytes rate is balanced over OSTs and consistent over the period with only few spikes.
+We can see that the `readbytes` rate is mostly balanced over OSTs and consistent over the period, expect a few spikes and one long, heavy load from 9.00 to 14.00 to a single OST, which we inspect in more detail in Figure \ref{fig:density-3} in the next section.
+Heavy load on a single OST indicates that a large file is not properly striped over multiple OSTs.
+The `writebytes` rate is balanced over OSTs and consistent over the period with only a few spikes.
 \label{fig:total-ost-2}
 ](figures/2022-10-27_ost_compute_2.svg)
 
@@ -267,7 +261,7 @@ The `setattr` rate is very low and does not exhibit interesting patterns.
 
 ![
 Total rates of `quotactl` and `sync` operations from compute nodes to each OST.
-We can see that the `quotactl` rate looks well balances between OSTs, compared to read and write rates in Figure \ref{fig:total-ost-1}, likely because it does not operate on specific files, but rather fetches the disk quota information.
+We can see that the `quotactl` rate looks well balanced between OSTs, compared to other rates, such as `read` and `write` rates in Figure \ref{fig:total-ost-1}, likely because it does not operate on specific files, users cannot easily perform a different amount of `quotactl` operations of different OSTs.
 The `sync` rate is very low and does not exhibit interesting patterns.
 \label{fig:total-ost-4}
 ](figures/2022-10-27_ost_compute_4.svg)
@@ -301,6 +295,7 @@ Categorical values include the Lustre target, Lustre client, user, and job ident
 In the future, we could also use categorical values from the Slurm job data such project and partition identifiers.
 We can stop when there is only few aggregate time series left.
 
+<!-- TODO: density is easy to compute -->
 3) Computing the density with chosen resolution.
 We can use it to obtain new filtering condition, such as time and value range, and repeat the process.
 
