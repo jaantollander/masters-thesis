@@ -180,8 +180,15 @@ In this work, we care more about measuring the file system usage from non-system
 
 <!--  TODO: login vs compute -->
 
+For running work on compute nodes, Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload-manager}.
+At the time of writing, the version was 21.08.7, but it is updated regularly.
+It has partitions with different resource limits, set by administrators, as seen in Table \ref{tab:slurm-partitions}.
+When we submit a job to Slurm, we must specify which partition it will run, the project used for billing, and the resource we want to reserve.
+We present concrete examples of Slurm job scripts for Puhti in Appendix \ref{slurm-job-scripts}.
+Slurm schedules the job to run when sufficient resources are available using a fair share algorithm.
+It also performs accounting of details about the submitted jobs.
 
-## Running workloads
+
 Partition name | Time limit | Task limit | Node limit | Node type
 -|-|-|-|-|-|-
 *test* | 15 minutes | 80 | 2 | *M*
@@ -202,13 +209,6 @@ Each partition has a name and resource limits such as time, task and node limit 
 Node types, listed in Table \ref{tab:puhti-nodes}, dictates the set of nodes where job may run.
 Typically, memory and local storage limits are the same for the node type.
 
-Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload-manager}.
-At the time of writing, the version was 21.08.7, but it is updated regularly.
-It has partitions with different resource limits, set by administrators, as seen in Table \ref{tab:slurm-partitions}.
-When we submit a job to Slurm, we must specify which partition it will run, the project used for billing, and the resource we wish to reserve.
-We present concrete examples of Slurm job scripts for Puhti in Appendix \ref{slurm-job-scripts}.
-Slurm schedules the job to run when sufficient resources are available using a fair share algorithm.
-It also performs accounting of details about the submitted jobs.
 
 Slurm sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
 One of them is the *Slurm Job ID* (`SLURM_JOB_ID` environment variable) which we use as an identifier to collect job-specific file operations.
