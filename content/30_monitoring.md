@@ -330,20 +330,7 @@ However, it might reduce ambiguity about identifying an individual time series.
 
 
 ## Analyzing statistics
-We analyzed batches of the raw counter data using the Julia language [@julia_fresh_approach; @julia_language].
-We dumped data from the database into Parquet files, such that each file contained data from one day, which limited the file size to manageable on a local computer.
-We used Parquet.jl package to parse the data, which we converted into a data frame using DataFrames.jl [@julia_dataframes].
-We computed rates from the counter values for each time series and performed explorative data analysis on the rates, such as computing sums over different subsets and computing densities.
-We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
-We show many of the visualizations in Section \ref{results}.
-We describe the theoretical aspects of computing rates from counters, manipulating rates, and aggregating them in Appendix \ref{computing-and-aggregating-rates}.
-The aggregation methods include computing a sum and density.
-
-<!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
-
----
-
-<!-- TODO: move the general description of data and the analysis to *Analyzing statistics* section -->
+TODO: rework this section and tie it to the results section, explain the idea behind the data analysis in general terms
 
 Data consists of metadata (categorical values), time (timestamp), and rates for each operation (`read`, `write`, etc).
 
@@ -366,3 +353,17 @@ We can stop when there are only a few aggregate time series left.
 <!-- TODO: density is easy to compute -->
 3) Computing the density with chosen resolution.
 We can use it to obtain new filtering conditions, such as time and value range, and repeat the process.
+
+---
+
+<!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
+<!-- TODO: toosl, data analysis tools, DataFrames.jl -->
+We analyzed batches of the raw counter data using the Julia language [@julia_fresh_approach; @julia_language].
+We dumped data from the database into Parquet files, such that each file contained data from one day, which limited the file size to manageable on a local computer.
+We used Parquet.jl package to parse the data, which we converted into a data frame using DataFrames.jl [@julia_dataframes].
+We computed rates from the counter values for each time series and performed explorative data analysis on the rates, such as computing sums over different subsets and computing densities.
+We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
+We show many of the visualizations in Section \ref{results}.
+We describe the theoretical aspects of computing rates from counters, manipulating rates, and aggregating them in Appendix \ref{computing-and-aggregating-rates}.
+The aggregation methods include computing a sum and density.
+

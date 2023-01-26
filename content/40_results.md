@@ -18,8 +18,8 @@ However, the data quality issues reduce the reliability of the identification.
 We demonstrate different aspects of data from compute nodes taken at 2-minute intervals for 24 hours on 2022-10-27.
 We omitted data from login and utility nodes in this analysis due to a lack of time to verify the correctness of the data.
 Subsection \ref{counters-and-rates} shows raw counter values and computed rates of three jobs to illustrate different I/O patterns.
-In Subsections \ref{total-rates-for-mdts} and \ref{total-rates-for-osts}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
-Finally, Subsection \ref{components-of-total-rates} shows how fine-grained measurements allow us to break the total rate down into its components.
+In Subsections \ref{metadata-rates} and \ref{object-storage-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
+Finally, Subsection \ref{identifying-outliers} shows how fine-grained measurements allow us to break the total rate down into its components.
 Then we demonstrate how a single user can perform the majority of a total load of a given file system operation.
 
 
@@ -157,7 +157,7 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 
 \clearpage
 
-## Total rates for MDTs
+## Metadata rates
 <!-- TODO: add motivation, repeat what is in the Section -->
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 Comparing loads between MDTs is not interesting because Lustre assigned each storage area to one MDT.
@@ -225,7 +225,7 @@ On the contrary, `statfs` operations seem consistent and appear on all MDTs.
 
 \clearpage
 
-## Total rates for OSTs
+## Object storage rates
 Figures \ref{fig:total-ost-1}, \ref{fig:total-ost-2}, \ref{fig:total-ost-3}, \ref{fig:total-ost-4}, and \ref{fig:total-ost-5} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
 Since there are 24 OSTs, we can compare the variation of rate between OSTs and across time.
 By default, Lustre aims to balance the load between OSTs by assigning files to them equally.
@@ -277,7 +277,7 @@ Both rates are very low and do not exhibit interesting patterns.
 \clearpage
 
 
-## Components of total rates
+## Identifying outliers
 <!-- TODO: add motivation, repeat what is in the Section -->
 Obtaining meaningful information visually from graphs with many time series is challenging because they tend to overlap.
 To remedy this situation, we can use a density plot.
