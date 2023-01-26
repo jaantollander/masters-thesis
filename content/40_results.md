@@ -15,7 +15,7 @@ We use this data to derive insights for future work.
 Regarding the research questions from Section \ref{introduction}, the data indicates that we can identify users who perform more file system operations than others on the cluster, often orders of magnitude more.
 However, the data quality issues reduce the reliability of the identification.
 
-As a demonstration, we present different aspects of data from compute nodes taken at 2-minute intervals for 24 hours on 2022-10-27.
+We demonstrate different aspects of data from compute nodes taken at 2-minute intervals for 24 hours on 2022-10-27.
 We omitted data from login and utility nodes in this analysis due to a lack of time to verify the correctness of the data.
 Subsection \ref{counters-and-rates} shows raw counter values and computed rates of three jobs to illustrate different I/O patterns.
 In Subsections \ref{total-rates-for-mdts} and \ref{total-rates-for-osts}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
@@ -107,7 +107,7 @@ The first subplot shows the number of correct entries for login and utility node
 The third subplot shows the number of missing job IDs on compute nodes, which is substantial compared to the correct identifiers in the second subplot.
 The fourth subplot shows the number of malformed identifiers for all nodes.
 We can see that Jobstats on Puhti systematically produce missing job IDs and malformed identifiers.
-Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, which indicates in some conditions, Jobstats produces a huge amount of malformed identifiers.
+Furthermore, there is a large burst of malformed identifiers from 12.06 to 12.26, indicating that in some conditions, Jobstats produces large amounts of malformed identifiers.
 It might be due to a heavy load on the OSS.
 The load across OSTs is balanced because the files are assigned OSTs equally with round-robin unless the user explicitly overwrites this policy.
 \label{fig:entry-ids-ost}
@@ -116,12 +116,13 @@ The load across OSTs is balanced because the files are assigned OSTs equally wit
 \clearpage
 
 ## Counters and rates
-Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for `write` operations for different jobs during a 24-hour period of 2022-10-27.
+<!-- TODO: add motivation, repeat what is in the Section -->
+Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for `write` operations for different jobs during 24 hours of 2022-10-27.
 The figures demonstrate the fine-grained nature of the monitoring data and entry resets discussed in Section \ref{monitoring-and-analysis}.
 The x-axis displays time, and the y-axis display the accumulated amount of operations for counters and the operations per second for the rate.
 Each line displays operations from one Lustre client to one Lustre Target.
 The figures in this subsection display a single node job; thus, each line shows `write` operations from the same compute node to a different OST.
-We say that a job is *active* during a period that performs any file system operations, and otherwise, it is *inactive*.
+We say that a job is *active* during a period that performs any file system operations; otherwise, it is *inactive*.
 
 ![
 The counter and rate of `write` operations from one job on a single compute node.
@@ -147,7 +148,7 @@ We can see that the job performs almost 75\% of the operations to one OST, almos
 The counter and rate of `write` operations from one job on a single compute node.
 The top subplot shows the counter values, and the bottom subplot shows the rates computed from the counter values in the first plot.
 The subplots share the same x-axis.
-One of the counter values increases in a wave-like pattern that resets periodically; the other counter seems to increase in a burst-like manner for short periods of time before resetting.
+One of the counter values increases in a wave-like pattern that resets periodically; the other counter seems to increase in a burst-like manner for short periods before resetting.
 By looking at the rates, we can see that the rates fluctuate for all OSTs.
 Furthermore, most of the time, the job performs writes to one OST and sometimes to multiple OSTs in a burst.
 \label{fig:job-rate-3}
@@ -157,6 +158,7 @@ Furthermore, most of the time, the job performs writes to one OST and sometimes 
 \clearpage
 
 ## Total rates for MDTs
+<!-- TODO: add motivation, repeat what is in the Section -->
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 Comparing loads between MDTs is not interesting because Lustre assigned each storage area to one MDT.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
@@ -168,7 +170,7 @@ Total rates of `open` and `close` operations from compute nodes to each MDT.
 We can see that the `open` rate is quite consistent, and `close` has a large drop around 12.00.
 Large changes in rates are usually caused when a single job that performs heavy I/O stops.
 We can also see that the rate of `close` is greater than the rate of `open`.
-It is not possible to perform more `close` and `open` operations because we always need to open a file before we can close it.
+It is impossible to perform more `close` and `open` operations because we always need to open a file before closing it.
 We suspect that Lustre clients cache `open` operations but not `close` operations, and Jobstats does not count cached operations.
 Therefore, the close rate may look higher than the `open` rate from the statistics.
 For example, if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS; thus request is not recorded.
@@ -179,7 +181,7 @@ For example, if `open` is called multiple times with the same arguments Lustre c
 Total rates of `mknod` and `unlink` operations from compute nodes to each MDT.
 We can see the file creation rate by looking at the rate of `mknod` operations and the file removal rate by looking at the rate of `unlink` operations.
 The values in these plots do not show large variations.
-Elevated rates both in file creation and removal may indicate the creation of temporary files on the Lustre file system, which is undesirable.
+Elevated file creation and removal rates may indicate the creation of temporary files on the Lustre file system, which is undesirable.
 \label{fig:total-mdt-2}
 ](figures/2022-10-27_mdt_compute_2.svg)
 
@@ -216,7 +218,7 @@ Both rates are consistent throughout the period, and the magnitude is relatively
 ![
 Total rates of `link` and `statfs` operations from compute nodes to each MDT.
 We can see that there are almost no `link` operations; hence the line is very sparse.
-On the contrary, `statfs` operations seem to be consistent and appear on all MDTs.
+On the contrary, `statfs` operations seem consistent and appear on all MDTs.
 \label{fig:total-mdt-7}
 ](figures/2022-10-27_mdt_compute_7.svg)
 
@@ -229,7 +231,7 @@ Since there are 24 OSTs, we can compare the variation of rate between OSTs and a
 By default, Lustre aims to balance the load between OSTs by assigning files to them equally.
 Significant differences between the rates of different OSTs mean that the load is unbalanced.
 An unbalanced load may lead to congestion when others try to access the same OST.
-We use a logarithmic scale due to large variations in the magnitude of the rates.
+We use a logarithmic scale due to large variations in the magnitude of the values.
 All plots share the same x-axis, making them easier to compare.
 
 <!-- TODO: use single color for all targets and use alpha, highlight one OST that we inspect in the next section, add references to those figures (also for MDTs), Each line is an OST, and there are 24 lines. -->
@@ -254,7 +256,7 @@ The `writebytes` rate is balanced over OSTs and consistent over the period with 
 
 ![
 Total rates of `punch` and `setattr` operations from compute nodes to each OST.
-We can see that the `punch` rate spikes periodically at the same time for all OSTs.
+We can see that the `punch` rate spikes periodically simultaneously for all OSTs.
 The `setattr` rate is very low and does not exhibit interesting patterns.
 \label{fig:total-ost-3}
 ](figures/2022-10-27_ost_compute_3.svg)
@@ -276,60 +278,54 @@ Both rates are very low and do not exhibit interesting patterns.
 
 
 ## Components of total rates
+<!-- TODO: add motivation, repeat what is in the Section -->
 Obtaining meaningful information visually from graphs with many time series is challenging because they tend to overlap.
 To remedy this situation, we can use a density plot.
 A density plot is a statistical plot that shows how many time series has a value in a specific range, called a bucket, at a particular time, but omits information about individual time series.
 We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate of operations or a large number of users performing a low rate of operations.
 We can also use the information from a density plot to obtain time intervals and value ranges to filter original data.
+The density plot is a heatmap consisting of time on the x-axis, buckets on the y-axis, and color on the z-axis.
+The color indicates how many values fall into the bucket at a given time.
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
+We determine a *threshold* between the average and outlier behavior such that the *average behavior*, with many small values, is below the threshold and the *outlier behavior*, with a few large values, is above the threshold.
 
-The general technique for identifying outliers in a batch of fine-grained time series data consists of three steps.
-We analyze the data by progressively increasing the resolution.
+<!-- TODO: we determine the threshold from the density plot, and we can tune the resolution -->
+<!-- TODO: plots show one iteration of the process in \ref{analyzing-statistics} -->
 
-1) Filtering the data by a condition.
-It is not necessary to filter data initially.
-
-2) Computing the sum aggregate with chosen categorical value.
-Categorical values include the Lustre target, Lustre client, user, and job identifiers.
-In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers.
-We can stop when there are only a few aggregate time series left.
-
-<!-- TODO: density is easy to compute -->
-3) Computing the density with chosen resolution.
-We can use it to obtain new filtering conditions, such as time and value range, and repeat the process.
-
-<!-- TODO: plots show one iteration of the above process -->
-Each of the Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} show three subplots of data of a selected operation from compute nodes to a selected Lustre target.
+Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} visualize the user-level behavior of a specific operation from compute nodes to a specific Lustre target.
+Each figure consists of three subplots.
 The top subplot shows the total rate, the middle subplot shows the total rates of each user, and the bottom subplot shows the density plot of the total rates of each user.
-We use a logarithmic scale for the density due to the large variations, and we omit zeros from the plot.
+We use a logarithmic scale for the density due to the significant variations in the magnitude of the values and omit zeros from the plot.
+In the density plot, lighter color indicates more users, a darker color indicates fewer users, and no color indicates zero users.
+
+<!-- TODO: resolution of density in figures, base $10$ -->
 
 <!--
-Total rate is sum many time series, fine-grained data allows us to decompose the total rate into its component time series, then we can analyze those components
-
+We can also see general usage trends.
 The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
 We can perform a similar analysis based on job ID or node name.
 -->
 
-<!-- TODO: highlight individual line from the middle graph? -->
+<!-- TODO: highlight an individual line from the middle graph? -->
 
 ![
-Decomposition of a total setattr rate from compute nodes to scratch-MDT0000 during 24 hours of 2022-10-27.
-We can see two distinct patterns compared to the average behaviour; many, short spikes of high rates and three longer burst of less intense rates.
+Decomposition of a total `setattr` rate from compute nodes to `scratch-MDT0000` during 24 hours of 2022-10-27.
+We can visually determine a threshold between average and outlier behavior at $10^1.$
+We can see two distinct patterns compared to the average behavior; many high spikes and three less intense bursts.
 \label{fig:density-1}
 ](figures/2022-10-27_mdt0000_compute_setattr.svg)
 
 ![
-Decomposition of a total read rate from compute nodes to scratch-OST0001 during 24 hours of 2022-10-27.
-The first subplot shows the time series of the total rate, the second subplot shows the time series of the total rate of each user ID, and the third subplot shows the density of the total rates of each user ID.
-We can see that individual users cause bursts in the read rates.
-A heatmap consists of time in the x-axis, discrete bins in the y-axis, and color in the z-axis, indicating how many time series have the value at the bin's range at that time.
+Decomposition of a total `read` rate from compute nodes to `scratch-OST0001` during 24 hours of 2022-10-27.
+We can visually determine a threshold between average and outlier behavior at $10^2.$
+We can see that individual users cause bursts in the rate.
 \label{fig:density-2}
 ](figures/2022-10-27_ost0001_compute_read.svg)
 
 ![
-Decomposition of a total readbytes rate from compute nodes to scratch-OST0004 during 24 hours of 2022-10-27.
-TODO:
-We can crearly see that there a single user reads lot of bytes during 9:00 and 14:00.
+Decomposition of a total `readbytes` rate from compute nodes to `scratch-OST0004` during 24 hours of 2022-10-27.
+We can visually determine a threshold between average and outlier behavior at $10^8.$
+We can see that a single user caused a large increase in the rate between 9:00 and 14:00.
 \label{fig:density-3}
 ](figures/2022-10-27_ost0004_compute_readbytes.svg)
 

@@ -341,3 +341,28 @@ The aggregation methods include computing a sum and density.
 
 <!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
 
+---
+
+<!-- TODO: move the general description of data and the analysis to *Analyzing statistics* section -->
+
+Data consists of metadata (categorical values), time (timestamp), and rates for each operation (`read`, `write`, etc).
+
+* metadata (`target`, `node_name`, `user_id`, `job_id`) consists of categorical values
+* timestamp is time
+* rate for each operation
+
+The general technique for identifying outliers in a batch of fine-grained time series data consists of three steps.
+We analyze the data of an operation by progressively increasing the resolution.
+
+1) Filtering the data by a condition.
+Conditions include time range, value range, and selecting a subset of Lustre targets (`target`), Lustre clients (`node_name`), users (`user_id`), or jobs (`job_id`).
+<!-- It is optional to filter data initially. -->
+
+2) Computing the sum aggregate with chosen categorical value.
+Categorical values include the Lustre target, Lustre client, user, and job identifiers.
+In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers.
+We can stop when there are only a few aggregate time series left.
+
+<!-- TODO: density is easy to compute -->
+3) Computing the density with chosen resolution.
+We can use it to obtain new filtering conditions, such as time and value range, and repeat the process.
