@@ -287,9 +287,12 @@ We can also use the information from a density plot to obtain time intervals and
 The density plot is a heatmap consisting of time on the x-axis, buckets on the y-axis, and color on the z-axis.
 The color indicates how many values fall into the bucket at a given time.
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
-We determine a *threshold* between the average and outlier behavior such that the *average behavior*, with many small values, is below the threshold and the *outlier behavior*, with a few large values, is above the threshold.
 
-<!-- TODO: we determine the threshold from the density plot, and we can tune the resolution -->
+<!-- TODO: there is not one absolute threshold, it depends how many values we consider -->
+We determine a *threshold* between the average and outlier behavior such that the *average behavior*, with many small values, is below the threshold and the *outlier behavior*, with a few large values, is above the threshold.
+We should set the resolution as low as possible to find a clear threshold; if we cannot, we should increase the resolution of the density.
+We call a high rate that lasts minutes a *spike* and one that lasts for hours a *burst*.
+
 <!-- TODO: plots show one iteration of the process in \ref{analyzing-statistics} -->
 
 Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} visualize the user-level behavior of a specific operation from compute nodes to a specific Lustre target.
@@ -297,8 +300,7 @@ Each figure consists of three subplots.
 The top subplot shows the total rate, the middle subplot shows the total rates of each user, and the bottom subplot shows the density plot of the total rates of each user.
 We use a logarithmic scale for the density due to the significant variations in the magnitude of the values and omit zeros from the plot.
 In the density plot, lighter color indicates more users, a darker color indicates fewer users, and no color indicates zero users.
-
-<!-- TODO: resolution of density in figures, base $10$ -->
+The resolution of the density plots, that is, the upper and lower bounds of the buckets, uses a logarithmic scale in base $10.$
 
 <!--
 We can also see general usage trends.
@@ -310,22 +312,24 @@ We can perform a similar analysis based on job ID or node name.
 
 ![
 Decomposition of a total `setattr` rate from compute nodes to `scratch-MDT0000` during 24 hours of 2022-10-27.
-We can visually determine a threshold between average and outlier behavior at $10^1.$
-We can see two distinct patterns compared to the average behavior; many high spikes and three less intense bursts.
+We can visually determine a threshold between average and outlier behavior at $10^1$ operations per second.
+We can see two outlier patterns compared to the average behavior; many intense spikes and three less intense bursts.
 \label{fig:density-1}
 ](figures/2022-10-27_mdt0000_compute_setattr.svg)
 
 ![
 Decomposition of a total `read` rate from compute nodes to `scratch-OST0001` during 24 hours of 2022-10-27.
-We can visually determine a threshold between average and outlier behavior at $10^2.$
-We can see that individual users cause bursts in the rate.
+We can visually determine a threshold between average and outlier behavior at $10^2$ operations per second.
+After 13:00, we see outlier behavior of many bursts caused by two users.
 \label{fig:density-2}
 ](figures/2022-10-27_ost0001_compute_read.svg)
 
 ![
 Decomposition of a total `readbytes` rate from compute nodes to `scratch-OST0004` during 24 hours of 2022-10-27.
-We can visually determine a threshold between average and outlier behavior at $10^8.$
-We can see that a single user caused a large increase in the rate between 9:00 and 14:00.
+We can visually determine a threshold between average and outlier behavior at $10^8$ bytes per second.
+The figure shows us two outlier behaviors: one long, intense burst and one short, less intense burst.
+We can see that a single user caused a long, intense burst, over a gigabyte per second ($10^9$ bytes per second), between 9:00 and 14:00.
+The shorter, less intense burst, from 9:00 to 10:00, is hundreds of megabytes per second ($10^8$ bytes per second).
 \label{fig:density-3}
 ](figures/2022-10-27_ost0004_compute_readbytes.svg)
 
