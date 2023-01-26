@@ -282,16 +282,15 @@ Both rates are very low and do not exhibit interesting patterns.
 Obtaining meaningful information visually from graphs with many time series is challenging because they tend to overlap.
 To remedy this situation, we can use a density plot.
 A density plot is a statistical plot that shows how many time series has a value in a specific range, called a bucket, at a particular time, but omits information about individual time series.
-We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate of operations or a large number of users performing a low rate of operations.
-We can also use the information from a density plot to obtain time intervals and value ranges to filter original data.
-The density plot is a heatmap consisting of time on the x-axis, buckets on the y-axis, and color on the z-axis.
-The color indicates how many values fall into the bucket at a given time.
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
+We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate of operations or a large number of users performing a low rate of operations.
+Furthermore, we can visually determine a *threshold* between the average and outlier behavior from a density plot.
+The *average behavior*, with many small values, is below the threshold and the *outlier behavior*, with a few large values, is above the threshold.
+We should set the resolution as low as possible to find a clear threshold; if we cannot, we should increase the resolution of the density.
+We can use the threshold as a condition for filtering the data.
 
 <!-- TODO: there is not one absolute threshold, it depends how many values we consider -->
-We determine a *threshold* between the average and outlier behavior such that the *average behavior*, with many small values, is below the threshold and the *outlier behavior*, with a few large values, is above the threshold.
-We should set the resolution as low as possible to find a clear threshold; if we cannot, we should increase the resolution of the density.
-We call a high rate that lasts minutes a *spike* and one that lasts for hours a *burst*.
+<!-- TODO: We call a high rate that lasts minutes a *spike* and one that lasts for hours a *burst*. -->
 
 <!-- TODO: plots show one iteration of the process in \ref{analyzing-statistics} -->
 
@@ -299,6 +298,7 @@ Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} visual
 Each figure consists of three subplots.
 The top subplot shows the total rate, the middle subplot shows the total rates of each user, and the bottom subplot shows the density plot of the total rates of each user.
 We use a logarithmic scale for the density due to the significant variations in the magnitude of the values and omit zeros from the plot.
+We plot densities as heatmaps consisting of time on the x-axis, buckets on the y-axis, and color on the z-axis.
 In the density plot, lighter color indicates more users, a darker color indicates fewer users, and no color indicates zero users.
 The resolution of the density plots, that is, the upper and lower bounds of the buckets, uses a logarithmic scale in base $10.$
 
