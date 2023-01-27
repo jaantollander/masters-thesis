@@ -1,15 +1,12 @@
 \clearpage
 
 # Introduction
-<!-- TODO: add a figure to the introduction (monitoring, parallel file system) -->
-
 Persistent data storage is an essential part of a computing system.
 Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
 A shared file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
 Such use may lead to congestion in a parallel file system, which can slow down or even halt the whole system, harming all users who perform operations on the file system, not just the ones responsible for the problem.
 Heavy use may be intentional, such as data-intensive computing, or unintentional, such as unknowingly running a program that creates many temporary files.
-<!-- TODO: production system -->
-In this thesis, we investigate whether monitoring file system usage can help identify the causes of slowdowns and the users responsible for them.
+In this thesis, we investigate whether monitoring file system usage can help identify the causes of slowdowns and the users responsible for them in a production system.
 
 The professional literature typically refers to interaction with storage as *I/O*, an abbreviation for *Input/Output*.
 Generally, I/O refers to communication between a computer and the outside world, but we often use it to describe interactions with a storage device.
@@ -26,9 +23,8 @@ The system must transport this data between main memory and storage, making I/O 
 The increasing demand for better I/O performance in HPC systems makes studying it necessary.
 The community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
-<!-- TODO: expand abbreviations -->
-Research from various institutions and companies such as ORNL, LBNL, Virginia Tech, Cray, and Seagate is actively finding ways to improve I/O performance in HPC.
-For example, they research methods to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions [@daos_and_friends; @object_centric_data].
+Research from various institutions and companies such as Oak Ridge National Laboratory, Lawrence Berkeley National Laboratory, Virginia Tech, Cray, and Seagate is actively finding ways to improve I/O performance in HPC.
+For example, they research ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions [@daos_and_friends; @object_centric_data].
 
 Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
 Many HPC facilities have guidelines for performing file I/O on high-performance clusters.
@@ -59,12 +55,12 @@ This thesis focuses on fine-grained file system usage monitoring to identify the
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs the operations, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
-<!-- TODO: why do we care about the problem at CSC -->
-*CSC -- IT Center for Science* is an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. [@about-csc]
-At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-europian LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
-<!-- TODO: move -->
-At CSC, we experience similar problems concerning parallel file system usage and want to develop a monitoring system to alleviate them.
+Problems from parallel file system usage concern the high-performance clusters at *CSC -- IT Center for Science*, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
+[@about-csc]
+<!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
+At the time of writing, CSC operates three high-performance clusters, *Puhti*, *Mahti*, and the pan-europian *LUMI*, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
+Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity and billing units for the users.
+We believe that monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
 
 Lustre has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics at a fine-grained level.
 Early experimental monitoring with Jobstats includes [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring].
@@ -83,12 +79,12 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-<!-- TODO: separate scope and contributions -->
-The scope of the thesis is to describe the Puhti cluster, our monitoring system, and the collected data in detail.
-Furthermore, the scope includes presenting the data analysis and visualizations the author built from scratch.
-<!-- TODO: improtant, why -->
+The scope of the thesis is to describe the Puhti cluster, the monitoring system, details of the collected data, the data analysis methods we used, and the results from the analysis.
 The thesis advisor and system administrators were responsible for developing, deploying, and maintaining the monitoring system on Puhti.
+Their effort was instrumental in initiating the thesis work, collecting the data, and helping with writing the thesis.
+The thesis's contributions are the data analysis methods and visualizations, which the thesis author built from scratch.
 
+<!-- TODO: improve thesis outline based on the section contents -->
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
 In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective.
