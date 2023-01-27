@@ -330,16 +330,19 @@ However, it might reduce ambiguity about identifying an individual time series.
 
 
 ## Analyzing statistics
-TODO: rework this section and tie it to the results section, explain the idea behind the data analysis in general terms
+<!-- TODO: identifying outliers from the statistics -->
 
-Data consists of metadata (categorical values), time (timestamp), and rates for each operation (`read`, `write`, etc).
+<!-- TODO: rework this section and tie it to the results section, explain the idea behind the data analysis in general terms, how to analyze a batch of time series data, in the future analysis should be done as a stream -->
 
-* metadata (`target`, `node_name`, `user_id`, `job_id`) consists of categorical values
-* timestamp is time
-* rate for each operation
+Data consist of a table of rows.
+Each row consists of a timestamp and metadata values and each operation's statistics.
+The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the set of Lustre targets \ref{tab:???}, the set of node names \ref{tab:???}, user IDs, and job IDs.
+Categorical values make the data fine-grained.
 
-The general technique for identifying outliers in a batch of fine-grained time series data consists of three steps.
-We analyze the data of an operation by progressively increasing the resolution.
+We can identify outliers from a batch of statistics of a specific operation from batch data.
+<!-- we progressively increase the resolution. -->
+
+* select a categorical value and compute the sum of rates
 
 1) Filtering the data by a condition.
 Conditions include time range, value range, and selecting a subset of Lustre targets (`target`), Lustre clients (`node_name`), users (`user_id`), or jobs (`job_id`).
@@ -358,6 +361,7 @@ We can use it to obtain new filtering conditions, such as time and value range, 
 
 <!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
 <!-- TODO: toosl, data analysis tools, DataFrames.jl -->
+
 We analyzed batches of the raw counter data using the Julia language [@julia_fresh_approach; @julia_language].
 We dumped data from the database into Parquet files, such that each file contained data from one day, which limited the file size to manageable on a local computer.
 We used Parquet.jl package to parse the data, which we converted into a data frame using DataFrames.jl [@julia_dataframes].
