@@ -11,22 +11,17 @@ Download links for documents from the `build` branch.
 ## Usage
 The `env.sh ` file contains script for using Pandoc to convert content into HTML or PDF.
 It depends on the `pandoc`, `texlive`, `texlive-lang-european`, `inotify-tools` and `rsvg-convert` Linux packages.
-We can use it by sourcing the `env.sh` script.
+
+We can build the various documents format using the `thesis` script with the following arguments.
 
 ```bash
-source env.sh
-```
-
-Then, we can build the various documents format using the following commands.
-
-```bash
-thesis_pdf
-thesis_epub
-thesis_html
+./thesis pdf
+./thesis epub
+./thesis html
 ```
 
 We can use the preview for automatically running a build command if files in `metadata` or `content` files change.
 
 ```bash
-thesis_preview thesis_html
+./thesis preview pdf
 ```

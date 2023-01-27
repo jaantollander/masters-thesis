@@ -28,5 +28,4 @@ jobs:
         run: |
           git config --local user.name "$NAME"
           git config --local user.email "$EMAIL"
-          source env.sh
-          thesis_build
+          ./thesis build

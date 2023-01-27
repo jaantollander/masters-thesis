@@ -149,8 +149,6 @@ thesis_build() {
 
     thesis_pdf "$TMP"
     thesis_epub "$TMP"
-    #thesis_html "$TMP"
-    #thesis_tex "$TMP"
 
     (
         cd "$TMP" && \
@@ -160,12 +158,22 @@ thesis_build() {
     )
 }
 
-DOCKER_PANDOC="pandoc/latex:2.19-alpine"
 
-thesis_pandoc_docker_pull() {
-    sudo docker pull "$DOCKER_PANDOC"
-}
-
-thesis_pandoc_docker_alias() {
-    alias pandoc='sudo docker run --rm --volume "$(pwd):$(pwd)" --user $(id -u):$(id -g) "$DOCKER_PANDOC"'
-}
+# Pass arguments
+case "$1" in 
+    "pdf") thesis_pdf "$2" ;;
+    "html") thesis_html "$2" ;;
+    "epub") thesis_epub "$2" ;;
+    "tex") thesis_tex "$2" ;;
+    "build") thesis_build ;;
+    "serve") thesis_serve ;;
+    "preview") case "$2" in
+        "pdf") thesis_preview thesis_pdf ;;
+        "html") thesis_preview thesis_html ;;
+    esac ;;
+    "download") case "$2" in
+        "aaltostyle") thesis_download_aaltostyle;;
+        "citationstyle") thesis_download_citationstyle;;
+    esac ;;
+    *) exit 1 ;;
+esac
