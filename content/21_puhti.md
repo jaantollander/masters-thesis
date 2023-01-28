@@ -93,7 +93,7 @@ The version transitioned from 7.9 to 8.6 during the thesis writing.
 <!-- TODO: expand discussion -->
 Each Lustre server and Lustre target has a name in the Lustre file system.
 We record file system usage statistics for each target.
-Table \ref{tab:mdt-mds} lists the names of Lustre targets for the corresponding Lustre server in Puhti.
+Table \ref{tab:lustre-servers-targets} lists the names of Lustre targets for the corresponding Lustre server in Puhti.
 We denote set such that curly braces `{...}` denote a set, ranges such as `{01-04}` expand to `{01,02,03,04}`, and products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
 Furthermore, we add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
 
@@ -111,7 +111,7 @@ Node category|Server|Targets
 *Lustre*|`OSS 7`|`scratch-OST{0012,0013,0014}`
 *Lustre*|`OSS 8`|`scratch-OST{0015,0016,0017}`
 
-: \label{tab:mdt-mds}
+: \label{tab:lustre-servers-targets}
 Names of Lustre servers and Lustre targets in Puhti.
 For example, `scratch-MDT0000` is a name of one of the MDTs and `scratch-OST000f` is a name of one of the OSTs.
 

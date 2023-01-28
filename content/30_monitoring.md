@@ -330,44 +330,38 @@ However, it might reduce ambiguity about identifying an individual time series.
 
 
 ## Analyzing statistics
-<!-- TODO: identifying outliers from the statistics -->
+<!-- TODO: rework this section and tie it to the results section-->
+We used explorative data analysis methods to identify outliers from batches of monitoring data.
+In the future, we should adapt these methods to stream instead of batch computing.
+As our tools, we used the Julia language [@julia_fresh_approach; @julia_language] and the DataFrames.jl [@julia_dataframes] data analysis framework.
 
-<!-- TODO: rework this section and tie it to the results section, explain the idea behind the data analysis in general terms, how to analyze a batch of time series data, in the future analysis should be done as a stream -->
 
-Data consist of a table of rows.
-Each row consists of a timestamp and metadata values and each operation's statistics.
-The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the set of Lustre targets \ref{tab:???}, the set of node names \ref{tab:???}, user IDs, and job IDs.
-Categorical values make the data fine-grained.
-
-We can identify outliers from a batch of statistics of a specific operation from batch data.
-<!-- we progressively increase the resolution. -->
-
-* select a categorical value and compute the sum of rates
-
-1) Filtering the data by a condition.
-Conditions include time range, value range, and selecting a subset of Lustre targets (`target`), Lustre clients (`node_name`), users (`user_id`), or jobs (`job_id`).
-<!-- It is optional to filter data initially. -->
-
-2) Computing the sum aggregate with chosen categorical value.
-Categorical values include the Lustre target, Lustre client, user, and job identifiers.
-In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers.
-We can stop when there are only a few aggregate time series left.
-
-<!-- TODO: density is easy to compute -->
-3) Computing the density with chosen resolution.
-We can use it to obtain new filtering conditions, such as time and value range, and repeat the process.
-
----
-
+<!-- Dumping data from the database and preprossing it -->
+First, we dumped data from selected period from the database into Parquet files.
+We use the Parquet file format because it can efficiently compresses tabular data.
+Furthermore, we limited the file size to be manageable on a local computer by dumping data from different days to a separate files.
+Then, we processed the monitoring data by computing rates from the counter values.
 <!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
-<!-- TODO: toosl, data analysis tools, DataFrames.jl -->
+The processed data consist of rows of a timestamp and metadata values and average rate of each operation from the previous timestamp to the current timestamp.
+The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the names of Lustre targets from Table \ref{tab:lustre-servers-targets}, node names from Table \ref{tab:node-names}, valid user identifiers, and valid job identifiers.
+<!-- In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers. -->
 
-We analyzed batches of the raw counter data using the Julia language [@julia_fresh_approach; @julia_language].
-We dumped data from the database into Parquet files, such that each file contained data from one day, which limited the file size to manageable on a local computer.
-We used Parquet.jl package to parse the data, which we converted into a data frame using DataFrames.jl [@julia_dataframes].
-We computed rates from the counter values for each time series and performed explorative data analysis on the rates, such as computing sums over different subsets and computing densities.
-We visualized them using Plots.jl [@julia_plots] with PlotlyJS backend for interactive graphics.
+
+<!-- General idea behind the data analysis -->
+We can identify outliers from the data of a specific operation by starting from a high-level view and progressively increasing the resolution while filter data.
+
+* choose a resolution for density
+* choose a categorical value to aggregate over
+* compute the density of the sum aggregates over the categorical value
+* find an interesting range of time and value from the density
+* filter the data with the range of time and value as condition
+* repeat
+* we can stop when there are only a few aggregate time series left.
+
+<!-- Visulizing the results -->
+We visualized them using Plots.jl [@julia_plots] with GR as the backend.
 We show many of the visualizations in Section \ref{results}.
+
 We describe the theoretical aspects of computing rates from counters, manipulating rates, and aggregating them in Appendix \ref{computing-and-aggregating-rates}.
 The aggregation methods include computing a sum and density.
 
