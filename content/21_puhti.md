@@ -8,7 +8,7 @@ Puhti is a Finnish noun that means having energy.
 
 In Subsection \ref{hardware-configuration}, we explain the hardware configuration of Puhti, including the nodes, processors, memory, storage, and network.
 Subsection \ref{system-configuration} covers the system configuration, such as the operating system, specific names and identifiers, and storage areas.
-Finally, Subsection \ref{running-workloads} discusses how to workloads on Puhti via Slurm, Slurm partitions, and Slurm's relevance for collecting file system usage statistics.
+<!-- Finally, Subsection \ref{running-workloads} discusses how to workloads on Puhti via Slurm, Slurm partitions, and Slurm's relevance for collecting file system usage statistics. -->
 
 Value    | Prefix   | Value    | Prefix
 -        | -        | -        | -
@@ -94,49 +94,53 @@ The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each Lustre server and Lustre target has a name in the Lustre file system.
 We record file system usage statistics for each target.
 Table \ref{tab:mdt-mds} lists the names of Lustre targets for the corresponding Lustre server in Puhti.
+We denote set such that curly braces `{...}` denote a set, ranges such as `{01-04}` expand to `{01,02,03,04}`, and products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
+Furthermore, we add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
 
-Server|Targets
--|-
-`MDS 1`|`scratch-MDT{0000,0001}`
-`MDS 2`|`scratch-MDT{0002,0003}`
-`OSS 1`|`scratch-OST{0000,0001,0002}`
-`OSS 2`|`scratch-OST{0003,0004,0005}`
-`OSS 3`|`scratch-OST{0006,0007,0008}`
-`OSS 4`|`scratch-OST{0009,000a,000b}`
-`OSS 5`|`scratch-OST{000c,000d,000e}`
-`OSS 6`|`scratch-OST{000f,0010,0011}`
-`OSS 7`|`scratch-OST{0012,0013,0014}`
-`OSS 8`|`scratch-OST{0015,0016,0017}`
+
+Node category|Server|Targets
+-|-|-
+*Lustre*|`MDS 1`|`scratch-MDT{0000,0001}`
+*Lustre*|`MDS 2`|`scratch-MDT{0002,0003}`
+*Lustre*|`OSS 1`|`scratch-OST{0000,0001,0002}`
+*Lustre*|`OSS 2`|`scratch-OST{0003,0004,0005}`
+*Lustre*|`OSS 3`|`scratch-OST{0006,0007,0008}`
+*Lustre*|`OSS 4`|`scratch-OST{0009,000a,000b}`
+*Lustre*|`OSS 5`|`scratch-OST{000c,000d,000e}`
+*Lustre*|`OSS 6`|`scratch-OST{000f,0010,0011}`
+*Lustre*|`OSS 7`|`scratch-OST{0012,0013,0014}`
+*Lustre*|`OSS 8`|`scratch-OST{0015,0016,0017}`
 
 : \label{tab:mdt-mds}
-List of Lustre servers and Lustre targets in Puhti.
+Names of Lustre servers and Lustre targets in Puhti.
+For example, `scratch-MDT0000` is a name of one of the MDTs and `scratch-OST000f` is a name of one of the OSTs.
+
 
 Each node in Puhti is a Lustre client of the shared Lustre file system.
 We can identify nodes based on their *node name*, which is the part of the hostname before the first dot, for example, `<nodename>.bullx`.
 Table \ref{tab:node-names} lists the names of service and compute nodes.
 We can use node names to separate file system operations at a node-specific level.
 
-Set of node names|Example node name
+
+Node category | Set of node names
 -|-
-`puhti-login{11-16}` | `puhti-login11`
-`puhti-fmi{11-12}` | `puhti-fmi12`
-`puhti-ood1-{staging,production}` | `puhti-ood1-production`
-`puhti-ood2-{sandbox,testing,production}` | `puhti-ood2-testing`
-`r{01-04}c{01-48}`|`r01c01`
-`r{01-04}g{01-08}`|`r01g06`
-`r{05-07}c{01-64}`|`r07c64`
-`r08m{01-06}`|`r08m06`
-`r{09-10}c{01-48}`|`r10c02`
-`r{11-12}c{01-72}`|`r12c72`
-`r{13-18}c{01-48}`|`r18c04`
-`r{13-18}g{01-08}`|`r18g04`
+*Service* | `puhti-login{11-16}`
+*Service* | `puhti-fmi{11-12}`
+*Service* | `puhti-ood1-{production}`
+*Service* | `puhti-ood2-{testing,production}`
+*Compute* | `r{01-04}c{01-48}`
+*Compute* | `r{01-04}g{01-08}`
+*Compute* | `r{05-07}c{01-64}`
+*Compute* | `r08m{01-06}`
+*Compute* | `r{09-10}c{01-48}`
+*Compute* | `r{11-12}c{01-72}`
+*Compute* | `r{13-18}c{01-48}`
+*Compute* | `r{13-18}g{01-08}`
 
 : \label{tab:node-names}
-A table of node names of service and compute nodes in Puhti.
-Service nodes start with the `puhti-` prefix; the rest are compute nodes.
-Curly braces denote a set.
-Ranges such as `{01-04}` expand to `{01,02,03,04}`, and products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
-We add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
+Names of service and compute nodes in Puhti which have Lustre Jobstats enabled.
+For example, `puhti-login11` is a name of one of the login nodes or `r01c21` is a name of one of the compute nodes.
+
 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
 It shares the same Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
@@ -180,7 +184,7 @@ In this work, we care more about measuring the file system usage from non-system
 
 <!--  TODO: login vs compute -->
 
-For running work on compute nodes, Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload-manager}.
+Puhti uses the Slurm workload manager, introduced in Section \ref{slurm-workload-manager}.
 At the time of writing, the version was 21.08.7, but it is updated regularly.
 It has partitions with different resource limits, set by administrators, as seen in Table \ref{tab:slurm-partitions}.
 When we submit a job to Slurm, we must specify which partition it will run, the project used for billing, and the resource we want to reserve.
