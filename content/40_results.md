@@ -25,7 +25,6 @@ Then we demonstrate how a single user can perform the majority of a total load o
 ---
 
 <!-- TODO: merge this text -->
-The thesis work focused on the analysis and visualization parts.
 We explain how we analyzed batches of time series data.
 In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 

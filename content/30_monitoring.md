@@ -13,13 +13,11 @@ We explain how to collect file system usage statistics with *Lustre Jobstats*, m
 Subsection \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
 In Subsection \ref{file-system-statistics}, we explain the different file system operations and statistics for them that we can track, how to query them, and the output format.
 We explain how the statistics reset in Subsection \ref{entry-resets}.
-
 Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
 We suspect that high total file system usage rates can cause congestion in the file system.
 Fine-grained statistics allow us to break down the total rate into its components.
 Then, we can analyze the components and identify the components with the highest rates.
 
-TODO: explain Subsection \ref{backfilling-initial-entries}
 
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
@@ -29,12 +27,14 @@ In Subsection \ref{monitoring-client}, we explain how a *monitoring client* coll
 Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
 We explain the initial and modified versions of the monitoring client.
+Subsection \ref{backfilling-initial-entries} explains how to backfill initial entries to the database.
 Subsection \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
 We changed the database to TimescaleDB.
 We take the precise design of programs as given and explain them only at a high level.
+The thesis work focused on the analysis and visualization parts which we explain in Section \ref{results}.
 
 
 ## Entry identifier format
