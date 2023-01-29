@@ -22,6 +22,56 @@ In Subsections \ref{metadata-rates} and \ref{object-storage-rates}, we show the 
 Finally, Subsection \ref{identifying-outliers} shows how fine-grained measurements allow us to break the total rate down into its components.
 Then we demonstrate how a single user can perform the majority of a total load of a given file system operation.
 
+---
+
+<!-- TODO: merge this text -->
+The thesis work focused on the analysis and visualization parts.
+We explain how we analyzed batches of time series data.
+In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
+
+<!-- TODO: rework this section and tie it to the results section-->
+We used explorative data analysis methods to identify outliers from batches of monitoring data.
+In the future, we should adapt these methods to stream instead of batch computing.
+As our tools, we used the Julia language [@julia_fresh_approach; @julia_language] and the DataFrames.jl [@julia_dataframes] data analysis framework.
+
+<!-- Dumping data from the database and preprossing it -->
+First, we dumped data from selected period from the database into Parquet files.
+We use the Parquet file format because it can efficiently compresses tabular data.
+Furthermore, we limited the file size to be manageable on a local computer by dumping data from different days to a separate files.
+Then, we processed the monitoring data by computing rates from the counter values.
+<!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
+The processed data consist of rows of a timestamp and metadata values and average rate of each operation from the previous timestamp to the current timestamp.
+The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the names of Lustre targets from Table \ref{tab:lustre-servers-targets}, node names from Table \ref{tab:node-names}, valid user identifiers, and valid job identifiers.
+<!-- In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers. -->
+
+<!-- General idea behind the data analysis -->
+A simple method for identifying outliers from the data of a specific operation is to start from a lower resolution, high-level view, then select a subset of the data based on the view and increase the resolution on the subset and repeat.
+Here is an example of the process:
+
+* Select an operation and the initial data.
+For example, `write` operation data from compute nodes to OSTs.
+
+* Let us compute a density with chose resolution of the sum aggregates over a chose categorical value.
+For example, Lustre target and buckets increasing in base ten.
+
+* We can look at the density and try to find an interesting time and value range.
+Higher values with only few of the categorical values in the buckets.
+
+* Next, we filter the data within that time and value range.
+
+* Then we either repeat the process by choosing a different categorical value and resolution or stop if ...
+
+* We can stop when there are only a few aggregate time series left.
+
+<!-- Visulizing the results -->
+We visualized them using Plots.jl [@julia_plots] with GR as the backend.
+We show many of the visualizations in Section \ref{results}.
+
+We describe the theoretical aspects of computing rates from counters, manipulating rates, and aggregating them in Appendix \ref{computing-and-aggregating-rates}.
+The aggregation methods include computing a sum and density.
+
+
+\clearpage
 
 ## Entries and issues
 

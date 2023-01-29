@@ -39,10 +39,9 @@ Organizations may also build clusters for internal use.
 
 ## Linux operating system
 An operating system (OS) is software that manages computer resources and provides standard services for application programs via an application programming interface (API).
+<!-- OPTIONAL: explain Application binary interface (ABI) -->
 At the time of writing, practically all high-performance computer clusters use the *Linux* operating system [@osfam].
 Linux derives from the family of UNIX operating systems and closely follows the POSIX standard.
-
-<!-- TODO: explain Application binary interface (ABI) -->
 
 The *Linux kernel* [@linux-kernel-source] is the core of the Linux operating system, written in the C programming language.
 The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.

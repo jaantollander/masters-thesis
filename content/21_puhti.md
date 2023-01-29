@@ -195,17 +195,17 @@ It also performs accounting of details about the submitted jobs.
 
 Partition name | Time limit | Task limit | Node limit | Node type
 -|-|-|-|-|-|-
-*test* | 15 minutes | 80 | 2 | *M*
-*interactive* | 7 days | 8 | 1 | *M-IO*, *L-IO*
-*small* | 3 days |  40 | 1 | *M*, *L*, *M-IO*, *L-IO*
-*large* | 3 days | 1040 | 26 | *M*, *L*, *M-IO*, *L-IO*
-*longrun* | 14 days | 40 | 1 | *M*, *L*, *M-IO*, *L-IO*
-*hugemem* | 3 days | 160 | 4 | *XL*, *BM*
-*hugemem\_longrun* | 14 days | 40 | 1 | *XL*, *BM*
-*fmitest* | 1 hour | 80 | 2 | *M-FMI*
-*fmi* | 12 days | 4000 | 100 | *M-FMI*
-*gputest* | 15 minutes | 8 | 2 | *GPU*
-*gpu* | 3 days | 80 | 20 | *GPU*
+`test` | 15 minutes | 80 | 2 | *M*
+`interactive` | 7 days | 8 | 1 | *M-IO*, *L-IO*
+`small` | 3 days |  40 | 1 | *M*, *L*, *M-IO*, *L-IO*
+`large` | 3 days | 1040 | 26 | *M*, *L*, *M-IO*, *L-IO*
+`longrun` | 14 days | 40 | 1 | *M*, *L*, *M-IO*, *L-IO*
+`hugemem` | 3 days | 160 | 4 | *XL*, *BM*
+`hugemem_longrun` | 14 days | 40 | 1 | *XL*, *BM*
+`fmitest` | 1 hour | 80 | 2 | *M-FMI*
+`fmi` | 12 days | 4000 | 100 | *M-FMI*
+`gputest` | 15 minutes | 8 | 2 | *GPU*
+`gpu` | 3 days | 80 | 20 | *GPU*
 
 : \label{tab:slurm-partitions}
 Slurm partitions on Puhti.

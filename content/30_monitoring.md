@@ -1,6 +1,6 @@
 \clearpage
 
-# Monitoring and analysis
+# Monitoring system
 ![
 A high-level overview of the monitoring system and analysis.
 Rounded rectangles indicate programs, and arrows indicate data flow.
@@ -30,10 +30,6 @@ Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
 We explain the initial and modified versions of the monitoring client.
 Subsection \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
-
-The thesis work focused on the analysis and visualization parts.
-We explain how we analyzed batches of time series data in Subsection \ref{analyzing-statistics}.
-In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
@@ -327,41 +323,4 @@ We dropped other entries that did not conform to the entry identifier format we 
 We could use the concatenated target and entry identifier string as the time series identifier (`<target>:<entry_id>`).
 It is optional since we can identify individual time series from the metadata alone.
 However, it might reduce ambiguity about identifying an individual time series.
-
-
-## Analyzing statistics
-<!-- TODO: rework this section and tie it to the results section-->
-We used explorative data analysis methods to identify outliers from batches of monitoring data.
-In the future, we should adapt these methods to stream instead of batch computing.
-As our tools, we used the Julia language [@julia_fresh_approach; @julia_language] and the DataFrames.jl [@julia_dataframes] data analysis framework.
-
-
-<!-- Dumping data from the database and preprossing it -->
-First, we dumped data from selected period from the database into Parquet files.
-We use the Parquet file format because it can efficiently compresses tabular data.
-Furthermore, we limited the file size to be manageable on a local computer by dumping data from different days to a separate files.
-Then, we processed the monitoring data by computing rates from the counter values.
-<!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
-The processed data consist of rows of a timestamp and metadata values and average rate of each operation from the previous timestamp to the current timestamp.
-The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the names of Lustre targets from Table \ref{tab:lustre-servers-targets}, node names from Table \ref{tab:node-names}, valid user identifiers, and valid job identifiers.
-<!-- In the future, we could also use categorical values from the Slurm job data, such as project and partition identifiers. -->
-
-
-<!-- General idea behind the data analysis -->
-We can identify outliers from the data of a specific operation by starting from a high-level view and progressively increasing the resolution while filter data.
-
-* choose a resolution for density
-* choose a categorical value to aggregate over
-* compute the density of the sum aggregates over the categorical value
-* find an interesting range of time and value from the density
-* filter the data with the range of time and value as condition
-* repeat
-* we can stop when there are only a few aggregate time series left.
-
-<!-- Visulizing the results -->
-We visualized them using Plots.jl [@julia_plots] with GR as the backend.
-We show many of the visualizations in Section \ref{results}.
-
-We describe the theoretical aspects of computing rates from counters, manipulating rates, and aggregating them in Appendix \ref{computing-and-aggregating-rates}.
-The aggregation methods include computing a sum and density.
 

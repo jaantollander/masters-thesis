@@ -89,8 +89,9 @@ The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
 In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective.
 We also explain the necessary system identifiers needed for fine-grained data.
-Section \ref{monitoring-and-analysis} describes the monitoring system and analysis.
-We explain how we collect data, what data we collect, how we store it, and how we analyze it.
+Section \ref{monitoring-system} describes the monitoring system.
+We explain how we collect data, what data we collect, and how we store it.
+<!-- TODO: explain explorative data analysis -->
 Section \ref{results} presents the results from collecting and analyzing the monitoring data.
 We explain data quality issues and provide visualizations and explanations of insights from the measured data.
 Finally, Section \ref{conclusion} concludes the thesis by discussing what we accomplished in this work.
