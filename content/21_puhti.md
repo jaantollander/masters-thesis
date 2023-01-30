@@ -19,7 +19,7 @@ $1000^4$ | tera (T) | $1024^4$ | tebi (Ti)
 $1000^5$ | peta (P) | $1024^5$ | pebi (Pi)
 
 : \label{tab:prefixes}
-  Prefixes of units in base ten and base two.
+Prefixes of units in base ten and base two.
 
 We use units of bytes and bits and base ten and base two prefixes, as shown in Table \ref{tab:prefixes}.
 One byte (B) is eight bits (b).

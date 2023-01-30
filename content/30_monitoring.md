@@ -98,7 +98,7 @@ The text output is formatted as follows.
 
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
 The *target* (`<target>`) contains the name of the Lustre target of the query.
-For Puhti, we listed them in Table \ref{tab:mdt-mds}.
+For Puhti, we listed them in Table \ref{tab:lustre-servers-targets}.
 <!--
 In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>`, and eight OSSs with three OSTs each, named `scratch-OST<index>`.
 The `<index>` is a four-digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.

@@ -39,7 +39,7 @@ Organizations may also build clusters for internal use.
 
 ## Linux operating system
 An operating system (OS) is software that manages computer resources and provides standard services for application programs via an application programming interface (API).
-<!-- OPTIONAL: explain Application binary interface (ABI) -->
+<!-- TODO: (optional) explain Application binary interface (ABI) -->
 At the time of writing, practically all high-performance computer clusters use the *Linux* operating system [@osfam].
 Linux derives from the family of UNIX operating systems and closely follows the POSIX standard.
 
@@ -103,7 +103,7 @@ Lustre file system components are connected using *Lustre Networking (LNet)*, a 
 LNet supports many network types, including high-speed networks used in HPC clusters.
 
 Lustre has a feature called *Lustre Jobstats* for collecting file system operations statistics from a Lustre file system.
-We discuss how we use Jobstats in Section \ref{monitoring-and-analysis}.
+We discuss how we use Jobstats in Section \ref{monitoring-system}.
 
 
 ## Slurm workload manager
