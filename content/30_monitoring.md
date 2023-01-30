@@ -55,17 +55,13 @@ Using more formatting codes results in higher resolution and leads to a higher r
 
 The formatting for Lustre clients on login nodes includes the executable name and user ID.
 
-```
-    jobid_name="%e.%u"
-```
+* `jobid_name="%e.%u"`
 
 The formatting for Lustre clients on compute and utility nodes includes job ID, user ID, and node name.
 We set the job ID to Slurm job ID.
 
-```
-    jobid_name="%j:%u:%H"
-    jobid_var=SLURM_JOB_ID
-```
+* `jobid_name="%j:%u:%H"`
+* `jobid_var=SLURM_JOB_ID`
 
 For Puhti, we listed the node names in Table \ref{tab:node-names}.
 

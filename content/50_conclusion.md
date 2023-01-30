@@ -24,7 +24,7 @@ The data demonstrate that an individual user can cause the majority of file syst
 
 In the future, we hope that the vendor fixes these issues so that we can gather reliable data over a longer period to perform a more extensive analysis.
 We should verify data correctness by running jobs with known I/O work and comparing them with the monitoring data.
-With reliable data and complete identifiers, we should be able to offer job-specific statistics to users and combine Slurm accounting data for the analysis.
+With reliable data and complete identifiers, we should be able to offer job-specific statistics to users and combine Slurm accounting data, such as project and partition information, for the analysis.
 Also, we want to compare the file system usage data with file system performance metrics to identify what kind of usage causes lag in a slowdown in the cluster and who is responsible for it.
 
 As a recap, the monitoring data of each file system operation consists of multiple time series.
@@ -62,5 +62,6 @@ We can also combine and mix previously mentioned methods.
 <!-- TODO: looking monitoring data as a stream (not batch) -->
 
 The ultimate goal is to provide real-time monitoring, visualization, and reporting deployed on a live system that administrators can use to identify if a slowdown is caused by file system usage and who is causing it.
+In the future, we would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 
 Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.

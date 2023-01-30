@@ -114,6 +114,8 @@ Node category|Server|Targets
 : \label{tab:lustre-servers-targets}
 Names of Lustre servers and Lustre targets in Puhti.
 For example, `scratch-MDT0000` is a name of one of the MDTs and `scratch-OST000f` is a name of one of the OSTs.
+The prefix `scratch-` is the mount point for lustre directories under root directory, `/scratch/`.
+We should not confuse it with the Scratch storage area discussed later, which is mounted under the scratch directory `/scratch/scratch/`.
 
 
 Each node in Puhti is a Lustre client of the shared Lustre file system.
@@ -138,7 +140,7 @@ Node category | Set of node names
 *Compute* | `r{13-18}g{01-08}`
 
 : \label{tab:node-names}
-Names of service and compute nodes in Puhti which have Lustre Jobstats enabled.
+Names of service and compute nodes in Puhti that have Lustre Jobstats enabled.
 For example, `puhti-login11` is a name of one of the login nodes or `r01c21` is a name of one of the compute nodes.
 
 
