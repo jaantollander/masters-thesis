@@ -291,18 +291,23 @@ Both rates are very low and do not exhibit interesting patterns.
 <!-- TODO: add motivation, repeat what is in the Section -->
 Obtaining meaningful information visually from graphs with many time series is challenging because they tend to overlap.
 To remedy this situation, we can use a density plot.
-A density plot is a statistical plot that shows how many time series has a value in a specific range, called a bucket, at a particular time, but omits information about individual time series.
+A density plot is a statistical plot that shows how many time series has a value in a specific range, called a bucket, at a particular time but omits information about individual time series.
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
-We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate of operations or a large number of users performing a low rate of operations.
+We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
 Furthermore, we can visually determine a *threshold* between the average and outlier behavior from a density plot.
-The *average behavior*, with many small values, is below the threshold and the *outlier behavior*, with a few large values, is above the threshold.
+We should select a threshold such that the *average behavior*, with many small values, is below the threshold, and the *outlier behavior*, with a few large values, is above the threshold.
 We should set the resolution as low as possible to find a clear threshold; if we cannot, we should increase the resolution of the density.
 We can use the threshold as a condition for filtering the data.
 
-<!-- TODO: there is not one absolute threshold, it depends how many values we consider -->
-<!-- TODO: We call a high rate that lasts minutes a *spike* and one that lasts for hours a *burst*. -->
+<!-- General idea behind the data analysis -->
+A simple method for identifying outliers from the data of a specific operation is to start from a lower resolution, high-level view, then select a subset of the data based on the view and increase the resolution on the subset, and repeat.
+Here is an example of the process:
 
-<!-- TODO: plots show one iteration of the process in \ref{analyzing-statistics} -->
+* First, we select an operation and the initial data, such as the data for the `write` operation from compute nodes to a specific OST.
+* Then, we compute a density with a chosen resolution of the total rate over a chosen categorical value.
+For example, we can choose the user ID as the categorical value and set the density resolution to exponentially increasing bucket size.
+* We can inspect the density plot, determine a time range and value threshold, and then filter the data using these values.
+* Finally, we either repeat the process by choosing a different categorical value and resolution or stop if we have identified the outliers.
 
 Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} visualize the user-level behavior of a specific operation from compute nodes to a specific Lustre target.
 Each figure consists of three subplots.
@@ -312,28 +317,11 @@ We plot densities as heatmaps consisting of time on the x-axis, buckets on the y
 In the density plot, lighter color indicates more users, a darker color indicates fewer users, and no color indicates zero users.
 The resolution of the density plots, that is, the upper and lower bounds of the buckets, uses a logarithmic scale in base $10.$
 
-<!-- General idea behind the data analysis -->
-A simple method for identifying outliers from the data of a specific operation is to start from a lower resolution, high-level view, then select a subset of the data based on the view and increase the resolution on the subset, and repeat.
-Here is an example of the process:
-
-* Select an operation and the initial data.
-For example, `write` operation data from compute nodes to OSTs.
-* Let us compute a density with a chosen resolution of the sum aggregates over a chosen categorical value.
-For example, the Lustre target and buckets increase in base ten.
-* We can look at the density and find an interesting time and value range.
-Higher values with only few of the categorical values in the buckets.
-* Next, we filter the data within that time and value range.
-* Then we either repeat the process by choosing a different categorical value and resolution or stop if ...
-* We can stop when there are only a few aggregate time series left.
-
-
 <!--
 We can also see general usage trends.
 The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
 We can perform a similar analysis based on job ID or node name.
 -->
-
-<!-- TODO: highlight an individual line from the middle graph? -->
 
 ![
 Decomposition of a total `setattr` rate from compute nodes to `scratch-MDT0000` during 24 hours of 2022-10-27.
