@@ -29,8 +29,10 @@ TODO: **Lustre** is a parallel file system for Linux clusters.
 TODO: **Lustre client**
 
 TODO: **Lustre server**
+MDS, OSS
 
 TODO: **Lustre target** is a storage unit attached to a Lustre server.
+MDT, OST
 
 **Slurm** is a resource manager for Linux clusters.
 
