@@ -25,9 +25,6 @@ Fortunately, we obtained data that we believed to be reliable and used it for an
 The results demonstrate different usage patterns and total rates for all the monitored file system operations.
 The data demonstrate that an individual user can cause the majority of file system operations at a given time.
 
-<!-- Lessons learned -->
-We should verify data correctness by running jobs with known I/O work and comparing them with the monitoring data.
-
 <!-- Future work and possibilities -->
 Problems from parallel file system usage will not disappear in the future due increase demand for data-intensive computing.
 

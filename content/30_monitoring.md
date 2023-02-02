@@ -95,13 +95,6 @@ The text output is formatted as follows.
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
 The *target* (`<target>`) contains the name of the Lustre target of the query.
 For Puhti, we listed them in Table \ref{tab:lustre-servers-targets}.
-<!--
-In Puhti, we have two MDSs with two MDTs each, named `scratch-MDT<index>`, and eight OSSs with three OSTs each, named `scratch-OST<index>`.
-The `<index>` is a four-digit integer in hexadecimal format using the characters `0-9a-f` to represent digits.
-Indexing starts from zero.
-For example, we have targets such as `scratch-MDT0000`, `scratch-OST000f`, and `scratch-OST0017`.
--->
-
 
 After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
 The output denotes each *entry* by dash `-` and contains the entry identifier (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
@@ -124,43 +117,43 @@ Units (`<unit>`) are either requests (`reqs`), bytes (`bytes`), or microseconds 
 Statistics of an entry that has not performed any operations are implicitly zero.
 
 
-MDT | OST | Lustre file system operation | Linux system call | Parsed statistics
--|-|---|-|-
-MDT | - | **`open`** |  `open` | `samples`
-MDT | - | **`close`** | `close` | `samples`
-MDT | - | **`mknod`** | `mknod` | `samples`
-MDT | - | **`link`** | `link` | `samples`
-MDT | - | **`unlink`** | `unlink` | `samples`
-MDT | - | **`mkdir`** | `mkdir` | `samples`
-MDT | - | **`rmdir`** | `rmdir` | `samples`
-MDT | - | **`rename`** | `rename` | `samples`
-MDT | \textcolor{lightgray}{OST} | **`getattr`** | `stat` | `samples`
-MDT | OST | **`setattr`** | `chmod`, `chown`, `utime` | `samples`
-MDT | - | **`getxattr`** | `getxattr` | `samples`
-MDT | - | **`setxattr`** | `setxattr` | `samples`
-MDT | \textcolor{lightgray}{OST} | **`statfs`** | `statfs` | `samples`
-MDT | OST | **`sync`** | `sync` | `samples`
-MDT | - | **`samedir_rename`** | `rename` | `samples`
-MDT | - | **`crossdir_rename`** | `rename` | `samples`
-- | OST | **`read`** | `read` | `samples`
-- | OST | **`write`** | `write` | `samples`
-\textcolor{lightgray}{MDT} | OST | **`punch`** | `fallocate` | `samples` 
-- | OST | **`get_info`** | | `samples`
-- | OST | **`set_info`** | | `samples`
-- | OST | **`quotactl`** | `quotactl` | `samples`
-\textcolor{lightgray}{MDT} | OST | **`read_bytes`** | `read` | `sum`
-\textcolor{lightgray}{MDT} | OST | **`write_bytes`** | `write` | `sum`
-- | \textcolor{lightgray}{OST} | **`create`** | 
-- | \textcolor{lightgray}{OST} | **`destroy`** | 
-- | \textcolor{lightgray}{OST} | **`prealloc`** | 
+MDT | OST | Lustre file system operation | Explanation
+-|-|:--|:-------
+MDT | - | `open` | Opens a file and returns a file descriptor.
+MDT | - | `close` | Closes a file descriptor that releases the resource from usage.
+MDT | - | `mknod` | Creates a new file.
+MDT | - | `link` | Creates a new hard link to an existing file. There can be multiple links to the same file.
+MDT | - | `unlink` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
+MDT | - | `mkdir` | Creates a new directory.
+MDT | - | `rmdir` | Removes an empty directory.
+MDT | - | `rename` | Renames a file by moving it to a new location.
+MDT | \textcolor{lightgray}{OST} | `getattr` | Return file information (`stat`).
+MDT | OST | `setattr` |  Change file ownership (`chown`), Change file permissions such as read, write, and execute permissions (`chmod`) and change file timestamps (`utime`)
+MDT | - | `getxattr` | Retrieve an extended attribute value
+MDT | - | `setxattr` | Set an extended attribute value
+MDT | \textcolor{lightgray}{OST} | `statfs` | Returns file system information.
+MDT | OST | `sync` | Commits file system caches to disk.
+MDT | - | `samedir_rename` | File name was changed within the directory.
+MDT | - | `crossdir_rename` | File name was changed from one directory to another.
+- | OST | `read` | Reads bytes from a file.
+- | OST | `write` | Writes bytes to a file.
+\textcolor{lightgray}{MDT} | OST | `punch` | Manipulates file space (`fallocate`).
+- | OST | `get_info` | -
+- | OST | `set_info` | -
+- | OST | `quotactl` | Manipulates disk quotas.
+\textcolor{lightgray}{MDT} | OST | `read_bytes` | Output from `read` operation.
+\textcolor{lightgray}{MDT} | OST | `write_bytes` | Output from `write` operation.
+- | \textcolor{lightgray}{OST} | `create` | -
+- | \textcolor{lightgray}{OST} | `destroy` | -
+- | \textcolor{lightgray}{OST} | `prealloc` | -
 
 : \label{tab:operations}
 This table lists all operations tracked by the Jobstats for each Lustre target.
 The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but the values were always zero. Thus, we did not include them in our analysis.
 The tables contain the corresponding system calls for each Lustre operation.
-We explain each system call in Appendix \ref{file-system-interface}.
+We parse the value from the `samples` field from all of the operations, except `read_bytes` and `write_bytes` where we parse the value from the `sum` field.
 
-<!-- TODO: move explanations of each Lustre file system operation from Appendix to the table -->
+<!-- TODO: system call names in parenthesis if different from operation name -->
 
 
 ## Entry resets
