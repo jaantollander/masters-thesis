@@ -1,36 +1,6 @@
 \clearpage
 
 # File system interface
-
-System call | Explanation
-:-|:-------
-`mknod` | Creates a new file.
-`open` | Opens a file and returns a file descriptor. It may also create a new file by calling `mknod` if it doesn't exist.
-`close` | Closes a file descriptor that releases the resource from usage.
-`read` | Reads bytes from a file.
-`write` | Writes bytes to a file.
-`link` | Creates a new hard link to an existing file. There can be multiple links to the same file.
-`unlink` | Removes a hard link to a file. If the removed hard link is the last hard link to the file, the file is deleted, and the space is released for reuse.
-`symlink` | Create a symbolic (soft) link to a file.
-`mkdir` | Creates a new directory.
-`rmdir` | Removes an empty directory.
-`rename` | Renames a file by moving it to a new location.
-`chown` | Change file ownership.
-`chmod` | Change file permissions such as read, write, and execute permissions.
-`utime` | Change file timestamps
-`stat` | Return file information.
-`statfs` | Returns file system information.
-`sync` | Commits file system caches to disk.
-`fallocate` | Manipulates file space.
-`quotactl` | Manipulates disk quotas.
-`setxattr` | Set an extended attribute value
-`getxattr` | Retrieve an extended attribute value
-
-: \label{tab:file-system-interface}
-A table of system calls for the virtual file system.
-
-
-Table \ref{tab:file-system-interface} lists common system calls of the virtual file system.
 For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2].
 Appendices \ref{read-write-open-and-close-operations} and \ref{punch-operation} present two examples of performing file I/O using system calls.
 Flags and modes are constants that modify the behavior of a system call.
@@ -66,6 +36,8 @@ The first example program demonstrates opening and closing file descriptors, rea
 It opens `input.txt` in read-only mode, reads at most `size` bytes to a buffer, and then creates and writes them into the `output.txt` file in write-only mode.
 The code performs the system calls `open`, `close`, `read`, and `write` with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
 
+
+\clearpage
 
 ## Punch operation
 ```c

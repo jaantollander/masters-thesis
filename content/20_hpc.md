@@ -59,7 +59,7 @@ The kernel provides an abstraction layer called *Virtual File System (VFS)*, whi
 VFS allows programs to use different file systems uniformly using the operations defined by the interface.
 The interface contains the system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
 For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2].
-We list system calls for the file system interface and demonstrate the relationship between different system calls in Appendix \ref{file-system-interface}.
+We demonstrate the relationship between different system calls with code examples in Appendix \ref{file-system-interface}.
 
 Linux is a *multiuser* system, which means that multiple users can use the computer at the same time.
 The kernel provides an abstraction of a virtual private computer for each user, allowing multiple users to operate independently on the same computer system.
