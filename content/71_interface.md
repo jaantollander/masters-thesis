@@ -36,6 +36,8 @@ The first example program demonstrates opening and closing file descriptors, rea
 It opens `input.txt` in read-only mode, reads at most `size` bytes to a buffer, and then creates and writes them into the `output.txt` file in write-only mode.
 The code performs the system calls `open`, `close`, `read`, and `write` with the flags `O_RDONLY`, `O_CREAT`, `O_WRONLY`, and modes `S_IRUSR` and `S_IWUSR`.
 
+<!-- TODO: implicitly calls mknod to create the file -->
+
 
 \clearpage
 

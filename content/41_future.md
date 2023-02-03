@@ -6,16 +6,12 @@
 In the future, we should analyze the monitoring data as a stream, not as a batch.
 We would like to compute the rates on the database as new data arrives and perform real-time analytics on them.
 We hope that the vendor fixes these issues so that we can gather reliable data over a longer period to perform more extensive analysis.
-With reliable data and complete identifiers, we should be able to offer job-specific statistics to users and combine Slurm accounting data, such as project and partition information, for the analysis.
-Also, we want to compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
-We should verify data correctness by running jobs with known I/O work and comparing them with the monitoring data.
-
 <!--
 As a recap, the monitoring data of each file system operation consists of multiple time series.
 Each time series consists of timestamps and associated values.
 Each value tells us the average rate of operations from the previous timestamp to the current timestamp.
 -->
-Here are some ideas of analysis methods we could try with reliable data over longer period of time.
+Here are some ideas of analysis methods we could try:
 
 - *Combining operations*:
   We analyzed operations independently.
@@ -42,5 +38,9 @@ Here are some ideas of analysis methods we could try with reliable data over lon
   We can analyze how the cluster for each time series evolves in time.
   We can use Kernel Density Estimation (KDE), such as Average Shifted Histograms to perform fast one-dimensional clustering.
 
+<!-- TODO: composable methods -->
 We can also combine these methods.
 
+With reliable data and complete identifiers, we should be able to offer job-specific statistics to users and combine Slurm accounting data, such as project and partition information, for the analysis.
+Also, we want to compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
+We should verify data correctness by running jobs with known I/O work and comparing them with the monitoring data.
