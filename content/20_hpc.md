@@ -1,19 +1,14 @@
 \clearpage
 
 # High-performance computing
-Fundamentally, we can think about *computing* as applying *rules* on a string of symbols to transform it for some goal-oriented task such as solving a mathematical problem.
-At each *unit of time*, we apply the rules onto the string in a way defined by the chosen *model of computation*, for example, the first applicable rule at a time or multiple rules at once.
-Both the set of rules and the set of symbols must be discrete.
-*Computation* is the process of applying the rules until we can no longer apply any rules, and the process halts.
-The *memory* requirement of computation is the maximum string size during the computation.
-Some models of computation are only theoretical tools, while others we can implement in the real world using physical processes.
-
+Fundamentally, computing is about repeatedly applying a logical rule on a string of symbols to transform it for some goal-oriented task, such as solving a mathematical problem.
+In practice, we use computers for computing, which they do by leveraging physical processes.
 Contemporary computers represent data in digital form as binary digits called *bits*.
 Rules correspond to instructions to a computer processor that manipulates a string of bits in memory.
 Memory consists of multiple levels of volatile *main memory* and non-volatile *storage* organized hierarchically based on factors such as proximity to the processor, access speed, and cost.
 Models of computation include serial and parallel computing.
-*Serial computing* refers to performing one operation at a time.
-In contrast, *parallel computing* is about performing multiple independent operations simultaneously, intending to reduce run time, and performing larger calculations.
+Serial computing refers to performing one operation at a time.
+In contrast, parallel computing is about performing multiple independent operations simultaneously, intending to reduce run time, and performing larger calculations.
 
 *High-performance computing (HPC)* relies on parallel computing to provide large computing resources for solving computationally demanding and data-intensive problems.
 These problems include simulating complex systems, solving large computational models, data science, and training machine learning models.
@@ -33,7 +28,7 @@ Most *HPC systems* are computer clusters.
 It usually has a large amount of storage as well.
 Computer clusters are usually centrally managed by organizations such as companies or universities.
 They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services, and maintain them.
-The organizations may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, and processors requested.
+The organizations may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, processors, and storage requested.
 Organizations may also build clusters for internal use.
 
 
@@ -44,13 +39,13 @@ At the time of writing, practically all high-performance computer clusters use t
 Linux derives from the family of UNIX operating systems and closely follows the POSIX standard.
 
 The *Linux kernel* [@linux-kernel-source] is the core of the Linux operating system, written in the C programming language.
-The kernel is the central system that manages and allocates computer resources such as CPU, RAM, and devices.
+The kernel is the central system that manages and allocates computer resources such as processors, memory, and other devices.
 Its responsibilities include process scheduling, memory management, providing a file system, creating and terminating processes, access to devices, networking, and providing an application programming interface for system calls, making the kernel services available to programs.
 *System calls* enable user processes to request the kernel to perform specific actions for the process, such as manipulating files.
 They also provide separation between kernel space and user space.
 Library functions, such as functions in the C standard library, implement a caller-friendly layer on top of system calls for performing system operations. [@tlpi]
 
-Linux implements a universal file I/O model, which means that it represents everything from data stored on disk to devices and processes as files.
+Linux implements a *universal file I/O model*, which means that it represents everything from data stored on disk to devices and processes as files.
 It uses the same system calls for performing I/O on all types of files.
 Consequently, users can use the same file utilities to perform various tasks, such as reading and writing files or interacting with processes and devices.
 The kernel only provides one file type, a sequential stream of bytes.
@@ -89,19 +84,18 @@ A kernel module is a software that extends the kernel, in this case, to provide 
 [@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 
 Nodes running the Lustre client software are known as *Lustre Clients*.
-The Lustre client software interfaces the Linux virtual file system and *Lustre servers*.
+The Lustre client software interfaces the virtual file system with *Lustre servers*.
 For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
 Lustre file system separates file metadata and data operations and handles them using dedicated Lustre servers.
 Each Lustre server connects to one or more storage units called *Lustre targets*.
 
 *Metadata Servers (MDS)* provide access to file metadata and handle metadata operations for Lustre clients.
-Lustre stores the metadata, such as filenames, permissions, and file layout, on *Metadata Targets (MDT)*, storage units attached to an MDS.
+Lustre stores the metadata, such as filenames, permissions, and file layout, on one or more storage units attached to an MDS, called *Metadata Targets (MDT)*.
 On the other hand, *Object Storage Servers (OSS)* provide access to and handle file data operations for Lustre clients.
-Lustre breaks file data into one or more objects; it stores each object on an *Object Storage Target (OST)*, a storage unit attached to an OSS.
+Lustre breaks file data into one or more objects; it stores each object on one or more storage units attached to an OSS, called *Object Storage Targets (OST)*.
 Finally, the *Management Server (MGS)* stores configuration information for the Lustre file system and provides it to the other components.
 Lustre file system components are connected using *Lustre Networking (LNet)*, a custom networking API that handles metadata and file I/O data for the Lustre file system servers and clients.
 LNet supports many network types, including high-speed networks used in HPC clusters.
-
 Lustre has a feature called *Lustre Jobstats* for collecting file system operations statistics from a Lustre file system.
 We discuss how we use Jobstats in Section \ref{monitoring-system}.
 
@@ -119,5 +113,5 @@ Slurm provides a framework for starting, executing, and monitoring work on the a
 Resource access may be exclusive or nonexclusive, depending on the configuration.
 Slurm maintains a queue of jobs waiting for resources to become available and can perform accounting for resource usage.
 We refer to a resource allocation as a *job* and a job may contain multiple *job steps* that may execute sequentially or in parallel.
-Administrators can group nodes into Slurm *partitions*, which may overlap.
-They can also set policies such as queuing policies and maximum resource allocations.
+Administrators can group nodes into Slurm *partitions* on which they can set different policies such as queuing policies and maximum resource allocations.
+A node may belong to more than one partition.
