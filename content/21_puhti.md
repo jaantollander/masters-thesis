@@ -1,9 +1,10 @@
 \clearpage
 
 # Puhti cluster at CSC
-This section presents the configuration of the CSC's *Puhti* cluster from a storage perspective.
+In order to build a monitoring system for CSC's Puhti cluster, we need to understand certain aspects of its hardware and software configuration.
+<!-- This section presents the configuration of the CSC's *Puhti* cluster from a storage perspective. -->
 Puhti is a Petascale system, referring to the peak performance above $10^{15}$ floating point operations per second.
-It has over five hundred unique monthly users and a diverse user base, making it interesting for studying file system usage.
+It has over five hundred unique monthly users and a diverse user base, making it prone to problems from heavy use of the parallel file system, and thus interesting for studying it.
 Puhti is a Finnish noun that means having energy.
 
 In Subsection \ref{hardware-configuration}, we explain the hardware configuration of Puhti, including the nodes, processors, memory, storage, and network.
@@ -55,21 +56,21 @@ The node count describes how many nodes of given type Puhti contains.
 
 The *Puhti* cluster has various *service nodes* and 1002 *compute nodes* as seen in Table \ref{tab:puhti-nodes}.
 The services nodes consist of *utility nodes* for development and administration, *login nodes* for users to log in to the system, and MDS and OSS nodes for the Lustre file system.
-The compute nodes consist of 922 *CPU nodes* and 80 *GPU nodes*.
-Each login and compute node consists of two *Intel Xeon Gold 6230* CPUs with 20 cores and 2.1 GHz base frequency.
-In addition to CPUs, each GPU node has four *Nvidia Volta V100* GPUs, and each GPU has 36 GiB of GPU memory.
-We type nodes based on how much memory (RAM) and *fast local storage* they contain and whether they contain GPUs.
-Fast local storage is a Solid State Disk (SSD) attached to the node via *Non-Volatile Memory Express (NVMe)* for processes to perform I/O intensive work instead of relying on the global storage from the Lustre file system.
+The compute nodes consist of 922 CPU nodes and 80 GPU nodes.
+Each login and compute node consists of two Intel Xeon Gold 6230 Central Processing Units (CPUs) with 20 cores and 2.1 GHz base frequency.
+In addition to CPUs, each GPU node has four Nvidia Volta V100 Graphical Processing Units (GPUs), and each GPU has 36 GiB of GPU memory.
+We type nodes based on how much Random-access Memory (RAM) and *fast local storage* they contain and whether they contain GPUs.
+Fast local storage is a Solid State Disk (SSD) attached to the node via Non-Volatile Memory Express (NVMe) for processes to perform I/O intensive work instead of relying on the global storage from the Lustre file system.
 [@docs-csc]
 
 The global storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}, with two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
-At the time of writing, Puhti has Lustre version 2.12.6 from *DataDirect Networks (DDN)*.
+At the time of writing, Puhti has Lustre version 2.12.6 from DataDirect Networks (DDN).
 Each MDS has two MDTs connected to 20 of 800 GB NVMe, and each OSS has three OSTs connected to 704 of 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
 The cluster connects nodes via a network with a fat-tree topology.
 In the network, each node connects to all L1 switches, and each L1 switch connects to all L2 switches.
-The connections use *Mellanox HDR InfiniBand* (100 Gb/s IB HDR100).
+The connections use Mellanox HDR InfiniBand (100 Gb/s IB HDR100).
 The network has a total of 28 L1 switches and 12 L2 switches.
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
@@ -98,18 +99,18 @@ We denote set such that curly braces `{...}` denote a set, ranges such as `{01-0
 Furthermore, we add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
 
 
-Node category|Server|Targets
--|-|-
-*Lustre*|`MDS 1`|`scratch-MDT{0000,0001}`
-*Lustre*|`MDS 2`|`scratch-MDT{0002,0003}`
-*Lustre*|`OSS 1`|`scratch-OST{0000,0001,0002}`
-*Lustre*|`OSS 2`|`scratch-OST{0003,0004,0005}`
-*Lustre*|`OSS 3`|`scratch-OST{0006,0007,0008}`
-*Lustre*|`OSS 4`|`scratch-OST{0009,000a,000b}`
-*Lustre*|`OSS 5`|`scratch-OST{000c,000d,000e}`
-*Lustre*|`OSS 6`|`scratch-OST{000f,0010,0011}`
-*Lustre*|`OSS 7`|`scratch-OST{0012,0013,0014}`
-*Lustre*|`OSS 8`|`scratch-OST{0015,0016,0017}`
+Node category|Node Type|Index|Targets
+-|-|-|-
+*Lustre*|MDS|1|`scratch-MDT{0000,0001}`
+*Lustre*|MDS|2|`scratch-MDT{0002,0003}`
+*Lustre*|OSS|1|`scratch-OST{0000,0001,0002}`
+*Lustre*|OSS|2|`scratch-OST{0003,0004,0005}`
+*Lustre*|OSS|3|`scratch-OST{0006,0007,0008}`
+*Lustre*|OSS|4|`scratch-OST{0009,000a,000b}`
+*Lustre*|OSS|5|`scratch-OST{000c,000d,000e}`
+*Lustre*|OSS|6|`scratch-OST{000f,0010,0011}`
+*Lustre*|OSS|7|`scratch-OST{0012,0013,0014}`
+*Lustre*|OSS|8|`scratch-OST{0015,0016,0017}`
 
 : \label{tab:lustre-servers-targets}
 Names of Lustre servers and Lustre targets in Puhti.
@@ -155,11 +156,11 @@ It shares the same Lustre file system across *home*, *projappl*, and *scratch* s
 
 As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
-We focus on monitoring the usage of the shared Lustre file system.
+Our monitoring system, discussed in Section \ref{monitoring-system}, monitors the usage of the shared Lustre file system using Lustre Jobstats.
 
 Puhti also has two local storage areas, *local scratch* and *tmp*.
 They are intended for temporary file storage for I/O heavy operations to avoid burdening the Lustre file system.
-Users who want to keep data from local storage after a job completion should copy it to scratch since the system regularly cleans the local storage areas.
+Users who want to keep data from local storage after a job completion must copy it to scratch since the system regularly cleans the local storage areas.
 
 - *Local scratch*, mounted on a local SSD, is indented for batch jobs to perform I/O heavy operations.
 Its quota depends on how much the user requests for the job.
@@ -210,15 +211,15 @@ Partition name | Time limit | Task limit | Node limit | Node type
 `gpu` | 3 days | 80 | 20 | *GPU*
 
 : \label{tab:slurm-partitions}
-Slurm partitions on Puhti.
+Slurm partitions on Puhti at the time of writing.
 Each partition has a name and resource limits such as time, task and node limit that a job can request on the partition.
 Node types, listed in Table \ref{tab:puhti-nodes}, dictates the set of nodes where job may run.
 Typically, memory and local storage limits are the same for the node type.
 
 
-Slurm sets different job-specific environment variables for each job such that programs can access and use the job information within the process.
-One of them is the *Slurm Job ID* (`SLURM_JOB_ID` environment variable) which we use as an identifier to collect job-specific file operations.
-In the future, we could combine the data from Slurm's accounting with the file system usage using the job ID.
-For example, we could use the information about the project, partition, and local storage reservation of a job.
-Project information could also help identify if members of a particular project perform problematic file I/O patterns.
+Slurm sets different job-specific environment variables for each job such that programs can access and use them.
+One of them is the *Slurm Job ID*, accessed via the `SLURM_JOB_ID` environment variable, which we use as an identifier to collect job-specific file operations.
+We can combine the data from Slurm's accounting with the file system usage using the job ID.
+For example, we can use the information about the project, partition, and local storage reservation of a job.
+Project information might help identify if members of a particular project perform problematic file I/O patterns.
 
