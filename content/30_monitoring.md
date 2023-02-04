@@ -7,23 +7,23 @@ Rounded rectangles indicate programs, and arrows indicate data flow.
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
 
-<!-- The Section \ref{puhti-cluster-at-csc} described the Puhti cluster. -->
-This section explains how our monitoring system works in the Puhti cluster and how we analyze the data.
+This section explains how our monitoring system works in the Puhti cluster.
 We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
 Subsection \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
 In Subsection \ref{file-system-statistics}, we explain the different file system operations and statistics for them that we can track, how to query them, and the output format.
 We explain how the statistics reset in Subsection \ref{entry-resets}.
-Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics.
+Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics which we will use later in the analysis.
+<!--
 We suspect that high total file system usage rates can cause congestion in the file system.
 Fine-grained statistics allow us to break down the total rate into its components.
 Then, we can analyze the components and identify the components with the highest rates.
-
+-->
 
 We described how client-server applications work in Section \ref{client-server-application}.
 We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
 The statistics we collect from Jobstats form multiple time series.
 We explain how we store time series data in the *time series database* in Subsection \ref{storing-time-series-data}.
-In Subsection \ref{monitoring-client}, we explain how a *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
+In Subsection \ref{monitoring-client}, we explain how the *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
 Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
 We explain the initial and modified versions of the monitoring client.
@@ -32,7 +32,7 @@ Subsection \ref{ingest-server} explains how the ingest server processes the data
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
 We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
-We changed the database to TimescaleDB.
+We changed the database to TimescaleDB [@timescaledb].
 We take the precise design of programs as given and explain them only at a high level.
 The thesis work focused on the analysis and visualization parts which we explain in Section \ref{results}.
 
