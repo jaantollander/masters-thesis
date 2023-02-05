@@ -43,4 +43,6 @@ We can also combine these methods.
 
 With reliable data and complete identifiers, we should be able to offer job-specific statistics to users and combine Slurm accounting data, such as project and partition information, for the analysis.
 Also, we want to compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
+<!-- TODO: collect and analyze latency values? -->
+<!-- TODO: reducing the observation interval from 2-minutes to 1-minute. -->
 We should verify data correctness by running jobs with known I/O work and comparing them with the monitoring data.

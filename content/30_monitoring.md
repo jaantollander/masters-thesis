@@ -67,8 +67,8 @@ For Puhti, we listed the node names in Table \ref{tab:node-names}.
 
 
 ## File system statistics
-Each Lustre server keeps counters for all of its targets.
-We can fetch the counters and print them in a text format by running the `lctl get_param` command with an argument that points to the desired jobstats.
+Each Lustre server keeps statistics for all of its targets.
+We can fetch the statistics and print them in a text format by running the `lctl get_param` command with an argument that points to the desired jobstats.
 We can query jobstats from the Lustre server as follows:
 
 ```sh
@@ -97,7 +97,7 @@ The *target* (`<target>`) contains the name of the Lustre target of the query.
 For Puhti, we listed them in Table \ref{tab:lustre-servers-targets}.
 
 After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
-The output denotes each *entry* by dash `-` and contains the entry identifier (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
+The output denotes each *entry* by dash `-` and contains the *entry identifier* (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
 The value of snapshot time is a timestamp as a Unix epoch when the statistics of one of the operations are last updated.
 *Unix epoch* is the standard way of representing time in Unix systems.
 It measures time as the number of seconds elapsed since 00:00:00 UTC on 1 January 1970, excluding leap seconds.
@@ -109,15 +109,18 @@ Each operation (`<operation>`) contains a line of statistics (`<statistics>`), f
     { samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
 ```
 
-The samples (`samples`) field counts how many operations the job has requested since Jobstats started the counter.
-The fields minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) keep count of these aggregates values.
+The samples (`samples`) field counts how many operations the job has requested since Jobstats started the counter with implicit unit of requests (`reqs`).
+The statistics fields are minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) for either measure of latency, that is how long the operatio took, with unit microseconds (`usecs`) or for measure of transferred bytes with unit bytes (`bytes`).
 These fields contain nonnegative integer values.
 The samples, sum, and sum of squares increase monotonically except if reset.
-Units (`<unit>`) are either requests (`reqs`), bytes (`bytes`), or microseconds (`usecs`).
 Statistics of an entry that has not performed any operations are implicitly zero.
+We collect the value from the `samples` field from all of the operations, except `read_bytes` and `write_bytes` where we collect the value from the `sum` field.
+In this thesis, we did not look at the latency values.
 
 
-MDT | OST | Lustre file system operation | Explanation
+\clearpage
+
+MDT | OST | Operation | Explanation of the operation
 -|-|:--|:-------
 MDT | - | `open` | Opens a file and returns a file descriptor.
 MDT | - | `close` | Closes a file descriptor that releases the resource from usage.
@@ -150,9 +153,7 @@ MDT | - | `crossdir_rename` | File name was changed from one directory to anothe
 : \label{tab:operations}
 This table lists all operations tracked by the Jobstats for each Lustre target.
 The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but the values were always zero. Thus, we did not include them in our analysis.
-The tables contain the corresponding system calls for each Lustre operation.
-We parse the value from the `samples` field from all of the operations, except `read_bytes` and `write_bytes` where we parse the value from the `sum` field.
-
+<!-- The tables contain the corresponding system calls for each Lustre operation. -->
 <!-- TODO: system call names in parenthesis if different from operation name -->
 
 
@@ -210,9 +211,7 @@ We recommend using UTC instead of local time zones to avoid problems with daylig
 In our implementation, a time series table is a *TimescaleDB hyper table* with appropriate indices for efficient queries and chunks with a proper time interval for improved performance.
 We set a *compression policy* to compress data that is older than a specified time to reduce storage and a *retention policy* for dropping data that is older than a set time to limit data accumulation and for regulatory reasons.
 We stored all data on a single time series table.
-
 In the future, we may experiment with separate tables for MDT and OST data to improve performance since they mainly contain different fields.
-We would also like to combine the metadata information with Slurm job information.
 <!-- It is possible to separate time series data and metadata to reduce data bloat, but it makes queries more complex. -->
 
 
@@ -221,33 +220,24 @@ The monitoring client calls the appropriate command, as explained in Section \re
 The observation interval should be less than half of the cleanup interval for reliable reset detection.
 Smaller observation interval increases the resolution but also increase the rate of data accumulation.
 We used a 2-minute observation interval and a 10-minute cleanup interval.
-In the future, we could reduce the observation interval to 1-minute.
 
-<!-- computing differences on the fly -->
 Initially, we computed the difference between the two counters on the monitoring clients and stored them in the database.
 Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
-Also, computing the differences in the monitoring clients makes the design more complex and error-prone.
-
-<!-- parsing the entry identifier -->
-Also, we had a problem with malformed entry identifiers, discussed later in Section \ref{entries-and-issues}.
-Due to the bug, some node names were in the fully-qualified format instead of the short hostname format.
+However, computing the differences in the monitoring clients makes the design more complex and error-prone.
+Another problem that effected the initial design was a problem with data quality, which we discuss in detail in Section \ref{entries-and-issues}.
+Due to the bug in Lustre Jobstats, some node names were in the fully-qualified format instead of the short hostname format.
 Because we assumed that all node names would follow the short hostname format, we parsed the metadata from the entry identifiers with a short hostname and a fully-qualified hostname as the same.
 The mistake made us identify two different time series as the same, resulting in wrong values when computing rates.
 We fixed it by modifying our parser to disambiguate between the two formats.
-Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system.
-
-<!-- recording the raw counters -->
-To solve and identify these problems, we switched to collecting the counter values in the database and computing the rates afterward.
+<!-- Due to the issues we found, we recommend experimenting with the settings, recording large raw dumps of the statistics, and analyzing them offline before building a more complex monitoring system. -->
+To identify and solve these problems, we switched to collecting the counter values in the database and computing the rates afterward.
 This approach simplifies the monitoring system and supports variable interval lengths.
 However, the approach makes queries and analysis more computationally intensive.
 
-Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
-Due to the scaling problem, we use TimescaleDB and suggest using a more efficient line protocol for communication instead.
-Next, we describe the monitoring client and the message structure using JSON.
-
 <!-- In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
-The monitoring client parses the target and all entries from the output using *Regular Expressions (Regex)*.
-It creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
+The monitoring client works as follows.
+First, it parses the target and all entries from the output using *Regular Expressions (Regex)*.
+Then, it creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
 An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
 
 ```json
@@ -267,6 +257,8 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 ```
 
 Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
+Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
+Due to the scaling problem, we use TimescaleDB and suggest using a more efficient line protocol for communication instead.
 
 
 ## Backfilling initial entries
@@ -305,8 +297,8 @@ The server creates an insert statement for every message and sends it into the t
 
 We did not explicitly set a time series identifier.
 Instead, we identified different time series as distinct tuples of the target, node name, job ID, and user ID.
-For login nodes, which do not have a job ID, we generated a synthetic job ID using the executable name and user ID values.
-Also, we created a synthetic job ID for other entries for which it was missing.
+For login nodes, which do not have a job ID, we generated a unique, synthetic job ID using the executable name and user ID values.
+Also, we created a unique, synthetic job ID for other entries for which it was missing.
 We dropped other entries that did not conform to the entry identifier format we had set, as described in Section \ref{entry-identifier-format}.
 
 We could use the concatenated target and entry identifier string as the time series identifier (`<target>:<entry_id>`).
