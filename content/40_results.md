@@ -17,8 +17,9 @@ We demonstrate different aspects of this data from compute nodes taken at 2-minu
 We omitted data from login and utility nodes in this analysis due to a lack of time to verify the correctness of the data.
 Subsection \ref{counters-and-rates} shows counter values and computed rates of three jobs to illustrate different I/O patterns.
 In Subsections \ref{metadata-rates} and \ref{object-storage-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
-Finally, Subsection \ref{identifying-outliers} shows how fine-grained measurements enable us to break the total rate down into its components which we can use to identify outliers.
+Subsection \ref{identifying-outliers} shows how fine-grained measurements enable us to break the total rate down into its components which we can use to identify outliers.
 Outliers demonstrate how a single user can perform the majority of a total load of a given file system operation.
+In Subsection \ref{future-work}, we explore ideas for improving the analysis in the future.
 
 We performed explorative data analysis on batches of monitoring data to explore the data and identify outliers using the Julia language [@julia_fresh_approach; @julia_language] and tabular data manipulation tools from the DataFrames.jl [@julia_dataframes] package.
 To visualize our results, we used Plots.jl [@julia_plots] with GR [@gr_framework] as the backend.
@@ -341,8 +342,8 @@ After 13:00, we see outlier behavior of many bursts caused by two users.
 Decomposition of a total `readbytes` rate from compute nodes to `scratch-OST0004` during 24 hours of 2022-10-27.
 We can visually determine a threshold between average and outlier behavior at $10^8$ bytes per second.
 The figure shows us two outlier behaviors: one long, intense burst and one short, less intense burst.
-We can see that a single user caused a long, intense burst, over a gigabyte per second ($10^9$ bytes per second), between 9:00 and 14:00.
-The shorter, less intense burst, from 9:00 to 10:00, is hundreds of megabytes per second ($10^8$ bytes per second).
+We can see that a single user caused a long, intense burst, over a gigabyte ($10^9$ bytes) per second, between 9:00 and 14:00.
+The shorter, less intense burst, from 9:00 to 10:00, is hundreds of megabytes ($10^8$ bytes) per second.
 \label{fig:density-3}
 ](figures/2022-10-27_ost0004_compute_readbytes.svg)
 
