@@ -14,8 +14,7 @@ A file system is a commonly used abstraction layer between the physical storage 
 The term *storage I/O* is agnostic about the underlying abstraction layer.
 In this work, the I/O refers to storage I/O.
 
-<!-- TODO: Add a reference. Also, we have seen this in practice at CSC. Add authority. Data intensive computing. -->
-Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads.
+Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [TODO: reference needed, increase in data-intensive computing].
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
 <!-- A ranking is maintained on the TOP500 list [@top_500]. -->
 However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
