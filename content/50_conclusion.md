@@ -18,12 +18,12 @@ During the thesis work, we uncovered issues with data quality.
 By analyzing raw data, we identified that the issue was caused by a bug in the Lustre jobstats feature that we used for collecting the data.
 Due to the issues, we had to modify the monitoring system and data analysis workflows to correct the issues to the extent possible and discard previous data that would have been useful in our analysis.
 Consequently, we lost valuable time and effort and only met some of the original goals set for the thesis.
-We could not build an automated monitoring and analysis system that would identity the causes of slowdowns in the cluster in real-time.
-Fortunately, we obtained some data that we believed to be reliable and used it for analysis and visualization and to obtain insights for future parallel file system usage monitoring.
+Due to unreliable data, we did not find it feasible to build an automated monitoring and analysis system that would identity the causes of slowdowns in the cluster in real-time.
+Fortunately, we obtained enough data that we believed to be reliable to use for analysis and visualization and obtained insights for future parallel file system usage monitoring.
 We were able to identify users who perform heavy usage on the file system from this monitoring data.
 The results demonstrate different usage patterns and total rates for all the monitored file system operations and that an individual user can cause the majority of file system operations at a given time.
 
 <!-- Future work and possibilities -->
-Problems from parallel file system usage will not disappear in the future due to increase demand for data-intensive computing [TODO: reference needed].
+We expect problems from parallel file system usage to increase in the future due to increase demand for data-intensive computing [TODO: reference needed].
 
 <!-- Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system. -->
