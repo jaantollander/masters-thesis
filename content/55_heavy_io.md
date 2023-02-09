@@ -2,11 +2,12 @@
 
 ## Identifying heavy I/O
 <!-- TODO: add motivation, repeat what is in the Section -->
-Obtaining meaningful information visually from graphs with many time series is challenging because they tend to overlap.
-To remedy this situation, we can use a density plot.
+Fine-grained file system usage monitoring produces data with multiple overlapping time series.
+We can obtain meaningful information visually from a graph with many time series using a density plot.
 A density plot is a statistical plot that shows how many time series has a value in a specific range, called a bucket, at a particular time but omits information about individual time series.
 We can increase the resolution of a density plot by decreasing the sizes of the buckets and vice versa.
 We can use the density plot to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
+
 Furthermore, we can visually determine a *threshold* between the *light I/O* and *heavy I/O* from a density plot.
 We should select a threshold such that the light I/O, with typically many small values, is below the threshold, and the heavy I/O, with typically a few large values, is above the threshold.
 We should set the resolution as low as possible to find a clear threshold; if we cannot, we should increase the resolution of the density.
