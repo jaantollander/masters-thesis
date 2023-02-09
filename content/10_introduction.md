@@ -14,7 +14,9 @@ A file system is a commonly used abstraction layer between the physical storage 
 The term *storage I/O* is agnostic about the underlying abstraction layer.
 In this work, the I/O refers to storage I/O.
 
-Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [TODO: reference needed, increase in data-intensive computing].
+<!-- TODO: greater need for understanding I/O performance and behavior  -->
+<!-- TODO: [@toward_understanding_io_behavior] -->
+Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [@understanding_io_behavior].
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
 <!-- A ranking is maintained on the TOP500 list [@top_500]. -->
 However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
@@ -22,7 +24,7 @@ The system must transport this data between main memory and storage, making I/O 
 The increasing demand for better I/O performance in HPC systems makes studying it necessary.
 The HPC community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
 <!-- Ranking on IO500 list [@io_500]. -->
-Research from various institutions and companies such as Oak Ridge National Laboratory, Lawrence Berkeley National Laboratory, Virginia Tech, Cray, and Seagate is actively finding ways to improve I/O performance in HPC.
+Research from institutions and companies such as Oak Ridge National Laboratory, Lawrence Berkeley National Laboratory, Virginia Tech, Cray, and Seagate is actively finding ways to improve I/O performance in HPC.
 For example, they research ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions [@daos_and_friends; @object_centric_data].
 
 Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
@@ -57,7 +59,7 @@ Fine-grained monitoring shows us detailed file system behavior instead of a sing
 Problems from parallel file system usage concern the high-performance clusters at *CSC -- IT Center for Science*, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 [@about-csc]
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
-At the time of writing, CSC operates three high-performance clusters, *Puhti*, *Mahti*, and the pan-europian *LUMI*, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
+At the time of writing, CSC operates three high-performance clusters, *Puhti*, *Mahti*, and the pan-european *LUMI*, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
 Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity and billing units for the users.
 We believe that monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
 
