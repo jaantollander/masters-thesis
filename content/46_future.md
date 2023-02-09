@@ -18,12 +18,12 @@ For example, given a time series such as a total rate of an operation or a linea
 Furthermore, we can combine Slurm accounting data, such as project and partition information, as metadata for the analysis when we have reliable data.
 For example, we can use project information to identify if members of a particular project perform heavy I/O and partition information to identify if jobs on a particular partition perform heavy I/O.
 
-Finally, we should compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
+We should compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
 Currently, we have probes that periodically measure the parallel file system performance.
 We should measure the correlation between these measurements and file system usage data.
 Also, it might be interesting to collect and analyze latency values from Lustre Jobstats to see if they provide useful information.
 
-Analyzing monitoring data as a *batch* is fine for exploring the data and experimenting with different analysis methods.
+Finally, analyzing monitoring data as a *batch* is fine for exploring the data and experimenting with different analysis methods.
 However, to build a real-time monitoring system, we must process and analyze the monitoring data as a *stream*.
 We must implement our analysis methods to stream computing, that is, computing the rates and analytics on new data as soon as it arrives from a monitoring client.
 We should also build real-time visualization and reporting of the analysis results.

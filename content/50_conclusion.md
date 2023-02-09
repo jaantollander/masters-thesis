@@ -10,7 +10,7 @@ Despite the challenges, we obtained meaningful results that will benefit future 
 Furthermore, these efforts take us closer to achieving the long-term goal at CSC is to build real-time monitoring, visualization, and reporting deployed on a live system that administrators can use to identify if a slowdown is caused by file system usage and who is causing it.
 
 <!-- Describe the thesis work -->
-In summary, the thesis explored monitoring and analyzing the usage of a parallel file system in the Puhti cluster.
+The thesis explored monitoring and analyzing the usage of a parallel file system in the Puhti cluster.
 Our goal was to determine whether monitoring could help us identify slowdowns and their causes.
 We explained the basic building blocks of a high-performance computing system and covered the configuration of the Puhti cluster at CSC from a storage perspective.
 We developed a monitoring system, deployed it on the Puhti cluster, and collected file system usage data.
@@ -24,9 +24,10 @@ Due to unreliable data, we did not find it feasible to build an automated monito
 Fortunately, we obtained enough data that we believed to be reliable for analysis and visualization.
 From this monitoring data, we could identify users who perform heavy I/O on the file system.
 The results demonstrate different usage patterns and total rates for all the monitored file system operations and that an individual user can cause the majority of file system operations at a given time.
+
 Finally, we discussed ideas for future analysis methods, such as analyzing operations together and trends across time, that we can try when we have solved the data quality issues.
+Due to the increased demand for data-intensive computing, we expect problems from parallel file system usage to increase at CSC.
 
-<!-- Future work and possibilities in general -->
-We expect problems from parallel file system usage to increase at CSC due to the increased demand for data-intensive computing.
+TODO: thus, research and development in I/O monitoring is important
 
-<!-- Additionally, we aim to provide information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system. -->
+Furthermore, file system usage and I/O metrics provide helpful information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
