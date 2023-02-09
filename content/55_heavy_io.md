@@ -16,12 +16,11 @@ We can use the threshold as a condition for filtering the data.
 <!-- General idea behind the data analysis -->
 A simple method for identifying heavy I/O from the data of a specific operation is to start from a lower resolution, high-level view, then select a subset of the data based on the view and increase the resolution on the subset, and repeat.
 Here is an example of the process:
-
-* First, we select an operation and the initial data, such as the data for the `write` operation from compute nodes to a specific OST.
-* Then, we compute a density with a chosen resolution of the total rate over a chosen categorical value.
+First, we select an operation and the initial data, such as the data for the `write` operation from compute nodes to a specific OST.
+Then, we compute a density with a chosen resolution of the total rate over a chosen categorical value.
 For example, we can choose the user ID as the categorical value and set the density resolution to exponentially increasing bucket size.
-* We can inspect the density plot, determine a time range and value threshold, and then filter the data using these values.
-* Finally, we either repeat the process by choosing a different categorical value and resolution or stop if we have identified the causes of heavy I/O.
+Next, we inspect the density plot, determine a time range and value threshold, and then filter the data using these values.
+Finally, we either repeat the process by choosing a different categorical value and resolution or stop if we have identified the causes of heavy I/O.
 
 <!-- TODO: explain how figures relate to the above process -->
 Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3} visualize the user-level behavior of a specific operation from compute nodes to a specific Lustre target.
