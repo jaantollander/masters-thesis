@@ -7,27 +7,27 @@ As previous results demonstrate, we can inspect at the data in a high-level view
 We want to find changes in trends from the high-level view and the causes for the changes in trends from the low-level view.
 Especially, we care about identifying causes for large increases in the I/O rates.
 
+TODO: requires editing
+
 In Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3}, we demonstrate the process of identifying users who cause large relative increases in I/O rates.
 Each figure consists of three subplots.
 The *top subplot* demonstrates the high-level trend by showing a total rate.
 The *middle subplot* demonstrates a more fine-grained view by breaking down the total rate into the rates of each user.
 We analyze them to understand the causes of changes in the total rate.
-Because the fine-grained view consist of many overlapping time series, directly plotting them is not good method for analyzing them.
-It is better to use a statistical method of computing a *density*.
+<!-- Because the fine-grained view consist of many overlapping time series, directly plotting them is not good method for visualizing them. -->
+We can compute a *density* to obtain information from many time series.
+Density is a statistical method that tells us how many time series have a value in a specific range, called a *bucket*, at a particular time but omits information about individual time series.
+For example, we can use the density to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
 
 The *bottom subplot* shows the density computed from the values seen in the middle subplot.
-We compute a *density* to obtain information from many time series.
-Density is a statistical method that tells us how many time series have a value in a specific range, called a *bucket*, at a particular time but omits information about individual time series.
+We use density to identify heavy I/O by determining a *threshold between light and heavy I/O*.
+We assume that heavy I/O is rarer than light I/O so that we can select a threshold with lots of light I/O below the threshold and a little heavy I/O above it.
 We use a *heatmap* to visualize the density and to determine a threshold visually.
 We aimed to set the resolution of the density as low as possible such that find could still find a clear threshold.
 We decrease the resolution of a density by increasing the sizes of the buckets.
 To identify the causes of heavy I/O, we can filter the data using the threshold as a condition and look at the metadata values.
-To identify heavy I/O, we determine a *threshold between light and heavy I/O* by analyzing multiple time series.
-We assume that heavy I/O is rarer than light I/O so that we can select a threshold with lots of light I/O below the threshold and a little heavy I/O above it.
-We can easily see ??? from the heatmap.
-For example, we can use the density to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
+
 Density is easier to compute and plot as a heatmap, even with a large number of time series.
-We use it to determine the threshold between light and heavy I/O.
 (We can quantify the threshold by counting how many users are below versus above the threshold in a given period.)
 
 We use a logarithmic scale for the density due to the significant variations in the magnitude of the values and omit zeros from the plot.
