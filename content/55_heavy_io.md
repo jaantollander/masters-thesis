@@ -4,20 +4,20 @@
 <!-- TODO: add motivation, repeat what is in the Section -->
 As discussed in Section \ref{monitoring-system}, fine-grained file system usage monitoring produces multiple time series, that is, rates from the monitoring data.
 We have one time series for each time series identifier consisting of the metadata values.
-We can look at the data in high-level view as a sum of many time series or high-resolution as individual time series of the components of the sum.
+We can look at the data in a high-level view as a sum of many time series or high-resolution as individual time series of the components of the sum.
 We demonstrate how to identify individual components of heavy I/O in Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3}.
-Each figure consists of three subplots which demonstrate the process of identifying heavy I/O.
+Each figure consists of three subplots that demonstrate the process of identifying heavy I/O.
 
 The top subplot demonstrates the general trend by displaying a total rate.
-We need more more fine-grained view to understand the causes of changes in the total rate.
+We need a more fine-grained view to understand the causes of changes in the total rate.
 
-The middle subplot demonstrates more fine-grained view by breaking down the total rate by into the rates of each user.
+The middle subplot demonstrates a more fine-grained view by breaking down the total rate into the rates of each user.
 Typically, many overlapping time series make this plot difficult to read.
-Furthremore, this type of graph becomes more difficult to plot as the number of time series increases.
+Furthermore, this type of graph becomes more difficult to plot as the number of time series increases.
 To identify heavy I/O, we determine a *threshold between light and heavy I/O* by analyzing multiple time series.
 We assume that heavy I/O is rarer than light I/O so that we can select a threshold with lots of light I/O below the threshold and a little heavy I/O above it.
 
-The bottom subplot shows the density computed from the values seen on the middle subplot.
+The bottom subplot shows the density computed from the values seen in the middle subplot.
 We compute a *density* to obtain information from many time series.
 Density is a statistical method that tells us how many time series have a value in a specific range, called a *bucket*, at a particular time but omits information about individual time series.
 We use a *heatmap* to visualize the density and to determine a threshold visually.
@@ -26,9 +26,9 @@ We decrease the resolution of a density by increasing the sizes of the buckets a
 To identify the causes of heavy I/O, we can filter the data using the threshold as a condition and look at the metadata values.
 We can easily see ??? from the heatmap.
 For example, we can use the density to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
-Density is easier to compute and plot as heatmap even with large number of time series.
+Density is easier to compute and plot as a heatmap, even with a large number of time series.
 We use it to determine the threshold between light and heavy I/O.
-(Quantify by counting how many users below versus above the threshold in given period.)
+(We can quantify the threshold by counting how many users are below versus above the threshold in a given period.)
 
 We use a logarithmic scale for the density due to the significant variations in the magnitude of the values and omit zeros from the plot.
 We plot densities as heatmaps consisting of time on the x-axis, buckets on the y-axis, and color on the z-axis.
