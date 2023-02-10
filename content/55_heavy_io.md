@@ -4,34 +4,37 @@
 <!-- TODO: add motivation, repeat what is in the Section -->
 As discussed in Section \ref{monitoring-system}, fine-grained file system usage monitoring produces multiple time series, that is, rates from the monitoring data.
 We have one time series for each time series identifier consisting of the metadata values.
+We can look at the data in high-level view as a sum of many time series or high-resolution as individual time series of the components of the sum.
+We demonstrate how to identify individual components of heavy I/O in Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3}.
+Each figure consists of three subplots which demonstrate the process of identifying heavy I/O.
+
+The top subplot demonstrates the general trend by displaying a total rate.
+We need more more fine-grained view to understand the causes of changes in the total rate.
+
+The middle subplot demonstrates more fine-grained view by breaking down the total rate by into the rates of each user.
+Typically, many overlapping time series make this plot difficult to read.
+Furthremore, this type of graph becomes more difficult to plot as the number of time series increases.
 To identify heavy I/O, we determine a *threshold between light and heavy I/O* by analyzing multiple time series.
 We assume that heavy I/O is rarer than light I/O so that we can select a threshold with lots of light I/O below the threshold and a little heavy I/O above it.
 
-We compute a *density* over time to obtain information from many time series.
+The bottom subplot shows the density computed from the values seen on the middle subplot.
+We compute a *density* to obtain information from many time series.
 Density is a statistical method that tells us how many time series have a value in a specific range, called a *bucket*, at a particular time but omits information about individual time series.
-For example, we can use the density to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
-Then, we use a *heatmap* to visualize the density and a heatmap to determine a threshold visually.
+We use a *heatmap* to visualize the density and to determine a threshold visually.
 We aimed to set the resolution of the density as low as possible such that find could still find a clear threshold.
 We decrease the resolution of a density by increasing the sizes of the buckets and vice versa.
 To identify the causes of heavy I/O, we can filter the data using the threshold as a condition and look at the metadata values.
-
-We demonstrate this process in Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3}.
-Each figure consists of three subplots.
-
-1) The top subplot shows the total rate of a specific operation on a specific Lustre target.
-It demonstrates the general trends.
-2) The middle subplot breaks the total rate into the rates of each user.
-It demonstrates the granular user-level view.
-3) The bottom shows the density of the rates per user.
-We use it to determine the threshold.
+We can easily see ??? from the heatmap.
+For example, we can use the density to distinguish differences, such as whether an increase in total rate is due to a small number of users performing a high rate or a large number of users performing a low rate of a specific operation.
+Density is easier to compute and plot as heatmap even with large number of time series.
+We use it to determine the threshold between light and heavy I/O.
+(Quantify by counting how many users below versus above the threshold in given period.)
 
 We use a logarithmic scale for the density due to the significant variations in the magnitude of the values and omit zeros from the plot.
 We plot densities as heatmaps consisting of time on the x-axis, buckets on the y-axis, and color on the z-axis.
 In the density plot, lighter color indicates more users, a darker color indicates fewer users, and no color indicates zero users.
 The resolution of the density plots, that is, the upper and lower bounds of the buckets, uses a logarithmic scale in base $10.$
 
-<!-- General idea behind the data analysis -->
-<!-- TODO: generally the method work as follows ... -->
 <!--
 A simple method for identifying heavy I/O from the data of a specific operation is to start from a lower resolution, high-level view, then select a subset of the data based on the view and increase the resolution on the subset, and repeat.
 Here is an example of the process:
@@ -40,12 +43,6 @@ Then, we compute a density with a chosen resolution of the total rate over a cho
 For example, we can choose the user ID as the categorical value and set the density resolution to exponentially increasing bucket size.
 Next, we inspect the density plot, determine a time range and value threshold, and then filter the data using these values.
 Finally, we either repeat the process by choosing a different categorical value and resolution or stop if we have identified the causes of heavy I/O.
--->
-
-<!--
-We can also see general usage trends.
-The base load mostly stays the same, although a few more users perform read operations from around 7.00 to 17.00 UTC, corresponding to daytime in Finland (10.00 to 20.00).
-We can perform a similar analysis based on job ID or node name.
 -->
 
 ![
