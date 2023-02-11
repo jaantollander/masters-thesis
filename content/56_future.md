@@ -16,7 +16,7 @@ The intersections between two filtered time series indicate points in time where
 For example, given a time series such as a total rate of an operation or a linear combination of operations, we could compare its moving average with a short, ten-minute time window against a long, one-day time window to identify transient changes against a longer trend.
 
 Furthermore, we can combine Slurm accounting data, such as project and partition information, as metadata for the analysis when we have reliable data.
-For example, we can use project information to identify if members of a particular project perform heavy I/O and partition information to identify if jobs on a particular partition perform heavy I/O.
+For example, we can use project information to identify if members of a particular project perform heavy I/O relative to others and partition information to identify if jobs on a particular partition perform heavy I/O relative to others.
 
 We should compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
 Currently, we have probes that periodically measure the parallel file system performance.

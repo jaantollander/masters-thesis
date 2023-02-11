@@ -22,7 +22,7 @@ Consequently, we lost valuable time and effort and only met some of the original
 
 Due to unreliable data, we did not find it feasible to build an automated monitoring and analysis system to identify the causes of slowdowns in the cluster in real time.
 Fortunately, we obtained enough data that we believed to be reliable for analysis and visualization.
-From this monitoring data, we could identify users who perform heavy I/O on the file system.
+From this monitoring data, we could identify users who perform heavy I/O relative to others on the file system.
 The results demonstrate different usage patterns and total rates for all the monitored file system operations and that an individual user can cause the majority of file system operations at a given time.
 
 Finally, we discussed ideas for future analysis methods, such as analyzing operations together and trends across time, that we can try when we have solved the data quality issues.
