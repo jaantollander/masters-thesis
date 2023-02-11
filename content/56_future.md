@@ -8,7 +8,7 @@ Here are some ideas for future analysis methods.
 
 We analyzed operations independently.
 However, we should model the dependency of different operations by *combining operations* of the same unit using a linear combination with appropriate weights and analyze the resulting time series.
-For example, we can combine the rates of metadata operations that read data from disk or write data to disk.
+For example, we can combine the rates of metadata operations to a specific metadata server or target to analyze its total load.
 
 We can also *analyze trends* of a time series by using a causal, impulse response filter such as a moving average with a finite time window.
 Furthermore, we can *identify changes in trends* by filtering a time series with different time window lengths and comparing the filtered time series.
