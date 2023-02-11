@@ -31,13 +31,8 @@ In the density plot, lighter color indicates more users, a darker color indicate
 The resolution of the density plots, that is, the upper and lower bounds of the buckets, uses a logarithmic scale in base $10.$
 
 <!--
-We use density to determine a threshold between light I/O and heavy I/O.
-We assume that heavy I/O is rarer than light I/O so that we can select a threshold with lots of light I/O below the threshold and a little heavy I/O above it.
-We determine a threshold visually from the density plot.
 We aimed to set the resolution of the density as low as possible such that find could still find a clear threshold.
 We decrease the resolution of a density by increasing the sizes of the buckets.
-To identify the causes of heavy I/O, we can filter the data using the threshold as a condition and look at the metadata values.
-(We can quantify the threshold by counting how many users are below versus above the threshold in a given period.)
 -->
 
 <!--
@@ -51,22 +46,19 @@ Finally, we either repeat the process by choosing a different categorical value 
 -->
 
 ![
-Decomposition of a total `setattr` rate from compute nodes to `scratch-MDT0000` during 24 hours of 2022-10-27.
-We can visually determine a threshold between light and heavy I/O at $10^1$ operations per second.
+Rates of `setattr` from compute nodes to `scratch-MDT0000` during 24 hours of 2022-10-27.
 We can see two heavy I/O patterns compared to the many light I/O patterns; many intense spikes and three less intense bursts.
 \label{fig:density-1}
 ](figures/2022-10-27_mdt0000_compute_setattr.svg)
 
 ![
-Decomposition of a total `read` rate from compute nodes to `scratch-OST0001` during 24 hours of 2022-10-27.
-We can visually determine a threshold between light and heavy I/O at $10^2$ operations per second.
+Rates of `read` from compute nodes to `scratch-OST0001` during 24 hours of 2022-10-27.
 After 13:00, we see many bursts of heavy I/O caused by two users.
 \label{fig:density-2}
 ](figures/2022-10-27_ost0001_compute_read.svg)
 
 ![
-Decomposition of a total `readbytes` rate from compute nodes to `scratch-OST0004` during 24 hours of 2022-10-27.
-We can visually determine a threshold between light and heavy I/O at $10^8$ bytes per second.
+Rates of `readbytes` from compute nodes to `scratch-OST0004` during 24 hours of 2022-10-27.
 The figure shows us two heavy I/O patterns: one long, intense burst and one short, less intense burst.
 We can see that a single user caused a long, intense burst, over a gigabyte ($10^9$ bytes) per second, between 9:00 and 14:00.
 The shorter, less intense burst, from 9:00 to 10:00, is hundreds of megabytes ($10^8$ bytes) per second.
