@@ -17,7 +17,7 @@ We demonstrate different aspects of this data from compute nodes taken at 2-minu
 We omitted data from login and utility nodes in this analysis due to a lack of time to verify the correctness of the data.
 Subsection \ref{counters-and-rates} shows counter values and computed rates of three jobs to illustrate different I/O patterns.
 In Subsections \ref{metadata-rates} and \ref{object-storage-rates}, we show the total rates of each operation for each Lustre target to visualize larger-scale I/O patterns across the whole data set.
-Subsection \ref{identifying-heavy-io} shows how fine-grained measurements allow us to break the total rate down into its components which we can use to identify users who perform heavy I/O.
+Subsection \ref{identifying-causes-of-changes-in-io-trends} shows how fine-grained measurements allow us to break the total rate down into its components which we can use to identify users who perform heavy I/O relative to others.
 Figures demonstrate how a single user can perform the majority of a total load of a given file system operation.
 In Subsection \ref{future-work}, we explore ideas for improving the analysis in the future.
 
