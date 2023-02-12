@@ -7,7 +7,7 @@ We can use the monitoring data to perform more extensive analysis and to develop
 Here are some ideas for future analysis methods.
 
 We analyzed operations independently.
-However, we should model the dependency of different operations by combining operations of the same unit using a linear combination with appropriate weights and analyze the resulting time series.
+However, we should analyze total I/O rates by combining different operations of the same unit using a linear combination with appropriate weights.
 For example, we can combine the rates of metadata operations to a specific metadata server or target to analyze its total load.
 
 We identified trends manually using data visualization.
