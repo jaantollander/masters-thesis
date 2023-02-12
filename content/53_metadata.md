@@ -2,8 +2,10 @@
 
 ## Metadata rates
 <!-- TODO: add motivation, repeat what is in the Section -->
+We explore trends of different metadata operations by visualizing the data we obtained from metadata servers.
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
-Comparing loads between MDTs is not interesting because Lustre assigned each storage area to one MDT.
+Comparing loads between MDTs is not interesting because Lustre assignes each storage area to one MDT.
+
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 Because some rates in the plots are zero, but the logarithmic axis does contain zero, we omit zeros from the plot.
 The plots share the same x-axis, making them easier to compare.

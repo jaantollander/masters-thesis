@@ -1,6 +1,7 @@
 \clearpage
 
 ## Object storage rates
+We explore trends of different object storage operations by visualizing the data we obtained from object storage servers.
 Figures \ref{fig:total-ost-1}, \ref{fig:total-ost-2}, \ref{fig:total-ost-3}, \ref{fig:total-ost-4}, and \ref{fig:total-ost-5} show the total rates of all operations from compute nodes to each of 24 OSTs during 24 hours of 2022-10-27.
 Since there are 24 OSTs, we can compare the variation of rate between OSTs and across time.
 By default, Lustre aims to balance the load between OSTs by assigning files to them equally.
