@@ -27,7 +27,5 @@ The results demonstrate different usage patterns and total rates for all the mon
 
 Finally, we discussed ideas for future analysis methods, such as analyzing operations together and trends across time, that we can try when we have solved the data quality issues.
 Due to the increased demand for data-intensive computing, we expect problems from parallel file system usage to increase at CSC.
-
-TODO: thus, research and development in I/O monitoring is important
-
-Furthermore, file system usage and I/O metrics provide helpful information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
+Thereore, research and development in I/O performance, monitoring and analyzing I/O behavior will grow even more important and consequential in the future.
+Also, we believe that file system usage and I/O metrics could provide helpful information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.

@@ -7,15 +7,17 @@ We can use the monitoring data to perform more extensive analysis and to develop
 Here are some ideas for future analysis methods.
 
 We analyzed operations independently.
-However, we should model the dependency of different operations by *combining operations* of the same unit using a linear combination with appropriate weights and analyze the resulting time series.
+However, we should model the dependency of different operations by combining operations of the same unit using a linear combination with appropriate weights and analyze the resulting time series.
 For example, we can combine the rates of metadata operations to a specific metadata server or target to analyze its total load.
 
-We can also *analyze trends* of a time series by using a causal, impulse response filter such as a moving average with a finite time window.
-Furthermore, we can *identify changes in trends* by filtering a time series with different time window lengths and comparing the filtered time series.
+We identified trends manually using data visualization.
+However, we should identify trends automatically from a time series by using a causal, impulse response filter such as a moving average with a finite time window.
+Furthermore, we can identify changes in trends across different timescales by filtering a time series with different time window lengths and comparing the filtered time series.
 The intersections between two filtered time series indicate points in time where the trends change.
 For example, given a time series such as a total rate of an operation or a linear combination of operations, we could compare its moving average with a short, ten-minute time window against a long, one-day time window to identify transient changes against a longer trend.
 
-Furthermore, we can combine Slurm accounting data, such as project and partition information, as metadata for the analysis when we have reliable data.
+Furthermore, we can use data from login and utility nodes when we have reliable data.
+Also, we can use Slurm accounting data, such as project and partition information, as metadata for the analysis.
 For example, we can use project information to identify if members of a particular project perform heavy I/O relative to others and partition information to identify if jobs on a particular partition perform heavy I/O relative to others.
 
 We should compare the file system usage data with file system performance metrics to identify what kind of usage causes a slowdown in the cluster.
@@ -23,8 +25,8 @@ Currently, we have probes that periodically measure the parallel file system per
 We should measure the correlation between these measurements and file system usage data.
 Also, it might be interesting to collect and analyze latency values from Lustre Jobstats to see if they provide useful information.
 
-Finally, analyzing monitoring data as a *batch* is fine for exploring the data and experimenting with different analysis methods.
-However, to build a real-time monitoring system, we must process and analyze the monitoring data as a *stream*.
+Finally, analyzing monitoring data as a batch is fine for exploring the data and experimenting with different analysis methods.
+However, to build a real-time monitoring system, we must process and analyze the monitoring data as a stream.
 We must implement our analysis methods to stream computing, that is, computing the rates and analytics on new data as soon as it arrives from a monitoring client.
 We should also build real-time visualization and reporting of the analysis results.
 
