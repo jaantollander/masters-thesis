@@ -7,6 +7,8 @@ The bitwise-or of two modes or flags means that both of them apply.
 Please note that these examples do not perform any error handling that proper programs should do.
 For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2].
 
+---
+
 ```c
 #include<fcntl.h>
 #include<sys/types.h>
@@ -36,6 +38,8 @@ The code performs the system calls `open`, `close`, `read`, and `write` with the
 Furthermore, if the file does not already exist, the code calls `mknod` to create it.
 
 \clearpage
+
+---
 
 ```c
 #define _GNU_SOURCE

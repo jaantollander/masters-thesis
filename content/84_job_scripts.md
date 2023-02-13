@@ -6,6 +6,8 @@ We can specify the options as command line arguments as we invoke the command or
 The script specifies job steps using the `srun` command.
 Next, we show three job script examples for different job sizes
 
+---
+
 ```sh
 #!/usr/bin/env bash
 #SBATCH --job-name=<job-name>
@@ -21,6 +23,7 @@ srun <program>
 
 The above script is an example of a small, sequential batch job with a single job step, that is, `srun` command.
 
+---
 
 ```sh
 #!/usr/bin/env bash
@@ -39,6 +42,9 @@ srun <program> $SLURM_ARRAY_TASK_ID
 It is also common to run multiple similar sequential batch jobs independent from one another with slight variations, for example, in initial conditions.
 We can achieve that by turning it into an array job by adding the `array` argument with the desired range and accessing the array ID via an environment variable.
 
+\clearpage
+
+---
 
 ```sh
 #!/usr/bin/env bash
