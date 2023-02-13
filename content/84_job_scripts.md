@@ -4,10 +4,8 @@
 In Puhti, we can submit a job to the Slurm scheduler as a shell script via the `sbatch` command.
 We can specify the options as command line arguments as we invoke the command or in the script as comments.
 The script specifies job steps using the `srun` command.
-Appendices \ref{small-sequential-job}, \ref{multiple-similar-sequential-jobs}, and \ref{large-parallel-job} describe job scripts for different size jobs.
+Next, we show three job script examples for different job sizes
 
-
-## Small sequential job
 ```sh
 #!/usr/bin/env bash
 #SBATCH --job-name=<job-name>
@@ -21,10 +19,9 @@ Appendices \ref{small-sequential-job}, \ref{multiple-similar-sequential-jobs}, a
 srun <program>
 ```
 
-The above script is an example of a small, sequential batch job with a single job step (`srun` command).
+The above script is an example of a small, sequential batch job with a single job step, that is, `srun` command.
 
 
-## Multiple similar sequential jobs
 ```sh
 #!/usr/bin/env bash
 #SBATCH --job-name=<job-name>
@@ -39,11 +36,10 @@ The above script is an example of a small, sequential batch job with a single jo
 srun <program> $SLURM_ARRAY_TASK_ID
 ```
 
-It is also common to run multiple such jobs independent of each other with slight variation, for example, in initial conditions.
+It is also common to run multiple similar sequential batch jobs independent from one another with slight variations, for example, in initial conditions.
 We can achieve that by turning it into an array job by adding the `array` argument with the desired range and accessing the array ID via an environment variable.
 
 
-## Large parallel job
 ```sh
 #!/usr/bin/env bash
 #SBATCH --job-name=<job-name>
@@ -67,11 +63,12 @@ srun --nodes 1 --ntasks 2 <program-4> &
 wait
 ```
 
+Finally, the we can run large parallel batch jobs.
 The above script is an example of a large parallel batch job with four job steps.
-For example,
-The first program will run on the first job step and could load data to the local disk.
-The second program will run on the second job step utilizing all given nodes, tasks, and CPUs and the majority of the given time.
-It would be a large parallel program, such as a large, well-parallelizing simulation communicating via MPI.
-The third and fourth programs' job steps will run parallel after the first step, utilizing all tasks and CPUs from a single node.
+For example, it could perform the following steps.
+The first program runs on the first job step and could load data to the local disk.
+The second program runs on the second job step utilizing all given nodes, tasks, and CPUs and the majority of the given time.
+It is a large parallel program, such as a large, well-parallelizing simulation communicating via MPI.
+The third and fourth programs' job steps run parallel after the first step, utilizing all tasks and CPUs from a single node.
 These programs could be post-processing steps, for example, processing and backing up the simulation results.
 
