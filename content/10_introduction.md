@@ -91,5 +91,5 @@ In Section \ref{high-performance-computing}, we present a general overview of hi
 In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective and explain the necessary system identifiers for fine-grained data.
 In Section \ref{monitoring-system}, we describe the monitoring system and explain how we collect data, what data we collect, and how we store it.
 Section \ref{results} presents methods and results from explorative data analysis on the collected monitoring data during this thesis.
-We explore issues with data quality and how they affected the thesis work, provide visualizations and explanations of the monitoring data, demonstrate that we can identify users who perform heavy I/O from the data, and present ideas for future improvement in the analysis methods.
+We explore issues with data quality and how they affected the thesis work, provide visualizations and explanations of the monitoring data, demonstrate that we can identify users who perform heavy I/O relative to others from the data, and present ideas for future improvement in the analysis methods.
 Section \ref{conclusion} concludes by discussing the general aspects of the thesis work, which thesis goals we accomplished, which ones we had to leave for future work, and perspectives for future work on monitoring file system usage.

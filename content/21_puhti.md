@@ -1,6 +1,4 @@
-\clearpage
-
-# Puhti cluster at CSC
+## Puhti cluster at CSC
 In order to build a monitoring system for CSC's Puhti cluster, we need to understand certain aspects of its hardware and software configuration.
 <!-- This section presents the configuration of the CSC's *Puhti* cluster from a storage perspective. -->
 Puhti is a Petascale system, referring to the peak performance above $10^{15}$ floating point operations per second.
@@ -26,9 +24,6 @@ We use units of bytes and bits and base ten and base two prefixes, as shown in T
 One byte (B) is eight bits (b).
 Units of memory size use bytes with base two prefixes, such as gibibytes (GiB), storage size uses bytes with base ten prefixes, such as gigabytes (GB), and network bandwidth uses bit rates with base ten prefixes, such as gigabits per second (Gb/s).
 
-\clearpage
-
-## Hardware configuration
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GB per node)
 -|-|-|-|-
@@ -86,7 +81,6 @@ Three dots between nodes or switches indicate that there are many of them.
 <!-- TODO: illustrate that there are two MDTs per MDS and three OSTs per OSS in the figure -->
 
 
-## System configuration
 As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
 Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server (RHEL)* as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
