@@ -67,6 +67,8 @@ r_k(t_{i-1}, t_{i}), & \text{if } t_{i-1} < t \le t_{i},\quad \forall i\in\{2,..
 \label{eq:rate-general}
 \end{equation}
 
+---
+
 ![
 The upper graph shows a sampling of a counter values $v_{k}(t)$ from Equation \eqref{eq:counter-value} with timestamps $t_{1},t_{2},...,t_{9}.$
 The lower graph shows the computed rate $r_{k}(t)$ as described in Equation \eqref{eq:rate-general}.
@@ -76,8 +78,6 @@ The red box demonstrates the relationship $\delta_k(t_4,t_5)=r_k(t_4,t_5)\cdot\t
 ](figures/counter-rate.svg)
 
 \clearpage
-
-Transforming timestamps
 
 We can recover the counter increments from the step function using a definite integral
 
