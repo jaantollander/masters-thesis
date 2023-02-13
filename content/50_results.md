@@ -29,4 +29,4 @@ We preprocessed the monitoring data by computing rates from the counter values a
 <!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
 The processed data consists of rows of timestamp and metadata values and the average rate of each operation from the previous to the current timestamp.
 The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the names of Lustre targets from Table \ref{tab:lustre-servers-targets}, node names from Table \ref{tab:node-names}, valid user identifiers, and valid job identifiers.
-We describe the theoretical aspects of computing rates from counters and sums and densities for rates in Appendix \ref{computing-and-aggregating-rates}.
+We describe the theoretical aspects of computing rates from counters and sums and densities for rates in Appendix \ref{computing-and-analyzing-rates}.

@@ -1,6 +1,6 @@
 \clearpage
 
-# Computing and aggregating rates
+# Computing and analyzing rates
 We compute rates from counter values.
 A rate tells us how much the value changes on average during an interval.
 We referer to the values obtained from Jobstast as *observed values* in contrast to implicit zero values of counters outside the observation intervals, such as the initial counter.
@@ -11,8 +11,6 @@ The size of the set of observed identifiers tells us how many individual time se
 It is proportional to how much data we accumulate at each observation.
 We regard the observed identifiers as a subset of *all identifiers*, which is the set of all possible identifiers, depending on the chosen identifier scheme.
 
-
-## Computing rates from counters
 Let $\mathcal{K}$ denote the set of *all identifiers* and $t\in\mathbb{R}$ denote a *timestamp*.
 Then, we define $K(t)\subseteq \mathcal{K}$ as the set of *observed identifiers* at time $t$ and $c_{k}(t)\in\mathbb{R}$ such that $c_{k}(t)\ge 0$ as the *observed counter value* at time $t$ for observed identifier $k\in K(t).$
 
@@ -69,6 +67,18 @@ r_k(t_{i-1}, t_{i}), & \text{if } t_{i-1} < t \le t_{i},\quad \forall i\in\{2,..
 \label{eq:rate-general}
 \end{equation}
 
+![
+The upper graph shows a sampling of a counter values $v_{k}(t)$ from Equation \eqref{eq:counter-value} with timestamps $t_{1},t_{2},...,t_{9}.$
+The lower graph shows the computed rate $r_{k}(t)$ as described in Equation \eqref{eq:rate-general}.
+The graphs also show the observation interval $\tau(t_4,t_5)$ from Equation \eqref{eq:observation-interval}, counter increment $\delta_{k}(t_4,t_5)$ from Equation \eqref{eq:counter-increment}, and individual rate $r_{k}(t_4,t_5)$ from Equation \eqref{eq:rate}
+The red box demonstrates the relationship $\delta_k(t_4,t_5)=r_k(t_4,t_5)\cdot\tau(t_4,t_5),$ which recovers the counter increment with a definitive integral, seen in Equation \eqref{eq:rate-integral}.
+\label{fig:counter-rate}
+](figures/counter-rate.svg)
+
+\clearpage
+
+Transforming timestamps
+
 We can recover the counter increments from the step function using a definite integral
 
 \begin{equation}
@@ -80,17 +90,6 @@ r_k(t_{i-1}, t_{i}) \cdot \tau(t_{i-1}, t_{i}),\quad \forall i\in\{2,...,n\}.
 \label{eq:rate-integral}
 \end{equation}
 
-
-![
-The upper graph shows a sampling of a counter values $v_{k}(t)$ from Equation \eqref{eq:counter-value} with timestamps $t_{1},t_{2},...,t_{9}.$
-The lower graph shows the computed rate $r_{k}(t)$ as described in Equation \eqref{eq:rate-general}.
-The graphs also show the observation interval $\tau(t_4,t_5)$ from Equation \eqref{eq:observation-interval}, counter increment $\delta_{k}(t_4,t_5)$ from Equation \eqref{eq:counter-increment}, and individual rate $r_{k}(t_4,t_5)$ from Equation \eqref{eq:rate}
-The red box demonstrates the relationship $\delta_k(t_4,t_5)=r_k(t_4,t_5)\cdot\tau(t_4,t_5),$ which recovers the counter increment with a definitive integral, seen in Equation \eqref{eq:rate-integral}.
-\label{fig:counter-rate}
-](figures/counter-rate.svg)
-
-
-## Transforming timestamps
 Using the property \eqref{eq:rate-integral}, we can transform a step function $r_k(t)$ into a step function $r_{k}^\prime(t)$ with timestamps $t_1^{\prime}, t_2^{\prime}, ..., t_m^{\prime}$ where $t_1^{\prime} < t_2^{\prime} < ... < t_m^{\prime}$ and $m\in\mathbb{N}$ such that it preserves the change in counter values in the new intervals by first setting as
 
 \begin{equation}
@@ -106,10 +105,8 @@ Then, by computing the rate of change using \eqref{eq:rate}.
 This transformation is helpful if we have multiple step functions with steps as different timestamps, and we need to convert the steps to happen at identical timestamps.
 In practice, we can avoid the transformation by querying the counters simultaneously.
 
+---
 
-\clearpage
-
-## Summation
 We define the sum of rates of change over identifiers $K \subseteq \mathcal{K}$ as
 
 \begin{equation}
@@ -122,8 +119,8 @@ We sum all the values at each timestamp.
 Otherwise, we have to resort to a more complex algorithm whose description is out of the scope of this thesis.
 In practice, we transform the timestamps of all rates to identical timestamps using \eqref{eq:counter-increment-new} before summation if necessary.
 
+---
 
-## Density
 We define a function that indicates if the logarithmic value of $x\in\mathbb{R}$ with *base* $b\in \mathbb{N}$ where $b > 1$ belongs to the *bucket* $y\in \mathbb{Z}$ as
 
 \begin{equation}
