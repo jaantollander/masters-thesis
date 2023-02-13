@@ -70,7 +70,7 @@ There are no malformed entries on MDTs.
 We can see that only two of the four MDTs handle almost all of the metadata operations.
 Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
 The load across MDTs is unbalanced because MDTs are assigned based on the top-level directory, that is, to different storage areas, such as Home, Projappl, Scratch, and the usage of these storage areas varies.
-We explained storage areas in Section \ref{system-configuration}.
+We explained storage areas in Section \ref{puhti-cluster-at-csc}.
 \label{fig:entry-ids-mdt}
 ](figures/entry_ids_mdt.svg)
 

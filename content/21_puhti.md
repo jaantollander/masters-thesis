@@ -1,13 +1,10 @@
 ## Puhti cluster at CSC
 In order to build a monitoring system for CSC's Puhti cluster, we need to understand certain aspects of its hardware and software configuration.
-<!-- This section presents the configuration of the CSC's *Puhti* cluster from a storage perspective. -->
 Puhti is a Petascale system, referring to the peak performance above $10^{15}$ floating point operations per second.
 It has over five hundred unique monthly users and a diverse user base, making it prone to problems from heavy use of the parallel file system, and thus interesting for studying it.
 Puhti is a Finnish noun that means having energy.
-
-In Subsection \ref{hardware-configuration}, we explain the hardware configuration of Puhti, including the nodes, processors, memory, storage, and network.
-Subsection \ref{system-configuration} covers the system configuration, such as the operating system, specific names and identifiers, and storage areas.
-<!-- Finally, Subsection \ref{running-workloads} discusses how to workloads on Puhti via Slurm, Slurm partitions, and Slurm's relevance for collecting file system usage statistics. -->
+We explain the hardware configuration of Puhti, including the nodes, processors, memory, storage, and network.
+Then, we cover the system configuration, such as the operating system, specific names and identifiers, and storage areas.
 
 Value    | Prefix   | Value    | Prefix
 -        | -        | -        | -

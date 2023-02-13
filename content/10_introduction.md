@@ -18,12 +18,10 @@ In this work, the I/O refers to storage I/O.
 <!-- TODO: [@toward_understanding_io_behavior] -->
 Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [@understanding_io_behavior].
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
-<!-- A ranking is maintained on the TOP500 list [@top_500]. -->
 However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
 The system must transport this data between main memory and storage, making I/O performance essential and problems from heavy I/O more common.
 The increasing demand for better I/O performance in HPC systems makes studying it necessary.
 The HPC community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
-<!-- Ranking on IO500 list [@io_500]. -->
 Research from institutions and companies such as Oak Ridge National Laboratory, Lawrence Berkeley National Laboratory, Virginia Tech, Cray, and Seagate is actively finding ways to improve I/O performance in HPC.
 For example, they research ways to improve parallel file systems [@io_load_balancing; @efficient-metadata-indexing] and develop alternative storage solutions [@daos_and_friends; @object_centric_data].
 
@@ -85,10 +83,9 @@ The thesis advisor and system administrators were responsible for developing, de
 Their effort was instrumental in initiating the thesis work, collecting the data, and helping with writing the thesis.
 The thesis's contributions are the data analysis methods and visualizations, which the thesis author built from scratch.
 
-<!-- TODO: improve thesis outline based on the section contents -->
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
-In Section \ref{puhti-cluster-at-csc}, we describe the configuration of the Puhti cluster from a storage perspective and explain the necessary system identifiers for fine-grained data.
+We also describe the configuration of the Puhti cluster from a storage perspective and explain the necessary system identifiers for fine-grained data.
 In Section \ref{monitoring-system}, we describe the monitoring system and explain how we collect data, what data we collect, and how we store it.
 Section \ref{results} presents methods and results from explorative data analysis on the collected monitoring data during this thesis.
 We explore issues with data quality and how they affected the thesis work, provide visualizations and explanations of the monitoring data, demonstrate that we can identify users who perform heavy I/O relative to others from the data, and present ideas for future improvement in the analysis methods.
