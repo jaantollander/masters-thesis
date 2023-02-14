@@ -6,7 +6,7 @@ Many high-performance computing (HPC) systems, typically computer clusters, rely
 A shared file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
 Such use may lead to congestion in a parallel file system, which can slow down or even halt the whole system, harming all users who use the file system, not just the ones responsible for the problem.
 Heavy use may be intentional, such as data-intensive computing, or unintentional, such as unknowingly running a program that creates many temporary files or a program that uses the file system for communication between processes.
-In this thesis, we investigate whether monitoring file system usage can help identify the causes of slowdowns and the users responsible for them in a production system.
+In this thesis, we investigate whether monitoring file system usage in a production system can help identify the causes of slowdowns, such as specific users or jobs.
 
 The professional literature typically refers to interaction with storage as *I/O*, an abbreviation for *Input/Output*.
 Generally, I/O refers to communication between a computer and the outside world, but we often use it to describe interactions with a storage device.
