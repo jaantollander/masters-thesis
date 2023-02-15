@@ -225,7 +225,7 @@ Initially, we computed the difference between the two counters on the monitoring
 Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
 However, computing the differences in the monitoring clients makes the design more complex and error-prone.
 Another problem that effected the initial design was a problem with data quality, which we discuss in detail in Section \ref{entries-and-issues}.
-Due to the bug in Lustre Jobstats, some node names were in the fully-qualified format instead of the short hostname format.
+Due to some bug or configuration issue, some node names were in the fully-qualified format instead of the short hostname format.
 Because we assumed that all node names would follow the short hostname format, we parsed the metadata from the entry identifiers with a short hostname and a fully-qualified hostname as the same.
 The mistake made us identify two different time series as the same, resulting in wrong values when computing rates.
 We fixed it by modifying our parser to disambiguate between the two formats.

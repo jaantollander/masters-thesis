@@ -45,23 +45,29 @@ Next, we inspect the density plot, determine a time range and value threshold, a
 Finally, we either repeat the process by choosing a different categorical value and resolution or stop if we have identified the causes of heavy I/O.
 -->
 
+<!--
+We can see two heavy I/O patterns compared to the many light I/O patterns; many intense spikes and three less intense bursts.
+-->
+
 ![
 Rates of `setattr` from compute nodes to `scratch-MDT0000` during 24 hours of 2022-10-27.
-We can see two heavy I/O patterns compared to the many light I/O patterns; many intense spikes and three less intense bursts.
+During the period, only one user performs above $10^3$ operation per second, seen as the large spikes relative to other users.
+Furthermore, 8 users perform within $10^2$ and $10^3$ operations per second, compared to the 310 user perform rate less than $10^2.$
 \label{fig:density-1}
 ](figures/2022-10-27_mdt0000_compute_setattr.svg)
 
 ![
 Rates of `read` from compute nodes to `scratch-OST0001` during 24 hours of 2022-10-27.
-After 13:00, we see many bursts of heavy I/O caused by two users.
+During the period, only one user performs above $10^3$ operation per second, seen as the bursts starting after 14:30.
+Furthermore, 7 users perform within $10^2$ and $10^3$ operations per second, compared to the 285 user perform rate less than $10^2.$
 \label{fig:density-2}
 ](figures/2022-10-27_ost0001_compute_read.svg)
 
 ![
 Rates of `readbytes` from compute nodes to `scratch-OST0004` during 24 hours of 2022-10-27.
-The figure shows us two heavy I/O patterns: one long, intense burst and one short, less intense burst.
-We can see that a single user caused a long, intense burst, over a gigabyte ($10^9$ bytes) per second, between 9:00 and 14:00.
-The shorter, less intense burst, from 9:00 to 10:00, is hundreds of megabytes ($10^8$ bytes) per second.
+During the period, only one user performs above $10^9$ bytes (gigabytes) per second, seen the long, intense burst between 9:00 and 14:00.
+Furthremore, 5 users perform within $10^8$ and $10^9$ bytes (hundreds of megabytes) per second, most of which is from a burst from 9:00 to 10:00.
+Compared to the 304 user perform rate less than $10^8.$
 \label{fig:density-3}
 ](figures/2022-10-27_ost0004_compute_readbytes.svg)
 

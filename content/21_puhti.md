@@ -139,7 +139,7 @@ For example, `puhti-login11` is a name of one of the login nodes or `r01c21` is 
 Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
 It shares the same Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
 
-- *Home* is intended for storing personal data and configuration files with a default quota of 10 GB and 100 000 files per user.
+- *Home* is intended for storing personal data and configuration files with a fixed quota of 10 GB and 100 000 files per user.
 
 - *Projappl* is intended for storing project-specific application files such as compiled libraries with a default quota of 50 GB and 100 000 files per project.
 
