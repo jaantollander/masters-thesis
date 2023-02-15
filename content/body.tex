@@ -1,36 +1,13 @@
 \makecoverpage
 \makecopyrightpage
 
-% TODO: English abstract
-% TODO: copy to \thesisabstract metadata
+% English abstract
 \begin{abstractpage}[english]
-% Topic and problem
-Many high-performance computing (HPC) systems, typically computer clusters, rely on a global, shared, parallel file system for large storage capacity and bandwidth.
-A shared file system is available across the entire system, making it user-friendly but prone to problems from heavy use.
-Such use can cause congestion and slow down or even halt the whole system, harming all users who use the parallel file system.
-In this thesis, we investigate whether monitoring file system usage in a production system can help identify the causes of slowdowns, such as specific users or jobs.
-
-% Why?
-% help system admins to elimate the slowdown, and to improve usability of CSC clusters
-% real-time monitoring and warning system
-% long-term goal at CSC
-
-% Methods
-We monitor the usage of the Lustre parallel file system in CSC's Puhti cluster using a custom monitoring system built around Lustre Jobstats.
-We explain the configuration of the Puhti cluster and the monitoring system regarding the file system usage data.
-
-% Results
-We discovered issues in the data quality from Lustre Jobstats during the thesis.
-We explain these issues in detail and the limitations they imposed on analysis and thesis goals.
-Despite the data quality issues, we obtained enough feasible data for analysis.
-We demonstrate 24 hours of monitoring data by visually demonstrate low-level and high-level file system usage patterns.
-Furthermore, we show that we can use file system usage data to identify causes of relative changes in I/O trends, such as large relative increases.
-Finally, we explore ideas for future work on monitoring file system usage.
-% such as, ...
+\abstracttext
 \end{abstractpage}
 
 
-% TODO: Finnish abstract
+% Finnish abstract
 \degreeprogram{Tieto-, tietoliikenne- ja informaatiotekniikka}
 \major{Tietotekniikka}
 \thesistitle{Rinnakkaistiedostojärjestelmän käytön valvonta suurteholaskenta tietokoneklusterissa}
@@ -38,7 +15,19 @@ Finally, we explore ideas for future work on monitoring file system usage.
 \keywords{tietokonejärjestelmien valvonta\spc havaittavuus\spc tietokoneklusteri\spc suurteholaskenta\spc rinnakkaistiedostojärjestelmä\spc Lustre\spc I/O käyttäytyminen\spc aikasarjaanalyysi\spc tutkiva data-analyysi}
 
 \begin{abstractpage}[finnish]
-TODO: Abstrakti suomeksi
+Monet tehokkaat tietokoneklusterit luottavat järjestelmän laajuiseen, jaettuun rinnakkaistiedostojärjestelmään suuren tallennuskapasiteetin ja kaistanleveyden saavuttamiseksi.
+Jaettu tiedostojärjestelmä on käytettävissä koko järjestelmässä, mikä tekee siitä käyttäjäystävällisen, mutta altis raskaan käytön aiheuttamille ongelmille.
+Tällainen käyttö voi aiheuttaa ruuhkautumista ja hidastaa tai jopa pysäyttää koko järjestelmän, mikä vahingoittaa kaikkia rinnakkaistiedostojärjestelmää käyttäviä käyttäjiä.
+Tässä opinnäytetyössä tutkimme voiko CSC:n tuotantojärjestelmän tiedostojärjestelmän käytön seuranta auttaa tunnistamaan hidastumisen syitä, kuten tiettyjä käyttäjiä tai töitä.
+CSC:n pitkäaikainen tavoite on rakentaa automaattinen, reaaliaikainen valvonta- ja varoitusjärjestelmä, jonka avulla järjestelmänvalvojat voivat tehdä päätöksiä hidastumisen lievittämiseksi.
+Tarkemmin sanottuna seuraamme Lustre rinnakkaistiedostojärjestelmän käyttöä Lustre Jobstatsilla Puhti-klusterissa, joka on monipuolisen käyttäjäkunnan omaava petascale-klusteri.
+Selitämme tarvittavat yksityiskohdat Puhti-klusterista ja valvontajärjestelmästämme Lustre-tiedostojärjestelmän käyttötietojen ymmärtämiseksi.
+Opinnäytetyön aikana havaitsimme ongelmia Lustre Jobstats:in tietojen laadussa.
+Ongelmat vaikuttivat tiedoissa oleviin tunnisteisiin, mikä teki joistakin tiedoista epäluotettavia ja rajoitti kykyämme luoda automaattinen, reaaliaikainen analyysi.
+Siitä huolimatta saimme käyttökelpoisen tietojoukon tutkivaa eräanalyysiä varten.
+Esittelemme 24 tunnin seurantatietoja näyttämällä visuaalisesti tiedostojärjestelmän käyttötapoja matalalla ja korkealla tasolla.
+Lisäksi osoitamme, että voimme käyttää tiedostojärjestelmän käyttötietoja tunnistamaan syitä suhteellisiin muutoksiin I/O-trendeissä, erityisesti suurissa suhteellisissa nousuissa.
+Lopuksi tutkimme ideoita tulevaa työtä varten tiedostojärjestelmän käytön seuraamiseksi luotettavalla tiedolla pidemmältä ajalta.
 \end{abstractpage}
 
 
