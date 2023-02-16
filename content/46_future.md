@@ -34,7 +34,7 @@ We should also build real-time visualization and reporting of the analysis resul
 <!-- We aim to offer job-specific I/O statistics to users. -->
 
 <!--
-Another interesting analysis method is using *cluster analysis*.
+Another interesting analysis method is using cluster analysis.
 We can assign groups for multiple time series with similar values using one-dimensional clustering at each timestamp and then analyze how the cluster for each time series evolves in time.
 We could describe each cluster with using summary statistics such as the number of samples, min, max, mean, and deviation from the mean.
 For example, we could use Average Shifted Histograms [@ash] to perform fast one-dimensional clustering.

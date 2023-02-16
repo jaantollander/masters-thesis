@@ -9,7 +9,7 @@ The figures demonstrate the fine-grained nature of the monitoring data and entry
 The x-axis displays time, and the y-axis display the accumulated amount of operations for counters and the operations per second for the rate.
 Each line displays operations from one Lustre client to one Lustre Target.
 The figures in this subsection display a single node job; thus, each line shows `write` operations from the same compute node to a different OST.
-We say that a job is *active* during a period that performs any file system operations; otherwise, it is *inactive*.
+We say that a job is active during a period that performs any file system operations; otherwise, it is inactive.
 
 ![
 The counter and rate of `write` operations from one job on a single compute node.

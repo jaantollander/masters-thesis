@@ -15,11 +15,11 @@ Importantly density allows us to distinguish differences, such as whether an inc
 We explore a part of the data set visually using Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3}.
 We demonstrate a process of identifying users who cause large relative increases in I/O rates.
 Each figure consists of three subplots.
-The *top subplot* demonstrates the high-level trend by showing the total rate, that is, the sum of rates from all users.
+The top subplot demonstrates the high-level trend by showing the total rate, that is, the sum of rates from all users.
 We use it to identify periods where trends change, specifically the large relative increases.
-The *middle subplot* demonstrates a more fine-grained view by showing the rate of each user, that is, the components of the total rate from the top subplot.
+The middle subplot demonstrates a more fine-grained view by showing the rate of each user, that is, the components of the total rate from the top subplot.
 We analyze them to understand user-level causes of changes in the total rate.
-The *bottom subplot* shows the density computed from the values seen in the middle subplot.
+The bottom subplot shows the density computed from the values seen in the middle subplot.
 We use a density plot to analyze how many users perform the I/O rate in a specific range during specific time.
 Specifically, we look at the bucket at the top of the plot to see how many users perform large I/O rates relative to others during increase in I/O rate.
 We identify the users by filtering the data set using the period and value range as conditions obtained from the subplots.
