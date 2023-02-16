@@ -47,17 +47,17 @@ Users can proactively throttle their workloads, or administrators can throttle j
 
 Even if users follow the guidelines, problems eventually occur.
 To identify when they occur, we must actively monitor file system performance.
-Furthermore, by measuring I/O performance and using statistical time-series analysis, we can identify variations in performance trends, such as *short-transient* or *long-persistent* ones, and changes in baseline performance over time [@year-in-life-of-parallel-file-system].
+Furthermore, by measuring I/O performance and using statistical time-series analysis, we can identify variations in performance trends, such as short-transient or long-persistent ones, and changes in baseline performance over time [@year-in-life-of-parallel-file-system].
 However, we need more than performance monitoring to identify who or what is causing problems in a parallel file system.
 To identify causes, we can monitor file system health, capacity, and usage, track system changes, and use data from the resource manager.
 This thesis focuses on fine-grained file system usage monitoring to identify the causes of short-transient problems.
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs the operations, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
-Problems from parallel file system usage concern the high-performance clusters at *CSC -- IT Center for Science*, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
+Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 [@about-csc]
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
-At the time of writing, CSC operates three high-performance clusters, *Puhti*, *Mahti*, and the pan-european *LUMI*, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
+At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-european LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
 Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity and billing units for the users.
 We believe that monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
 

@@ -24,19 +24,19 @@ Units of memory size use bytes with base two prefixes, such as gibibytes (GiB), 
 
 Node category | Node type | Node count | Memory \newline (GiB per node) | Local storage \newline (GB per node)
 -|-|-|-|-
-*Lustre* | *MDS* (virtual) | 2 |   |  
-*Lustre* | *OSS* (virtual) | 8 |   |  
-*Service* | *Utility* | 3 | 384 | 2900
-*Service* | *Login* | 2 | 384 | 2900
-*Service* | *Login-FMI* | 2 | 384 | 2900
-*Compute* | *CPU*, *M* | 484 | 192 | -
-*Compute* | *CPU*, *M-IO* | 48 | 192 | 1490
-*Compute* | *CPU*, *M-FMI* | 240 | 192 | -
-*Compute* | *CPU*, *L* | 92 | 384 | -
-*Compute* | *CPU*, *L-IO* | 40 | 384 | 3600
-*Compute* | *CPU*, *XL* | 12 | 768 | 1490
-*Compute* | *CPU*, *BM* | 6 | 1500 | 5960
-*Compute* | *GPU* | 80 | 384 | 3600
+Lustre | MDS (virtual) | 2 |   |  
+Lustre | OSS (virtual) | 8 |   |  
+Service | Utility | 3 | 384 | 2900
+Service | Login | 2 | 384 | 2900
+Service | Login-FMI | 2 | 384 | 2900
+Compute | CPU, M | 484 | 192 | -
+Compute | CPU, M-IO | 48 | 192 | 1490
+Compute | CPU, M-FMI | 240 | 192 | -
+Compute | CPU, L | 92 | 384 | -
+Compute | CPU, L-IO | 40 | 384 | 3600
+Compute | CPU, XL | 12 | 768 | 1490
+Compute | CPU, BM | 6 | 1500 | 5960
+Compute | GPU | 80 | 384 | 3600
 
 : \label{tab:puhti-nodes}
 Nodes on the Puhti cluster.
@@ -79,7 +79,7 @@ Three dots between nodes or switches indicate that there are many of them.
 
 
 As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
-Puhti also uses Linux, specifically the *RedHat Enterprise Linux Server (RHEL)* as its operating system.
+Puhti also uses Linux, specifically the RedHat Enterprise Linux Server (RHEL) as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
 
 <!-- TODO: expand discussion -->
@@ -92,16 +92,16 @@ Furthermore, we add curly braces to elements outside them, such as `a{c,b}` is `
 
 Node category|Node Type|Index|Targets
 -|-|-|-
-*Lustre*|MDS|1|`scratch-MDT{0000,0001}`
-*Lustre*|MDS|2|`scratch-MDT{0002,0003}`
-*Lustre*|OSS|1|`scratch-OST{0000,0001,0002}`
-*Lustre*|OSS|2|`scratch-OST{0003,0004,0005}`
-*Lustre*|OSS|3|`scratch-OST{0006,0007,0008}`
-*Lustre*|OSS|4|`scratch-OST{0009,000a,000b}`
-*Lustre*|OSS|5|`scratch-OST{000c,000d,000e}`
-*Lustre*|OSS|6|`scratch-OST{000f,0010,0011}`
-*Lustre*|OSS|7|`scratch-OST{0012,0013,0014}`
-*Lustre*|OSS|8|`scratch-OST{0015,0016,0017}`
+Lustre|MDS|1|`scratch-MDT{0000,0001}`
+Lustre|MDS|2|`scratch-MDT{0002,0003}`
+Lustre|OSS|1|`scratch-OST{0000,0001,0002}`
+Lustre|OSS|2|`scratch-OST{0003,0004,0005}`
+Lustre|OSS|3|`scratch-OST{0006,0007,0008}`
+Lustre|OSS|4|`scratch-OST{0009,000a,000b}`
+Lustre|OSS|5|`scratch-OST{000c,000d,000e}`
+Lustre|OSS|6|`scratch-OST{000f,0010,0011}`
+Lustre|OSS|7|`scratch-OST{0012,0013,0014}`
+Lustre|OSS|8|`scratch-OST{0015,0016,0017}`
 
 : \label{tab:lustre-servers-targets}
 Names of Lustre servers and Lustre targets in Puhti.
@@ -118,55 +118,55 @@ We can use node names to separate file system operations at a node-specific leve
 
 Node category | Set of node names
 -|-
-*Service* | `puhti-login{11-16}`
-*Service* | `puhti-fmi{11-12}`
-*Service* | `puhti-ood1-{production}`
-*Service* | `puhti-ood2-{testing,production}`
-*Compute* | `r{01-04}c{01-48}`
-*Compute* | `r{01-04}g{01-08}`
-*Compute* | `r{05-07}c{01-64}`
-*Compute* | `r08m{01-06}`
-*Compute* | `r{09-10}c{01-48}`
-*Compute* | `r{11-12}c{01-72}`
-*Compute* | `r{13-18}c{01-48}`
-*Compute* | `r{13-18}g{01-08}`
+Service | `puhti-login{11-16}`
+Service | `puhti-fmi{11-12}`
+Service | `puhti-ood1-{production}`
+Service | `puhti-ood2-{testing,production}`
+Compute | `r{01-04}c{01-48}`
+Compute | `r{01-04}g{01-08}`
+Compute | `r{05-07}c{01-64}`
+Compute | `r08m{01-06}`
+Compute | `r{09-10}c{01-48}`
+Compute | `r{11-12}c{01-72}`
+Compute | `r{13-18}c{01-48}`
+Compute | `r{13-18}g{01-08}`
 
 : \label{tab:node-names}
 Names of service and compute nodes in Puhti that have Lustre Jobstats enabled.
 For example, `puhti-login11` is a name of one of the login nodes or `r01c21` is a name of one of the compute nodes.
 
 
-Puhti separates its file system into *storage areas*, such that each storage area has a dedicated directory.
-It shares the same Lustre file system across *home*, *projappl*, and *scratch* storage areas with different uses and quotas.
+Puhti separates its file system into storage areas, such that each storage area has a dedicated directory.
+It shares the same Lustre file system across Home, Projappl, and Scratch storage areas with different uses and quotas.
 
-- *Home* is intended for storing personal data and configuration files with a fixed quota of 10 GB and 100 000 files per user.
+- Home is intended for storing personal data and configuration files with a fixed quota of 10 GB and 100 000 files per user.
 
-- *Projappl* is intended for storing project-specific application files such as compiled libraries with a default quota of 50 GB and 100 000 files per project.
+- Projappl is intended for storing project-specific application files such as compiled libraries with a default quota of 50 GB and 100 000 files per project.
 
-- *Scratch* is intended for short-term data storage in the cluster with a default quota of 1 TB and 1 000 000 files per project.
+- Scratch is intended for short-term data storage in the cluster with a default quota of 1 TB and 1 000 000 files per project.
 
-As a general guideline, jobs should use the *scratch* area for storing data.
-They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
+As a general guideline, jobs should use the Scratch area for storing data.
+They should access the Home or Projappl areas only to read or copy configuration or application-specific files at the beginning of the job.
 <!-- TODO: edit this paragraph -->
 Our monitoring system, discussed in Section \ref{monitoring-system}, monitors the usage of the shared Lustre file system using Lustre Jobstats.
 
-Puhti also has two local storage areas, *local scratch* and *tmp*.
+Puhti also has two local storage areas, Local scratch and Tmp.
 They are intended for temporary file storage for I/O heavy operations to avoid burdening the Lustre file system.
 Users who want to keep data from local storage after a job completion must copy it to scratch since the system regularly cleans the local storage areas.
 
-- *Local scratch*, mounted on a local SSD, is indented for batch jobs to perform I/O heavy operations.
+- Local scratch, mounted on a local SSD, is indented for batch jobs to perform I/O heavy operations.
 Its quota depends on how much the user requests for the job.
 
-- *Tmp*, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
+- Tmp, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
 
 In this work, we do not monitor the usage of the local storage areas.
 Monitoring their usage is complicated; obviously, we cannot use Lustre Jobstats.
 In the future, a more practical option is to monitor the reservations for local storage.
 
-In CSC systems, users have a *user account* which can belong to one or more *projects*.
+In CSC systems, users have a user account which can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.
 <!--
-We measure the usage of computational resources in *Billing Units (BU)*.
+We measure the usage of computational resources in Billing Units (BU).
 Resources, such as reserved CPU cores, memory, local disk, GPUs, and storage, use different rates of BUs.
 -->
 Puhti associates each user account with a *user* and each project with a *group*.
@@ -190,17 +190,17 @@ It also performs accounting of details about the submitted jobs.
 
 Partition name | Time limit | Task limit | Node limit | Node type
 -|-|-|-|-|-|-
-`test` | 15 minutes | 80 | 2 | *M*
-`interactive` | 7 days | 8 | 1 | *M-IO*, *L-IO*
-`small` | 3 days |  40 | 1 | *M*, *L*, *M-IO*, *L-IO*
-`large` | 3 days | 1040 | 26 | *M*, *L*, *M-IO*, *L-IO*
-`longrun` | 14 days | 40 | 1 | *M*, *L*, *M-IO*, *L-IO*
-`hugemem` | 3 days | 160 | 4 | *XL*, *BM*
-`hugemem_longrun` | 14 days | 40 | 1 | *XL*, *BM*
-`fmitest` | 1 hour | 80 | 2 | *M-FMI*
-`fmi` | 12 days | 4000 | 100 | *M-FMI*
-`gputest` | 15 minutes | 8 | 2 | *GPU*
-`gpu` | 3 days | 80 | 20 | *GPU*
+`test` | 15 minutes | 80 | 2 | M
+`interactive` | 7 days | 8 | 1 | M-IO, L-IO
+`small` | 3 days |  40 | 1 | M, L, M-IO, L-IO
+`large` | 3 days | 1040 | 26 | M, L, M-IO, L-IO
+`longrun` | 14 days | 40 | 1 | M, L, M-IO, L-IO
+`hugemem` | 3 days | 160 | 4 | XL, BM
+`hugemem_longrun` | 14 days | 40 | 1 | XL, BM
+`fmitest` | 1 hour | 80 | 2 | M-FMI
+`fmi` | 12 days | 4000 | 100 | M-FMI
+`gputest` | 15 minutes | 8 | 2 | GPU
+`gpu` | 3 days | 80 | 20 | GPU
 
 : \label{tab:slurm-partitions}
 Slurm partitions on Puhti at the time of writing.

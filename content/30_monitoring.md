@@ -8,7 +8,7 @@ Rounded rectangles indicate programs, and arrows indicate data flow.
 ](figures/lustre-monitor.drawio.svg)
 
 This section explains how our monitoring system works in the Puhti cluster.
-We explain how we collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
+We explain how we collect file system usage statistics with Lustre Jobstats, mentioned in Section \ref{lustre-parallel-file-system}.
 Subsection \ref{entry-identifier-format} covers the settings we use for the entry identifiers for collecting fine-grained statistics.
 In Subsection \ref{file-system-statistics}, we explain the different file system operations statistics that we can track, how we query them, and the output format.
 In Subsection \ref{entry-resets}, we explain when Lustre Jobstats resets the statistics it collects.
@@ -33,7 +33,7 @@ The thesis work focused on the analysis and visualization parts which we explain
 
 
 ## Entry identifier format
-We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the *Lustre Manual* [@docs-lustre, sec. 12.2].
+We can enable Jobstats by specifying a formatting string for the *entry identifier* using the `jobid_name` parameter on a Lustre client as explained in the Lustre Manual [@docs-lustre, sec. 12.2].
 We can configure each Lustre client separately and specify different configurations for different clients.
 We can use the following format codes.
 
@@ -50,13 +50,13 @@ Using more formatting codes results in higher resolution and leads to a higher r
 
 The formatting for Lustre clients on login nodes includes the executable name and user ID.
 
-* `jobid_name="%e.%u"`
+- `jobid_name="%e.%u"`
 
 The formatting for Lustre clients on compute and utility nodes includes job ID, user ID, and node name.
 We set the job ID to Slurm job ID.
 
-* `jobid_name="%j:%u:%H"`
-* `jobid_var=SLURM_JOB_ID`
+- `jobid_name="%j:%u:%H"`
+- `jobid_var=SLURM_JOB_ID`
 
 For Puhti, we listed the node names in Table \ref{tab:node-names}.
 
@@ -88,13 +88,13 @@ The text output is formatted as follows.
 ```
 
 The server (`<server>`) parameter is `mdt` for MDSs and `odbfilter` for OSSs.
-The *target* (`<target>`) contains the name of the Lustre target of the query.
+The target (`<target>`) contains the name of the Lustre target of the query.
 For Puhti, we listed them in Table \ref{tab:lustre-servers-targets}.
 
 After the `job_stats` line, we have a list of entries for workloads that have performed file system operations on the target.
 The output denotes each *entry* by dash `-` and contains the *entry identifier* (`job_id`), *snapshot time* (`snapshot_time`), and various operations with statistics.
 The value of snapshot time is a timestamp as a Unix epoch when the statistics of one of the operations are last updated.
-*Unix epoch* is the standard way of representing time in Unix systems.
+Unix epoch is the standard way of representing time in Unix systems.
 It measures time as the number of seconds elapsed since 00:00:00 UTC on 1 January 1970, excluding leap seconds.
 
 In Table \ref{tab:operations}, we list the MDT and OST operations for which Jobstats keeps statistics.
@@ -158,7 +158,7 @@ That is if the snapshot time is older than the cleanup interval.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
 
-We *detect the resets* by observing if any counter-values have decreased.
+We detect the resets by observing if any counter-values have decreased.
 This method does not detect reset if the new counter value is larger than the old one, but it is uncommon because counter values typically grow large.
 We will underestimate the counter increment in this case when calculating the difference between two counter values.
 
@@ -173,7 +173,7 @@ We explain theoretical details about computing rates in Appendix \ref{computing-
 
 
 ## Storing time series data
-We can use a *time series database* to efficiently store and handle time series data from multiple distinct time series.
+We can use a time series database to efficiently store and handle time series data from multiple distinct time series.
 *Time series data* has distinctive properties that allow optimizations for storing and querying them.
 TimescaleDB documentation [@docs-timescale] characterizes these properties as follows:
 
@@ -183,9 +183,9 @@ TimescaleDB documentation [@docs-timescale] characterizes these properties as fo
 
 There are different options for choosing time series databases.
 A key differentiation between time series databases is whether they can handle a growing number or a fixed number of distinct time series.
-We used *TimescaleDB* because it can handle data with a growing number of distinct time series.
+We used TimescaleDB because it can handle data with a growing number of distinct time series.
 TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distinct time series without drastically declining performance.
-Initially, we used *InfluxDB* but found out that it did not scale well for our use case.
+Initially, we used InfluxDB but found out that it did not scale well for our use case.
 
 
 Field | Type | Value
@@ -199,12 +199,12 @@ Field | Type | Value
   A record in a time series database consists of a time series identifier, timestamp, metadata, and time series data.
 
 
-An instance of a time series database consists of *time series tables* with a schema as in Table \ref{tab:schema-time-series}.
-The *time series identifier* (`time_series_id`) is an ID type such as an integer type, and the *timestamp* (`timestamp`) is a date-time with *Coordinated Universal Time (UTC)* timezone.
+An instance of a time series database consists of time series tables with a schema as in Table \ref{tab:schema-time-series}.
+The *time series identifier* (`time_series_id`) is an ID type such as an integer type, and the *timestamp* (`timestamp`) is a date-time with Coordinated Universal Time (UTC) timezone.
 We recommend using UTC instead of local time zones to avoid problems with daylight saving time and date-time instead of Unix epoch because date-times are human-readable.
 
-In our implementation, a time series table is a *TimescaleDB hyper table* with appropriate indices for efficient queries and chunks with a proper time interval for improved performance.
-We set a *compression policy* to compress data that is older than a specified time to reduce storage and a *retention policy* for dropping data that is older than a set time to limit data accumulation and for regulatory reasons.
+In our implementation, a time series table is a TimescaleDB hyper table with appropriate indices for efficient queries and chunks with a proper time interval for improved performance.
+We set a compression policy to compress data that is older than a specified time to reduce storage and a retention policy for dropping data that is older than a set time to limit data accumulation and for regulatory reasons.
 We stored all data on a single time series table.
 In the future, we may experiment with separate tables for MDT and OST data to improve performance since they mainly contain different fields.
 <!-- It is possible to separate time series data and metadata to reduce data bloat, but it makes queries more complex. -->
@@ -231,9 +231,9 @@ However, the approach makes queries and analysis more computationally intensive.
 
 <!-- In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
 The monitoring client works as follows.
-First, it parses the target and all entries from the output using *Regular Expressions (Regex)*.
+First, it parses the target and all entries from the output using Regular Expressions (Regex).
 Then, it creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
-An example instance of a data structure using *JavaScript Object Notation (JSON)* looks as follows:
+An example instance of a data structure using JavaScript Object Notation (JSON) looks as follows:
 
 ```json
 {
@@ -251,8 +251,8 @@ An example instance of a data structure using *JavaScript Object Notation (JSON)
 }
 ```
 
-Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via *Hypertext Transfer Protocol (HTTP)*.
-Our implementation used the *InfluxDB line protocol* for communication because we designed the code initially for InfluxDB.
+Finally, the monitoring client composes a message of the data by listing the individual data structures and sends it to the ingest server via Hypertext Transfer Protocol (HTTP).
+Our implementation used the InfluxDB line protocol for communication because we designed the code initially for InfluxDB.
 Due to the scaling problem, we use TimescaleDB and suggest using a more efficient line protocol for communication instead.
 
 
