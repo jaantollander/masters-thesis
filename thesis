@@ -24,7 +24,7 @@ thesis_download_aaltostyle() {
 }
 
 thesis_download_citationstyle() {
-    curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/vancouver-brackets.csl" \
+    curl --location "https://raw.githubusercontent.com/citation-style-language/styles/master/ieee-with-url.csl" \
         --output "$(dir_assets)/citationstyle.csl"
 }
 
@@ -41,7 +41,11 @@ thesis_html() {
         --mathjax \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/html.yaml" \
-        --bibliography "$(dir_content)/bibliography.bib" \
+        --bibliography "$(dir_content)/bibliography/online.bib" \
+        --bibliography "$(dir_content)/bibliography/manual.bib" \
+        --bibliography "$(dir_content)/bibliography/article.bib" \
+        --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
+        --bibliography "$(dir_content)/bibliography/book.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --toc \
         --number-sections \
@@ -60,7 +64,11 @@ thesis_epub() {
         --mathml \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/epub.yaml" \
-        --bibliography "$(dir_content)/bibliography.bib" \
+        --bibliography "$(dir_content)/bibliography/online.bib" \
+        --bibliography "$(dir_content)/bibliography/manual.bib" \
+        --bibliography "$(dir_content)/bibliography/article.bib" \
+        --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
+        --bibliography "$(dir_content)/bibliography/book.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --toc \
         --number-sections \
@@ -81,7 +89,11 @@ thesis_pdf() {
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
-        --bibliography "$(dir_content)/bibliography.bib" \
+        --bibliography "$(dir_content)/bibliography/online.bib" \
+        --bibliography "$(dir_content)/bibliography/manual.bib" \
+        --bibliography "$(dir_content)/bibliography/article.bib" \
+        --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
+        --bibliography "$(dir_content)/bibliography/book.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --include-in-header "$(dir_content)/header.tex" \
         --include-before-body "$(dir_content)/body.tex" \
@@ -100,7 +112,11 @@ thesis_tex() {
         --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.tex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
-        --bibliography "$(dir_content)/bibliography.bib" \
+        --bibliography "$(dir_content)/bibliography/online.bib" \
+        --bibliography "$(dir_content)/bibliography/manual.bib" \
+        --bibliography "$(dir_content)/bibliography/article.bib" \
+        --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
+        --bibliography "$(dir_content)/bibliography/book.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --include-in-header "$(dir_content)/header.tex" \
         --include-before-body "$(dir_content)/body.tex" \
@@ -125,8 +141,11 @@ thesis_preview() {
     inotifywait -e close_write,moved_to,create -m "$(dir_content)" -m "$(dir_metadata)" |
     while read -r directory events filename; do
         case $filename in 
-            *.md|*.bib|*.tex|*.yaml) $THESIS_PREVIEW_CMD ;;
-            *) ;;
+            (*.md|*.bib|*.tex|*.yaml)
+                echo "$filename" "$events"
+                $THESIS_PREVIEW_CMD
+                ;;
+            (*) ;;
         esac
     done
     unset directory events filename
