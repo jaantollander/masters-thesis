@@ -53,7 +53,7 @@ The kernel only provides one file type, a sequential stream of bytes.
 The kernel provides an abstraction layer called *Virtual File System (VFS)*, which defines a generic interface for file-system operations for concrete file systems such as ext4, Btrfs, or FAT.
 VFS allows programs to use different file systems uniformly using the operations defined by the interface.
 The interface contains the system calls such as `open()`, `close()`, `read()`, `write()`, `mknod()`, `unlink()` and others.
-For in-depth documentation about system calls, we recommend the Linux Man Pages [@man-pages, sec. 2].
+Linux Man Pages [@man-pages, sec. 2] provides in-depth documentation for system calls.
 We demonstrate the relationship between different system calls with code examples in Appendix \ref{file-system-interface}.
 
 Linux is a multiuser system, which means that multiple users can use the computer at the same time.
@@ -83,7 +83,7 @@ The Lustre file system is implemented as a set of kernel modules designed using 
 A kernel module is a software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 
-Nodes running the Lustre client software are known as *Lustre Clients*.
+Nodes running the Lustre client software are known as *Lustre clients*.
 The Lustre client software interfaces the virtual file system with *Lustre servers*.
 For Lustre clients, the file system appears as a single, coherent, synchronized namespace across the whole cluster.
 Lustre file system separates file metadata and data operations and handles them using dedicated Lustre servers.
