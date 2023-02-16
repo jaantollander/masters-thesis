@@ -103,6 +103,7 @@ We discuss how we use Jobstats in Section \ref{monitoring-system}.
 ## Slurm workload manager
 Typically, the nodes on a cluster are separated into *front end* and *back end*.
 The front end consists of login and utility nodes, and the back end consists of compute nodes.
+Login nodes are meant for login into the system and for performing light, interactive tasks where as compute nodes are meant for performing heavy computing workloads.
 Clusters rely on a *workload manager* to allocate access to computing resources, schedule, and run programs on the back end.
 The programs may instantiate an interactive or batch process.
 A batch process is a computation that runs from start to finish without user interaction compared to interactive processes such as an active terminal prompt or a text editor which respond to user input.

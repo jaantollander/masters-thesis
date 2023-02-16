@@ -5,6 +5,104 @@
     year={2022},
 }
 
+@online{linux-kernel-source,
+    url={https://github.com/torvalds/linux},
+    title={Linux kernel source tree},
+    author={Torvals, Linux and others},
+}
+
+@online{osfam,
+    url={https://www.top500.org/statistics/details/osfam/1/},
+    title={TOP500 - Operating System Family / Linux},
+    year={2022},
+}
+
+@online{top_500,
+    url={https://www.top500.org},
+    title={TOP500},
+    year={2022},
+}
+
+@online{io_500,
+    url={https://io500.org},
+    title={IO500},
+    year={2022},
+}
+
+@online{jobid-atomic,
+    url={https://jira.whamcloud.com/browse/LU-16251},
+    title={Fill jobid in an atomic way},
+    year={2022},
+}
+
+@online{lustre-job-stats-metric-aggregation,
+    url={https://lustre.ornl.gov/ecosystem-2016/documents/tutorials/Hanley-OLCF-JobStats.pdf},
+    title={Lustre Job Stats Metric Aggregation at OLCF},
+    author={Hanley, Jesse and Mohr, Rick},
+    year={2016},
+    month={March}
+}
+
+@online{fine-grained-file-system-monitoring,
+    url={https://www.opensfs.org/wp-content/uploads/2014/04/D3_S31_FineGrainedFileSystemMonitoringwithLustreJobstat.pdf},
+    title={Fine-grained File System Monitoring with Lustre Jobstat},
+    author={Rodwell, Daniel and Fitzhenry, Patrick},
+    year={2014},
+    month={March}
+}
+
+@online{ddn-insight,
+    url={https://www.ddn.com/products/storage-monitoring-ddn-insight/},
+    title={DDN Insight},
+    organization={DataDirect Networks},
+    year={2022},
+}
+
+@online{influxdb,
+    url={https://www.influxdata.com/},
+    title={InfluxDB},
+    organization={InfluxData, Inc},
+    year={2022}
+}
+
+@online{timescaledb,
+    url={https://www.timescale.com/},
+    title={TimescaleDB},
+    organization={Timescale, Inc},
+    year={2022}
+}
+
+@online{go_language,
+    title={Go Programming Language},
+    author={Griesemer, Robert and Pike, Rob and Thompson, Ken and others},
+    url={https://go.dev/},
+}
+
+@online{julia_language,
+    title={The Julia Programming Language},
+    author={Bezanson, Jeff and Edelman, Alan and Karpinski, Stefan and Shah, Viral B and others},
+    url={https://julialang.org/},
+}
+
+@online{julia_dataframes,
+    title={DataFrames.jl - In-memory tabular data in Julia},
+    url={https://github.com/JuliaData/DataFrames.jl},
+    author={Kamiński, Bogumił and others},
+}
+
+@online{gr_framework,
+  author = {Josef Heinen and others},
+  title = {{GR Framework}},
+  year = {1985-2020},
+  url = {https://gr-framework.org/},
+}
+
+@online{ash,
+    title={AverageShiftedHistograms.jl},
+    author={Day, Josh and others},
+    url={https://github.com/joshday/AverageShiftedHistograms.jl},
+}
+
 @manual{docs-csc,
     url={https://docs.csc.fi/},
     title={Docs CSC},
@@ -46,6 +144,13 @@
     year={2022},
 }
 
+@manual{docs-slurm,
+    url={https://slurm.schedmd.com/},
+    title={Slurm Workload Manager},
+    organization={SchedMD},
+    year={2022},
+}
+
 @book{tlpi,
     author = {Kerrisk, Michael},
     title = {The Linux Programming Interface: A Linux and UNIX System Programming Handbook},
@@ -57,11 +162,13 @@
     url={https://man7.org/tlpi/},
 }
 
-@manual{docs-slurm,
-    url={https://slurm.schedmd.com/},
-    title={Slurm Workload Manager},
-    organization={SchedMD},
-    year={2022},
+@book{parallel-and-high-performance-computing,
+    title={Parallel and High Performance Computing},
+    author={Robey, Robert and Zamora, Yuliana},
+    isbn={9781617296468},
+    url={https://www.manning.com/books/parallel-and-high-performance-computing},
+    year={2021},
+    publisher={Manning}
 }
 
 @inproceedings{slurm,
@@ -71,36 +178,6 @@
     pages={44--60},
     year={2003},
     organization={Springer}
-}
-
-@online{linux-kernel-source,
-    url={https://github.com/torvalds/linux},
-    title={Linux kernel source tree},
-    author={Torvals, Linux and others},
-}
-
-@online{osfam,
-    url={https://www.top500.org/statistics/details/osfam/1/},
-    title={TOP500 - Operating System Family / Linux},
-    year={2022},
-}
-
-@online{top_500,
-    url={https://www.top500.org},
-    title={TOP500},
-    year={2022},
-}
-
-@online{io_500,
-    url={https://io500.org},
-    title={IO500},
-    year={2022},
-}
-
-@online{jobid-atomic,
-    url={https://jira.whamcloud.com/browse/LU-16251},
-    title={Fill jobid in an atomic way},
-    year={2022},
 }
 
 @inproceedings{tacc-io-guideline,
@@ -119,23 +196,14 @@
     series={PEARC '21}
 }
 
-@inproceedings{lustre-storage-architecture,
+@article{lustre-storage-architecture,
     author={Braam, Peter},
     title={The Lustre Storage Architecture},
     journal={CoRR},
     year={2019},
     url={http://arxiv.org/abs/1903.01955},
-    eprinttype={arXiv},
+    eprinttype={amiscrXiv},
     eprint={1903.01955},
-}
-
-@book{parallel-and-high-performance-computing,
-    title={Parallel and High Performance Computing},
-    author={Robey, Robert and Zamora, Yuliana},
-    isbn={9781617296468},
-    url={https://www.manning.com/books/parallel-and-high-performance-computing},
-    year={2021},
-    publisher={Manning}
 }
 
 @inproceedings{understanding-io-behaviour,
@@ -160,29 +228,6 @@
     doi={10.1109/CCGrid49817.2020.00-77}
 }
 
-@online{lustre-job-stats-metric-aggregation,
-    url={https://lustre.ornl.gov/ecosystem-2016/documents/tutorials/Hanley-OLCF-JobStats.pdf},
-    title={Lustre Job Stats Metric Aggregation at OLCF},
-    author={Hanley, Jesse and Mohr, Rick},
-    year={2016},
-    month={March}
-}
-
-@online{fine-grained-file-system-monitoring,
-    url={https://www.opensfs.org/wp-content/uploads/2014/04/D3_S31_FineGrainedFileSystemMonitoringwithLustreJobstat.pdf},
-    title={Fine-grained File System Monitoring with Lustre Jobstat},
-    author={Rodwell, Daniel and Fitzhenry, Patrick},
-    year={2014},
-    month={March}
-}
-
-@manual{view-for-clusterstor,
-    url={https://support.hpe.com/hpesc/public/docDisplay?docId=a00114944en_us},
-    title={View for ClusterStor Installation and Configuration Guide},
-    organization={Cray Inc},
-    year={2022},
-}
-
 @inproceedings{year-in-life-of-parallel-file-system,
     title={A year in the life of a parallel file system},
     author={Lockwood, Glenn K and Snyder, Shane and Wang, Teng and Byna, Suren and Carns, Philip and Wright, Nicholas J},
@@ -193,35 +238,14 @@
     doi={10.1109/SC.2018.00077}
 }
 
-@online{ddn-insight,
-    url={https://www.ddn.com/products/storage-monitoring-ddn-insight/},
-    title={DDN Insight},
-    organization={DataDirect Networks},
-    year={2022},
-}
-
-@online{influxdb,
-    url={https://www.influxdata.com/},
-    title={InfluxDB},
-    organization={InfluxData, Inc},
-    year={2022}
-}
-
-@online{timescaledb,
-    url={https://www.timescale.com/},
-    title={TimescaleDB},
-    organization={Timescale, Inc},
-    year={2022}
-}
-
-@inproceedings{io_500_benchmark,
+@article{io_500_benchmark,
   title={Establishing the io-500 benchmark},
   author={Kunkel, J and Bent, John and Lofstead, Jay and Markomanolis, George S},
   journal={White Paper},
   year={2016}
 }
 
-@inproceedings{performance_linear_algebra,
+@article{performance_linear_algebra,
   title={Performance of various computers using standard linear equations software},
   author={Dongarra, Jack J},
   journal={ACM SIGARCH Computer Architecture News},
@@ -232,7 +256,7 @@
   publisher={ACM New York, NY, USA}
 }
 
-@inproceedings{linpack_benchmark,
+@article{linpack_benchmark,
   title={The LINPACK benchmark: past, present and future},
   author={Dongarra, Jack J and Luszczek, Piotr and Petitet, Antoine},
   journal={Concurrency and Computation: practice and experience},
@@ -253,19 +277,7 @@
   doi={10.1109/BigData.2017.8257931}
 }
 
-@online{go_language,
-    title={Go Programming Language},
-    author={Griesemer, Robert and Pike, Rob and Thompson, Ken and others},
-    url={https://go.dev/},
-}
-
-@online{julia_language,
-    title={The Julia Programming Language},
-    author={Bezanson, Jeff and Edelman, Alan and Karpinski, Stefan and Shah, Viral B and others},
-    url={https://julialang.org/},
-}
-
-@inproceedings{julia_fresh_approach,
+@article{julia_fresh_approach,
   title={Julia: A fresh approach to numerical computing},
   author={Bezanson, Jeff and Edelman, Alan and Karpinski, Stefan and Shah, Viral B},
   journal={SIAM review},
@@ -277,13 +289,7 @@
   url={https://doi.org/10.1137/141000671},
 }
 
-@online{julia_dataframes,
-    title={DataFrames.jl - In-memory tabular data in Julia},
-    url={https://github.com/JuliaData/DataFrames.jl},
-    author={Kamiński, Bogumił and others},
-}
-
-@misc{julia_plots,
+@article{julia_plots,
     doi = {10.48550/ARXIV.2204.08775},
     url = {https://arxiv.org/abs/2204.08775},
     author = {Christ, Simon and Schwabeneder, Daniel and Rackauckas, Christopher and Borregaard, Michael Krabbe and Breloff, Thomas},
@@ -291,13 +297,6 @@
     title = {Plots.jl -- a user extendable plotting API for the julia programming language},
     publisher = {arXiv},
     year = {2022},
-}
-
-@online{gr_framework,
-  author = {Josef Heinen and others},
-  title = {{GR Framework}},
-  year = {1985-2020},
-  url = {https://gr-framework.org/},
 }
 
 @inproceedings{daos_and_friends,
@@ -325,12 +324,6 @@
     pages={486--493},
     year={2020},
     organization={IEEE}
-}
-
-@online{ash,
-    title={AverageShiftedHistograms.jl},
-    author={Day, Josh and others},
-    url={https://github.com/joshday/AverageShiftedHistograms.jl},
 }
 
 @inproceedings{toward_understanding_io_behavior,

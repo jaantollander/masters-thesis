@@ -147,6 +147,7 @@ It shares the same Lustre file system across *home*, *projappl*, and *scratch* s
 
 As a general guideline, jobs should use the *scratch* area for storing data.
 They should access the *home* or *projappl* areas only to read or copy configuration or application-specific files at the beginning of the job.
+<!-- TODO: edit this paragraph -->
 Our monitoring system, discussed in Section \ref{monitoring-system}, monitors the usage of the shared Lustre file system using Lustre Jobstats.
 
 Puhti also has two local storage areas, *local scratch* and *tmp*.

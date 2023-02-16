@@ -8,19 +8,14 @@ Rounded rectangles indicate programs, and arrows indicate data flow.
 ](figures/lustre-monitor.drawio.svg)
 
 This section explains how our monitoring system works in the Puhti cluster.
-We explain how to collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
-Subsection \ref{entry-identifier-format} covers the settings we used for the entry identifiers for collecting fine-grained statistics.
-In Subsection \ref{file-system-statistics}, we explain the different file system operations and statistics for them that we can track, how to query them, and the output format.
-We explain how the statistics reset in Subsection \ref{entry-resets}.
+We explain how we collect file system usage statistics with *Lustre Jobstats*, mentioned in Section \ref{lustre-parallel-file-system}.
+Subsection \ref{entry-identifier-format} covers the settings we use for the entry identifiers for collecting fine-grained statistics.
+In Subsection \ref{file-system-statistics}, we explain the different file system operations statistics that we can track, how we query them, and the output format.
+In Subsection \ref{entry-resets}, we explain when Lustre Jobstats resets the statistics it collects.
 Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics which we will use later in the analysis.
-<!--
-We suspect that high total file system usage rates can cause congestion in the file system.
-Fine-grained statistics allow us to break down the total rate into its components.
-Then, we can analyze the components and identify the components with the highest rates.
--->
 
 We described how client-server applications work in Section \ref{client-server-application}.
-We built the monitoring system as a client-server application, consisting of a Monitoring client, an Ingest server, and a Time series database, illustrated in Figure \ref{fig:monitoring-system}.
+We built the monitoring system as a client-server application, consisting of a monitoring client, an ingest server, and a time series database, illustrated in Figure \ref{fig:monitoring-system}.
 The statistics we collect from Jobstats form multiple time series.
 We explain how we store time series data in the *time series database* in Subsection \ref{storing-time-series-data}.
 In Subsection \ref{monitoring-client}, we explain how the *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
