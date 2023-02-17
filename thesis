@@ -12,6 +12,7 @@ dir_out() {
 }
 
 files_md() { find "$(dir_content)" -name '*.md' | sort ;}
+files_svg() { find "$(dir_content)" -name '*.svg' | sort ;}
 
 thesis_download_aaltostyle() {
     curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" \
@@ -179,6 +180,10 @@ thesis_build() {
         git commit -m "build" && \
         git push "origin" "build" --force
     )
+}
+
+thesis_clean_drawio() {
+    sed -i 's/Text is not SVG - cannot display//' "$(files_svg)"
 }
 
 

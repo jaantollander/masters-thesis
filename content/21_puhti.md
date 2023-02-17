@@ -57,13 +57,13 @@ Fast local storage is a Solid State Disk (SSD) attached to the node via Non-Vola
 
 The global storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}, with two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
 At the time of writing, Puhti has Lustre version 2.12.6 from DataDirect Networks (DDN).
-Each MDS has two MDTs connected to 20 of 800 GB NVMe, and each OSS has three OSTs connected to 704 of 10 TB SAS HDD.
+Each MDS has two MDTs connected to 20 of 800 GB NVMe, and each OSS has three OSTs connected to 30 of 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
-The cluster connects nodes via a network with a fat-tree topology.
-In the network, each node connects to all L1 switches, and each L1 switch connects to all L2 switches.
+The cluster connects nodes via a network with a HDR200 fat-tree topology.
+In the network, each node connects to one of 28 L1 switches, and each L1 switch connects to all 12 L2 switches.
 The connections use Mellanox HDR InfiniBand (100 Gb/s IB HDR100).
-The network has a total of 28 L1 switches and 12 L2 switches.
+<!-- The network has a total of 28 L1 switches and 12 L2 switches. -->
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![
@@ -77,7 +77,6 @@ Three dots between nodes or switches indicate that there are many of them.
 
 <!-- TODO: illustrate that there are two MDTs per MDS and three OSTs per OSS in the figure -->
 
-
 As mentioned in Section \ref{linux-operating-system}, most high-performance clusters use the Linux operating system.
 Puhti also uses Linux, specifically the RedHat Enterprise Linux Server (RHEL) as its operating system.
 The version transitioned from 7.9 to 8.6 during the thesis writing.
@@ -86,7 +85,7 @@ The version transitioned from 7.9 to 8.6 during the thesis writing.
 Each Lustre server and Lustre target has a name in the Lustre file system.
 We record file system usage statistics for each target.
 Table \ref{tab:lustre-servers-targets} lists the names of Lustre targets for the corresponding Lustre server in Puhti.
-We denote set such that curly braces `{...}` denote a set, ranges such as `{01-04}` expand to `{01,02,03,04}`, and products such as `{a,b}{c,d}` expand to `{ab,ad,bc,bd}`.
+We denote set such that curly braces `{...}` denote a set, ranges such as `{01-04}` expand to `{01,02,03,04}`, and products such as `{a,b}{c,d}` expand to `{ac,ad,bc,bd}`.
 Furthermore, we add curly braces to elements outside them, such as `a{c,b}` is `{a}{c,b}` and expand them as a product.
 
 
