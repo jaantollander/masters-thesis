@@ -53,17 +53,18 @@ Each login and compute node consists of two Intel Xeon Gold 6230 Central Process
 In addition to CPUs, each GPU node has four Nvidia Volta V100 Graphical Processing Units (GPUs), and each GPU has 36 GiB of GPU memory.
 We type nodes based on how much Random-access Memory (RAM) and *fast local storage* they contain and whether they contain GPUs.
 Fast local storage is a Solid State Disk (SSD) attached to the node via Non-Volatile Memory Express (NVMe) for processes to perform I/O intensive work instead of relying on the global storage from the Lustre file system.
-[@docs-csc]
 
-The global storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}, with two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
+The global storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}.
 At the time of writing, Puhti has Lustre version 2.12.6 from DataDirect Networks (DDN).
-Each MDS has two MDTs connected to 20 of 800 GB NVMe, and each OSS has three OSTs connected to 30 of 10 TB SAS HDD.
+Puhti's Lustre configuration contains two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
+Each MDS has two MDTs.
+All four MDTs share 20 of 800 GB NVMe.
+Each OSS has three OSTs and each OST is connected to 30 of 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
 
 The cluster connects nodes via a network with a HDR200 fat-tree topology.
 In the network, each node connects to one of 28 L1 switches, and each L1 switch connects to all 12 L2 switches.
 The connections use Mellanox HDR InfiniBand (100 Gb/s IB HDR100).
-<!-- The network has a total of 28 L1 switches and 12 L2 switches. -->
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![
