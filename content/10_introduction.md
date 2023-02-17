@@ -55,7 +55,6 @@ This thesis focuses on fine-grained file system usage monitoring to identify the
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
 
 Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
-[@about-csc]
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
 At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-european LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
 Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity and billing units for the users.
