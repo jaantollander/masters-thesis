@@ -46,6 +46,7 @@ thesis_html() {
         --bibliography "$(dir_content)/bibliography/article.bib" \
         --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
         --bibliography "$(dir_content)/bibliography/book.bib" \
+        --bibliography "$(dir_content)/bibliography/software.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --toc \
         --number-sections \
@@ -69,6 +70,7 @@ thesis_epub() {
         --bibliography "$(dir_content)/bibliography/article.bib" \
         --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
         --bibliography "$(dir_content)/bibliography/book.bib" \
+        --bibliography "$(dir_content)/bibliography/software.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --toc \
         --number-sections \
@@ -94,6 +96,7 @@ thesis_pdf() {
         --bibliography "$(dir_content)/bibliography/article.bib" \
         --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
         --bibliography "$(dir_content)/bibliography/book.bib" \
+        --bibliography "$(dir_content)/bibliography/software.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --include-in-header "$(dir_content)/header.tex" \
         --include-before-body "$(dir_content)/body.tex" \
@@ -117,6 +120,7 @@ thesis_tex() {
         --bibliography "$(dir_content)/bibliography/article.bib" \
         --bibliography "$(dir_content)/bibliography/inproceedings.bib" \
         --bibliography "$(dir_content)/bibliography/book.bib" \
+        --bibliography "$(dir_content)/bibliography/software.bib" \
         --csl "$(dir_assets)/citationstyle.csl" \
         --include-in-header "$(dir_content)/header.tex" \
         --include-before-body "$(dir_content)/body.tex" \
