@@ -153,8 +153,8 @@ The \textcolor{lightgray}{light gray} operation names indicate that the operatio
 
 
 ## Entry resets
-If Jobstats has not updated the statistics of an entry within the *cleanup interval*, it removes the entry, referred to as *reset*.
-That is if the snapshot time is older than the cleanup interval.
+If Jobstats has not updated the statistics of an entry within the *cleanup interval*, that is, if the snapshot time is older than the cleanup interval, it removes the entry.
+We refer to the removal as *entry reset*.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
 
