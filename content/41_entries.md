@@ -44,7 +44,7 @@ Next, we look at Figures \ref{fig:entry-ids-mdt} and \ref{fig:entry-ids-ost}, wh
 \definecolor{non-system-user}{rgb}{0.1216,0.4667,0.7059}
 \definecolor{system-user}{rgb}{1.0,0.498,0.0549}
 
-\newpage
+\clearpage
 
 ![
 The number of entries for each of the four MDTs during a sample of Jobstats outputs taken every 2 minutes during an interval on 2022-03-04.
@@ -56,7 +56,7 @@ There are no malformed entries on MDTs.
 \label{fig:entry-ids-mdt}
 ](figures/entry_ids_mdt.svg)
 
-\newpage
+\clearpage
 
 ![
 The number of entries for each of the 24 OSTs during a sample of Jobstats outputs taken every 2 minutes during an interval on 2022-03-04.
