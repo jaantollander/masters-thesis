@@ -14,11 +14,9 @@ A file system is a commonly used abstraction layer between the physical storage 
 The term *storage I/O* is agnostic about the underlying abstraction layer.
 In this work, the I/O refers to storage I/O.
 
-<!-- TODO: greater need for understanding I/O performance and behavior  -->
-<!-- TODO: [@toward_understanding_io_behavior] -->
-Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [@understanding_io_behavior].
+<!-- Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [TODO: reference]. -->
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
-However, storage is becoming increasingly important in HPC system due to data-intensive workloads, such as data science and machine learning, which relies on huge amounts of data.
+However, storage I/O performance is also becoming important in HPC system due a rise in data-intensive workloads, such as data science and machine learning workflows, which relies on huge amounts of data.
 The system must transport this data between main memory and storage, making I/O performance essential and problems from heavy I/O more common.
 The increasing demand for better I/O performance in HPC systems makes studying it necessary.
 The HPC community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
@@ -53,6 +51,7 @@ To identify causes, we can monitor file system health, capacity, and usage, trac
 This thesis focuses on fine-grained file system usage monitoring to identify the causes of short-transient problems.
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs the operations, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
+This kind of work is part greater need for measuring and understanding I/O behavior in HPC systems [@toward_understanding_io_behavior; @understanding_io_behavior].
 
 Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->

@@ -5,7 +5,6 @@
 We explore trends of different metadata operations by visualizing the data we obtained from metadata servers.
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 Comparing loads between MDTs is not interesting because Lustre assignes each storage area to one MDT.
-
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 Because some rates in the plots are zero, but the logarithmic axis does contain zero, we omit zeros from the plot.
 The plots share the same x-axis, making them easier to compare.
@@ -16,9 +15,7 @@ We can see that the `open` rate is quite consistent, and `close` has a large dro
 Large changes in rates are usually caused when a single job that performs heavy I/O stops.
 We can also see that the rate of `close` is greater than the rate of `open`.
 It is impossible to perform more `close` and `open` operations because we always need to open a file before closing it.
-We suspect that Lustre clients cache `open` operations but not `close` operations, and Jobstats does not count cached operations.
-Therefore, the close rate may look higher than the `open` rate from the statistics.
-For example, if `open` is called multiple times with the same arguments Lustre client can serve it from the cache instead of having to request it from MDS; thus request is not recorded.
+We suspect that Lustre clients cache some operations, and Jobstats does not include cached operations in the statistics, explaining the differing `close` and `open` rates.
 \label{fig:total-mdt-1}
 ](figures/2022-10-27_mdt_compute_1.svg)
 
