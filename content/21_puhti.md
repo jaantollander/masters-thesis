@@ -207,5 +207,5 @@ Slurm sets different job-specific environment variables for each job such that p
 An important environment variable is the *Slurm Job ID*, accessed via `SLURM_JOB_ID`, which we use as an identifier to collect job-specific file operations.
 We can combine the data from Slurm's accounting with the file system usage using the job ID.
 For example, we can use the information about the project, partition, and local storage reservation of a job.
-Project information might help identify if members of a particular project perform problematic file I/O patterns.
+Project information might help identify if members of a particular project performs heavy I/O.
 

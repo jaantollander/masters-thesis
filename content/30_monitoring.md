@@ -7,8 +7,8 @@ Rounded rectangles indicate programs, and arrows indicate data flow.
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
 
-This section explains how our monitoring system works.
-We explain how we collect file system usage statistics from the Lustre file system in the Puhti cluster using Lustre Jobstats.
+This section explains how our monitoring system works and how we collect file system usage statistics from the Lustre file system in the Puhti cluster using Lustre Jobstats.
+We built the monitoring system as a client-server application, consisting of a monitoring client, an ingest server, and a time series database, illustrated in Figure \ref{fig:monitoring-system}.
 We do not monitor the usage of the local storage areas because monitoring their usage is complicated.
 Since they are not part of the Lustre file system, we cannot use Lustre Jobstats.
 A more practical option is to combine the reservations for local storage from Slurm accounting using job identifiers from Lustre Jobstats data.
@@ -16,10 +16,7 @@ A more practical option is to combine the reservations for local storage from Sl
 Subsection \ref{entry-identifier-format} covers the settings we use for the entry identifiers for collecting fine-grained statistics.
 In Subsection \ref{file-system-statistics}, we explain the different file system operations statistics that we can track, how we query them, and the output format.
 In Subsection \ref{entry-resets}, we explain when Lustre Jobstats resets the statistics it collects.
-Subsection \ref{computing-rates} explain how to compute average file system usage rates from the statistics which we will use later in the analysis.
-
-We described how client-server applications work in Section \ref{client-server-application}.
-We built the monitoring system as a client-server application, consisting of a monitoring client, an ingest server, and a time series database, illustrated in Figure \ref{fig:monitoring-system}.
+Subsection \ref{computing-rates} explains how to compute average file system usage rates from the statistics, which we will use in the analysis.
 The statistics we collect from Jobstats form multiple time series.
 We explain how we store time series data in the *time series database* in Subsection \ref{storing-time-series-data}.
 In Subsection \ref{monitoring-client}, we explain how the *monitoring client* collects the usage statistics from Lustre Jobstats on each Lustre server and sends them to the *ingest server*.
@@ -33,7 +30,7 @@ The thesis advisor and system administrators were responsible for enabling Lustr
 We adapted the Monitoring client and Ingest server codes from a GPU monitoring program written in the Go language [@go_language], which used InfluxDB [@influxdb] as a database.
 We changed the database to TimescaleDB [@timescaledb].
 We take the precise design of programs as given and explain them only at a high level.
-The thesis work focused on the analysis and visualization parts which we explain in Section \ref{results}.
+The thesis work focused on the analysis and visualization parts we explain in Section \ref{results}.
 
 
 ## Entry identifier format
@@ -108,12 +105,12 @@ Each operation (`<operation>`) contains a line of statistics (`<statistics>`), f
     { samples: 0, unit: <unit>, min: 0, max: 0, sum: 0, sumsq: 0 }
 ```
 
-The samples (`samples`) field counts how many operations the job has requested since Jobstats started the counter with implicit unit of requests (`reqs`).
-The statistics fields are minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) for either measure of latency, that is how long the operatio took, with unit microseconds (`usecs`) or for measure of transferred bytes with unit bytes (`bytes`).
+The samples (`samples`) field counts how many operations the job has requested since Jobstats started the counter with an implicit unit of requests (`reqs`).
+The statistics fields are minimum (`min`), maximum (`max`), sum (`sum`), and the sum of squares (`sumsq`) for either measure of latency, that is, how long the operation took, with unit microseconds (`usecs`) or for a measure of transferred bytes with unit bytes (`bytes`).
 These fields contain nonnegative integer values.
 The samples, sum, and sum of squares increase monotonically except if reset.
 Statistics of an entry that has not performed any operations are implicitly zero.
-We collect the value from the `samples` field from all of the operations, except `read_bytes` and `write_bytes` where we collect the value from the `sum` field.
+We collect the value from the `samples` field from all operations, except `read_bytes` and `write_bytes`, where we collect the value from the `sum` field.
 In this thesis, we did not look at the latency values.
 
 
@@ -127,8 +124,8 @@ MDT | - | `unlink` | Removes a hard link to a file. If the removed hard link is 
 MDT | - | `mkdir` | Creates a new directory.
 MDT | - | `rmdir` | Removes an empty directory.
 MDT | - | `rename` | Renames a file by moving it to a new location.
-MDT | \textcolor{lightgray}{OST} | `getattr` | Return file information (`stat`).
-MDT | OST | `setattr` |  Change file ownership (`chown`), Change file permissions such as read, write, and execute permissions (`chmod`) and change file timestamps (`utime`)
+MDT | \textcolor{lightgray}{OST} | `getattr` | Return file information.
+MDT | OST | `setattr` |  Change file ownership, change file permissions such as read, write, and execute permissions, and change file timestamps.
 MDT | - | `getxattr` | Retrieve an extended attribute value
 MDT | - | `setxattr` | Set an extended attribute value
 MDT | \textcolor{lightgray}{OST} | `statfs` | Returns file system information.
@@ -137,7 +134,7 @@ MDT | - | `samedir_rename` | File name was changed within the directory.
 MDT | - | `crossdir_rename` | File name was changed from one directory to another.
 - | OST | `read` | Reads bytes from a file.
 - | OST | `write` | Writes bytes to a file.
-\textcolor{lightgray}{MDT} | OST | `punch` | Manipulates file space (`fallocate`).
+\textcolor{lightgray}{MDT} | OST | `punch` | Manipulates file space.
 - | OST | `get_info` | -
 - | OST | `set_info` | -
 - | OST | `quotactl` | Manipulates disk quotas.
@@ -155,14 +152,14 @@ The \textcolor{lightgray}{light gray} operation names indicate that the operatio
 
 
 ## Entry resets
-If Jobstats has not updated the statistics of an entry within the *cleanup interval*, that is, if the snapshot time is older than the cleanup interval, it removes the entry.
+If Jobstats has not updated the statistics of an entry within the *cleanup interval* by looking whether the snapshot time is older than the cleanup interval, it removes the entry.
 We refer to the removal as *entry reset*.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
 
 We detect the resets by observing if any counter-values have decreased.
 This method does not detect reset if the new counter value is larger than the old one, but it is uncommon because counter values typically grow large.
-We will underestimate the counter increment in this case when calculating the difference between two counter values.
+We might underestimate the counter increment in this case when calculating the difference between two counter values.
 
 
 ## Computing rates
@@ -187,7 +184,7 @@ There are different options for choosing time series databases.
 A key differentiation between time series databases is whether they can handle a growing number or a fixed number of distinct time series.
 We used TimescaleDB because it can handle data with a growing number of distinct time series.
 TimescaleDB expands PostgreSQL for storing and analyzing time series data and can scale well to an increasing amount of distinct time series without drastically declining performance.
-Initially, we used InfluxDB but found out that it did not scale well for our use case.
+Initially, we used InfluxDB but found out it did not scale well for our use case.
 
 
 Field | Type | Value
@@ -221,7 +218,7 @@ We used a 2-minute observation interval and a 10-minute cleanup interval.
 Initially, we computed the difference between the two counters on the monitoring clients and stored them in the database.
 Since we used a constant interval, the differences were proportional to the rates explained in Section \ref{computing-rates}, making database queries easy and fast.
 However, computing the differences in the monitoring clients makes the design more complex and error-prone.
-Another problem that effected the initial design was a problem with data quality, which we discuss in detail in Section \ref{entries-and-issues}.
+Another problem that affected the initial design was a problem with data quality, which we discuss in detail in Section \ref{entries-and-issues}.
 Due to some bug or configuration issue, some node names were in the fully-qualified format instead of the short hostname format.
 Because we assumed that all node names would follow the short hostname format, we parsed the metadata from the entry identifiers with a short hostname and a fully-qualified hostname as the same.
 The mistake made us identify two different time series as the same, resulting in wrong values when computing rates.
@@ -231,7 +228,7 @@ To identify and solve these problems, we switched to collecting the counter valu
 This approach simplifies the monitoring system and supports variable interval lengths.
 However, the approach makes queries and analysis more computationally intensive.
 
-<!-- In the description we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
+<!-- In the description, we present here, we used the time the call was made as the timestamp and stored the snapshot time as a value similar to the statistics. -->
 The monitoring client works as follows.
 First, it parses the target and all entries from the output using Regular Expressions (Regex).
 Then, it creates a data structure for all entries with the timestamp, target, parsed entry identifier, snapshot time, and statistics listed in Table \ref{tab:operations}.
@@ -259,8 +256,8 @@ Due to the scaling problem, we use TimescaleDB and suggest using a more efficien
 
 
 ## Backfilling initial entries
-<!-- TODO: first version had to keep track -->
-We must manually add an initial entry filled with zeros when a new entry appears, or old entry resets in Jobstats.
+<!-- TODO: the first version had to keep track -->
+We must manually add an initial entry filled with zeros when a new entry appears or old entry resets in Jobstats.
 Otherwise, we lose data from the first observation interval.
 During this thesis, we backfilled the initial entries during the analysis.
 In the future, we should backfill them into the database to keep the analysis simpler.
