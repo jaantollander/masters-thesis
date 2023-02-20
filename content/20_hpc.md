@@ -61,7 +61,7 @@ The kernel provides an abstraction of a virtual private computer for each user, 
 Linux systems have one special user, called the super user or root, which can access everything on the system.
 System administrators can use the super user for administrative tasks and system maintenance.
 
-A Linux distribution comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and, optionally, a graphical user interface.
+A *Linux distribution* comprises some version of the Linux kernel combined with a set of utility programs such as a shell, command-line tools, a package manager, and, optionally, a graphical user interface.
 
 
 ## Client-server application
