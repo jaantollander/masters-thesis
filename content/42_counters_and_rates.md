@@ -1,12 +1,11 @@
 \clearpage
 
 ## Counters and rates
-<!-- TODO: add motivation, repeat what is in the Section -->
-We explore I/O patterns at most fine-grained level by visualizing data of three selected jobs.
-Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show different patterns of counter values and rates for `write` operations for different jobs during 24 hours of 2022-10-27.
+We explore I/O patterns at the most fine-grained level by visualizing data from three selected jobs.
+Figures \ref{fig:job-rate-1}, \ref{fig:job-rate-2}, and \ref{fig:job-rate-3} show us different patterns of counter values and rates for `write` operations for different jobs during 24 hours of 2022-10-27.
 The figures demonstrate the fine-grained nature of the monitoring data and entry resets discussed in Section \ref{monitoring-system}.
 
-The x-axis displays time, and the y-axis display the accumulated amount of operations for counters and the operations per second for the rate.
+The x-axis displays time and the y-axis displays the accumulated amount of operations for counters and the operations per second for the rate.
 Each line displays operations from one Lustre client to one Lustre target.
 The figures in this subsection display a single node job; thus, each line shows `write` operations from the same compute node to a different OST.
 We say that a job is active during a period that performs any file system operations; otherwise, it is inactive.

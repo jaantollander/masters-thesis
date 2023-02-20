@@ -4,7 +4,7 @@
 <!-- TODO: add motivation, repeat what is in the Section -->
 We explore trends of different metadata operations by visualizing the data we obtained from metadata servers.
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
-Comparing loads between MDTs is not interesting because Lustre assignes each storage area to one MDT.
+Comparing loads between MDTs is not interesting because Lustre assigns each storage area to one MDT.
 We use a logarithmic scale due to large variations in the magnitude of the rates.
 Because some rates in the plots are zero, but the logarithmic axis does contain zero, we omit zeros from the plot.
 The plots share the same x-axis, making them easier to compare.
@@ -31,7 +31,7 @@ Elevated file creation and removal rates may indicate the creation of temporary 
 Total rates of `getattr` and `setattr` operations from compute nodes to each MDT.
 We can see that the `getattr` rate is consistent, but the `setattr` has large spikes.
 These rates indicate the frequency of querying and modifying file attributes, such as file ownership, access rights, and timestamps.
-These rates may be elevated rates for example, due to the creation of temporary files.
+For example, these rates may be elevated due to the creation of temporary files.
 In Figure \ref{fig:density-1}, we inspect the contribution of different users to the `setattr` rate on MDT.
 \label{fig:total-mdt-3}
 ](figures/2022-10-27_mdt_compute_3.svg)
@@ -59,7 +59,7 @@ Both rates are consistent throughout the period, and the magnitude is relatively
 
 ![
 Total rates of `link` and `statfs` operations from compute nodes to each MDT.
-We can see that there are almost no `link` operations; hence the line is very sparse.
+We can see almost no `link` operations; hence the line is sparse.
 On the contrary, `statfs` operations seem consistent and appear on all MDTs.
 \label{fig:total-mdt-7}
 ](figures/2022-10-27_mdt_compute_7.svg)
