@@ -52,9 +52,9 @@ The compute nodes consist of 922 CPU nodes and 80 GPU nodes.
 Each login and compute node consists of two Intel Xeon Gold 6230 Central Processing Units (CPUs) with 20 cores and 2.1 GHz base frequency.
 In addition to CPUs, each GPU node has four Nvidia Volta V100 Graphical Processing Units (GPUs), and each GPU has 36 GiB of GPU memory.
 We type nodes based on how much Random-access Memory (RAM) and *fast local storage* they contain and whether they contain GPUs.
-Fast local storage is a Solid State Disk (SSD) attached to the node via Non-Volatile Memory Express (NVMe) for processes to perform I/O intensive work instead of relying on the global storage from the Lustre file system.
+Fast local storage is a Solid State Disk (SSD) attached to the node via Non-Volatile Memory Express (NVMe) for processes to perform I/O intensive work instead of relying on the system-wide storage.
 
-The global storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}.
+The system-wide storage on Puhti consists of a Lustre parallel file system, introduced in Section \ref{lustre-parallel-file-system}.
 At the time of writing, Puhti has Lustre version 2.12.6 from DataDirect Networks (DDN).
 Puhti's Lustre configuration contains two virtualized MDSs and eight virtualized OSSs with an SFA18KE controller.
 Each MDS has two MDTs.
@@ -147,8 +147,6 @@ It shares the same Lustre file system across Home, Projappl, and Scratch storage
 
 As a general guideline, jobs should use the Scratch area for storing data.
 They should access the Home or Projappl areas only to read or copy configuration or application-specific files at the beginning of the job.
-<!-- TODO: edit this paragraph -->
-Our monitoring system, discussed in Section \ref{monitoring-system}, monitors the usage of the shared Lustre file system using Lustre Jobstats.
 
 Puhti also has two local storage areas, Local scratch, and Tmp.
 They are intended for temporary file storage for I/O heavy operations to avoid burdening the Lustre file system.
@@ -158,10 +156,6 @@ Users who want to keep data from local storage after a job completion must copy 
 Its quota depends on how much the user requests for the job.
 
 - Tmp, mounted on RAMDisk, is intended for login and interactive jobs to perform I/O heavy operations such as post and preprocessing data, compiling libraries, or compressing data.
-
-In this work, we do not monitor the usage of the local storage areas.
-Monitoring their usage is complicated; we cannot use Lustre Jobstats.
-In the future, a more practical option is to monitor the reservations for local storage.
 
 In CSC systems, users have a user account that can belong to one or more *projects*.
 We use projects for setting quotas and accounting for computational resources and storage.

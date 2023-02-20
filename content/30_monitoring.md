@@ -7,8 +7,12 @@ Rounded rectangles indicate programs, and arrows indicate data flow.
 \label{fig:monitoring-system}
 ](figures/lustre-monitor.drawio.svg)
 
-This section explains how our monitoring system works in the Puhti cluster.
-We explain how we collect file system usage statistics with Lustre Jobstats, mentioned in Section \ref{lustre-parallel-file-system}.
+This section explains how our monitoring system works.
+We explain how we collect file system usage statistics from the Lustre file system in the Puhti cluster using Lustre Jobstats.
+We do not monitor the usage of the local storage areas because monitoring their usage is complicated.
+Since they are not part of the Lustre file system, we cannot use Lustre Jobstats.
+A more practical option is to combine the reservations for local storage from Slurm accounting using job identifiers from Lustre Jobstats data.
+
 Subsection \ref{entry-identifier-format} covers the settings we use for the entry identifiers for collecting fine-grained statistics.
 In Subsection \ref{file-system-statistics}, we explain the different file system operations statistics that we can track, how we query them, and the output format.
 In Subsection \ref{entry-resets}, we explain when Lustre Jobstats resets the statistics it collects.
@@ -112,8 +116,6 @@ Statistics of an entry that has not performed any operations are implicitly zero
 We collect the value from the `samples` field from all of the operations, except `read_bytes` and `write_bytes` where we collect the value from the `sum` field.
 In this thesis, we did not look at the latency values.
 
-
-\clearpage
 
 MDT | OST | Operation | Explanation of the operation
 -|-|:--|:-------
