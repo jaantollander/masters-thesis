@@ -11,7 +11,7 @@ Serial computing refers to performing one operation at a time.
 In contrast, parallel computing is about performing multiple independent operations simultaneously, intending to reduce run time, and performing larger calculations.
 
 *High-performance computing (HPC)* relies on parallel computing to provide large computing resources for solving computationally demanding and data-intensive problems.
-These problems include simulating complex systems, solving large computational models, data science, and training machine learning models.
+These problems include simulations of complex systems, solving large computational models, data science, and training machine learning models.
 Examples of commercial and research applications of HPC include:
 
 - Weather modeling for weather forecasting
@@ -75,12 +75,12 @@ Commonly, there are multiple instances of client processes communicating with on
 
 
 ## Lustre parallel file system
-A parallel file system is a file system designed for clusters.
+A *parallel file system* is a file system designed for clusters.
 It stores data on multiple networked servers to facilitate high-performance access.
 It makes the data available via a global namespace such that users do not need to know the physical location of the data blocks to access a file.
 *Lustre* is a parallel file system that provides a POSIX standard-compliant file system interface for Linux clusters.
 The Lustre file system is implemented as a set of kernel modules designed using the client-server architecture.
-A kernel module is a software that extends the kernel, in this case, to provide a new file system.
+A kernel module is software that extends the kernel, in this case, to provide a new file system.
 [@lustre-storage-architecture; @docs-lustre, secs. 1-2]
 
 Nodes running the Lustre client software are known as *Lustre clients*.
@@ -101,18 +101,18 @@ We discuss how we use Jobstats in Section \ref{monitoring-system}.
 
 
 ## Slurm workload manager
-Typically, the nodes on a cluster are separated into front end and back end.
+Typically, the nodes on a cluster are separated into a front and back end.
 The front end consists of login and utility nodes, and the back end consists of compute nodes.
-Login nodes are meant for login into the system and for performing light, interactive tasks where as compute nodes are meant for performing heavy computing workloads.
+Login nodes are meant for login into the system and performing light, interactive tasks, and compute nodes are meant for performing heavy computing workloads.
 Clusters rely on a workload manager to allocate access to computing resources, schedule, and run programs on the back end.
 The programs may instantiate an interactive or batch process.
-A batch process is a computation that runs from start to finish without user interaction compared to interactive processes such as an active terminal prompt or a text editor which respond to user input.
+A *batch process* is a computation that runs from start to finish without user interaction compared to interactive processes such as an active terminal prompt or a text editor which respond to user input.
 
 *Slurm* is a workload manager for Linux clusters [@slurm; @docs-slurm].
 Unlike Lustre, Slurm operates in the user space, not kernel space.
 Slurm provides a framework for starting, executing, and monitoring work on the allocated nodes with requested computing resources such as nodes, cores, memory, and time.
 Resource access may be exclusive or nonexclusive, depending on the configuration.
 Slurm maintains a queue of jobs waiting for resources to become available and can perform accounting for resource usage.
-We refer to a resource allocation as a *job* and a job may contain multiple job steps that may execute sequentially or in parallel.
-Administrators can group nodes into Slurm partitions on which they can set different policies such as queuing policies and maximum resource allocations.
+We refer to a resource allocation as a *job*, which may contain multiple steps that may execute sequentially or in parallel.
+Administrators can group nodes into Slurm partitions to set different policies, such as queuing policies and maximum resource allocations.
 A node may belong to more than one partition.

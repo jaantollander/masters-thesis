@@ -26,7 +26,7 @@ Fortunately, we obtained enough data that we believe to be reliable for batch an
 The results from the analysis demonstrate different low-level file system usage patterns and high-level view of total rates for all the monitored file system usage statistics.
 Furthermore, we demonstrate that we can identify users who cause large relative increases in I/O rates from the data that we obtained.
 Finally, we discussed future ideas towards building the automated, real-time analysis and warning system that we can try after we solve the data quality issue.
-
+<!-- TODO: tie in with above future work, reasons for future work -->
 Due to the increased demand for data-intensive computing, we expect problems from parallel file system usage to increase at HPC facilities [@???].
 Thereore, research and development in I/O performance, monitoring and analyzing I/O behavior will grow even more important and consequential in the future.
 

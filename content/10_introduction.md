@@ -16,7 +16,7 @@ In this work, the I/O refers to storage I/O.
 
 <!-- Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [TODO: reference]. -->
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
-However, storage I/O performance is also becoming important in HPC system due a rise in data-intensive workloads, such as data science and machine learning workflows, which relies on huge amounts of data.
+However, storage I/O performance is also becoming important in HPC system due to a rise in data-intensive workloads, such as data science and machine learning workflows, which relies on huge amounts of data.
 The system must transport this data between main memory and storage, making I/O performance essential and problems from heavy I/O more common.
 The increasing demand for better I/O performance in HPC systems makes studying it necessary.
 The HPC community has also established new benchmarks to measure I/O performance, such as the ones discussed in the IO500 benchmarks [@io_500_benchmark].
@@ -51,11 +51,11 @@ To identify causes, we can monitor file system health, capacity, and usage, trac
 This thesis focuses on fine-grained file system usage monitoring to identify the causes of short-transient problems.
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs the operations, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
-This kind of work is part greater need for measuring and understanding I/O behavior in HPC systems [@toward_understanding_io_behavior; @understanding_io_behavior].
+This kind of work is a part of the greater need for measuring and understanding I/O behavior in HPC systems [@toward_understanding_io_behavior; @understanding_io_behavior].
 
-Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, an organization that provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
+Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, which provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
-At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-european LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
+At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-European LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
 Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity and billing units for the users.
 We believe that monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
 
@@ -87,4 +87,4 @@ We also describe the configuration of the Puhti cluster from a storage perspecti
 In Section \ref{monitoring-system}, we describe the monitoring system and explain how we collect data, what data we collect, and how we store it.
 Section \ref{results} presents methods and results from explorative data analysis on the collected monitoring data during this thesis.
 We explore issues with data quality and how they affected the thesis work, provide visualizations and explanations of the monitoring data, demonstrate that we can identify users who perform heavy I/O relative to others from the data, and present ideas for future improvement in the analysis methods.
-Section \ref{conclusion} concludes by discussing the general aspects of the thesis work, which thesis goals we accomplished, which ones we had to leave for future work, and perspectives for future work on monitoring file system usage.
+Section \ref{conclusion} concludes by discussing the general aspects of the thesis work, accomplished thesis goals, and perspectives for future work on monitoring file system usage and I/O.
