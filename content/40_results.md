@@ -23,7 +23,7 @@ In Subsection \ref{future-work}, we explore ideas for improving the analysis in 
 
 We performed explorative data analysis on batches of monitoring data using the Julia language [@julia_fresh_approach; @julia_language] and tabular data manipulation tools from the DataFrames.jl [@julia_dataframes] package.
 To visualize our results, we used Plots.jl [@julia_plots] with GR [@gr_framework] as the backend.
-We obtained a database dump from a selected period into Apache Parquet files, a file format that can efficiently handle and compress tabular data.
+We obtained a database dump from a selected period into Apache Parquet [@apache_parquet] files, a file format that can efficiently handle and compress tabular data.
 We limited the file size to be manageable on a local computer by dumping data from different days to separate files.
 We preprocessed the monitoring data by computing rates from the counter values and discarding unwanted data.
 <!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->

@@ -32,7 +32,7 @@ Due to these issues, data from the same job might scatter into multiple time ser
 The issue might be related to problems fetching the environment variable's value.
 This issue occurred in both MDSs and OSSs on Puhti.
 
-The second, more serious issue is that there were malformed entry identifiers.
+The second, more severe issue is that there were malformed entry identifiers.
 The issue is likely related to the lack of thread safety in the functions that produce the entry identifier strings in the Lustre Jobstats code.
 A recent bug report mentioned broken entry identifiers [@jobid-atomic], which looked similar to our problems.
 Consequently, we cannot reliably parse information from these entry identifiers, and we had to discard them, which resulted in data loss.
@@ -73,13 +73,13 @@ Furthermore, there is a large burst of malformed identifiers from 12:06 to 12:26
 \clearpage
 
 We can see that only two of the four MDTs handle almost all of the metadata operations.
-Of the two active MDTs, the first one seems to handle more operations than the second one, but their magnitudes seem to correlate.
+Of the two active MDTs, the first one handles more operations than the second one, but their magnitudes correlate.
 The load across MDTs is unbalanced because MDTs are assigned based on the top-level directory.
-That is, each MDT is assigned to a different storage area, such as Home, Projappl, Scratch covered in Section \ref{puhti-cluster-at-csc}, and the load is unbalanced because the usage of these storage areas varies.
-On the contrary, the load across OSTs is balanced because the files are assigned OSTs equally with round-robin unless the user explicitly overwrites this policy.
+Each MDT is assigned to a different storage area, such as Home, Projappl, or Scratch, covered in Section \ref{puhti-cluster-at-csc}, and the load is unbalanced because the usage of these storage areas varies.
+On the contrary, the load across OSTs is balanced because the files are assigned OSTs equally with a round-robin policy unless the user explicitly overwrites this policy.
 
 We see that the number of entry identifiers with missing job IDs is substantial compared to the number of correct identifiers for non-system users.
-We also observe that Jobstats systemically generates malformed identifiers on the OSSs and in certain conditions, maybe due to heavy load on the OSS, it can create many of them.
+We also observe that Jobstats systemically generates malformed identifiers on the OSSs, and in certain conditions, maybe due to heavy load on the OSS, it can create many of them.
 
 Entries from non-system users are the most valuable ones for analysis.
 However, we see that system users generate many entries.

@@ -169,7 +169,7 @@ However, we should retrieve the group ID from the workload manager's accounting 
 RHEL 7 and 8 reserve user IDs from 0 to 999 for system processes.
 We refer to the users with IDs from 0 to 999 as *system users* and other users as *non-system users*.
 It is helpful to separate the file system operations performed by system users from the non-system users.
-In this work, we care more about measuring the file system usage from non-system users.
+We are more interested in the file system usage of non-system users that system users.
 
 <!--  TODO: login vs compute -->
 
