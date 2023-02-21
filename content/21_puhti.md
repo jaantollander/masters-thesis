@@ -60,8 +60,8 @@ Puhti's Lustre configuration contains two virtualized MDSs and eight virtualized
 Each MDS has two MDTs.
 All four MDTs share 20 of 800 GB NVMe via Linux Volume Manager (LVM).
 Each OSS has three OSTs.
-Each OST is connected to 30 of 10 TB SAS HDD.
-The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
+Each OST is connected to 30 of 9 TiB SAS HDD.
+The total storage capacity of the file system is 4.8 PiBs since part of the total capacity is reserved for redundancy.
 Storage is connected using Mellanox InfiniBand EDR links.
 
 The cluster connects nodes via a network with an fat-tree topology.
