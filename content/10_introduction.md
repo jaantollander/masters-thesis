@@ -24,7 +24,7 @@ For example, they research ways to improve parallel file systems [@io_load_balan
 
 Since parallel file systems are shared, and heavy usage can cause problems, educating users about how to use them correctly is crucial.
 Many HPC facilities have guidelines for performing file I/O on high-performance clusters.
-For example, Texas Advanced Computing Center (TACC)'s guidelines [@tacc-io-guideline] advise how to avoid overburdening the parallel file system with bad practices and move the heavy I/O to local temporary storage away from the shared file system.
+For example, Texas Advanced Computing Center (TACC)'s guidelines [@tacc-io-guideline] advise avoiding overburdening the parallel file system with bad practices and moving the heavy I/O to local temporary storage.
 Furthermore, they list common bad practices and solutions for them, such as the following:
 
 1) Using many small files instead of a few large files.
@@ -50,13 +50,13 @@ To identify causes, we can monitor file system health, capacity, and usage, trac
 This thesis focuses on fine-grained file system usage monitoring to identify the causes of short-transient problems.
 *Fine-grained* refers to collecting statistics of each file system operation to identify who performs the operations, from which node, and to which storage unit.
 Fine-grained monitoring shows us detailed file system behavior instead of a single aggregate of its performance.
-This kind of work is a part of the greater need for measuring and understanding I/O behavior in HPC systems [@toward_understanding_io_behavior; @understanding_io_behavior].
+This work is a part of the greater need for measuring and understanding I/O behavior in HPC systems [@toward_understanding_io_behavior; @understanding_io_behavior].
 
 Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, which provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
 At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-European LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
-Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity and billing units for the users.
-We believe that monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
+Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity, lost billing units, and increased administrative work.
+Monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
 
 Lustre has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics at a fine-grained level.
 Early experimental monitoring with Jobstats includes [@lustre-job-stats-metric-aggregation; @fine-grained-file-system-monitoring].
