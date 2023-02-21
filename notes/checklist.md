@@ -1,19 +1,21 @@
 Here is my checklist for finishing the thesis work.
 
 Mandatory
-- I need to edit sections 5.0 and 5.5 because I move the description of the explorative data analysis to the Results where it fits better.
-- I need to edit the Conclusion and describe what we achieved and the future work in the Conclusion.
-- I need to improve the thesis outline in the Introduction.
-- I need to add a reference to the increase in data-intensive computing in HPC to the Introduction.
-- I need to define the terms in the Terminology section.
-- I added some terms to terminology (HPC, computer, storage) that I should also mention in Introduction.
+- Mention in results, we cannot release the data set due to privacy, we release the code?
+- I need to change "trends" to "load"
 - I need to motivate the reader about what we are doing and why it is important in the introduction of every section.
 - I need to read through the full text to make sure everything is coherent and in logical order.
-- I need to write English and Finnish abstracts and add the English abstract to the metadata.
 - I need to check the grammar for the full text.
 - I need to check that all captions have good form.
+- I need to check all internal references and add more if needed.
 
 Optional
+- I need to send thesis for comments
+    - Markus and Matts about time series analysis
+    - Simon
+    - Henrik
+    - Tommi
+    - Sebastian
 - I might add a figure of rate with wrong values.
   I would need to find a suitable figure for this.
 - I might make improvements to the figures.
