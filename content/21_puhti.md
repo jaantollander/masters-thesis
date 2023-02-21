@@ -62,11 +62,11 @@ All four MDTs share 20 of 800 GB NVMe via Linux Volume Manager (LVM).
 Each OSS has three OSTs.
 Each OST is connected to 30 of 10 TB SAS HDD.
 The total storage capacity of the file system is 4.8 PBs since part of the total capacity is reserved for redundancy.
+Storage is connected using Mellanox InfiniBand EDR links.
 
-<!-- TODO: HDR100, HDR200 -->
 The cluster connects nodes via a network with an fat-tree topology.
 Each node connects to one of 28 L1 switches in the network, and each L1 switch connects to all 12 L2 switches.
-The connections use Mellanox HDR InfiniBand (100 Gb/s IB HDR100).
+The connections use Mellanox InfiniBand HDR technology offering 100 Gb/s bandwidth for each node.
 Figure \ref{fig:puhti-network} shows a simplified, high-level overview of the network.
 
 ![

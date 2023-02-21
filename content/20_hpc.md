@@ -29,7 +29,7 @@ It usually has a large amount of storage as well.
 Computer clusters are usually centrally managed by organizations such as companies or universities.
 They rely on administrators and software from the organization and various vendors to configure the machine, install software, orchestrate their services, and maintain them.
 The organizations may offer access to the machine as a service with billing based on the usage of computer resources, such as the amount of time, memory, processors, and storage requested.
-Organizations may also build clusters for internal use.
+<!-- Organizations may also build clusters for internal use. -->
 
 
 ## Linux operating system
