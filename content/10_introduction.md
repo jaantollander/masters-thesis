@@ -74,7 +74,7 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-The scope of the thesis is to describe the necessary details of high-performance computing, Lustre parallel file system, and Puhti cluster for collecting fine-grained file system usage statistics and to describe the monitoring system built around them.
+The scope of the thesis is to describe the necessary details of high-performance computing, Lustre parallel file system, and Puhti cluster for collecting fine-grained file system usage statistics and the monitoring system built around them.
 The thesis advisor and system administrators were responsible for developing, deploying, and maintaining the monitoring system on Puhti.
 Their effort was instrumental in initiating the thesis work, collecting the data, and helping with writing the thesis.
 Furthermore, performing explorative data analysis on the obtained monitoring data and visualizing and explaining the results belongs to the scope.
