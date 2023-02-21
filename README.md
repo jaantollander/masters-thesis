@@ -4,8 +4,8 @@
 ## Documents
 Download links for documents from the `build` branch.
 
-- [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2022_tollander-de-balsch_jaan.pdf)
-- [**EPUB**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2022_tollander-de-balsch_jaan.epub)
+- [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.pdf)
+- [**EPUB**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.epub)
 
 
 ## Usage

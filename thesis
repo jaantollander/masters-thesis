@@ -62,7 +62,7 @@ thesis_epub() {
         --citeproc \
         --from "markdown+tex_math_dollars" \
         --to "epub" \
-        --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.epub" \
+        --output "$DIR_OUT/sci_2023_tollander-de-balsch_jaan.epub" \
         --mathml \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/epub.yaml" \
@@ -88,7 +88,7 @@ thesis_pdf() {
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.pdf" \
+        --output "$DIR_OUT/sci_2023_tollander-de-balsch_jaan.pdf" \
         --pdf-engine="pdflatex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
@@ -113,7 +113,7 @@ thesis_tex() {
         --citeproc \
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
-        --output "$DIR_OUT/sci_2022_tollander-de-balsch_jaan.tex" \
+        --output "$DIR_OUT/sci_2023_tollander-de-balsch_jaan.tex" \
         --metadata "date=$(date -I)" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
         --bibliography "$(dir_content)/bibliography/online.bib" \
