@@ -25,8 +25,7 @@ We performed explorative data analysis on batches of monitoring data using the J
 To visualize our results, we used Plots.jl [@julia_plots] with GR [@gr_framework] as the backend.
 We obtained a database dump from a selected period into Apache Parquet [@apache_parquet] files, a file format that can efficiently handle and compress tabular data.
 We limited the file size to be manageable on a local computer by dumping data from different days to separate files.
-We preprocessed the monitoring data by computing rates from the counter values and discarding unwanted data.
-<!-- TODO: we used snapshot time as the timestamp and inferred the beginning of the time series -->
+We preprocessed the monitoring data by computing rates from the counter values, inferring initial entries from the data and discarding unwanted data.
 The processed data consists of rows of timestamp and metadata values and the average rate of each operation from the previous to the current timestamp.
 The metadata values are categorical; that is, they take values from a fixed set of possible values, such as the names of Lustre targets from Table \ref{tab:lustre-servers-targets}, node names from Table \ref{tab:node-names}, valid user identifiers, and valid job identifiers.
 We describe the theoretical aspects of computing rates from counters and sums and densities for rates in Appendix \ref{computing-and-analyzing-rates}.

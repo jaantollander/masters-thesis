@@ -1,7 +1,6 @@
 \clearpage
 
 ## Metadata rates
-<!-- TODO: add motivation, repeat what is in the Section -->
 We explore trends of different metadata operations by visualizing the data we obtained from metadata servers.
 Figures \ref{fig:total-mdt-1}, \ref{fig:total-mdt-2}, \ref{fig:total-mdt-3}, \ref{fig:total-mdt-4}, \ref{fig:total-mdt-5}, \ref{fig:total-mdt-6}, and \ref{fig:total-mdt-7} show the total rates for all operations from compute nodes to each of four MDTs during 24 hours of 2022-10-27.
 Comparing loads between MDTs is not interesting because Lustre assigns each storage area to one MDT.
@@ -54,8 +53,6 @@ Total rates of `rename` and `sync` operations from compute nodes to each MDT.
 Both rates are consistent throughout the period, and the magnitude is relatively small.
 \label{fig:total-mdt-6}
 ](figures/2022-10-27_mdt_compute_6.svg)
-
-<!-- TODO: add samedir and crossdir renames to the rename plot? -->
 
 ![
 Total rates of `link` and `statfs` operations from compute nodes to each MDT.

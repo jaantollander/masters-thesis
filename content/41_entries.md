@@ -38,7 +38,6 @@ A recent bug report mentioned broken entry identifiers [@jobid-atomic], which lo
 Consequently, we cannot reliably parse information from these entry identifiers, and we had to discard them, which resulted in data loss.
 This issue occurred only in OSSs on Puhti.
 We obtained feasible values for correct entry identifiers, but we are still determining if the integrity of the counter values is affected by this issue.
-<!-- TODO: lines that do not show are zero -->
 Next, we look at Figures \ref{fig:entry-ids-mdt} and \ref{fig:entry-ids-ost}, which show the number of entries per Lustre target and identifier format for system and non-system users in a sample of 74 Jobstats outputs taken every 2-minutes from 2022-03-04.
 
 \definecolor{non-system-user}{rgb}{0.1216,0.4667,0.7059}

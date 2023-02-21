@@ -10,8 +10,6 @@ An unbalanced load may lead to congestion when others try to access the same OST
 We use a logarithmic scale due to large variations in the magnitude of the values.
 All plots share the same x-axis, making them easier to compare.
 
-<!-- TODO: use single color for all targets and use alpha, highlight one OST that we inspect in the next section, add references to those figures (also for MDTs), Each line is an OST, and there are 24 lines. -->
-
 ![
 Total rates of `read` and `write` operations from compute nodes to each OST.
 In the top subplot, we can see that the rate of `read` operations does not vary across OSTs from 00:00 to 07:00, but after 07:00, the variance increases.

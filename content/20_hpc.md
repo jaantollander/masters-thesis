@@ -34,7 +34,6 @@ The organizations may offer access to the machine as a service with billing base
 
 ## Linux operating system
 An operating system (OS) is software that manages computer resources and provides standard services for application programs via an application programming interface (API).
-<!-- TODO: (optional) explain Application binary interface (ABI) -->
 At the time of writing, practically all high-performance computer clusters use the *Linux* operating system [@osfam].
 Linux derives from the family of UNIX operating systems and closely follows the POSIX standard.
 

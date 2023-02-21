@@ -147,8 +147,6 @@ MDT | - | `crossdir_rename` | File name was changed from one directory to anothe
 : \label{tab:operations}
 This table lists all operations tracked by the Jobstats for each Lustre target.
 The \textcolor{lightgray}{light gray} operation names indicate that the operation field is present in the output, but the values were always zero. Thus, we did not include them in our analysis.
-<!-- The tables contain the corresponding system calls for each Lustre operation. -->
-<!-- TODO: system call names in parenthesis if different from operation name -->
 
 
 ## Entry resets

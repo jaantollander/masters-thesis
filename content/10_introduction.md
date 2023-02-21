@@ -55,7 +55,7 @@ This work is a part of the greater need for measuring and understanding I/O beha
 Problems from parallel file system usage concern the high-performance clusters at CSC -- IT Center for Science, which provides ICT services for higher education institutions, research institutes, culture, public administration, and enterprises in Finland.
 <!-- These services include high-performance computing, cloud computing, data storage, network services, training, and technical support. -->
 At the time of writing, CSC operates three high-performance clusters, Puhti, Mahti, and the pan-European LUMI, which all use the *Lustre* parallel file system [@lustre-storage-architecture].
-Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity, lost billing units, and increased administrative work.
+Especially the Puhti cluster is susceptible to service disruptions from heavy file system usage, which leads to lost productivity, lost computational resources, and increased administrative work.
 Monitoring file system usage will help us to identify the causes of the problems and take action faster to alleviate them.
 
 Lustre has a feature called *Lustre Jobstats* [@lustre-monitoring-guide] for collecting file system usage statistics at a fine-grained level.
