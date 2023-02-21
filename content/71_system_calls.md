@@ -1,6 +1,6 @@
 \clearpage
 
-# File system interface
+# System calls
 The next two examples present examples of performing file I/O using system calls.
 Flags and modes are constants that modify the behavior of a system call.
 The bitwise-or of two modes or flags means that both of them apply.
