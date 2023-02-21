@@ -13,7 +13,7 @@ Importantly density allows us to distinguish differences, such as whether an inc
 
 We explore a part of the data set visually using Figures \ref{fig:density-1}, \ref{fig:density-2}, and \ref{fig:density-3}.
 We demonstrate a process of identifying users who cause large relative increases in I/O rates.
-Furthermore, these figures show that a minority of users can perform the majority of I/O load at a given time.
+Furthermore, these figures show that a minority of users can perform most of the I/O load at a given time.
 Each figure consists of three subplots.
 The top subplot demonstrates the high-level trend by showing the total rate, the sum of rates from all users.
 We use it to identify periods where trends change, specifically the large relative increases.
