@@ -14,11 +14,12 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes git curl texlive texlive-latex-base texlive-latex-extra texlive-lang-european librsvg2-bin
-          TMP="$(mktemp -d)"
-          curl --location https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-amd64.deb --output "$TMP/pandoc.deb"
-          sudo apt-get install "$TMP/pandoc.deb"
+          ./thesis apt-install
+#          sudo apt-get update
+#          sudo apt-get install --yes git curl texlive texlive-latex-base texlive-latex-extra texlive-lang-european librsvg2-bin
+#          TMP="$(mktemp -d)"
+#          curl --location https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-amd64.deb --output "$TMP/pandoc.deb"
+#          sudo apt-get install "$TMP/pandoc.deb"
 
       - name: "Build"
         env:

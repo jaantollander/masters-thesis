@@ -14,6 +14,18 @@ dir_out() {
 files_md() { find "$(dir_content)" -name '*.md' | sort ;}
 files_svg() { find "$(dir_content)" -name '*.svg' | sort ;}
 
+thesis_apt_install() {
+    sudo apt-get update && \
+    sudo apt-get install --assume-yes --no-install-recommends \
+        git \
+        pandoc \
+        texlive \
+        texlive-latex-base \
+        texlive-latex-extra \
+        texlive-lang-european \
+        librsvg2-bin=2.*
+}
+
 thesis_download_aaltostyle() {
     curl --location "https://wiki.aalto.fi/download/attachments/69900685/aaltothesis.cls?api=v2" \
         --output "$(dir_assets)/aaltothesis.cls"
@@ -189,6 +201,7 @@ thesis_clean_drawio() {
 
 # Pass arguments
 case "$1" in 
+    "apt-install") thesis_apt_install ;;
     "pdf") thesis_pdf "$2" ;;
     "html") thesis_html "$2" ;;
     "epub") thesis_epub "$2" ;;
