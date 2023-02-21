@@ -74,15 +74,16 @@ However, the problem often disappears before they have identified the actual cau
 Active monitoring of file system usage should help system administrators to identify the causes and take action as the issues occur, not afterward.
 It should also reduce the amount of manual work involved.
 
-The scope of the thesis is to describe the Puhti cluster, the monitoring system, details of the collected data, the data analysis methods we used, and the results from the analysis.
+The scope of the thesis is to describe the necessary details of high-performance computing, Lustre parallel file system, and Puhti cluster for collecting fine-grained file system usage statistics and to describe the monitoring system built around them.
 The thesis advisor and system administrators were responsible for developing, deploying, and maintaining the monitoring system on Puhti.
 Their effort was instrumental in initiating the thesis work, collecting the data, and helping with writing the thesis.
-The thesis's contributions are the explorative data analysis methods and visualizations, which the thesis author built from scratch.
+Furthermore, performing explorative data analysis on the obtained monitoring data and visualizing and explaining the results belongs to the scope.
+The main contributions of the thesis are the resulting insights that help us build the real-time monitoring and warning system.
 
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
 We also describe the configuration of the Puhti cluster from a storage perspective and explain the necessary system identifiers for fine-grained data.
 In Section \ref{monitoring-system}, we describe the monitoring system and explain how we collect data, what data we collect, and how we store it.
 Section \ref{results} presents methods and results from explorative data analysis on the collected monitoring data during this thesis.
-We explore issues with data quality and how they affected the thesis work, provide visualizations and explanations of the monitoring data, demonstrate that we can identify users who perform heavy I/O relative to others from the data, and present ideas for future improvement in the analysis methods.
-Section \ref{conclusion} concludes by discussing the general aspects of the thesis work, accomplished thesis goals, and perspectives for future work on monitoring file system usage and I/O.
+We explore issues with data quality and how they affected the thesis work, provide visualizations and explanations of the monitoring data, demonstrate that we can identify users who perform heavy I/O relative to others from the data, and present ideas for improving the analysis methods in the future.
+Section \ref{conclusion} concludes by discussing the general aspects of the thesis work, accomplished thesis goals, and perspectives for future work on monitoring file system usage and I/O behavior.

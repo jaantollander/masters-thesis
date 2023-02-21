@@ -8,7 +8,7 @@ Furthermore, these efforts take us closer to achieving the long-term goal at CSC
 Also, file system usage and I/O metrics could provide helpful information that can guide future procurements and configuration changes such that the investments and modifications improve the critical parts of the storage system.
 
 In the thesis, we explored monitoring and analyzing the usage of the Lustre parallel file system in the CSC's Puhti cluster.
-We described the necessary details of a high-performance computing system, the Lustre parallel file system, and the configuration of the Puhti cluster at CSC for collecting fine-grained file system usage statistics with Lustre Jobstats.
+We described the necessary details of a high-performance computer cluster, the Lustre parallel file system, and the configuration of the Puhti cluster at CSC for collecting fine-grained file system usage statistics with Lustre Jobstats.
 We also described how our monitoring system works by running a monitoring client on each Lustre server to collect data from Lustre Jobtats and send it to the ingest server, which inserts the data into a time series database.
 These descriptions will help us improve future versions of our monitoring system.
 
