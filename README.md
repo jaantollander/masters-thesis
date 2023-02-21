@@ -1,9 +1,6 @@
 # Master's Thesis
-*Monitoring parallel file system usage in a high-performance computer cluster*
-
-Download links for documents from the `build` branch.
-
-- [**PDF**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.pdf)
+- Title: *Monitoring parallel file system usage in a high-performance computer cluster*
+- [Download **PDF** document](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.pdf)
 
 
 ## Usage
