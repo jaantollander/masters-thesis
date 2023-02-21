@@ -14,7 +14,7 @@ Since they are not part of the Lustre file system, we cannot use Lustre Jobstats
 A more practical option is to combine the reservations for local storage from Slurm accounting using job identifiers from Lustre Jobstats data.
 
 Subsection \ref{entry-identifier-format} covers the settings we use for the entry identifiers for collecting fine-grained statistics.
-In Subsection \ref{file-system-statistics}, we explain the different file system operations statistics that we can track, how we query them, and the output format.
+In Subsection \ref{file-system-statistics}, we explain the different file system operations statistics we can track, how we query them, and the output format.
 In Subsection \ref{entry-resets}, we explain when Lustre Jobstats resets the statistics it collects.
 Subsection \ref{computing-rates} explains how to compute average file system usage rates from the statistics, which we will use in the analysis.
 The statistics we collect from Jobstats form multiple time series.
@@ -23,7 +23,7 @@ In Subsection \ref{monitoring-client}, we explain how the *monitoring client* co
 Due to various issues, we had to modify the monitoring client during the thesis.
 These changes affected the analysis and required significant changes in the analysis code and methods.
 We explain the initial and modified versions of the monitoring client.
-Subsection \ref{backfilling-initial-entries} explains how to backfill initial entries to the database.
+Subsection \ref{handling-initial-entries} explains how we detect and handle initial statistics entries.
 Subsection \ref{ingest-server} explains how the ingest server processes the data from the monitoring clients and inserts it into the time series database.
 
 The thesis advisor and system administrators were responsible for enabling Lustre Jobstats, developing the monitoring client and ingest server, installing them on Puhti, and maintaining the database.
@@ -152,7 +152,7 @@ The \textcolor{lightgray}{light gray} operation names indicate that the operatio
 
 
 ## Entry resets
-If Jobstats has not updated the statistics of an entry within the *cleanup interval* by looking whether the snapshot time is older than the cleanup interval, it removes the entry.
+If Jobstats has not updated the statistics of an entry within the *cleanup interval* by looking at whether the snapshot time is older than the cleanup interval, it removes the entry.
 We refer to the removal as *entry reset*.
 We can specify the cleanup interval in the configuration using the `job_cleanup_interval` parameter.
 The default cleanup interval is 10 minutes.
@@ -255,12 +255,11 @@ Our implementation used the InfluxDB line protocol for communication because we 
 Due to the scaling problem, we use TimescaleDB and suggest using a more efficient line protocol for communication instead.
 
 
-## Backfilling initial entries
-<!-- TODO: the first version had to keep track -->
-We must manually add an initial entry filled with zeros when a new entry appears or old entry resets in Jobstats.
-Otherwise, we lose data from the first observation interval.
-During this thesis, we backfilled the initial entries during the analysis.
-In the future, we should backfill them into the database to keep the analysis simpler.
+## Handling initial entries
+We must manually add an initial entry filled with zeros when an entry appears that was not present in the previous observation interval in Jobstats.
+Otherwise, we lose data from the first observation interval when a new time series appears, or an old one resets.
+During this thesis, we added the initial entries to the data during the analysis.
+In the future, we should backfill them into the database to simplify the analysis.
 
 To detect initial entries, the monitoring client must keep track of previously observed identifiers, concatenation of target and entry identifier (`<target>:<entry_id>`), and the previous observation timestamp.
 When the client encounters an identifier not present in the previous observation interval, it creates a new instance of a data structure with the new target and entry identifier, the previous timestamp, the missing value for snapshot time, and zeros for statistics.
