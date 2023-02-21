@@ -14,7 +14,6 @@ A file system is a commonly used abstraction layer between the physical storage 
 The term *storage I/O* is agnostic about the underlying abstraction layer.
 In this work, the I/O refers to storage I/O.
 
-<!-- Contemporary HPC is moving from computation-centric workloads to I/O-centric workloads [TODO: reference]. -->
 Traditionally, we measure the performance of an HPC system in standard linear algebra operations per second, focusing on the processor and memory [@performance_linear_algebra; @linpack_benchmark].
 However, storage I/O performance is also becoming important in HPC system due to a rise in data-intensive workloads, such as data science and machine learning workflows, which relies on huge amounts of data.
 The system must transport this data between main memory and storage, making I/O performance essential and problems from heavy I/O more common.
@@ -69,7 +68,6 @@ Unfortunately, these products did not meet our monitoring and analysis needs, wh
 In this work, we monitor and analyze file system usage in the *Puhti* cluster.
 Our long-term goal at CSC is to build active monitoring and near real-time warning systems to identify who and what causes problems in the file system.
 This thesis takes steps towards achieving this goal.
-<!-- Real-time monitoring should provide valuable information for improving the usability and throughput of the system. -->
 Currently, Puhti has system-level load monitoring from processor usage, file system capacity monitoring, and job information from the workload manager, which cannot identify the causes of the problems.
 When problems occur, system administrators have to determine the causes manually.
 However, the problem often disappears before they have identified the actual cause.
@@ -79,7 +77,7 @@ It should also reduce the amount of manual work involved.
 The scope of the thesis is to describe the Puhti cluster, the monitoring system, details of the collected data, the data analysis methods we used, and the results from the analysis.
 The thesis advisor and system administrators were responsible for developing, deploying, and maintaining the monitoring system on Puhti.
 Their effort was instrumental in initiating the thesis work, collecting the data, and helping with writing the thesis.
-The thesis's contributions are the data analysis methods and visualizations, which the thesis author built from scratch.
+The thesis's contributions are the explorative data analysis methods and visualizations, which the thesis author built from scratch.
 
 The thesis is structured as follows.
 In Section \ref{high-performance-computing}, we present a general overview of high-performance computing and specific software related to high-performance clusters.
