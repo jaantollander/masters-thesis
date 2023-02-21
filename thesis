@@ -12,7 +12,7 @@ dir_out() {
 }
 
 files_md() { find "$(dir_content)" -name '*.md' | sort ;}
-files_svg() { find "$(dir_content)" -name '*.svg' | sort ;}
+files_svg() { find "$(dir_content)" -name '*.svg' ;}
 
 thesis_apt_install() {
     sudo apt-get update && \
@@ -198,7 +198,7 @@ thesis_build() {
 }
 
 thesis_clean_drawio() {
-    sed -i 's/Text is not SVG - cannot display//' "$(files_svg)"
+    files_svg | xargs sed -i 's/Text is not SVG - cannot display//'
 }
 
 
@@ -219,5 +219,6 @@ case "$1" in
         "aaltostyle") thesis_download_aaltostyle;;
         "citationstyle") thesis_download_citationstyle;;
     esac ;;
+    "clean-drawio") thesis_clean_drawio ;;
     *) exit 1 ;;
 esac
