@@ -8,7 +8,7 @@
 - Keywords: monitoring computer systems, observability, computer cluster, high-performance computing, parallel file system, Lustre, I/O behavior, time series analysis, exploratory data analysis
 - [License](./LICENSE): This work is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) license.
 
-[Download **PDF** document](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.pdf)
+[**Download the thesis (PDF)**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.pdf)
 
 
 ## Abstract
