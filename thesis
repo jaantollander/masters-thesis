@@ -55,7 +55,7 @@ thesis_html() {
         --to "html" \
         --output "$DIR_OUT/index.html" \
         --mathjax \
-        --metadata "date=$(date -I)" \
+        --metadata "date=2023-02-25" \
         --metadata-file "$(dir_metadata)/html.yaml" \
         --bibliography "$(dir_content)/bibliography/online.bib" \
         --bibliography "$(dir_content)/bibliography/manual.bib" \
@@ -79,7 +79,7 @@ thesis_epub() {
         --to "epub" \
         --output "$DIR_OUT/sci_2023_tollander-de-balsch_jaan.epub" \
         --mathml \
-        --metadata "date=$(date -I)" \
+        --metadata "date=2023-02-25" \
         --metadata-file "$(dir_metadata)/epub.yaml" \
         --bibliography "$(dir_content)/bibliography/online.bib" \
         --bibliography "$(dir_content)/bibliography/manual.bib" \
@@ -105,7 +105,7 @@ thesis_pdf() {
         --to "latex" \
         --output "$DIR_OUT/sci_2023_tollander-de-balsch_jaan.pdf" \
         --pdf-engine="pdflatex" \
-        --metadata "date=$(date -I)" \
+        --metadata "date=2023-02-25" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
         --bibliography "$(dir_content)/bibliography/online.bib" \
         --bibliography "$(dir_content)/bibliography/manual.bib" \
@@ -129,7 +129,7 @@ thesis_tex() {
         --from "markdown+tex_math_dollars+raw_tex" \
         --to "latex" \
         --output "$DIR_OUT/sci_2023_tollander-de-balsch_jaan.tex" \
-        --metadata "date=$(date -I)" \
+        --metadata "date=2023-02-25" \
         --metadata-file "$(dir_metadata)/tex.yaml" \
         --bibliography "$(dir_content)/bibliography/online.bib" \
         --bibliography "$(dir_content)/bibliography/manual.bib" \
@@ -171,10 +171,6 @@ thesis_preview() {
     unset directory events filename
 }
 
-thesis_serve() {
-    julia serve.jl "$(dir_out)"
-}
-
 thesis_build() {
     TMP=$(mktemp -d)
     echo "$TMP"
@@ -210,7 +206,6 @@ case "$1" in
     "epub") thesis_epub "$2" ;;
     "tex") thesis_tex "$2" ;;
     "build") thesis_build ;;
-    "serve") thesis_serve ;;
     "preview") case "$2" in
         "pdf") thesis_preview thesis_pdf ;;
         "html") thesis_preview thesis_html ;;
