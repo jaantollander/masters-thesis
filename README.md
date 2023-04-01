@@ -6,7 +6,9 @@
 - Degreeprogram: Computer, Communication and Information Sciences
 - Major: Computer Science
 - Keywords: monitoring computer systems, observability, computer cluster, high-performance computing, parallel file system, Lustre, I/O behavior, time series analysis, exploratory data analysis
-- [License](./LICENSE): This work is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) license.
+- License: This work is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) license.
+- URN: http://urn.fi/URN:NBN:fi:aalto-202303262552
+
 
 [**Download the thesis (PDF)**](https://github.com/jaantollander/masters-thesis/blob/build/sci_2023_tollander-de-balsch_jaan.pdf)
 
